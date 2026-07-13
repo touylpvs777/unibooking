@@ -1,28 +1,30 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Search, X, ArrowRight, Command } from 'lucide-react'
 import { createPortal } from 'react-dom'
 import { ROUTE_CONFIG } from '@/config/routes'
 import './SearchBar.css'
 
 interface SearchResult {
-  label: string
+  labelKey: string
   path: string
-  group: string
+  groupKey: string
 }
 
 const NAV_RESULTS: SearchResult[] = ROUTE_CONFIG
   .filter((r) => !r.path.includes(':'))
-  .map((r) => ({ label: r.label, path: r.path, group: 'Navigation' }))
+  .map((r) => ({ labelKey: r.labelKey, path: r.path, groupKey: 'header.groupNavigation' }))
 
 const QUICK_ACTIONS: SearchResult[] = [
-  { label: 'New Customer', path: '/customers', group: 'Quick Actions' },
-  { label: 'New Quotation', path: '/quotations/new', group: 'Quick Actions' },
-  { label: 'New Contract', path: '/rental-contracts/new', group: 'Quick Actions' },
-  { label: 'Register Equipment', path: '/equipment', group: 'Quick Actions' },
+  { labelKey: 'header.quickActionNewCustomer', path: '/customers', groupKey: 'header.groupQuickActions' },
+  { labelKey: 'header.quickActionNewQuotation', path: '/quotations/new', groupKey: 'header.groupQuickActions' },
+  { labelKey: 'header.quickActionNewContract', path: '/rental-contracts/new', groupKey: 'header.groupQuickActions' },
+  { labelKey: 'header.quickActionRegisterEquipment', path: '/equipment', groupKey: 'header.groupQuickActions' },
 ]
 
 export default function SearchBar() {
+  const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [activeIndex, setActiveIndex] = useState(0)
@@ -31,11 +33,12 @@ export default function SearchBar() {
   const previousFocus = useRef<HTMLElement | null>(null)
   const navigate = useNavigate()
 
-  const filtered = query.trim()
+  const filtered = useMemo(() => (query.trim()
     ? [...NAV_RESULTS, ...QUICK_ACTIONS].filter((r) =>
-        r.label.toLowerCase().includes(query.toLowerCase())
+        t(r.labelKey).toLowerCase().includes(query.toLowerCase())
       )
     : [...QUICK_ACTIONS.slice(0, 3), ...NAV_RESULTS.slice(0, 6)]
+  ), [query, t])
 
   const open = useCallback(() => {
     previousFocus.current = document.activeElement as HTMLElement
@@ -84,7 +87,7 @@ export default function SearchBar() {
   }
 
   const grouped = filtered.reduce<Record<string, SearchResult[]>>((acc, r) => {
-    ;(acc[r.group] ??= []).push(r)
+    ;(acc[r.groupKey] ??= []).push(r)
     return acc
   }, {})
 
@@ -93,21 +96,21 @@ export default function SearchBar() {
 
   return (
     <>
-      <button className="search-trigger" onClick={open} aria-label="Search (Ctrl+K)">
+      <button className="search-trigger" onClick={open} aria-label={t('header.searchLabel')}>
         <Search size={15} />
-        <span className="search-trigger-text">Search...</span>
+        <span className="search-trigger-text">{t('header.searchTrigger')}</span>
         <kbd className="search-trigger-kbd"><Command size={10} />K</kbd>
       </button>
 
       {isOpen && createPortal(
         <div className="search-overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) close() }}>
-          <div ref={paletteRef} className="search-palette" role="dialog" aria-modal="true" aria-label="Search" onKeyDown={handleKeyDown}>
+          <div ref={paletteRef} className="search-palette" role="dialog" aria-modal="true" aria-label={t('header.searchLabel')} onKeyDown={handleKeyDown}>
             <div className="search-palette-input-wrap">
               <Search size={18} className="search-palette-icon" />
               <input
                 ref={inputRef}
                 className="search-palette-input"
-                placeholder="Search pages, actions..."
+                placeholder={t('header.searchPlaceholder')}
                 value={query}
                 onChange={(e) => { setQuery(e.target.value); setActiveIndex(0) }}
                 role="combobox"
@@ -115,25 +118,25 @@ export default function SearchBar() {
                 aria-controls={listboxId}
                 aria-activedescendant={filtered[activeIndex] ? `search-opt-${activeIndex}` : undefined}
                 aria-autocomplete="list"
-                aria-label="Search commands"
+                aria-label={t('header.searchCommandsLabel')}
               />
               {query && (
-                <button className="search-palette-clear" onClick={() => setQuery('')} aria-label="Clear search">
+                <button className="search-palette-clear" onClick={() => setQuery('')} aria-label={t('header.clearSearch')}>
                   <X size={14} />
                 </button>
               )}
             </div>
 
             <div className="search-palette-results" id={listboxId} role="listbox" aria-label="Search results">
-              {Object.entries(grouped).map(([group, items]) => (
-                <div key={group} className="search-group" role="group" aria-label={group}>
-                  <div className="search-group-label" aria-hidden="true">{group}</div>
+              {Object.entries(grouped).map(([groupKey, items]) => (
+                <div key={groupKey} className="search-group" role="group" aria-label={t(groupKey)}>
+                  <div className="search-group-label" aria-hidden="true">{t(groupKey)}</div>
                   {items.map((item) => {
                     flatIdx++
                     const idx = flatIdx
                     return (
                       <button
-                        key={item.path + item.label}
+                        key={item.path + item.labelKey}
                         id={`search-opt-${idx}`}
                         className={`search-result${idx === activeIndex ? ' active' : ''}`}
                         onClick={() => select(item)}
@@ -141,7 +144,7 @@ export default function SearchBar() {
                         role="option"
                         aria-selected={idx === activeIndex}
                       >
-                        <span className="search-result-label">{item.label}</span>
+                        <span className="search-result-label">{t(item.labelKey)}</span>
                         <ArrowRight size={14} className="search-result-arrow" />
                       </button>
                     )
@@ -149,14 +152,14 @@ export default function SearchBar() {
                 </div>
               ))}
               {filtered.length === 0 && (
-                <div className="search-empty" role="status">No results for &ldquo;{query}&rdquo;</div>
+                <div className="search-empty" role="status">{t('header.noResults', { query })}</div>
               )}
             </div>
 
             <div className="search-palette-footer" aria-hidden="true">
-              <span>↑↓ navigate</span>
-              <span>↵ select</span>
-              <span>esc close</span>
+              <span>↑↓ {t('header.navigate')}</span>
+              <span>↵ {t('header.select')}</span>
+              <span>esc {t('header.close')}</span>
             </div>
           </div>
         </div>,

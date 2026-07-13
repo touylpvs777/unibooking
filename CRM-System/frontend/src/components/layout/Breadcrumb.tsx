@@ -1,17 +1,19 @@
 import { useEffect } from 'react'
 import { useLocation, Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { ChevronRight } from 'lucide-react'
-import { buildBreadcrumbs, getPageTitle } from '@/config/routes'
+import { buildBreadcrumbs, getPageTitleKey } from '@/config/routes'
 import './Breadcrumb.css'
 
 export default function Breadcrumb() {
+  const { t } = useTranslation()
   const { pathname } = useLocation()
   const crumbs = buildBreadcrumbs(pathname)
-  const title = getPageTitle(pathname)
+  const title = t(getPageTitleKey(pathname))
 
   useEffect(() => {
-    document.title = `${title} — DK Service`
-  }, [title])
+    document.title = `${title} — ${t('common.brandName')}`
+  }, [title, t])
 
   if (crumbs.length <= 1) {
     return <span className="breadcrumb-title">{title}</span>
@@ -25,10 +27,10 @@ export default function Breadcrumb() {
           <span key={i} className="breadcrumb-segment">
             {i > 0 && <ChevronRight size={14} className="breadcrumb-sep" />}
             {isLast ? (
-              <span className="breadcrumb-current">{crumb.label}</span>
+              <span className="breadcrumb-current">{t(crumb.labelKey)}</span>
             ) : (
               <Link to={crumb.path} className="breadcrumb-link">
-                {crumb.label}
+                {t(crumb.labelKey)}
               </Link>
             )}
           </span>

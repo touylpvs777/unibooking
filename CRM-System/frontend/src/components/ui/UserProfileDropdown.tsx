@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { ChevronDown, Settings, LogOut } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import ThemeToggle from './ThemeToggle'
 import './UserProfileDropdown.css'
 
 export default function UserProfileDropdown() {
+  const { t } = useTranslation()
   const user = useAuthStore((s) => s.user)
   const clearAuth = useAuthStore((s) => s.logout)
   const navigate = useNavigate()
@@ -17,7 +19,7 @@ export default function UserProfileDropdown() {
     : '?'
   const displayName = user?.full_name ?? user?.username ?? '—'
   const email = user?.email ?? ''
-  const role = user?.is_superuser ? 'Administrator' : 'User'
+  const role = user?.is_superuser ? t('header.roleAdmin') : t('header.roleUser')
 
   useEffect(() => {
     if (!isOpen) return
@@ -53,7 +55,7 @@ export default function UserProfileDropdown() {
           </div>
 
           <div className="user-dropdown-section">
-            <div className="user-dropdown-section-label">Appearance</div>
+            <div className="user-dropdown-section-label">{t('header.appearance')}</div>
             <div className="user-dropdown-theme-row">
               <ThemeToggle />
             </div>
@@ -62,13 +64,13 @@ export default function UserProfileDropdown() {
           <div className="user-dropdown-divider" />
 
           <button className="user-dropdown-item" onClick={() => { setIsOpen(false); navigate('/settings') }}>
-            <Settings size={14} /> Settings
+            <Settings size={14} /> {t('header.settings')}
           </button>
 
           <div className="user-dropdown-divider" />
 
           <button className="user-dropdown-item danger" onClick={handleLogout}>
-            <LogOut size={14} /> Log out
+            <LogOut size={14} /> {t('header.logout')}
           </button>
         </div>
       )}

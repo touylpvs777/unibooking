@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   RefreshCw, AlertCircle,
   Users, UserCheck, UserPlus, TrendingUp, Sparkles,
@@ -38,6 +39,7 @@ function KpiSkeleton({ count }: { count: number }) {
 }
 
 export default function DashboardPage() {
+  const { t } = useTranslation()
   const { data, isLoading: summaryLoading, error: summaryError, refetch: refetchSummary } = useDashboardSummary()
   const dd = useDashboardData()
   const [billing, setBilling] = useState<BillingDashboardSummary | null>(null)
@@ -70,8 +72,8 @@ export default function DashboardPage() {
       <div className="mp-hero">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
           <div>
-            <div className="mp-hero-title">Dashboard</div>
-            <div className="mp-hero-sub">Updated {now}</div>
+            <div className="mp-hero-title">{t('dashboard.title')}</div>
+            <div className="mp-hero-sub">{t('dashboard.updated', { date: now })}</div>
           </div>
           <button
             className="btn btn-ghost"
@@ -79,7 +81,7 @@ export default function DashboardPage() {
             onClick={refetchAll}
             disabled={isLoading}
           >
-            <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> Refresh
+            <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('dashboard.refresh')}
           </button>
         </div>
       </div>
@@ -89,25 +91,25 @@ export default function DashboardPage() {
         <div className="dashboard-error">
           <AlertCircle size={18} />
           {summaryError || dd.error}
-          <button onClick={refetchAll}>Retry</button>
+          <button onClick={refetchAll}>{t('dashboard.retry')}</button>
         </div>
       )}
 
       {/* Enterprise KPI Strip */}
       <section className="dashboard-section">
-        <h2 className="dashboard-section-title">Key Metrics</h2>
+        <h2 className="dashboard-section-title">{t('dashboard.keyMetrics')}</h2>
         {dd.isLoading ? <EnterpriseKpiStripSkeleton /> : <EnterpriseKpiStrip kpis={kpiCards} />}
       </section>
 
       {/* Quick Actions */}
       <section className="dashboard-section">
-        <h2 className="dashboard-section-title">Quick Actions</h2>
+        <h2 className="dashboard-section-title">{t('dashboard.quickActions')}</h2>
         <QuickActions />
       </section>
 
       {/* Revenue & Fleet Charts */}
       <section className="dashboard-section">
-        <h2 className="dashboard-section-title">Revenue &amp; Fleet</h2>
+        <h2 className="dashboard-section-title">{t('dashboard.revenueFleet')}</h2>
         <div className="mp-chart-grid">
           <RevenueAreaChart data={revenueChartData} loading={dd.isLoading} />
           <FleetUtilizationDonut data={dd.fleetByStatus} loading={dd.isLoading} />
@@ -116,11 +118,11 @@ export default function DashboardPage() {
 
       {/* Activity Feed + Fleet Breakdown */}
       <section className="dashboard-section">
-        <h2 className="dashboard-section-title">Activity &amp; Fleet</h2>
+        <h2 className="dashboard-section-title">{t('dashboard.activityFleet')}</h2>
         <div className="mp-chart-grid">
           {dd.isLoading ? <EnterpriseActivityFeedSkeleton /> : <EnterpriseActivityFeed activities={dd.activities} />}
           <div className="mp-chart-panel">
-            <div className="mp-chart-title">Fleet by Fuel Type</div>
+            <div className="mp-chart-title">{t('dashboard.fleetByFuelType')}</div>
             <FleetByFuelChart data={dd.fleetByFuel} loading={dd.isLoading} />
           </div>
         </div>
@@ -128,7 +130,7 @@ export default function DashboardPage() {
 
       {/* Upcoming Tasks */}
       <section className="dashboard-section">
-        <h2 className="dashboard-section-title">Upcoming Tasks</h2>
+        <h2 className="dashboard-section-title">{t('dashboard.upcomingTasks')}</h2>
         <div className="dash-tasks-row">
           <ExpiringContractsCard contracts={dd.expiringContracts} loading={dd.isLoading} />
           <ExpiringQuotationsCard quotations={dd.expiringQuotations} loading={dd.isLoading} />
@@ -138,7 +140,7 @@ export default function DashboardPage() {
 
       {/* Customer Overview */}
       <section className="dashboard-section">
-        <h2 className="dashboard-section-title">Customer Overview</h2>
+        <h2 className="dashboard-section-title">{t('dashboard.customerOverview')}</h2>
         {summaryLoading ? <KpiSkeleton count={3} /> : data ? (
           <div className="mp-kpi-strip">
             <KpiWidget label="Total Customers" value={fmt(data.total_customers)} icon={<Users size={16} />} color="#2563eb" bg="#eff6ff" />
@@ -150,7 +152,7 @@ export default function DashboardPage() {
 
       {/* Lead Pipeline */}
       <section className="dashboard-section">
-        <h2 className="dashboard-section-title">Lead Pipeline</h2>
+        <h2 className="dashboard-section-title">{t('dashboard.leadPipeline')}</h2>
         {summaryLoading ? <KpiSkeleton count={5} /> : data ? (
           <div className="mp-kpi-strip">
             <KpiWidget label="Total Leads" value={fmt(data.total_leads)} icon={<TrendingUp size={16} />} color="#2563eb" bg="#eff6ff" />
@@ -164,7 +166,7 @@ export default function DashboardPage() {
 
       {/* Results & Conversion */}
       <section className="dashboard-section">
-        <h2 className="dashboard-section-title">Results &amp; Conversion</h2>
+        <h2 className="dashboard-section-title">{t('dashboard.resultsConversion')}</h2>
         {summaryLoading ? <KpiSkeleton count={5} /> : data ? (
           <div className="mp-kpi-strip">
             <KpiWidget label="Won" value={fmt(data.won_leads)} icon={<Trophy size={16} />} color="#16a34a" bg="#f0fdf4" />

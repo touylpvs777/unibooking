@@ -1,56 +1,56 @@
 export interface RouteConfig {
   path: string
-  label: string
+  labelKey: string
   parent?: string
 }
 
 export const ROUTE_CONFIG: RouteConfig[] = [
-  { path: '/dashboard',             label: 'Dashboard' },
-  { path: '/customers',             label: 'Customers' },
-  { path: '/leads',                 label: 'Leads' },
-  { path: '/activity',              label: 'Activity' },
-  { path: '/reports',               label: 'Reports' },
-  { path: '/settings',              label: 'Settings' },
-  { path: '/catalog',               label: 'Products' },
-  { path: '/catalog/products/:id',  label: 'Product Detail',     parent: '/catalog' },
-  { path: '/catalog/brands',        label: 'Brands',             parent: '/catalog' },
-  { path: '/catalog/categories',    label: 'Categories',         parent: '/catalog' },
-  { path: '/catalog/import',        label: 'Import',             parent: '/catalog' },
-  { path: '/equipment',             label: 'Equipment Registry' },
-  { path: '/equipment/:id',         label: 'Equipment Detail',   parent: '/equipment' },
-  { path: '/quotations',            label: 'Quotations' },
-  { path: '/quotations/new',        label: 'New Quotation',      parent: '/quotations' },
-  { path: '/quotations/:id',        label: 'Quotation Detail',   parent: '/quotations' },
-  { path: '/rental-contracts',      label: 'Rental Contracts' },
-  { path: '/rental-contracts/new',  label: 'New Contract',       parent: '/rental-contracts' },
-  { path: '/rental-contracts/:id',  label: 'Contract Detail',    parent: '/rental-contracts' },
-  { path: '/movements',             label: 'Movement Control' },
-  { path: '/movements/new',         label: 'New Movement',       parent: '/movements' },
-  { path: '/movements/:id',         label: 'Movement Detail',    parent: '/movements' },
-  { path: '/billing',                          label: 'Billing' },
-  { path: '/billing/invoices',                 label: 'Invoices',             parent: '/billing' },
-  { path: '/billing/invoices/:id',             label: 'Invoice Detail',       parent: '/billing/invoices' },
-  { path: '/billing/payments',                 label: 'Payments',             parent: '/billing' },
-  { path: '/billing/payments/:id',             label: 'Payment Detail',       parent: '/billing/payments' },
-  { path: '/billing/deposits',                 label: 'Deposits',             parent: '/billing' },
-  { path: '/billing/deposits/:id',             label: 'Deposit Detail',       parent: '/billing/deposits' },
-  { path: '/billing/revenue-recognitions',     label: 'Revenue Recognition',  parent: '/billing' },
-  { path: '/billing/finance',                label: 'Finance Dashboard',    parent: '/billing' },
-  { path: '/billing/statements',             label: 'Statements',           parent: '/billing' },
-  { path: '/billing/payments-unified',       label: 'Payment Manager',      parent: '/billing' },
-  { path: '/billing/deposits-unified',       label: 'Deposit Manager',      parent: '/billing' },
-  { path: '/maintenance',                   label: 'Maintenance & PM' },
-  { path: '/maintenance/work-orders',       label: 'Work Orders',        parent: '/maintenance' },
-  { path: '/maintenance/work-orders/new',   label: 'New Work Order',     parent: '/maintenance/work-orders' },
-  { path: '/maintenance/work-orders/:id',   label: 'Work Order Detail',  parent: '/maintenance/work-orders' },
-  { path: '/maintenance/schedules',         label: 'PM Schedules',       parent: '/maintenance' },
-  { path: '/inventory',                     label: 'Inventory' },
-  { path: '/inventory/parts',               label: 'Spare Parts',        parent: '/inventory' },
-  { path: '/inventory/parts/new',           label: 'New Part',           parent: '/inventory/parts' },
-  { path: '/inventory/parts/:id',           label: 'Part Detail',        parent: '/inventory/parts' },
-  { path: '/inventory/warehouses',          label: 'Warehouses',         parent: '/inventory' },
-  { path: '/inventory/purchase-orders',     label: 'Purchase Orders',    parent: '/inventory' },
-  { path: '/executive',                    label: 'Executive Dashboard' },
+  { path: '/dashboard',             labelKey: 'routes.dashboard' },
+  { path: '/customers',             labelKey: 'routes.customers' },
+  { path: '/leads',                 labelKey: 'routes.leads' },
+  { path: '/activity',              labelKey: 'routes.activity' },
+  { path: '/reports',               labelKey: 'routes.reports' },
+  { path: '/settings',              labelKey: 'routes.settings' },
+  { path: '/catalog',               labelKey: 'routes.products' },
+  { path: '/catalog/products/:id',  labelKey: 'routes.productDetail',    parent: '/catalog' },
+  { path: '/catalog/brands',        labelKey: 'routes.brands',           parent: '/catalog' },
+  { path: '/catalog/categories',    labelKey: 'routes.categories',       parent: '/catalog' },
+  { path: '/catalog/import',        labelKey: 'routes.import',           parent: '/catalog' },
+  { path: '/equipment',             labelKey: 'routes.equipmentRegistry' },
+  { path: '/equipment/:id',         labelKey: 'routes.equipmentDetail',  parent: '/equipment' },
+  { path: '/quotations',            labelKey: 'routes.quotations' },
+  { path: '/quotations/new',        labelKey: 'routes.newQuotation',     parent: '/quotations' },
+  { path: '/quotations/:id',        labelKey: 'routes.quotationDetail',  parent: '/quotations' },
+  { path: '/rental-contracts',      labelKey: 'routes.rentalContracts' },
+  { path: '/rental-contracts/new',  labelKey: 'routes.newContract',      parent: '/rental-contracts' },
+  { path: '/rental-contracts/:id',  labelKey: 'routes.contractDetail',   parent: '/rental-contracts' },
+  { path: '/movements',             labelKey: 'routes.movementControl' },
+  { path: '/movements/new',         labelKey: 'routes.newMovement',      parent: '/movements' },
+  { path: '/movements/:id',         labelKey: 'routes.movementDetail',   parent: '/movements' },
+  { path: '/billing',                          labelKey: 'routes.billing' },
+  { path: '/billing/invoices',                 labelKey: 'routes.invoices',             parent: '/billing' },
+  { path: '/billing/invoices/:id',             labelKey: 'routes.invoiceDetail',        parent: '/billing/invoices' },
+  { path: '/billing/payments',                 labelKey: 'routes.payments',             parent: '/billing' },
+  { path: '/billing/payments/:id',             labelKey: 'routes.paymentDetail',        parent: '/billing/payments' },
+  { path: '/billing/deposits',                 labelKey: 'routes.deposits',             parent: '/billing' },
+  { path: '/billing/deposits/:id',             labelKey: 'routes.depositDetail',        parent: '/billing/deposits' },
+  { path: '/billing/revenue-recognitions',     labelKey: 'routes.revenueRecognition',   parent: '/billing' },
+  { path: '/billing/finance',                labelKey: 'routes.financeDashboard',      parent: '/billing' },
+  { path: '/billing/statements',             labelKey: 'routes.statements',            parent: '/billing' },
+  { path: '/billing/payments-unified',       labelKey: 'routes.paymentManager',        parent: '/billing' },
+  { path: '/billing/deposits-unified',       labelKey: 'routes.depositManager',        parent: '/billing' },
+  { path: '/maintenance',                   labelKey: 'routes.maintenancePm' },
+  { path: '/maintenance/work-orders',       labelKey: 'routes.workOrders',        parent: '/maintenance' },
+  { path: '/maintenance/work-orders/new',   labelKey: 'routes.newWorkOrder',      parent: '/maintenance/work-orders' },
+  { path: '/maintenance/work-orders/:id',   labelKey: 'routes.workOrderDetail',   parent: '/maintenance/work-orders' },
+  { path: '/maintenance/schedules',         labelKey: 'routes.pmSchedules',       parent: '/maintenance' },
+  { path: '/inventory',                     labelKey: 'routes.inventory' },
+  { path: '/inventory/parts',               labelKey: 'routes.spareParts',        parent: '/inventory' },
+  { path: '/inventory/parts/new',           labelKey: 'routes.newPart',           parent: '/inventory/parts' },
+  { path: '/inventory/parts/:id',           labelKey: 'routes.partDetail',        parent: '/inventory/parts' },
+  { path: '/inventory/warehouses',          labelKey: 'routes.warehouses',        parent: '/inventory' },
+  { path: '/inventory/purchase-orders',     labelKey: 'routes.purchaseOrders',    parent: '/inventory' },
+  { path: '/executive',                    labelKey: 'routes.executiveDashboard' },
 ]
 
 export function matchRoute(pathname: string): RouteConfig | undefined {
@@ -60,19 +60,19 @@ export function matchRoute(pathname: string): RouteConfig | undefined {
   })
 }
 
-export function buildBreadcrumbs(pathname: string): { label: string; path: string }[] {
+export function buildBreadcrumbs(pathname: string): { labelKey: string; path: string }[] {
   const current = matchRoute(pathname)
-  if (!current) return [{ label: 'DK Service', path: '/' }]
+  if (!current) return [{ labelKey: 'common.brandName', path: '/' }]
 
-  const crumbs: { label: string; path: string }[] = []
+  const crumbs: { labelKey: string; path: string }[] = []
 
   let cfg: RouteConfig | undefined = current
   while (cfg) {
-    crumbs.unshift({ label: cfg.label, path: cfg.parent ? pathname : pathname })
+    crumbs.unshift({ labelKey: cfg.labelKey, path: cfg.parent ? pathname : pathname })
     if (cfg.parent) {
       cfg = ROUTE_CONFIG.find((r) => r.path === cfg!.parent)
       if (cfg) crumbs[0].path = pathname
-      crumbs.unshift({ label: cfg?.label ?? '', path: cfg?.path ?? '' })
+      crumbs.unshift({ labelKey: cfg?.labelKey ?? '', path: cfg?.path ?? '' })
       break
     } else {
       break
@@ -82,6 +82,6 @@ export function buildBreadcrumbs(pathname: string): { label: string; path: strin
   return crumbs
 }
 
-export function getPageTitle(pathname: string): string {
-  return matchRoute(pathname)?.label ?? 'DK Service'
+export function getPageTitleKey(pathname: string): string {
+  return matchRoute(pathname)?.labelKey ?? 'common.brandName'
 }

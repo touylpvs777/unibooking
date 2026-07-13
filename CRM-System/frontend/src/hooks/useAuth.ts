@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { login as loginApi, logoutApi, getMe } from '@/api/auth'
 import { useAuthStore } from '@/store/authStore'
 import type { LoginRequest } from '@/types/auth'
 
 export function useAuth() {
+  const { t } = useTranslation()
   const { token, user, setToken, setRefreshToken, setUser, logout: clearAuth, isAuthenticated } = useAuthStore()
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
@@ -25,7 +27,7 @@ export function useAuth() {
         ?.response?.data?.detail
       const msg = typeof detail === 'string'
         ? detail
-        : 'Invalid username or password'
+        : t('login.invalidCredentials')
       setError(msg)
     } finally {
       setIsLoading(false)

@@ -1,9 +1,12 @@
 import { type FormEvent, useState } from 'react'
 import { Navigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/hooks/useAuth'
+import LanguageToggle from '@/components/ui/LanguageToggle'
 import './LoginPage.css'
 
 export default function LoginPage() {
+  const { t } = useTranslation()
   const { isAuthenticated, isLoading, error, login } = useAuth()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -48,21 +51,25 @@ export default function LoginPage() {
             />
           </div>
 
-          <h1 className="neon-title">DK Service</h1>
-          <p className="neon-brand">Enterprise Platform</p>
-          <p className="neon-subtitle">Sign in to continue</p>
+          <div className="neon-lang-toggle">
+            <LanguageToggle />
+          </div>
+
+          <h1 className="neon-title">{t('common.brandName')}</h1>
+          <p className="neon-brand">{t('common.brandTagline')}</p>
+          <p className="neon-subtitle">{t('login.subtitle')}</p>
 
           {error && <div className="neon-error">{error}</div>}
 
           <form onSubmit={handleSubmit} className="neon-form">
             <div className="neon-field">
-              <label htmlFor="username">Username</label>
+              <label htmlFor="username">{t('login.username')}</label>
               <input
                 id="username"
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter your username"
+                placeholder={t('login.usernamePlaceholder')}
                 autoComplete="username"
                 autoFocus
                 required
@@ -70,13 +77,13 @@ export default function LoginPage() {
             </div>
 
             <div className="neon-field">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password">{t('login.password')}</label>
               <input
                 id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
+                placeholder={t('login.passwordPlaceholder')}
                 autoComplete="current-password"
                 required
               />
@@ -88,21 +95,21 @@ export default function LoginPage() {
                 checked={remember}
                 onChange={(e) => setRemember(e.target.checked)}
               />
-              <span>Remember me</span>
+              <span>{t('login.rememberMe')}</span>
             </label>
 
             <button className="neon-btn" type="submit" disabled={isLoading}>
               {isLoading ? (
                 <span className="neon-btn-loading">
                   <span className="neon-spinner" />
-                  Signing in…
+                  {t('login.signingIn')}
                 </span>
-              ) : 'Sign In'}
+              ) : t('login.signIn')}
             </button>
           </form>
 
           <p className="neon-footer">
-            &copy; 2026 DK LAO Services. All rights reserved.
+            {t('login.footer')}
           </p>
         </div>
       </div>

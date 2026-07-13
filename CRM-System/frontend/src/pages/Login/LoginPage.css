@@ -101,6 +101,13 @@
   padding: 0 20px;
 }
 
+.neon-lang-toggle {
+  position: absolute;
+  top: 16px;
+  right: 36px;
+  z-index: 11;
+}
+
 .neon-card-inner {
   background: rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(20px);

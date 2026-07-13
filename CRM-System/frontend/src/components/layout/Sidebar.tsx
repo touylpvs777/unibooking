@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   LayoutDashboard, Users, TrendingUp, Activity, BarChart2, Settings,
   Package, Truck, FileText, ClipboardList,
@@ -11,80 +12,81 @@ import './Sidebar.css'
 
 interface NavGroup {
   id: string
-  label: string
-  items: { to: string; label: string; icon: React.ElementType }[]
+  labelKey: string
+  items: { to: string; labelKey: string; icon: React.ElementType }[]
 }
 
 const NAV_GROUPS: NavGroup[] = [
   {
     id: 'dashboard',
-    label: 'Dashboard',
+    labelKey: 'nav.groups.dashboard',
     items: [
-      { to: '/dashboard', label: 'Overview', icon: LayoutDashboard },
+      { to: '/dashboard', labelKey: 'nav.items.overview', icon: LayoutDashboard },
     ],
   },
   {
     id: 'crm',
-    label: 'CRM',
+    labelKey: 'nav.groups.crm',
     items: [
-      { to: '/customers', label: 'Customers', icon: Users },
-      { to: '/leads', label: 'Leads', icon: TrendingUp },
-      { to: '/quotations', label: 'Quotations', icon: FileText },
+      { to: '/customers', labelKey: 'nav.items.customers', icon: Users },
+      { to: '/leads', labelKey: 'nav.items.leads', icon: TrendingUp },
+      { to: '/quotations', labelKey: 'nav.items.quotations', icon: FileText },
     ],
   },
   {
     id: 'equipment',
-    label: 'Equipment',
+    labelKey: 'nav.groups.equipment',
     items: [
-      { to: '/equipment', label: 'Registry', icon: Truck },
-      { to: '/movements', label: 'Movements', icon: ArrowRightLeft },
+      { to: '/equipment', labelKey: 'nav.items.registry', icon: Truck },
+      { to: '/movements', labelKey: 'nav.items.movements', icon: ArrowRightLeft },
     ],
   },
   {
     id: 'rental',
-    label: 'Rental',
+    labelKey: 'nav.groups.rental',
     items: [
-      { to: '/rental-contracts', label: 'Contracts', icon: ClipboardList },
+      { to: '/rental-contracts', labelKey: 'nav.items.contracts', icon: ClipboardList },
     ],
   },
   {
     id: 'maintenance',
-    label: 'Maintenance',
+    labelKey: 'nav.groups.maintenance',
     items: [
-      { to: '/maintenance', label: 'Dashboard', icon: Wrench },
+      { to: '/maintenance', labelKey: 'nav.items.dashboard', icon: Wrench },
     ],
   },
   {
     id: 'inventory',
-    label: 'Inventory',
+    labelKey: 'nav.groups.inventory',
     items: [
-      { to: '/inventory', label: 'Dashboard', icon: Box },
-      { to: '/catalog', label: 'Products', icon: Package },
+      { to: '/inventory', labelKey: 'nav.items.dashboard', icon: Box },
+      { to: '/catalog', labelKey: 'nav.items.products', icon: Package },
     ],
   },
   {
     id: 'finance',
-    label: 'Finance',
+    labelKey: 'nav.groups.finance',
     items: [
-      { to: '/billing', label: 'Dashboard', icon: Receipt },
-      { to: '/billing/invoices', label: 'Invoices', icon: FileText },
-      { to: '/billing/payments', label: 'Payments', icon: CreditCard },
-      { to: '/billing/deposits', label: 'Deposits', icon: Landmark },
-      { to: '/billing/statements', label: 'Statements', icon: FileSpreadsheet },
+      { to: '/billing', labelKey: 'nav.items.dashboard', icon: Receipt },
+      { to: '/billing/invoices', labelKey: 'nav.items.invoices', icon: FileText },
+      { to: '/billing/payments', labelKey: 'nav.items.payments', icon: CreditCard },
+      { to: '/billing/deposits', labelKey: 'nav.items.deposits', icon: Landmark },
+      { to: '/billing/statements', labelKey: 'nav.items.statements', icon: FileSpreadsheet },
     ],
   },
   {
     id: 'executive',
-    label: 'Executive BI',
+    labelKey: 'nav.groups.executive',
     items: [
-      { to: '/activity', label: 'Activity', icon: Activity },
-      { to: '/reports', label: 'Reports', icon: BarChart2 },
-      { to: '/executive', label: 'Analytics', icon: PieChart },
+      { to: '/activity', labelKey: 'nav.items.activity', icon: Activity },
+      { to: '/reports', labelKey: 'nav.items.reports', icon: BarChart2 },
+      { to: '/executive', labelKey: 'nav.items.analytics', icon: PieChart },
     ],
   },
 ]
 
 export default function Sidebar() {
+  const { t } = useTranslation()
   const user = useAuthStore((s) => s.user)
   const sidebarState = useSidebarStore((s) => s.state)
   const collapsedGroups = useSidebarStore((s) => s.collapsedGroups)
@@ -99,7 +101,7 @@ export default function Sidebar() {
     ? (user.full_name ?? user.username).split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase()
     : '?'
   const displayName = user?.full_name ?? user?.username ?? '—'
-  const role = user?.is_superuser ? 'Administrator' : 'User'
+  const role = user?.is_superuser ? t('header.roleAdmin') : t('header.roleUser')
 
   const closeMobile = () => {
     if (window.innerWidth <= 768) setState('hidden')
@@ -121,8 +123,8 @@ export default function Sidebar() {
           </div>
           {!isCollapsed && (
             <div className="sidebar-brand-text">
-              <span className="sidebar-brand-name">DK Service</span>
-              <span className="sidebar-brand-sub">Enterprise Platform</span>
+              <span className="sidebar-brand-name">{t('common.brandName')}</span>
+              <span className="sidebar-brand-sub">{t('common.brandTagline')}</span>
             </div>
           )}
         </NavLink>
@@ -139,7 +141,7 @@ export default function Sidebar() {
                     onClick={() => toggleGroup(group.id)}
                     aria-expanded={!isGroupCollapsed}
                   >
-                    <span>{group.label}</span>
+                    <span>{t(group.labelKey)}</span>
                     <ChevronDown
                       size={12}
                       className={`sidebar-group-arrow${isGroupCollapsed ? ' collapsed' : ''}`}
@@ -158,10 +160,10 @@ export default function Sidebar() {
                           `sidebar-nav-item${isActive ? ' active' : ''}`
                         }
                         onClick={closeMobile}
-                        title={isCollapsed ? item.label : undefined}
+                        title={isCollapsed ? t(item.labelKey) : undefined}
                       >
                         <item.icon className="sidebar-nav-icon" size={16} />
-                        {!isCollapsed && <span className="sidebar-label">{item.label}</span>}
+                        {!isCollapsed && <span className="sidebar-label">{t(item.labelKey)}</span>}
                       </NavLink>
                     ))}
                   </div>
@@ -177,10 +179,10 @@ export default function Sidebar() {
               `sidebar-nav-item${isActive ? ' active' : ''}`
             }
             onClick={closeMobile}
-            title={isCollapsed ? 'Settings' : undefined}
+            title={isCollapsed ? t('nav.items.settings') : undefined}
           >
             <Settings className="sidebar-nav-icon" size={16} />
-            {!isCollapsed && <span className="sidebar-label">Settings</span>}
+            {!isCollapsed && <span className="sidebar-label">{t('nav.items.settings')}</span>}
           </NavLink>
         </nav>
 
@@ -199,8 +201,8 @@ export default function Sidebar() {
             <button
               className="sidebar-collapse-btn"
               onClick={toggle}
-              title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-              aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+              title={isCollapsed ? t('nav.expandSidebar') : t('nav.collapseSidebar')}
+              aria-label={isCollapsed ? t('nav.expandSidebar') : t('nav.collapseSidebar')}
             >
               {isCollapsed ? <PanelLeftOpen size={16} /> : <PanelLeftClose size={16} />}
             </button>
