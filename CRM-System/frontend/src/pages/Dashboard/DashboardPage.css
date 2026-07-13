@@ -1,0 +1,83 @@
+.dashboard-page {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* ── Section ────────────────────────────────────────────── */
+.dashboard-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dashboard-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--color-text-muted);
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* ── KPI grid (for retained StatCard sections) ──────────── */
+.kpi-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+}
+.kpi-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.kpi-grid.cols-5 { grid-template-columns: repeat(5, 1fr); }
+.kpi-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+
+/* ── Error banner ───────────────────────────────────────── */
+.dashboard-error {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--color-danger-50);
+  border: 1px solid var(--color-danger-200);
+  color: var(--color-danger-700);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  font-size: 14px;
+}
+
+.dashboard-error button {
+  margin-left: auto;
+  padding: 5px 14px;
+  border: 1px solid var(--color-danger-300);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-danger-700);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--duration-fast);
+}
+.dashboard-error button:hover { background: var(--color-danger-100); }
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .kpi-grid.cols-5 { grid-template-columns: repeat(3, 1fr); }
+  .kpi-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 720px) {
+  .kpi-grid,
+  .kpi-grid.cols-3,
+  .kpi-grid.cols-5,
+  .kpi-grid.cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 420px) {
+  .kpi-grid,
+  .kpi-grid.cols-3,
+  .kpi-grid.cols-5,
+  .kpi-grid.cols-2 {
+    grid-template-columns: 1fr;
+  }
+}

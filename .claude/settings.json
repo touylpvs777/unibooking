@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c ' *)",
+      "Bash(python seed_admin.py)",
+      "Bash(nohup python -m uvicorn app.main:app --host 127.0.0.1 --port 8000)",
+      "Bash(echo \"started with pid $!\")",
+      "Read(//tmp/**)",
+      "Bash(curl -s -X POST http://127.0.0.1:8000/api/v1/auth/login -H \"Content-Type: application/json\" -d '{\"username\":\"admin\",\"password\":\"Admin@123\"}' -w \"\\\\nHTTP_STATUS:%{http_code}\\\\n\")",
+      "Bash(curl -s -X POST http://127.0.0.1:8000/api/v1/auth/login -H \"Content-Type: application/json\" -d '{\"username\":\"admin\",\"password\":\"wrongpass\"}' -w \"\\\\nHTTP_STATUS:%{http_code}\\\\n\")",
+      "Bash(nohup npm run dev)",
+      "Bash(echo \"started pid $!\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:5173/ --max-time 3)",
+      "Bash(netstat -ano)",
+      "Bash(curl -s -i -X OPTIONS http://127.0.0.1:8000/api/v1/auth/login -H 'Origin: http://localhost:5173' -H 'Access-Control-Request-Method: POST' -H 'Access-Control-Request-Headers: content-type')",
+      "Bash(curl -s -i -X POST http://127.0.0.1:8000/api/v1/auth/login -H 'Origin: http://localhost:5173' -H 'Content-Type: application/json' -d '{\"username\":\"admin\",\"password\":\"Admin@123\"}')",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://127.0.0.1:8000/docs --max-time 3)",
+      "Bash(python -c \"import playwright\")",
+      "Bash(node -e \"console.log\\('node ok'\\)\")",
+      "Bash(curl -s \"http://localhost:5173/src/api/auth.ts\")",
+      "Bash(curl -s \"http://localhost:5173/src/hooks/useAuth.ts\")"
+    ]
+  }
+}

@@ -1,0 +1,337 @@
+/* ═══════════════════════════════════════════════════════════
+   Neon Circle Login — DK Service Enterprise Platform
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Root ─────────────────────────────────────────────────── */
+.neon-root {
+  min-height: 100vh;
+  background: #050816;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* ── Subtle grid background ──────────────────────────────── */
+.neon-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 20%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 20%, transparent 70%);
+}
+
+/* ── Floating particles ──────────────────────────────────── */
+.neon-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.neon-particles span {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: rgba(0, 255, 255, 0.5);
+  border-radius: 50%;
+  animation: neon-drift 12s ease-in-out infinite;
+}
+.neon-particles span:nth-child(1) { left: 15%; top: 20%; animation-delay: 0s; animation-duration: 14s; }
+.neon-particles span:nth-child(2) { left: 75%; top: 15%; animation-delay: -2s; animation-duration: 11s; }
+.neon-particles span:nth-child(3) { left: 40%; top: 80%; animation-delay: -4s; animation-duration: 16s; }
+.neon-particles span:nth-child(4) { left: 85%; top: 60%; animation-delay: -6s; animation-duration: 13s; }
+.neon-particles span:nth-child(5) { left: 25%; top: 70%; animation-delay: -8s; animation-duration: 15s; }
+.neon-particles span:nth-child(6) { left: 60%; top: 40%; animation-delay: -3s; animation-duration: 10s; }
+
+@keyframes neon-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+  25%      { transform: translate(30px, -20px) scale(1.8); opacity: 0.7; }
+  50%      { transform: translate(-15px, 25px) scale(0.8); opacity: 0.4; }
+  75%      { transform: translate(20px, 15px) scale(1.5); opacity: 0.6; }
+}
+
+/* ── Glowing circle ──────────────────────────────────────── */
+.neon-circle {
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.neon-circle-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0, 255, 255, 0.15);
+  box-shadow:
+    0 0 60px rgba(0, 255, 255, 0.08),
+    0 0 120px rgba(0, 255, 255, 0.04),
+    inset 0 0 60px rgba(0, 255, 255, 0.03);
+  animation: neon-pulse 4s ease-in-out infinite;
+}
+
+.neon-circle-ring-2 {
+  inset: -30px;
+  border-color: rgba(0, 255, 255, 0.06);
+  box-shadow:
+    0 0 100px rgba(0, 255, 255, 0.05),
+    0 0 200px rgba(0, 255, 255, 0.02);
+  animation-delay: -2s;
+  animation-duration: 5s;
+}
+
+@keyframes neon-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.03); }
+}
+
+/* ── Card ────────────────────────────────────────────────── */
+.neon-card {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 400px;
+  padding: 0 20px;
+}
+
+.neon-card-inner {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 40px 36px 32px;
+  box-shadow:
+    0 0 40px rgba(0, 255, 255, 0.06),
+    0 25px 50px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Logo ────────────────────────────────────────────────── */
+.neon-logo-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.neon-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  object-fit: contain;
+  padding: 6px;
+  background: rgba(0, 255, 255, 0.08);
+  border: 1px solid rgba(0, 255, 255, 0.15);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+}
+
+/* ── Typography ──────────────────────────────────────────── */
+.neon-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #e2e8f0;
+  text-align: center;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.neon-brand {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: rgba(0, 255, 255, 0.6);
+  text-align: center;
+  margin: 4px 0 0;
+}
+
+.neon-subtitle {
+  font-size: 13.5px;
+  color: #64748b;
+  text-align: center;
+  margin: 16px 0 28px;
+}
+
+/* ── Error ────────────────────────────────────────────────── */
+.neon-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #f87171;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* ── Form ────────────────────────────────────────────────── */
+.neon-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.neon-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.neon-field label {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #94a3b8;
+  letter-spacing: 0.3px;
+}
+
+.neon-field input {
+  padding: 11px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  font-size: 14px;
+  color: #e2e8f0;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.neon-field input::placeholder {
+  color: #475569;
+}
+
+.neon-field input:focus {
+  border-color: rgba(0, 255, 255, 0.4);
+  box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.08), 0 0 20px rgba(0, 255, 255, 0.06);
+}
+
+/* ── Remember me ─────────────────────────────────────────── */
+.neon-remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.neon-remember input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #06b6d4;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* ── Button ──────────────────────────────────────────────── */
+.neon-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #06b6d4 0%, #2563eb 100%);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  letter-spacing: 0.3px;
+  position: relative;
+  overflow: hidden;
+}
+
+.neon-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.neon-btn:hover:not(:disabled) {
+  transform: scale(1.02);
+  box-shadow: 0 0 30px rgba(6, 182, 212, 0.3), 0 0 60px rgba(37, 99, 235, 0.15);
+}
+
+.neon-btn:hover:not(:disabled)::before {
+  opacity: 1;
+}
+
+.neon-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.neon-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.neon-btn-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.neon-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: neon-spin 0.6s linear infinite;
+}
+
+@keyframes neon-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Footer ──────────────────────────────────────────────── */
+.neon-footer {
+  font-size: 11px;
+  color: #334155;
+  text-align: center;
+  margin: 24px 0 0;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 520px) {
+  .neon-circle {
+    width: 380px;
+    height: 380px;
+  }
+
+  .neon-card-inner {
+    padding: 32px 24px 24px;
+    border-radius: 16px;
+  }
+
+  .neon-title {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 380px) {
+  .neon-circle {
+    width: 320px;
+    height: 320px;
+  }
+
+  .neon-card-inner {
+    padding: 28px 20px 20px;
+  }
+}
+
+/* ── Reduced motion ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .neon-circle-ring,
+  .neon-particles span {
+    animation: none;
+  }
+}

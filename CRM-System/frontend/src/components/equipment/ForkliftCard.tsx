@@ -1,0 +1,90 @@
+import { Fuel, Gauge, Calendar, Tag } from 'lucide-react'
+import { ForkliftStatusBadge, ForkliftConditionBadge } from './ForkliftStatusBadge'
+import type { Forklift } from '@/types/forklift'
+import './ForkliftCard.css'
+
+interface ForkliftCardProps {
+  forklift: Forklift
+  onClick?: () => void
+  onEdit?: () => void
+}
+
+const FUEL_LABELS: Record<string, string> = {
+  electric:  'Electric',
+  diesel:    'Diesel',
+  lpg:       'LPG',
+  dual_fuel: 'Dual Fuel',
+}
+
+const PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="%23cbd5e1" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"%3E%3Crect x="1" y="3" width="22" height="14" rx="2"/%3E%3Cpath d="M5 21h2M17 21h2M6 17v4M18 17v4M3 17h18"/%3E%3C/svg%3E'
+
+export default function ForkliftCard({ forklift, onClick, onEdit }: ForkliftCardProps) {
+  const imgSrc = forklift.primary_photo_url ?? PLACEHOLDER
+
+  return (
+    <div
+      className="forklift-card"
+      onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+    >
+      <div className="forklift-card-img-wrap">
+        <img
+          src={imgSrc}
+          alt={forklift.name_en}
+          className="forklift-card-img"
+          onError={(e) => { (e.currentTarget as HTMLImageElement).src = PLACEHOLDER }}
+        />
+        <div className="forklift-card-badges">
+          <ForkliftStatusBadge status={forklift.status} />
+          {!forklift.is_active && (
+            <span className="pc-badge inactive">Inactive</span>
+          )}
+        </div>
+      </div>
+
+      <div className="forklift-card-body">
+        {forklift.brand && (
+          <div className="forklift-card-brand">{forklift.brand.name}</div>
+        )}
+        <div className="forklift-card-name">{forklift.name_en}</div>
+        <div className="forklift-card-serial">
+          <Tag size={11} /> {forklift.serial_number}
+        </div>
+
+        <div className="forklift-card-meta">
+          <ForkliftConditionBadge condition={forklift.condition} />
+          {forklift.fuel_type && (
+            <span className="forklift-card-meta-item">
+              <Fuel size={11} /> {FUEL_LABELS[forklift.fuel_type] ?? forklift.fuel_type}
+            </span>
+          )}
+          {forklift.capacity_kg != null && (
+            <span className="forklift-card-meta-item">
+              <Gauge size={11} /> {forklift.capacity_kg.toLocaleString()} kg
+            </span>
+          )}
+          {forklift.year_manufactured && (
+            <span className="forklift-card-meta-item">
+              <Calendar size={11} /> {forklift.year_manufactured}
+            </span>
+          )}
+        </div>
+
+        <div className="forklift-card-hours">
+          {forklift.current_hour_meter.toLocaleString(undefined, { maximumFractionDigits: 1 })} hrs
+        </div>
+      </div>
+
+      {onEdit && (
+        <button
+          className="forklift-card-edit"
+          onClick={(e) => { e.stopPropagation(); onEdit() }}
+          title="Edit forklift"
+        >
+          Edit
+        </button>
+      )}
+    </div>
+  )
+}

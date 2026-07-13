@@ -1,0 +1,120 @@
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 240px;
+  right: 0;
+  height: 56px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 12px;
+  z-index: 100;
+  transition: left 0.22s ease;
+}
+
+.topbar.sidebar-closed {
+  left: 0;
+}
+
+/* ── Hamburger ──────────────────────────────────────────── */
+.topbar-menu-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius);
+  color: var(--color-text-muted);
+  transition: background 0.13s, color 0.13s;
+  flex-shrink: 0;
+}
+
+.topbar-menu-btn:hover {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* ── Page title ─────────────────────────────────────────── */
+.topbar-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+  flex: 1;
+}
+
+/* ── Right section ──────────────────────────────────────── */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── User chip ──────────────────────────────────────────── */
+.topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.topbar-avatar {
+  width: 26px;
+  height: 26px;
+  background: var(--color-primary-600);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--color-on-primary);
+  flex-shrink: 0;
+}
+
+.topbar-username {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Logout button ──────────────────────────────────────── */
+.topbar-logout {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  transition: background 0.13s, color 0.13s, border-color 0.13s;
+}
+
+.topbar-logout:hover {
+  background: var(--color-danger-50);
+  border-color: var(--color-danger-200);
+  color: var(--color-danger-700);
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .topbar {
+    left: 0;
+  }
+  .topbar-username {
+    display: none;
+  }
+}

@@ -1,0 +1,156 @@
+import enum
+
+from fastapi import Depends, HTTPException, status
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.database.session import get_db
+from app.dependencies import get_current_user
+from app.models.role import Role, RoleName
+from app.models.user import User
+
+
+class PermissionName(str, enum.Enum):
+    VIEW_DASHBOARD = "view_dashboard"
+    CREATE_CUSTOMER = "create_customer"
+    EDIT_CUSTOMER = "edit_customer"
+    DELETE_CUSTOMER = "delete_customer"
+    CREATE_LEAD = "create_lead"
+    EDIT_LEAD = "edit_lead"
+    DELETE_LEAD = "delete_lead"
+    MANAGE_USERS = "manage_users"
+    MANAGE_CATALOG = "manage_catalog"
+    FORKLIFT_READ = "forklift.read"
+    FORKLIFT_CREATE = "forklift.create"
+    FORKLIFT_UPDATE = "forklift.update"
+    FORKLIFT_DELETE = "forklift.delete"
+    QUOTATION_READ = "quotation.read"
+    QUOTATION_CREATE = "quotation.create"
+    QUOTATION_UPDATE = "quotation.update"
+    QUOTATION_DELETE = "quotation.delete"
+    QUOTATION_APPROVE = "quotation.approve"
+    QUOTATION_CONVERT = "quotation.convert"
+    RENTAL_READ = "rental.read"
+    RENTAL_CREATE = "rental.create"
+    RENTAL_UPDATE = "rental.update"
+    RENTAL_DELETE = "rental.delete"
+    RENTAL_APPROVE = "rental.approve"
+    RENTAL_DELIVER = "rental.deliver"
+    RENTAL_INSPECT = "rental.inspect"
+    RENTAL_SETTLE = "rental.settle"
+    BILLING_READ = "billing.read"
+    BILLING_CREATE = "billing.create"
+    BILLING_UPDATE = "billing.update"
+    BILLING_APPROVE = "billing.approve"
+
+
+# Design-time mapping — permissions are constants, not runtime config.
+# frozenset prevents accidental mutation.
+ROLE_PERMISSIONS: dict[RoleName, frozenset[PermissionName]] = {
+    RoleName.SUPER_ADMIN: frozenset(PermissionName),  # all permissions
+    RoleName.MANAGER: frozenset({
+        PermissionName.VIEW_DASHBOARD,
+        PermissionName.CREATE_CUSTOMER,
+        PermissionName.EDIT_CUSTOMER,
+        PermissionName.DELETE_CUSTOMER,
+        PermissionName.CREATE_LEAD,
+        PermissionName.EDIT_LEAD,
+        PermissionName.DELETE_LEAD,
+        PermissionName.MANAGE_CATALOG,
+        PermissionName.FORKLIFT_READ,
+        PermissionName.FORKLIFT_CREATE,
+        PermissionName.FORKLIFT_UPDATE,
+        PermissionName.FORKLIFT_DELETE,
+        PermissionName.QUOTATION_READ,
+        PermissionName.QUOTATION_CREATE,
+        PermissionName.QUOTATION_UPDATE,
+        PermissionName.QUOTATION_DELETE,
+        PermissionName.QUOTATION_APPROVE,
+        PermissionName.QUOTATION_CONVERT,
+        PermissionName.RENTAL_READ,
+        PermissionName.RENTAL_CREATE,
+        PermissionName.RENTAL_UPDATE,
+        PermissionName.RENTAL_DELETE,
+        PermissionName.RENTAL_APPROVE,
+        PermissionName.RENTAL_DELIVER,
+        PermissionName.RENTAL_INSPECT,
+        PermissionName.RENTAL_SETTLE,
+        PermissionName.BILLING_READ,
+        PermissionName.BILLING_CREATE,
+        PermissionName.BILLING_UPDATE,
+        PermissionName.BILLING_APPROVE,
+    }),
+    RoleName.SALES: frozenset({
+        PermissionName.VIEW_DASHBOARD,
+        PermissionName.CREATE_CUSTOMER,
+        PermissionName.EDIT_CUSTOMER,
+        PermissionName.CREATE_LEAD,
+        PermissionName.EDIT_LEAD,
+        PermissionName.FORKLIFT_READ,
+        PermissionName.QUOTATION_READ,
+        PermissionName.QUOTATION_CREATE,
+        PermissionName.QUOTATION_UPDATE,
+        PermissionName.RENTAL_READ,
+        PermissionName.RENTAL_CREATE,
+        PermissionName.RENTAL_UPDATE,
+        PermissionName.BILLING_READ,
+    }),
+    RoleName.SUPPORT: frozenset({
+        PermissionName.VIEW_DASHBOARD,
+        PermissionName.CREATE_CUSTOMER,
+        PermissionName.EDIT_CUSTOMER,
+        PermissionName.FORKLIFT_READ,
+        PermissionName.QUOTATION_READ,
+        PermissionName.RENTAL_READ,
+        PermissionName.BILLING_READ,
+    }),
+}
+
+
+def require_permission(permission: PermissionName):
+    """
+    Dependency factory — returns a FastAPI Depends that enforces one permission.
+
+    Usage:
+        current_user: User = require_permission(PermissionName.CREATE_CUSTOMER)
+
+    Rules:
+      - is_superuser=True bypasses all checks (backward-compatible with admin account).
+      - Users with no role, an inactive role, or insufficient permissions get HTTP 403.
+    """
+    async def _check(
+        current_user: User = Depends(get_current_user),
+        db: AsyncSession = Depends(get_db),
+    ) -> User:
+        if current_user.is_superuser:
+            return current_user
+
+        if current_user.role_id is None:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="No role assigned to your account",
+            )
+
+        role: Role | None = await db.get(Role, current_user.role_id)
+        if role is None or not role.is_active:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Your role is inactive or does not exist",
+            )
+
+        try:
+            role_name = RoleName(role.name)
+        except ValueError:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Unrecognised role: {role.name!r}",
+            )
+
+        if permission not in ROLE_PERMISSIONS.get(role_name, frozenset()):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Permission denied: '{permission.value}' required",
+            )
+
+        return current_user
+
+    return Depends(_check)

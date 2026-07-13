@@ -1,0 +1,237 @@
+from datetime import date, datetime
+
+from pydantic import BaseModel, Field, field_validator
+
+from app.models.quotation import ItemType, QuotationStatus, QuotationType
+
+
+# ── Brief models ─────────────────────────────────────────────────────────────
+
+class CustomerBrief(BaseModel):
+    model_config = {"from_attributes": True}
+    id: int
+    first_name: str
+    last_name: str
+    company: str | None = None
+
+
+class LeadBrief(BaseModel):
+    model_config = {"from_attributes": True}
+    id: int
+    title: str
+
+
+class UserBrief(BaseModel):
+    model_config = {"from_attributes": True}
+    id: int
+    username: str
+    full_name: str | None = None
+
+
+class ForkliftBrief(BaseModel):
+    model_config = {"from_attributes": True}
+    id: int
+    serial_number: str
+    name_en: str
+    status: str
+
+
+class ProductBrief(BaseModel):
+    model_config = {"from_attributes": True}
+    id: int
+    sku: str
+    name_en: str
+
+
+# ── Quotation schemas ────────────────────────────────────────────────────────
+
+class QuotationCreate(BaseModel):
+    quotation_type: QuotationType
+    title: str = Field(..., min_length=1, max_length=500)
+    customer_id: int | None = None
+    lead_id: int | None = None
+    assigned_to: int | None = None
+    contact_name: str | None = Field(default=None, max_length=200)
+    contact_email: str | None = Field(default=None, max_length=255)
+    contact_phone: str | None = Field(default=None, max_length=50)
+    tax_rate: float = Field(default=0.0, ge=0, le=100)
+    currency: str = Field(default="LAK", max_length=3)
+    valid_from: date | None = None
+    valid_until: date | None = None
+    notes: str | None = None
+    internal_notes: str | None = None
+
+    @field_validator("title")
+    @classmethod
+    def title_not_blank(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("title must not be blank")
+        return v.strip()
+
+
+class QuotationUpdate(BaseModel):
+    title: str | None = Field(default=None, min_length=1, max_length=500)
+    customer_id: int | None = None
+    lead_id: int | None = None
+    assigned_to: int | None = None
+    contact_name: str | None = None
+    contact_email: str | None = None
+    contact_phone: str | None = None
+    tax_rate: float | None = Field(default=None, ge=0, le=100)
+    discount_amount: float | None = Field(default=None, ge=0)
+    currency: str | None = Field(default=None, max_length=3)
+    valid_from: date | None = None
+    valid_until: date | None = None
+    notes: str | None = None
+    internal_notes: str | None = None
+
+
+class QuotationOut(BaseModel):
+    model_config = {"from_attributes": True}
+
+    id: int
+    quotation_number: str
+    revision_number: int
+    quotation_type: str
+    status: str
+    title: str
+    customer: CustomerBrief | None = None
+    lead: LeadBrief | None = None
+    assigned_user: UserBrief | None = None
+    subtotal: float
+    total_amount: float
+    currency: str
+    valid_from: date | None = None
+    valid_until: date | None = None
+    item_count: int = 0
+    created_at: datetime
+    updated_at: datetime | None = None
+    is_active: bool
+
+
+class QuotationDetail(QuotationOut):
+    parent_id: int | None = None
+    contact_name: str | None = None
+    contact_email: str | None = None
+    contact_phone: str | None = None
+    tax_rate: float
+    tax_amount: float
+    discount_amount: float
+    notes: str | None = None
+    internal_notes: str | None = None
+    converted_to_type: str | None = None
+    converted_to_id: int | None = None
+    created_by: int | None = None
+    updated_by: int | None = None
+    items: list["QuotationItemOut"] = []
+    recent_status_history: list["QuotationStatusHistoryOut"] = []
+    recent_approvals: list["QuotationApprovalOut"] = []
+    available_actions: list[str] = []
+
+
+class QuotationListResponse(BaseModel):
+    items: list[QuotationOut]
+    total: int
+    page: int
+    page_size: int
+    pages: int
+
+
+# ── Item schemas ─────────────────────────────────────────────────────────────
+
+class QuotationItemCreate(BaseModel):
+    item_type: ItemType
+    forklift_id: int | None = None
+    product_id: int | None = None
+    description: str = Field(..., min_length=1, max_length=1000)
+    quantity: float = Field(default=1.0, gt=0)
+    unit: str = Field(default="unit", max_length=50)
+    unit_price: float = Field(..., ge=0)
+    discount_percent: float = Field(default=0.0, ge=0, le=100)
+    rental_duration_days: int | None = Field(default=None, ge=1)
+    rental_rate_period: str | None = None
+    notes: str | None = Field(default=None, max_length=500)
+    sort_order: int = 0
+
+
+class QuotationItemUpdate(BaseModel):
+    description: str | None = Field(default=None, min_length=1, max_length=1000)
+    quantity: float | None = Field(default=None, gt=0)
+    unit: str | None = Field(default=None, max_length=50)
+    unit_price: float | None = Field(default=None, ge=0)
+    discount_percent: float | None = Field(default=None, ge=0, le=100)
+    rental_duration_days: int | None = Field(default=None, ge=1)
+    rental_rate_period: str | None = None
+    notes: str | None = None
+    sort_order: int | None = None
+
+
+class QuotationItemOut(BaseModel):
+    model_config = {"from_attributes": True}
+
+    id: int
+    quotation_id: int
+    line_number: int
+    item_type: str
+    forklift: ForkliftBrief | None = None
+    product: ProductBrief | None = None
+    description: str
+    quantity: float
+    unit: str
+    unit_price: float
+    discount_percent: float
+    line_total: float
+    rental_duration_days: int | None = None
+    rental_rate_period: str | None = None
+    notes: str | None = None
+    sort_order: int
+    created_at: datetime
+
+
+# ── Status History ───────────────────────────────────────────────────────────
+
+class QuotationStatusHistoryOut(BaseModel):
+    model_config = {"from_attributes": True}
+
+    id: int
+    quotation_id: int
+    from_status: str | None = None
+    to_status: str
+    reason: str | None = None
+    user: UserBrief | None = None
+    changed_at: datetime
+
+
+# ── Approval ─────────────────────────────────────────────────────────────────
+
+class QuotationApprovalOut(BaseModel):
+    model_config = {"from_attributes": True}
+
+    id: int
+    quotation_id: int
+    revision_number: int
+    decision: str
+    reason: str | None = None
+    conditions: str | None = None
+    user: UserBrief | None = None
+    decided_at: datetime
+
+
+# ── Workflow actions ─────────────────────────────────────────────────────────
+
+class WorkflowAction(BaseModel):
+    reason: str | None = Field(default=None, max_length=500)
+
+
+class ApproveAction(WorkflowAction):
+    conditions: str | None = Field(default=None, max_length=1000)
+
+
+class ConvertAction(BaseModel):
+    converted_to_type: str = Field(..., max_length=30)
+    notes: str | None = Field(default=None, max_length=500)
+
+
+# ── Forward ref rebuild ──────────────────────────────────────────────────────
+
+QuotationDetail.model_rebuild()
