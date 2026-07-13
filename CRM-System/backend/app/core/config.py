@@ -22,6 +22,20 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str = "uploads/images"
     MAX_UPLOAD_SIZE_MB: int = 5
 
+    # ── Notifications: WhatsApp Business API (primary channel) ──────────────
+    WHATSAPP_TOKEN: str = ""
+    WHATSAPP_PHONE_NUMBER_ID: str = ""
+    WHATSAPP_API_BASE_URL: str = "https://graph.facebook.com"
+    WHATSAPP_API_VERSION: str = "v20.0"
+
+    # ── Notifications: SMTP email (fallback channel) ─────────────────────────
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = 587
+    SMTP_USERNAME: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_FROM_EMAIL: str = "no-reply@dkservice.com"
+    SMTP_USE_TLS: bool = True
+
     ALLOWED_ORIGINS: list[str] = [
         "http://localhost:3000",
         "http://localhost:8080",

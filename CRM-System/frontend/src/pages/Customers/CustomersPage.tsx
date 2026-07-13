@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   UserPlus, Search, Pencil, Trash2, Users,
   ChevronUp, ChevronDown, ChevronLeft, ChevronRight,
@@ -53,6 +54,7 @@ function SkeletonRows() {
 }
 
 export default function CustomersPage() {
+  const navigate = useNavigate()
   const { customers, isLoading, error, create, update, remove } = useCustomers()
 
   const [search, setSearch]             = useState('')
@@ -209,7 +211,14 @@ export default function CustomersPage() {
                 rows.map((c) => (
                   <tr key={c.id}>
                     <td>
-                      <div className="customer-name-cell">
+                      <div
+                        className="customer-name-cell"
+                        role="link"
+                        tabIndex={0}
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => navigate(`/customers/${c.id}`)}
+                        onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/customers/${c.id}`) }}
+                      >
                         <div className="customer-avatar">{initials(c)}</div>
                         <div>
                           <div className="customer-full-name">{c.first_name} {c.last_name}</div>

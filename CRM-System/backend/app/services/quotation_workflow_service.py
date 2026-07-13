@@ -4,6 +4,7 @@ from datetime import date
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.events import event_bus
 from app.models.quotation import Quotation, QuotationStatus
 from app.models.quotation_approval import QuotationApproval
 from app.models.quotation_status_history import QuotationStatusHistory
@@ -129,9 +130,11 @@ class QuotationWorkflowService:
                 "valid_until": date.today() + timedelta(days=30),
             })
 
-        return await self._transition(
+        quotation = await self._transition(
             quotation, QuotationStatus.SENT.value, reason, user_id,
         )
+        await event_bus.emit("quotation.sent", db=self.db, quotation=quotation)
+        return quotation
 
     async def accept(self, quotation_id: int, reason: str | None, user_id: int) -> Quotation:
         quotation = await self._require(quotation_id)

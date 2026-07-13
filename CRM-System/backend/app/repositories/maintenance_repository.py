@@ -7,6 +7,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from app.models.forklift import Forklift
 from app.models.maintenance_plan import MaintenancePlan
 from app.models.maintenance_schedule import MaintenanceSchedule
 from app.models.work_order import WorkOrder
@@ -135,7 +136,7 @@ class MaintenanceRepository:
         result = await self.db.execute(
             select(WorkOrder)
             .options(
-                selectinload(WorkOrder.forklift),
+                selectinload(WorkOrder.forklift).selectinload(Forklift.customer),
                 selectinload(WorkOrder.schedule),
                 selectinload(WorkOrder.plan),
                 selectinload(WorkOrder.technician),
@@ -233,7 +234,9 @@ class MaintenanceRepository:
         for k, v in changes.items():
             setattr(wo, k, v)
         await self.db.flush()
-        await self.db.refresh(wo)
+        # Scope the refresh to just the changed columns so already-loaded
+        # relationships (e.g. .forklift) aren't expired out from under callers.
+        await self.db.refresh(wo, attribute_names=list(changes.keys()))
         return wo
 
     # ── Costs ────────────────────────────────────────────────────────────────

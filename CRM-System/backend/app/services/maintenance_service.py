@@ -7,6 +7,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.events import event_bus
 from app.models.maintenance_plan import IntervalType, MaintenancePlan
 from app.models.maintenance_schedule import MaintenanceSchedule, ScheduleStatus
 from app.models.work_order import WorkOrder, WorkOrderStatus
@@ -248,7 +249,9 @@ class MaintenanceService:
             await self._advance_schedule(wo.schedule_id, wo.forklift_id)
 
         await self.db.commit()
-        return await self._repo.get_work_order_by_id(wo.id)
+        completed_wo = await self._repo.get_work_order_by_id(wo.id)
+        await event_bus.emit("work_order.completed", db=self.db, work_order=completed_wo)
+        return completed_wo
 
     async def verify_work_order(self, wo_id: int, user_id: int) -> WorkOrder:
         wo = await self._require_wo(wo_id)

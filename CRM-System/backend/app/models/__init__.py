@@ -45,14 +45,17 @@ from app.models.payment import Payment
 from app.models.payment_allocation import PaymentAllocation
 from app.models.lead import Lead
 from app.models.lead_note import LeadNote
+from app.models.notification import Notification
 from app.models.product import Product, ProductCompatBrand, ProductImage, ProductSpec
 from app.models.revenue_recognition import RevenueRecognition
 from app.models.revoked_token import RevokedToken
 from app.models.role import Role
+from app.models.scheduler_lock import SchedulerLock
 from app.models.user import User
 
 __all__ = [
-    "Role", "User", "Customer", "Lead", "LeadNote", "ActivityLog", "RevokedToken",
+    "Role", "User", "Customer", "Lead", "LeadNote", "ActivityLog", "RevokedToken", "Notification",
+    "SchedulerLock",
     "AssetMovement", "MovementHistory",
     "Brand", "ProductCategory",
     "Product", "ProductSpec", "ProductImage", "ProductCompatBrand",

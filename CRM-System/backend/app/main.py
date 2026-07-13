@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, Request
+from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -26,9 +27,14 @@ from app.database.session import AsyncSessionLocal, engine
 # Import all models so Base.metadata knows about every table before create_all runs.
 import app.models as _models  # noqa: F401, E402
 
-from app.routes import activity, auth, billing, customers, dashboard, forklifts, inventory, leads, maintenance, movements, quotations, rentals, reports, roles, users, uploads
+from app.routes import activity, auth, billing, customers, dashboard, forklifts, inventory, leads, maintenance, movements, notifications, quotations, rentals, reports, roles, users, uploads
 from app.routes.catalog import router as catalog_router
+from app.scheduler import shutdown_scheduler, start_scheduler
+from app.services.notification_subscribers import register_notification_subscribers
 from app.services.rbac_service import RBACService
+
+# Wire domain-event subscribers (Phase 1, Step 3) once at import time.
+register_notification_subscribers()
 
 
 async def _apply_sqlite_migrations(conn) -> None:
@@ -114,7 +120,9 @@ async def lifespan(app: FastAPI):
             await _apply_sqlite_migrations(conn)
     async with AsyncSessionLocal() as db:
         await RBACService(db).seed_roles()
+    start_scheduler()
     yield
+    shutdown_scheduler()
     await engine.dispose()
 
 
@@ -152,6 +160,7 @@ app.include_router(maintenance.router, prefix="/api/v1")
 app.include_router(inventory.router, prefix="/api/v1")
 app.include_router(billing.router, prefix="/api/v1")
 app.include_router(uploads.router, prefix="/api/v1")
+app.include_router(notifications.router, prefix="/api/v1")
 
 _uploads_dir = Path(settings.UPLOAD_DIR)
 _uploads_dir.mkdir(parents=True, exist_ok=True)
@@ -171,7 +180,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     return JSONResponse(
         status_code=422,
         content={
-            "detail": exc.errors(),
+            "detail": jsonable_encoder(exc.errors()),
             "error_id": error_id,
         },
     )

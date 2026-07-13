@@ -178,7 +178,11 @@ class RentalRepository:
             setattr(contract, key, value)
         try:
             await self.db.flush()
-            await self.db.refresh(contract)
+            # Scope the refresh to just the changed columns — refreshing with no
+            # attribute_names expires already-loaded relationships (e.g. .items,
+            # .customer), which then crash on next access (unawaited lazy-load
+            # outside of an async context).
+            await self.db.refresh(contract, attribute_names=list(changes.keys()))
             logger.info("Rental contract updated: id=%s", contract.id)
             return contract
         except IntegrityError:

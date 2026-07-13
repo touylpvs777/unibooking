@@ -5,6 +5,7 @@ from datetime import date, datetime, timezone
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.events import event_bus
 from app.models.rental_contract import RentalContract, RentalContractStatus
 from app.models.rental_contract_item import ContractItemStatus
 from app.models.rental_contract_status_history import RentalContractStatusHistory
@@ -150,6 +151,8 @@ class RentalWorkflowService:
         # Auto-generate initial billing cycles
         await self._billing.on_contract_activated(contract, user_id)
         await self.db.commit()
+
+        await event_bus.emit("rental.activated", db=self.db, contract=contract)
 
         return contract
 

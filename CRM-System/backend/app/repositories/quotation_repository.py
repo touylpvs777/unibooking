@@ -150,7 +150,9 @@ class QuotationRepository:
             setattr(quotation, key, value)
         try:
             await self.db.flush()
-            await self.db.refresh(quotation)
+            # Scope the refresh to just the changed columns so already-loaded
+            # relationships (e.g. .customer) aren't expired out from under callers.
+            await self.db.refresh(quotation, attribute_names=list(changes.keys()))
             logger.info("Quotation updated: id=%s", quotation.id)
             return quotation
         except IntegrityError:

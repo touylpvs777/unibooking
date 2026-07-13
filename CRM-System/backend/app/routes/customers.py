@@ -6,7 +6,7 @@ from app.database.session import get_db
 from app.dependencies import get_current_user
 from app.models.activity_log import ActionType, EntityType
 from app.models.user import User
-from app.schemas.customer import CustomerCreate, CustomerOut, CustomerUpdate
+from app.schemas.customer import Customer360Out, CustomerCreate, CustomerOut, CustomerUpdate
 from app.services.activity_log_service import ActivityLogService
 from app.services.customer_service import CustomerService
 
@@ -53,6 +53,19 @@ async def get_customer(
     if not customer:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer not found")
     return customer
+
+
+@router.get("/{customer_id}/overview", response_model=Customer360Out)
+async def get_customer_overview(
+    customer_id: int,
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user),
+):
+    """Customer 360: profile + forklifts + rental contracts + work orders + invoices."""
+    overview = await CustomerService(db).get_360(customer_id)
+    if not overview:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer not found")
+    return overview
 
 
 @router.patch("/{customer_id}", response_model=CustomerOut)

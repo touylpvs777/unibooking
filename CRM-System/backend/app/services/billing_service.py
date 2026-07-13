@@ -833,7 +833,15 @@ class BillingService:
     async def generate_next_billing_cycles(
         self, contract_id: int, user_id: int,
     ) -> list[RentalBillingCycle]:
-        contract = await self.db.get(RentalContract, contract_id)
+        # selectinload avoids a lazy-load of `contract.items` below, which
+        # raises MissingGreenlet on an AsyncSession outside an awaited context.
+        contract = (
+            await self.db.execute(
+                select(RentalContract)
+                .where(RentalContract.id == contract_id)
+                .options(selectinload(RentalContract.items))
+            )
+        ).scalar_one_or_none()
         if contract is None:
             raise HTTPException(status_code=404, detail="Contract not found")
 
