@@ -23,4 +23,5 @@ class ActivityLogOut(BaseModel):
     entity_type: EntityType | None
     entity_id: int | None
     details: dict | None = None
+    ip_address: str | None = None
     created_at: datetime

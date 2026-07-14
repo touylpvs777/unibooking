@@ -1,8 +1,8 @@
 import enum
 from datetime import datetime
 
-from sqlalchemy import DateTime, Integer, String, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
 from app.database.base import Base
@@ -34,6 +34,15 @@ class Notification(Base):
     subject: Mapped[str | None] = mapped_column(String(300), nullable=True)
     message: Mapped[str] = mapped_column(Text, nullable=False)
 
+    # Staff-facing alerts (Smart Audit, Step 3): links the notification to the
+    # subscribed User so the frontend bell can show "my" alerts + unread state.
+    # Nullable — customer-facing notifications (WhatsApp/email to a customer)
+    # have no corresponding User row.
+    recipient_user_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=True, index=True
+    )
+    is_read: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+
     provider_message_id: Mapped[str | None] = mapped_column(String(200), nullable=True)
     error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
 
@@ -46,3 +55,5 @@ class Notification(Base):
         DateTime(timezone=True), server_default=func.now(), nullable=False, index=True,
     )
     sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    recipient_user: Mapped["User | None"] = relationship("User")

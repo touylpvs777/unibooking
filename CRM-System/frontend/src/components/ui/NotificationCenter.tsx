@@ -1,15 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Bell, Users, TrendingUp, FileText, ClipboardList, Truck, Activity as ActivityIcon } from 'lucide-react'
-import { getActivity } from '@/api/activity'
-import type { ActivityLog } from '@/types/activity'
+import { Bell, CheckCheck, AlertTriangle } from 'lucide-react'
+import { getMyNotifications, getMyUnreadCount, markNotificationRead, markAllNotificationsRead } from '@/api/notifications'
+import type { NotificationItem } from '@/types/notification'
 import './NotificationCenter.css'
-
-const ENTITY_ICONS: Record<string, React.ElementType> = {
-  customer: Users, lead: TrendingUp, quotation: FileText,
-  rental_contract: ClipboardList, forklift: Truck,
-}
 
 function useRelativeTime() {
   const { t } = useTranslation()
@@ -24,32 +18,31 @@ function useRelativeTime() {
   }
 }
 
-function actionLabel(action: string): string {
-  return action.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+function eventLabel(eventType: string | null): string {
+  if (!eventType) return ''
+  return eventType.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
 export default function NotificationCenter() {
   const { t } = useTranslation()
   const relativeTime = useRelativeTime()
   const [isOpen, setIsOpen] = useState(false)
-  const [activities, setActivities] = useState<ActivityLog[]>([])
+  const [items, setItems] = useState<NotificationItem[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
   const ref = useRef<HTMLDivElement>(null)
-  const navigate = useNavigate()
+
+  const loadUnreadCount = useCallback(() => {
+    getMyUnreadCount().then(({ data }) => setUnreadCount(data.count)).catch(() => {})
+  }, [])
 
   useEffect(() => {
-    getActivity({ limit: 10 })
-      .then(({ data }) => {
-        setActivities(data)
-        const lastRead = localStorage.getItem('dk-last-notification-read')
-        if (lastRead) {
-          setUnreadCount(data.filter((a) => new Date(a.created_at) > new Date(lastRead)).length)
-        } else {
-          setUnreadCount(data.length)
-        }
-      })
-      .catch(() => {})
-  }, [])
+    loadUnreadCount()
+  }, [loadUnreadCount])
+
+  useEffect(() => {
+    if (!isOpen) return
+    getMyNotifications({ limit: 10 }).then(({ data }) => setItems(data)).catch(() => {})
+  }, [isOpen])
 
   useEffect(() => {
     if (!isOpen) return
@@ -64,11 +57,24 @@ export default function NotificationCenter() {
     if (e.key === 'Escape') setIsOpen(false)
   }, [])
 
-  const handleOpen = () => {
-    setIsOpen((v) => !v)
-    if (!isOpen) {
-      localStorage.setItem('dk-last-notification-read', new Date().toISOString())
+  const handleItemClick = async (item: NotificationItem) => {
+    if (item.is_read) return
+    try {
+      await markNotificationRead(item.id)
+      setItems((current) => current.map((n) => (n.id === item.id ? { ...n, is_read: true } : n)))
+      setUnreadCount((count) => Math.max(0, count - 1))
+    } catch {
+      // non-fatal — leave item unread, user can retry
+    }
+  }
+
+  const handleMarkAllRead = async () => {
+    try {
+      await markAllNotificationsRead()
+      setItems((current) => current.map((n) => ({ ...n, is_read: true })))
       setUnreadCount(0)
+    } catch {
+      // non-fatal
     }
   }
 
@@ -76,7 +82,7 @@ export default function NotificationCenter() {
     <div className="notification-center" ref={ref} onKeyDown={handleKeyDown}>
       <button
         className="notification-trigger"
-        onClick={handleOpen}
+        onClick={() => setIsOpen((v) => !v)}
         aria-label={unreadCount > 0 ? t('header.notificationsUnread', { count: unreadCount }) : t('header.notifications')}
         aria-expanded={isOpen}
         aria-haspopup="true"
@@ -91,32 +97,31 @@ export default function NotificationCenter() {
             <span className="notification-header-title">{t('header.notifications')}</span>
           </div>
           <div className="notification-list" role="group">
-            {activities.length === 0 ? (
+            {items.length === 0 ? (
               <div className="notification-empty" role="status">{t('header.noRecentActivity')}</div>
             ) : (
-              activities.map((a) => {
-                const Icon = ENTITY_ICONS[a.entity_type ?? ''] ?? ActivityIcon
-                return (
-                  <button
-                    key={a.id}
-                    className="notification-item"
-                    role="menuitem"
-                    onClick={() => { setIsOpen(false); navigate('/activity') }}
-                  >
-                    <div className="notification-item-icon"><Icon size={14} /></div>
-                    <div className="notification-item-content">
-                      <div className="notification-item-text">{actionLabel(a.action)}</div>
-                      <div className="notification-item-meta">
-                        {a.user?.full_name ?? a.user?.username ?? t('header.systemUser')} · {relativeTime(a.created_at)}
-                      </div>
+              items.map((item) => (
+                <button
+                  key={item.id}
+                  className={`notification-item${!item.is_read ? ' notification-item-unread' : ''}`}
+                  role="menuitem"
+                  onClick={() => handleItemClick(item)}
+                >
+                  <div className="notification-item-icon"><AlertTriangle size={14} /></div>
+                  <div className="notification-item-content">
+                    <div className="notification-item-text">{item.subject ?? eventLabel(item.event_type)}</div>
+                    <div className="notification-item-meta">
+                      {item.message} · {relativeTime(item.created_at)}
                     </div>
-                  </button>
-                )
-              })
+                  </div>
+                  {!item.is_read && <span className="notification-item-dot" aria-hidden="true" />}
+                </button>
+              ))
             )}
           </div>
-          <button className="notification-footer" role="menuitem" onClick={() => { setIsOpen(false); navigate('/activity') }}>
-            {t('header.viewAllActivity')}
+          <button className="notification-footer" role="menuitem" onClick={handleMarkAllRead} disabled={unreadCount === 0}>
+            <CheckCheck size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />
+            {t('header.markAllRead')}
           </button>
         </div>
       )}

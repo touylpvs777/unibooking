@@ -77,6 +77,67 @@
     "createdAt": "สร้างเมื่อ",
     "updatedAt": "อัปเดตเมื่อ"
   },
+  "settings": {
+    "title": "การตั้งค่าทั่วโลก",
+    "subtitle": "จัดการค่าตั้งต้นหลักขององค์กรใน ERP",
+    "loading": "กำลังโหลดการตั้งค่า…",
+    "save": "บันทึกการเปลี่ยนแปลง",
+    "saving": "กำลังบันทึก…",
+    "saveSuccess": "อัปเดตการตั้งค่าเรียบร้อยแล้ว",
+    "saveError": "ไม่สามารถบันทึกการตั้งค่าได้ในขณะนี้",
+    "loadError": "ไม่สามารถโหลดการตั้งค่าได้ในขณะนี้",
+    "tabs": {
+      "company": "โปรไฟล์บริษัท",
+      "financial": "ค่าตั้งต้นทางการเงิน",
+      "system": "ตัวแปรระบบ",
+      "notifications": "การแจ้งเตือน"
+    },
+    "company": {
+      "description": "ค่าตั้งต้นโปรไฟล์บริษัท",
+      "companyName": "ชื่อบริษัท",
+      "address": "ที่อยู่",
+      "phone": "โทรศัพท์",
+      "logoUrl": "URL โลโก้"
+    },
+    "financial": {
+      "description": "ค่าตั้งต้นทางการเงิน",
+      "vatRate": "อัตรา VAT (%)",
+      "defaultCurrency": "สกุลเงินเริ่มต้น",
+      "defaultPaymentTerms": "เงื่อนไขการชำระเงินเริ่มต้น"
+    },
+    "system": {
+      "description": "ตัวแปรระบบ",
+      "equipmentTypes": "ประเภทอุปกรณ์",
+      "repairStatuses": "สถานะการซ่อมแซม"
+    },
+    "notifications": {
+      "description": "สมัครรับการแจ้งเตือนทางอีเมลสำหรับเหตุการณ์สำคัญของระบบ คุณจะได้รับการแจ้งเตือนทุกครั้งที่มีเหตุการณ์ที่ติดตามเกิดขึ้น ยกเว้นการกระทำของคุณเอง",
+      "loadError": "ไม่สามารถโหลดการตั้งค่าการแจ้งเตือนได้ในขณะนี้",
+      "saveError": "ไม่สามารถอัปเดตการตั้งค่านี้ได้ในขณะนี้",
+      "groups": {
+        "critical": "สำคัญและการลบ",
+        "sales": "การขายและการเช่า",
+        "billing": "การเงิน",
+        "operations": "การดำเนินงาน"
+      },
+      "events": {
+        "customerDeleted": "ลบลูกค้าแล้ว",
+        "forkliftDeleted": "ลบรถโฟล์คลิฟท์แล้ว",
+        "productDeleted": "ลบสินค้าในแคตตาล็อกแล้ว",
+        "quotationApproved": "ใบเสนอราคาได้รับการอนุมัติ",
+        "quotationSent": "ส่งใบเสนอราคาให้ลูกค้าแล้ว",
+        "contractActivated": "สัญญาเช่าเปิดใช้งานแล้ว",
+        "contractCancelled": "ยกเลิกสัญญาเช่าแล้ว",
+        "invoiceIssued": "ออกใบแจ้งหนี้แล้ว",
+        "paymentRecorded": "บันทึกการชำระเงินแล้ว",
+        "paymentRejected": "การชำระเงินถูกปฏิเสธ",
+        "depositRefunded": "คืนเงินมัดจำแล้ว",
+        "forkliftStatusChanged": "สถานะรถโฟล์คลิฟท์เปลี่ยนแปลง",
+        "inventoryImportExecuted": "นำเข้าข้อมูลคลังสินค้าแบบกลุ่มแล้ว",
+        "settingUpdated": "อัปเดตการตั้งค่าระบบแล้ว"
+      }
+    }
+  },
   "customers": {
     "status": {
       "active": "ใช้งานอยู่",
@@ -239,7 +300,8 @@
     "viewAllActivity": "ดูกิจกรรมทั้งหมด →",
     "searchResults": "ผลการค้นหา",
     "breadcrumb": "เส้นทางนำทาง",
-    "userActions": "การดำเนินการของผู้ใช้"
+    "userActions": "การดำเนินการของผู้ใช้",
+    "markAllRead": "ทำเครื่องหมายว่าอ่านทั้งหมดแล้ว"
   },
   "login": {
     "subtitle": "เข้าสู่ระบบเพื่อดำเนินการต่อ",
@@ -1409,7 +1471,16 @@
       "user": "ผู้ใช้",
       "customer": "ลูกค้า",
       "lead": "ลูกค้าเป้าหมาย",
-      "note": "หมายเหตุ"
+      "note": "หมายเหตุ",
+      "invoice": "ใบแจ้งหนี้",
+      "payment": "การชำระเงิน",
+      "deposit": "เงินมัดจำ",
+      "revenue_recognition": "การรับรู้รายได้",
+      "project": "โครงการ",
+      "project_milestone": "จุดสำคัญของโครงการ",
+      "setting": "การตั้งค่า",
+      "inventory_import": "การนำเข้าข้อมูลคลังสินค้า",
+      "notification_preference": "การตั้งค่าการแจ้งเตือน"
     },
     "table": {
       "timestamp": "เวลาที่บันทึก",
@@ -1419,7 +1490,8 @@
       "id": "รหัส",
       "details": "รายละเอียด",
       "noActivityFound": "ไม่พบกิจกรรม",
-      "noActivityYet": "กิจกรรมจะปรากฏที่นี่เมื่อผู้ใช้เริ่มใช้งานระบบ"
+      "noActivityYet": "กิจกรรมจะปรากฏที่นี่เมื่อผู้ใช้เริ่มใช้งานระบบ",
+      "ipAddress": "ที่อยู่ IP"
     },
     "details": {
       "group": "กลุ่ม: {{group}}",
@@ -1428,7 +1500,8 @@
       "title": "รายละเอียด",
       "noneRecorded": "ไม่มีรายละเอียดเพิ่มเติมที่บันทึกไว้",
       "fieldsModified": "ฟิลด์ที่แก้ไข:",
-      "drawerTitle": "รายละเอียดกิจกรรม"
+      "drawerTitle": "รายละเอียดกิจกรรม",
+      "ipNotTracked": "ไม่ได้บันทึก"
     },
     "pagination": {
       "showing": "แสดง {{start}}–{{end}} จาก {{total}}"

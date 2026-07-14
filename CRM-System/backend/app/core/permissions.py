@@ -48,6 +48,9 @@ class PermissionName(str, enum.Enum):
     PROJECT_APPROVE = "project.approve"
     PROJECT_BOQ_MANAGE = "project.boq_manage"
     PROJECT_MILESTONE_UPDATE = "project.milestone_update"
+    VIEW_SETTINGS = "settings.view"
+    MANAGE_SETTINGS = "settings.manage"
+    MANAGE_NOTIFICATION_PREFERENCES = "notification_preferences.manage"
 
 
 # Design-time mapping — permissions are constants, not runtime config.
@@ -92,6 +95,9 @@ ROLE_PERMISSIONS: dict[RoleName, frozenset[PermissionName]] = {
         PermissionName.PROJECT_APPROVE,
         PermissionName.PROJECT_BOQ_MANAGE,
         PermissionName.PROJECT_MILESTONE_UPDATE,
+        PermissionName.VIEW_SETTINGS,
+        PermissionName.MANAGE_SETTINGS,
+        PermissionName.MANAGE_NOTIFICATION_PREFERENCES,
     }),
     RoleName.SALES: frozenset({
         PermissionName.VIEW_DASHBOARD,
@@ -108,6 +114,7 @@ ROLE_PERMISSIONS: dict[RoleName, frozenset[PermissionName]] = {
         PermissionName.RENTAL_UPDATE,
         PermissionName.BILLING_READ,
         PermissionName.PROJECT_READ,
+        PermissionName.VIEW_SETTINGS,
     }),
     RoleName.SUPPORT: frozenset({
         PermissionName.VIEW_DASHBOARD,
@@ -121,6 +128,7 @@ ROLE_PERMISSIONS: dict[RoleName, frozenset[PermissionName]] = {
         # milestone status, but not create/approve/edit BOQ.
         PermissionName.PROJECT_READ,
         PermissionName.PROJECT_MILESTONE_UPDATE,
+        PermissionName.VIEW_SETTINGS,
     }),
 }
 

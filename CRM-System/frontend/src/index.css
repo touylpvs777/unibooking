@@ -1,5 +1,21 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@300;400;500;600;700&display=swap');
 @import './styles/tokens.css';
 @import './styles/breakpoints.css';
+
+body * {
+    font-family: 'Noto Sans Lao', sans-serif !important;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body, #root {
+    height: 100%;
+}
 
 *, *::before, *::after {
   box-sizing: border-box;

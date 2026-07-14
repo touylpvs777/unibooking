@@ -77,6 +77,67 @@
     "createdAt": "Created",
     "updatedAt": "Updated"
   },
+  "settings": {
+    "title": "Global Settings",
+    "subtitle": "Manage the core organization defaults across the ERP.",
+    "loading": "Loading settings…",
+    "save": "Save changes",
+    "saving": "Saving…",
+    "saveSuccess": "Settings updated successfully.",
+    "saveError": "Unable to save settings right now.",
+    "loadError": "Unable to load settings right now.",
+    "tabs": {
+      "company": "Company Profile",
+      "financial": "Financial Defaults",
+      "system": "System Variables",
+      "notifications": "Notification Preferences"
+    },
+    "company": {
+      "description": "Company profile defaults",
+      "companyName": "Company Name",
+      "address": "Address",
+      "phone": "Phone",
+      "logoUrl": "Logo URL"
+    },
+    "financial": {
+      "description": "Financial defaults",
+      "vatRate": "VAT Rate (%)",
+      "defaultCurrency": "Default Currency",
+      "defaultPaymentTerms": "Default Payment Terms"
+    },
+    "system": {
+      "description": "System variables",
+      "equipmentTypes": "Equipment Types",
+      "repairStatuses": "Repair Statuses"
+    },
+    "notifications": {
+      "description": "Subscribe to email alerts for important system events. You'll be notified whenever a tracked event occurs, except for actions you perform yourself.",
+      "loadError": "Unable to load notification preferences right now.",
+      "saveError": "Unable to update this preference right now.",
+      "groups": {
+        "critical": "Critical & Deletions",
+        "sales": "Sales & Rentals",
+        "billing": "Billing",
+        "operations": "Operations"
+      },
+      "events": {
+        "customerDeleted": "Customer deleted",
+        "forkliftDeleted": "Forklift deleted",
+        "productDeleted": "Catalog product deleted",
+        "quotationApproved": "Quotation approved",
+        "quotationSent": "Quotation sent to customer",
+        "contractActivated": "Rental contract activated",
+        "contractCancelled": "Rental contract cancelled",
+        "invoiceIssued": "Invoice issued",
+        "paymentRecorded": "Payment recorded",
+        "paymentRejected": "Payment rejected",
+        "depositRefunded": "Deposit refunded",
+        "forkliftStatusChanged": "Forklift status changed",
+        "inventoryImportExecuted": "Inventory bulk import executed",
+        "settingUpdated": "Global setting updated"
+      }
+    }
+  },
   "customers": {
     "status": {
       "active": "Active",
@@ -283,10 +344,22 @@
       "pendingPOs": "Pending POs"
     },
     "quickNav": {
-      "parts": { "label": "Spare Parts", "desc": "Browse inventory" },
-      "warehouses": { "label": "Warehouses", "desc": "Manage locations" },
-      "purchaseOrders": { "label": "Purchase Orders", "desc": "Procurement" },
-      "catalog": { "label": "Product Catalog", "desc": "Full catalog" }
+      "parts": {
+        "label": "Spare Parts",
+        "desc": "Browse inventory"
+      },
+      "warehouses": {
+        "label": "Warehouses",
+        "desc": "Manage locations"
+      },
+      "purchaseOrders": {
+        "label": "Purchase Orders",
+        "desc": "Procurement"
+      },
+      "catalog": {
+        "label": "Product Catalog",
+        "desc": "Full catalog"
+      }
     },
     "lowStock": {
       "title": "Low Stock Alerts",
@@ -331,12 +404,30 @@
       "received": "Received"
     },
     "quickNav": {
-      "invoices": { "label": "Invoices", "desc": "Create and manage" },
-      "payments": { "label": "Payments", "desc": "Track collection" },
-      "deposits": { "label": "Deposits", "desc": "Security deposits" },
-      "statements": { "label": "Statements", "desc": "Account activity" },
-      "analytics": { "label": "Analytics", "desc": "Charts & trends" },
-      "revenue": { "label": "Revenue", "desc": "Recognition schedule" }
+      "invoices": {
+        "label": "Invoices",
+        "desc": "Create and manage"
+      },
+      "payments": {
+        "label": "Payments",
+        "desc": "Track collection"
+      },
+      "deposits": {
+        "label": "Deposits",
+        "desc": "Security deposits"
+      },
+      "statements": {
+        "label": "Statements",
+        "desc": "Account activity"
+      },
+      "analytics": {
+        "label": "Analytics",
+        "desc": "Charts & trends"
+      },
+      "revenue": {
+        "label": "Revenue",
+        "desc": "Recognition schedule"
+      }
     },
     "invoiceStatusChart": {
       "title": "Status Distribution",
@@ -950,7 +1041,16 @@
       "user": "User",
       "customer": "Customer",
       "lead": "Lead",
-      "note": "Note"
+      "note": "Note",
+      "invoice": "Invoice",
+      "payment": "Payment",
+      "deposit": "Deposit",
+      "revenue_recognition": "Revenue Recognition",
+      "project": "Project",
+      "project_milestone": "Project Milestone",
+      "setting": "Setting",
+      "inventory_import": "Inventory Import",
+      "notification_preference": "Notification Preference"
     },
     "table": {
       "timestamp": "Timestamp",
@@ -960,7 +1060,8 @@
       "id": "ID",
       "details": "Details",
       "noActivityFound": "No activity found",
-      "noActivityYet": "Activity will appear here once users interact with the system."
+      "noActivityYet": "Activity will appear here once users interact with the system.",
+      "ipAddress": "IP Address"
     },
     "details": {
       "group": "Group: {{group}}",
@@ -969,7 +1070,8 @@
       "title": "Details",
       "noneRecorded": "No additional details recorded.",
       "fieldsModified": "Fields modified:",
-      "drawerTitle": "Activity Details"
+      "drawerTitle": "Activity Details",
+      "ipNotTracked": "Not tracked"
     },
     "pagination": {
       "showing": "Showing {{start}}–{{end}} of {{total}}"
@@ -1019,10 +1121,22 @@
       "searchPlaceholder": "Search equipment..."
     },
     "quickActions": {
-      "register": { "label": "Register Equipment", "desc": "Add new forklift" },
-      "movement": { "label": "Create Movement", "desc": "Transfer equipment" },
-      "maintenance": { "label": "Schedule Service", "desc": "Preventive maintenance" },
-      "rental": { "label": "New Rental", "desc": "Assign to contract" }
+      "register": {
+        "label": "Register Equipment",
+        "desc": "Add new forklift"
+      },
+      "movement": {
+        "label": "Create Movement",
+        "desc": "Transfer equipment"
+      },
+      "maintenance": {
+        "label": "Schedule Service",
+        "desc": "Preventive maintenance"
+      },
+      "rental": {
+        "label": "New Rental",
+        "desc": "Assign to contract"
+      }
     },
     "gallery": {
       "noPhotos": "No photos uploaded",
@@ -1209,25 +1323,20 @@
     "pageOf": "Page {{page}} of {{pages}} ({{total}} total)",
     "viewAll": "View All →",
     "browseAllProducts": "Browse All Products →",
-
     "hero": {
       "title": "Product Catalog",
       "subtitle": "Forklifts · Warehouse Equipment · Spare Parts · Attachments",
       "searchPlaceholder": "Search {{count}} products by name, SKU, model..."
     },
-
     "categorySlider": {
       "title": "Browse by Category"
     },
-
     "brandShowcase": {
       "title": "Shop by Brand"
     },
-
     "megaMenu": {
       "allCategories": "All Categories"
     },
-
     "brands": {
       "title": "Brands",
       "subtitle": "{{count}} brands",
@@ -1264,7 +1373,6 @@
         "message": "Delete brand \"{{name}}\"? Products referencing this brand will have their brand cleared."
       }
     },
-
     "categories": {
       "title": "Categories",
       "subtitle": "{{count}} categories (3-level tree)",
@@ -1300,7 +1408,6 @@
         "message": "Delete \"{{name}}\"? This will fail if the category has children or products assigned to it."
       }
     },
-
     "products": {
       "filterAllTypes": "All Types",
       "forSale": "For Sale",
@@ -1352,7 +1459,6 @@
         "createProduct": "Create Product"
       }
     },
-
     "productDetail": {
       "loadError": "Product not found or failed to load.",
       "backToCatalog": "Back to Catalog",
@@ -1361,7 +1467,6 @@
       "compatibleWith": "Compatible with",
       "specifications": "Specifications"
     },
-
     "import": {
       "title": "Import Products",
       "subtitle": "Upload an Excel file to bulk-import products, brands, and categories.",
@@ -1824,7 +1929,8 @@
     "viewAllActivity": "View all activity →",
     "searchResults": "Search results",
     "breadcrumb": "Breadcrumb",
-    "userActions": "User actions"
+    "userActions": "User actions",
+    "markAllRead": "Mark all as read"
   },
   "login": {
     "subtitle": "Sign in to continue",

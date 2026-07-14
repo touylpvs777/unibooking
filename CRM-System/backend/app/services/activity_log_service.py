@@ -1,10 +1,14 @@
+import logging
 from datetime import datetime
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from app.core.request_context import get_current_ip
 from app.models.activity_log import ActionType, ActivityLog, EntityType
+
+logger = logging.getLogger("app.activity_log")
 
 
 class ActivityLogService:
@@ -25,9 +29,27 @@ class ActivityLogService:
             entity_type=entity_type.value if entity_type else None,
             entity_id=entity_id,
             details=details,
+            ip_address=get_current_ip(),
         )
         self.db.add(entry)
         await self.db.commit()
+
+        # Smart Audit & Notification Preferences (Step 3): every tracked activity
+        # automatically runs a notification-preference check. Must never break
+        # the caller — a failed alert fan-out is logged and swallowed.
+        try:
+            from app.services.alert_service import check_and_notify
+
+            await check_and_notify(
+                self.db,
+                event_type=entry.action,
+                entity_type=entry.entity_type,
+                entity_id=entry.entity_id,
+                actor_user_id=user_id,
+            )
+        except Exception:
+            logger.exception("Notification-preference check failed for action %r", entry.action)
+
         return entry
 
     async def get_all(

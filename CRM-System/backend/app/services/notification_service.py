@@ -6,7 +6,7 @@ from datetime import UTC, datetime
 from email.message import EmailMessage
 
 import httpx
-from sqlalchemy import select
+from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
@@ -140,6 +140,7 @@ class NotificationService:
             event_type=data.event_type,
             entity_type=data.entity_type,
             entity_id=data.entity_id,
+            recipient_user_id=data.recipient_user_id,
             sent_at=datetime.now(UTC) if status_value == NotificationStatus.SENT.value else None,
         )
         self.db.add(notification)
@@ -156,3 +157,45 @@ class NotificationService:
             select(Notification).order_by(Notification.created_at.desc()).offset(skip).limit(limit)
         )
         return list(result.scalars().all())
+
+    # ── Staff-facing "my alerts" (Smart Audit bell) ────────────────────────
+
+    async def get_for_user(
+        self, user_id: int, skip: int = 0, limit: int = 50, unread_only: bool = False
+    ) -> list[Notification]:
+        stmt = (
+            select(Notification)
+            .where(Notification.recipient_user_id == user_id)
+            .order_by(Notification.created_at.desc())
+        )
+        if unread_only:
+            stmt = stmt.where(Notification.is_read.is_(False))
+        stmt = stmt.offset(skip).limit(limit)
+        result = await self.db.execute(stmt)
+        return list(result.scalars().all())
+
+    async def get_unread_count(self, user_id: int) -> int:
+        result = await self.db.execute(
+            select(func.count())
+            .select_from(Notification)
+            .where(Notification.recipient_user_id == user_id, Notification.is_read.is_(False))
+        )
+        return int(result.scalar_one())
+
+    async def mark_read(self, notification_id: int, user_id: int) -> Notification | None:
+        notification = await self.get_by_id(notification_id)
+        if notification is None or notification.recipient_user_id != user_id:
+            return None
+        notification.is_read = True
+        await self.db.commit()
+        await self.db.refresh(notification)
+        return notification
+
+    async def mark_all_read(self, user_id: int) -> int:
+        result = await self.db.execute(
+            update(Notification)
+            .where(Notification.recipient_user_id == user_id, Notification.is_read.is_(False))
+            .values(is_read=True)
+        )
+        await self.db.commit()
+        return result.rowcount or 0

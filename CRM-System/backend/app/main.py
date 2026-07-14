@@ -13,7 +13,7 @@ from sqlalchemy import text
 from sqlalchemy.exc import OperationalError
 
 from app.core.config import settings
-from app.core.middleware import RequestIdMiddleware, SecurityHeadersMiddleware
+from app.core.middleware import ClientIPMiddleware, RequestIdMiddleware, SecurityHeadersMiddleware
 
 logging.basicConfig(
     level=logging.DEBUG if settings.DEBUG else logging.INFO,
@@ -29,6 +29,7 @@ import app.models as _models  # noqa: F401, E402
 
 from app.routes import activity, auth, billing, customers, dashboard, forklifts, inventory, leads, maintenance, movements, notifications, projects, quotations, rentals, reports, roles, users, uploads
 from app.routes.catalog import router as catalog_router
+from app.routes.settings import router as settings_router
 from app.scheduler import shutdown_scheduler, start_scheduler
 from app.services.notification_subscribers import register_notification_subscribers
 from app.services.rbac_service import RBACService
@@ -45,6 +46,22 @@ async def _apply_sqlite_migrations(conn) -> None:
     # ── leads.source ───────────────────────────────────────────────────────
     try:
         await conn.execute(text("ALTER TABLE leads ADD COLUMN source VARCHAR(50)"))
+    except OperationalError:
+        pass  # column already exists
+
+    # ── activity_logs.ip_address ─────────────────────────────────────────
+    try:
+        await conn.execute(text("ALTER TABLE activity_logs ADD COLUMN ip_address VARCHAR(45)"))
+    except OperationalError:
+        pass  # column already exists
+
+    # ── notifications.recipient_user_id / is_read ───────────────────────────
+    try:
+        await conn.execute(text("ALTER TABLE notifications ADD COLUMN recipient_user_id INTEGER"))
+    except OperationalError:
+        pass  # column already exists
+    try:
+        await conn.execute(text("ALTER TABLE notifications ADD COLUMN is_read BOOLEAN NOT NULL DEFAULT 0"))
     except OperationalError:
         pass  # column already exists
 
@@ -141,6 +158,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(ClientIPMiddleware)
 
 
 app.include_router(auth.router, prefix="/api/v1")
@@ -162,6 +180,7 @@ app.include_router(billing.router, prefix="/api/v1")
 app.include_router(uploads.router, prefix="/api/v1")
 app.include_router(notifications.router, prefix="/api/v1")
 app.include_router(projects.router, prefix="/api/v1")
+app.include_router(settings_router, prefix="/api/v1")
 
 _uploads_dir = Path(settings.UPLOAD_DIR)
 _uploads_dir.mkdir(parents=True, exist_ok=True)

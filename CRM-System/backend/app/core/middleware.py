@@ -7,6 +7,9 @@ import logging
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
+from starlette.types import ASGIApp, Receive, Scope, Send
+
+from app.core.request_context import set_current_ip
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +29,29 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         for key, value in _SECURITY_HEADERS.items():
             response.headers.setdefault(key, value)
         return response
+
+
+class ClientIPMiddleware:
+    """
+    Plain ASGI middleware (not BaseHTTPMiddleware) so the contextvar set here
+    survives into the same task that runs the route handler — BaseHTTPMiddleware
+    runs `call_next` via an anyio task group, which spawns a *new* task and
+    silently drops contextvar writes made before the call.
+    """
+
+    def __init__(self, app: ASGIApp) -> None:
+        self.app = app
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+
+        request = Request(scope)
+        forwarded = request.headers.get("x-forwarded-for")
+        ip = forwarded.split(",")[0].strip() if forwarded else (request.client.host if request.client else None)
+        set_current_ip(ip)
+        await self.app(scope, receive, send)
 
 
 class RequestIdMiddleware(BaseHTTPMiddleware):

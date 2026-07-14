@@ -1,11 +1,14 @@
-import { NavLink } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   LayoutDashboard, Users, TrendingUp, Activity, BarChart2, Settings,
   Package, Truck, FileText, ClipboardList,
   Building2, ChevronDown, PanelLeftClose, PanelLeftOpen, ArrowRightLeft, Wrench,
-  Box, Receipt, CreditCard, Landmark, FileSpreadsheet, PieChart, Warehouse,
+  Box, Receipt, CreditCard, Landmark, FileSpreadsheet, PieChart, Warehouse, LogOut,
 } from 'lucide-react'
+import ThemeToggle from '@/components/ui/ThemeToggle'
 import { useAuthStore } from '@/store/authStore'
 import { useSidebarStore } from '@/store/sidebarStore'
 import './Sidebar.css'
@@ -13,7 +16,7 @@ import './Sidebar.css'
 interface NavGroup {
   id: string
   labelKey: string
-  items: { to: string; labelKey: string; icon: React.ElementType }[]
+  items: { to: string; labelKey: string; icon: React.ElementType; adminOnly?: boolean }[]
 }
 
 const NAV_GROUPS: NavGroup[] = [
@@ -85,7 +88,7 @@ const NAV_GROUPS: NavGroup[] = [
     id: 'executive',
     labelKey: 'nav.groups.executive',
     items: [
-      { to: '/activity', labelKey: 'nav.items.activity', icon: Activity },
+      { to: '/activities', labelKey: 'nav.items.activity', icon: Activity, adminOnly: true },
       { to: '/reports', labelKey: 'nav.items.reports', icon: BarChart2 },
       { to: '/executive', labelKey: 'nav.items.analytics', icon: PieChart },
     ],
@@ -95,6 +98,8 @@ const NAV_GROUPS: NavGroup[] = [
 export default function Sidebar() {
   const { t } = useTranslation()
   const user = useAuthStore((s) => s.user)
+  const logout = useAuthStore((s) => s.logout)
+  const navigate = useNavigate()
   const sidebarState = useSidebarStore((s) => s.state)
   const collapsedGroups = useSidebarStore((s) => s.collapsedGroups)
   const toggleGroup = useSidebarStore((s) => s.toggleGroup)
@@ -112,6 +117,40 @@ export default function Sidebar() {
 
   const closeMobile = () => {
     if (window.innerWidth <= 768) setState('hidden')
+  }
+
+  const [isUserMenuOpen, setUserMenuOpen] = useState(false)
+  const [menuPos, setMenuPos] = useState<{ left: number; bottom: number } | null>(null)
+  const userTriggerRef = useRef<HTMLButtonElement>(null)
+  const userMenuRef = useRef<HTMLDivElement>(null)
+
+  const toggleUserMenu = () => {
+    if (!isUserMenuOpen) {
+      const rect = userTriggerRef.current?.getBoundingClientRect()
+      if (rect) setMenuPos({ left: rect.left, bottom: window.innerHeight - rect.top + 8 })
+    }
+    setUserMenuOpen((v) => !v)
+  }
+
+  useEffect(() => {
+    if (!isUserMenuOpen) return
+    const handler = (e: MouseEvent) => {
+      const target = e.target as Node
+      if (
+        userTriggerRef.current && !userTriggerRef.current.contains(target) &&
+        userMenuRef.current && !userMenuRef.current.contains(target)
+      ) {
+        setUserMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [isUserMenuOpen])
+
+  const handleLogout = () => {
+    setUserMenuOpen(false)
+    logout()
+    navigate('/login', { replace: true })
   }
 
   return (
@@ -158,7 +197,9 @@ export default function Sidebar() {
 
                 {(isCollapsed || !isGroupCollapsed) && (
                   <div className="sidebar-group-items">
-                    {group.items.map((item) => (
+                    {group.items
+                      .filter((item) => !item.adminOnly || user?.is_superuser)
+                      .map((item) => (
                       <NavLink
                         key={item.to}
                         to={item.to}
@@ -180,30 +221,85 @@ export default function Sidebar() {
           })}
 
           <div className="sidebar-divider" />
-          <NavLink
-            to="/settings"
-            className={({ isActive }) =>
-              `sidebar-nav-item${isActive ? ' active' : ''}`
-            }
-            onClick={closeMobile}
-            title={isCollapsed ? t('nav.items.settings') : undefined}
-          >
-            <Settings className="sidebar-nav-icon" size={16} />
-            {!isCollapsed && <span className="sidebar-label">{t('nav.items.settings')}</span>}
-          </NavLink>
+          {user?.is_superuser && (
+            <NavLink
+              to="/settings"
+              className={({ isActive }) =>
+                `sidebar-nav-item${isActive ? ' active' : ''}`
+              }
+              onClick={closeMobile}
+              title={isCollapsed ? t('nav.items.settings') : undefined}
+            >
+              <Settings className="sidebar-nav-icon" size={16} />
+              {!isCollapsed && <span className="sidebar-label">{t('nav.items.settings')}</span>}
+            </NavLink>
+          )}
         </nav>
 
         {/* Footer */}
         <div className="sidebar-footer">
-          <div className="sidebar-user">
+          <button
+            type="button"
+            className="sidebar-user"
+            ref={userTriggerRef}
+            onClick={toggleUserMenu}
+            aria-haspopup="true"
+            aria-expanded={isUserMenuOpen}
+            title={isCollapsed ? displayName : undefined}
+          >
             <div className="sidebar-avatar">{initials}</div>
             {!isCollapsed && (
-              <div className="sidebar-user-info">
-                <div className="sidebar-user-name">{displayName}</div>
-                <div className="sidebar-user-role">{role}</div>
-              </div>
+              <>
+                <div className="sidebar-user-info">
+                  <div className="sidebar-user-name">{displayName}</div>
+                  <div className="sidebar-user-role">{role}</div>
+                </div>
+                <ChevronDown size={14} className={`sidebar-user-chevron${isUserMenuOpen ? ' open' : ''}`} />
+              </>
             )}
-          </div>
+          </button>
+
+          {isUserMenuOpen && menuPos && createPortal(
+            <div
+              ref={userMenuRef}
+              className="sidebar-user-menu"
+              style={{ position: 'fixed', left: menuPos.left, bottom: menuPos.bottom }}
+              role="menu"
+            >
+              <div className="sidebar-user-menu-header">
+                <div className="sidebar-avatar" style={{ width: 38, height: 38, fontSize: 13 }}>{initials}</div>
+                <div className="sidebar-user-menu-header-info">
+                  <div className="sidebar-user-menu-name">{displayName}</div>
+                  {user?.email && <div className="sidebar-user-menu-email">{user.email}</div>}
+                  <div className="sidebar-user-menu-role">{role}</div>
+                </div>
+              </div>
+
+              <div className="sidebar-user-menu-section">
+                <div className="sidebar-user-menu-section-label">{t('header.appearance')}</div>
+                <ThemeToggle />
+              </div>
+
+              <div className="sidebar-user-menu-divider" />
+
+              <button
+                type="button"
+                className="sidebar-user-menu-item"
+                role="menuitem"
+                onClick={() => { setUserMenuOpen(false); closeMobile(); navigate('/settings') }}
+              >
+                <Settings size={14} /> {t('header.settings')}
+              </button>
+
+              <div className="sidebar-user-menu-divider" />
+
+              <button type="button" className="sidebar-user-menu-item danger" role="menuitem" onClick={handleLogout}>
+                <LogOut size={14} /> {t('header.logout')}
+              </button>
+            </div>,
+            document.body
+          )}
+
           {!isHidden && (
             <button
               className="sidebar-collapse-btn"

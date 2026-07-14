@@ -47,15 +47,18 @@ from app.models.project import BOQItem, Project, ProjectMilestone
 from app.models.lead import Lead
 from app.models.lead_note import LeadNote
 from app.models.notification import Notification
+from app.models.notification_preference import NotificationPreference
 from app.models.product import Product, ProductCompatBrand, ProductImage, ProductSpec
 from app.models.revenue_recognition import RevenueRecognition
 from app.models.revoked_token import RevokedToken
 from app.models.role import Role
 from app.models.scheduler_lock import SchedulerLock
+from app.models.setting import Setting
 from app.models.user import User
 
 __all__ = [
     "Role", "User", "Customer", "Lead", "LeadNote", "ActivityLog", "RevokedToken", "Notification",
+    "NotificationPreference", "Setting",
     "SchedulerLock",
     "AssetMovement", "MovementHistory",
     "Brand", "ProductCategory",

@@ -2,7 +2,7 @@ import { useState, useMemo, type CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Activity, ChevronLeft, ChevronRight,
-  AlertCircle, Clock, User, Layers, FileText, RefreshCw,
+  AlertCircle, Clock, User, Layers, FileText, RefreshCw, Globe,
 } from 'lucide-react'
 import { useActivity, type ActivityFilters } from '@/hooks/useActivity'
 import Drawer from '@/components/ui/Drawer'
@@ -85,10 +85,41 @@ const ACTION_META: Record<ActionType, ActionMeta> = {
   rental_extension_approved: { label: 'Extension Approved', ...C.created },
   rental_extension_rejected: { label: 'Extension Rejected', ...C.deleted },
   rental_billing_created:    { label: 'Billing Created',    ...C.status },
+  invoice_created:          { label: 'Invoice Created',    ...C.created },
+  invoice_updated:          { label: 'Invoice Updated',    ...C.updated },
+  invoice_issued:           { label: 'Invoice Issued',     ...C.primary },
+  invoice_sent:              { label: 'Invoice Sent',       ...C.info },
+  invoice_cancelled:         { label: 'Invoice Cancelled',  ...C.neutral },
+  invoice_voided:            { label: 'Invoice Voided',     ...C.deleted },
+  payment_recorded:          { label: 'Payment Recorded',   ...C.created },
+  payment_confirmed:         { label: 'Payment Confirmed',  ...C.created },
+  payment_rejected:          { label: 'Payment Rejected',   ...C.deleted },
+  payment_allocated:         { label: 'Payment Allocated',  ...C.status },
+  deposit_created:           { label: 'Deposit Created',    ...C.created },
+  deposit_received:          { label: 'Deposit Received',   ...C.created },
+  deposit_refunded:          { label: 'Deposit Refunded',   ...C.neutral },
+  deposit_forfeited:         { label: 'Deposit Forfeited',  ...C.deleted },
+  deposit_applied:           { label: 'Deposit Applied',    ...C.status },
+  revenue_recognized:        { label: 'Revenue Recognized', ...C.created },
+  revenue_reversed:          { label: 'Revenue Reversed',   ...C.deleted },
+  project_created:           { label: 'Project Created',    ...C.created },
+  project_updated:           { label: 'Project Updated',    ...C.updated },
+  project_deleted:           { label: 'Project Deleted',    ...C.deleted },
+  project_milestone_status_changed: { label: 'Milestone Status Changed', ...C.status },
+  setting_updated:           { label: 'Setting Updated',    ...C.updated },
+  inventory_import_executed: { label: 'Inventory Imported', ...C.status },
+  notification_preference_created: { label: 'Alert Subscribed',   ...C.created },
+  notification_preference_updated: { label: 'Alert Preference Updated', ...C.updated },
+  notification_preference_deleted: { label: 'Alert Unsubscribed', ...C.deleted },
 }
 
 const ENTITY_LABELS: Record<string, string> = {
   user: 'User', customer: 'Customer', lead: 'Lead', note: 'Note',
+  invoice: 'Invoice', payment: 'Payment', deposit: 'Deposit',
+  revenue_recognition: 'Revenue Recognition',
+  project: 'Project', project_milestone: 'Project Milestone',
+  setting: 'Setting', inventory_import: 'Inventory Import',
+  notification_preference: 'Notification Preference',
 }
 
 const ACTION_GROUPS: Record<string, string> = {
@@ -97,6 +128,20 @@ const ACTION_GROUPS: Record<string, string> = {
   customer_deleted: 'Customer', customer_status_changed: 'Customer',
   lead_created: 'Lead', lead_updated: 'Lead', lead_deleted: 'Lead',
   lead_status_changed: 'Lead', lead_note_added: 'Lead', lead_note_deleted: 'Lead',
+  invoice_created: 'Billing', invoice_updated: 'Billing', invoice_issued: 'Billing',
+  invoice_sent: 'Billing', invoice_cancelled: 'Billing', invoice_voided: 'Billing',
+  payment_recorded: 'Billing', payment_confirmed: 'Billing',
+  payment_rejected: 'Billing', payment_allocated: 'Billing',
+  deposit_created: 'Billing', deposit_received: 'Billing',
+  deposit_refunded: 'Billing', deposit_forfeited: 'Billing', deposit_applied: 'Billing',
+  revenue_recognized: 'Billing', revenue_reversed: 'Billing',
+  project_created: 'Project', project_updated: 'Project', project_deleted: 'Project',
+  project_milestone_status_changed: 'Project',
+  setting_updated: 'Settings',
+  inventory_import_executed: 'Inventory',
+  notification_preference_created: 'Notifications',
+  notification_preference_updated: 'Notifications',
+  notification_preference_deleted: 'Notifications',
 }
 
 const PAGE_SIZE = 50
@@ -216,6 +261,14 @@ function ActivityDetails({ log }: { log: ActivityLog }) {
               </div>
             </div>
           )}
+
+          <div className="drawer-info-row">
+            <div className="drawer-info-icon"><Globe size={14} /></div>
+            <div className="drawer-info-content">
+              <div className="drawer-info-key">{t('activity.table.ipAddress')}</div>
+              <div className="drawer-info-value">{log.ip_address ?? t('activity.details.ipNotTracked')}</div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -265,7 +318,11 @@ function ActivityDetails({ log }: { log: ActivityLog }) {
 
 // ── Main page ─────────────────────────────────────────────
 const ALL_ACTIONS = Object.keys(ACTION_META) as ActionType[]
-const ENTITY_TYPES = ['user', 'customer', 'lead', 'note']
+const ENTITY_TYPES = [
+  'user', 'customer', 'lead', 'note',
+  'invoice', 'payment', 'deposit', 'revenue_recognition',
+  'project', 'project_milestone', 'setting', 'inventory_import', 'notification_preference',
+]
 
 export default function ActivityPage() {
   const { t } = useTranslation()
@@ -419,6 +476,7 @@ export default function ActivityPage() {
                 <th style={{ minWidth: 160 }}>{t('activity.table.action')}</th>
                 <th className="col-hide-sm">{t('activity.table.entity')}</th>
                 <th className="col-hide-sm" style={{ width: 80 }}>{t('activity.table.id')}</th>
+                <th className="col-hide-sm" style={{ minWidth: 110 }}>{t('activity.table.ipAddress')}</th>
                 <th style={{ width: 80 }}>{t('activity.table.details')}</th>
               </tr>
             </thead>
@@ -432,13 +490,14 @@ export default function ActivityPage() {
                       <td><div className="skeleton-cell" style={{ width: '90px' }} /></td>
                       <td className="col-hide-sm"><div className="skeleton-cell" style={{ width: '60px' }} /></td>
                       <td className="col-hide-sm"><div className="skeleton-cell" style={{ width: '30px' }} /></td>
+                      <td className="col-hide-sm"><div className="skeleton-cell" style={{ width: '80px' }} /></td>
                       <td><div className="skeleton-cell" style={{ width: '40px' }} /></td>
                     </tr>
                   ))}
                 </>
               ) : rows.length === 0 ? (
                 <tr>
-                  <td colSpan={6}>
+                  <td colSpan={7}>
                     <div className="table-empty">
                       <Activity size={36} />
                       <p>{t('activity.table.noActivityFound')}</p>
@@ -480,6 +539,9 @@ export default function ActivityPage() {
                       </td>
                       <td className="col-hide-sm cell-muted">
                         {log.entity_id ? `#${log.entity_id}` : '—'}
+                      </td>
+                      <td className="col-hide-sm cell-muted" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: 12 }}>
+                        {log.ip_address ?? '—'}
                       </td>
                       <td>
                         {hasDetails ? (

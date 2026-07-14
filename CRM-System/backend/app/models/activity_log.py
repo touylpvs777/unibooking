@@ -103,6 +103,14 @@ class ActionType(str, enum.Enum):
     PROJECT_UPDATED = "project_updated"
     PROJECT_DELETED = "project_deleted"
     PROJECT_MILESTONE_STATUS_CHANGED = "project_milestone_status_changed"
+    # ── Global Settings ────────────────────────────────────────────
+    SETTING_UPDATED = "setting_updated"
+    # ── Inventory Import ───────────────────────────────────────────
+    INVENTORY_IMPORT_EXECUTED = "inventory_import_executed"
+    # ── Notification Preferences ────────────────────────────────────
+    NOTIFICATION_PREFERENCE_CREATED = "notification_preference_created"
+    NOTIFICATION_PREFERENCE_UPDATED = "notification_preference_updated"
+    NOTIFICATION_PREFERENCE_DELETED = "notification_preference_deleted"
 
 
 class EntityType(str, enum.Enum):
@@ -123,6 +131,9 @@ class EntityType(str, enum.Enum):
     REVENUE_RECOGNITION = "revenue_recognition"
     PROJECT = "project"
     PROJECT_MILESTONE = "project_milestone"
+    SETTING = "setting"
+    INVENTORY_IMPORT = "inventory_import"
+    NOTIFICATION_PREFERENCE = "notification_preference"
 
 
 class ActivityLog(Base):
@@ -138,6 +149,7 @@ class ActivityLog(Base):
     entity_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
     # Arbitrary metadata: {"from": "new", "to": "contacted"}, {"changed_fields": ["title"]}…
     details: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    ip_address: Mapped[str | None] = mapped_column(String(45), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False, index=True
     )

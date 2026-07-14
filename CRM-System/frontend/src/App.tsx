@@ -52,6 +52,7 @@ const PurchaseOrderPage = lazy(() => import('@/pages/Inventory/PurchaseOrderPage
 const ExecutiveDashboardPage = lazy(() => import('@/pages/Executive/ExecutiveDashboardPage'))
 const ProjectListPage = lazy(() => import('@/pages/Projects/ProjectListPage'))
 const ProjectDetailPage = lazy(() => import('@/pages/Projects/ProjectDetailPage'))
+const SettingsPage = lazy(() => import('@/pages/Settings/Settings'))
 
 function PageLoader() {
   return (
@@ -80,8 +81,9 @@ export default function App() {
             <Route path="/customers/:id" element={<Suspense fallback={<PageLoader />}><Customer360Page /></Suspense>} />
             <Route path="/leads"    element={<Suspense fallback={<PageLoader />}><LeadsPage /></Suspense>} />
             <Route path="/activity" element={<Suspense fallback={<PageLoader />}><ActivityPage /></Suspense>} />
+            <Route path="/activities" element={<Suspense fallback={<PageLoader />}><ActivityPage /></Suspense>} />
             <Route path="/reports"  element={<Suspense fallback={<PageLoader />}><ReportsPage /></Suspense>} />
-            <Route path="/settings" element={<Placeholder name="Settings" />} />
+            <Route path="/settings" element={<Suspense fallback={<PageLoader />}><SettingsPage /></Suspense>} />
 
             <Route path="/catalog"                element={<Suspense fallback={<PageLoader />}><CatalogPage /></Suspense>} />
             <Route path="/catalog/products/:id"   element={<Suspense fallback={<PageLoader />}><ProductDetailPage /></Suspense>} />

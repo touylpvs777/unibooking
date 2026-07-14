@@ -1,10 +1,11 @@
 import logging
 
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, File, Query, UploadFile, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.permissions import PermissionName, require_permission
 from app.database.session import get_db
+from app.models.activity_log import ActionType, EntityType
 from app.models.user import User
 from app.schemas.inventory import (
     BalanceOut, ConsumeAction, ConsumptionOut, InventoryDashboardSummary,
@@ -12,6 +13,9 @@ from app.schemas.inventory import (
     SparePartCreate, SparePartListResponse, SparePartOut, SparePartUpdate,
     TransactionCreate, TransactionOut, WarehouseCreate, WarehouseOut,
 )
+from app.schemas.inventory_import import InventoryImportResult
+from app.services.activity_log_service import ActivityLogService
+from app.services.inventory_import_service import InventoryImportService
 from app.services.inventory_service import InventoryService
 
 logger = logging.getLogger(__name__)
@@ -52,6 +56,36 @@ async def create_part(data: SparePartCreate, db: AsyncSession = Depends(get_db),
 async def update_part(part_id: int, data: SparePartUpdate, db: AsyncSession = Depends(get_db), _: User = require_permission(PermissionName.MANAGE_CATALOG)):
     part = await InventoryService(db).update_part(part_id, data)
     return SparePartOut.model_validate(part)
+
+
+@router.post("/import", response_model=InventoryImportResult, status_code=status.HTTP_200_OK)
+async def import_inventory(
+    file: UploadFile = File(..., description="CSV or Excel (.csv, .xlsx, .xls) spare-part list"),
+    db: AsyncSession = Depends(get_db),
+    current_user: User = require_permission(PermissionName.MANAGE_CATALOG),
+):
+    """
+    Bulk insert/update spare parts from a CSV or Excel file.
+
+    Expected columns (case-insensitive; common aliases accepted): part_number
+    (or SKU), name, description, part_category, brand_id, unit, unit_price,
+    currency, min_stock_level, reorder_quantity, lead_time_days. Rows are
+    upserted by part_number — an existing part is updated, a new one created.
+    """
+    content = await file.read()
+    result = await InventoryImportService(db).import_file(content, file.filename or "upload")
+    await ActivityLogService(db).log(
+        user_id=current_user.id,
+        action=ActionType.INVENTORY_IMPORT_EXECUTED,
+        entity_type=EntityType.INVENTORY_IMPORT,
+        details={
+            "filename": file.filename,
+            "created_count": result.created_count,
+            "updated_count": result.updated_count,
+            "error_count": result.error_count,
+        },
+    )
+    return result
 
 
 # ── Warehouses ───────────────────────────────────────────────────────────────

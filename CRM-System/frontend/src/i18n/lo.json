@@ -77,6 +77,67 @@
     "createdAt": "ສ້າງເມື່ອ",
     "updatedAt": "ອັບເດດເມື່ອ"
   },
+  "settings": {
+    "title": "ການຕັ້ງຄ່າລະບົບລວມ",
+    "subtitle": "ຈັດການຄ່າເລີ່ມຕົ້ນຂອງອົງກອນໃນ ERP.",
+    "loading": "ກຳລັງໂຫຼດການຕັ້ງຄ່າ…",
+    "save": "ບັນທຶກການປ່ຽນແປງ",
+    "saving": "ກຳລັງບັນທຶກ…",
+    "saveSuccess": "ບັນທຶກການຕັ້ງຄ່າສຳເລັດແລ້ວ.",
+    "saveError": "ບໍ່ສາມາດບັນທຶກການຕັ້ງຄ່າໄດ້ໃນຕອນນີ້.",
+    "loadError": "ບໍ່ສາມາດໂຫຼດການຕັ້ງຄ່າໄດ້ໃນຕອນນີ້.",
+    "tabs": {
+      "company": "ໂປຣໄຟລ໌ບໍລິສັດ",
+      "financial": "ຄ່າເລີ່ມຕົ້ນດ້ານການເງິນ",
+      "system": "ຕົວແປລະບົບ",
+      "notifications": "ການແຈ້ງເຕືອນ"
+    },
+    "company": {
+      "description": "ຄ່າເລີ່ມຕົ້ນຂອງໂປຣໄຟລ໌ບໍລິສັດ",
+      "companyName": "ຊື່ບໍລິສັດ",
+      "address": "ທີ່ຢູ່",
+      "phone": "ເບີໂທ",
+      "logoUrl": "URL ໂລໂກ"
+    },
+    "financial": {
+      "description": "ຄ່າເລີ່ມຕົ້ນດ້ານການເງິນ",
+      "vatRate": "ອັດຕາ VAT (%)",
+      "defaultCurrency": "ສະກຸນເງິນມາດຕະຖານ",
+      "defaultPaymentTerms": "ເງື່ອນໄຂຊໍາລະເງິນມາດຕະຖານ"
+    },
+    "system": {
+      "description": "ຕົວແປລະບົບ",
+      "equipmentTypes": "ປະເພດອຸປະກອນ",
+      "repairStatuses": "ສະຖານະການສ້ອມແປງ"
+    },
+    "notifications": {
+      "description": "ສະໝັກຮັບການແຈ້ງເຕືອນທາງອີເມວສຳລັບເຫດການສຳຄັນຂອງລະບົບ. ທ່ານຈະໄດ້ຮັບການແຈ້ງເຕືອນທຸກຄັ້ງທີ່ມີເຫດການທີ່ຕິດຕາມເກີດຂຶ້ນ ຍົກເວັ້ນການກະທຳຂອງທ່ານເອງ.",
+      "loadError": "ບໍ່ສາມາດໂຫຼດການຕັ້ງຄ່າແຈ້ງເຕືອນໄດ້ໃນຕອນນີ້.",
+      "saveError": "ບໍ່ສາມາດອັບເດດການຕັ້ງຄ່ານີ້ໄດ້ໃນຕອນນີ້.",
+      "groups": {
+        "critical": "ສຳຄັນ ແລະ ການລຶບ",
+        "sales": "ການຂາຍ ແລະ ການເຊົ່າ",
+        "billing": "ການເງິນ",
+        "operations": "ການດຳເນີນງານ"
+      },
+      "events": {
+        "customerDeleted": "ລູກຄ້າຖືກລຶບ",
+        "forkliftDeleted": "ລົດຍົກຖືກລຶບ",
+        "productDeleted": "ສິນຄ້າໃນແຄຕາລັອກຖືກລຶບ",
+        "quotationApproved": "ໃບສະເໜີລາຄາໄດ້ຮັບການອະນຸມັດ",
+        "quotationSent": "ສົ່ງໃບສະເໜີລາຄາໃຫ້ລູກຄ້າແລ້ວ",
+        "contractActivated": "ສັນຍາເຊົ່າເປີດໃຊ້ງານແລ້ວ",
+        "contractCancelled": "ສັນຍາເຊົ່າຖືກຍົກເລີກ",
+        "invoiceIssued": "ອອກໃບແຈ້ງໜີ້ແລ້ວ",
+        "paymentRecorded": "ບັນທຶກການຊຳລະເງິນແລ້ວ",
+        "paymentRejected": "ການຊຳລະເງິນຖືກປະຕິເສດ",
+        "depositRefunded": "ຄືນເງິນມັດຈຳແລ້ວ",
+        "forkliftStatusChanged": "ສະຖານະລົດຍົກປ່ຽນແປງ",
+        "inventoryImportExecuted": "ນຳເຂົ້າຂໍ້ມູນສາງແບບຈຳນວນຫຼາຍແລ້ວ",
+        "settingUpdated": "ການຕັ້ງຄ່າລະບົບຖືກອັບເດດ"
+      }
+    }
+  },
   "customers": {
     "status": {
       "active": "ໃຊ້ງານຢູ່",
@@ -239,7 +300,8 @@
     "viewAllActivity": "ເບິ່ງກິດຈະກຳທັງໝົດ →",
     "searchResults": "ຜົນການຄົ້ນຫາ",
     "breadcrumb": "ເສັ້ນທາງນຳທາງ",
-    "userActions": "ຄຳສັ່ງຜູ້ໃຊ້"
+    "userActions": "ຄຳສັ່ງຜູ້ໃຊ້",
+    "markAllRead": "ໝາຍວ່າອ່ານທັງໝົດແລ້ວ"
   },
   "login": {
     "subtitle": "ເຂົ້າສູ່ລະບົບເພື່ອດຳເນີນການຕໍ່",
@@ -1400,13 +1462,23 @@
       "group": "ກຸ່ມ: {{group}}",
       "noneRecorded": "ບໍ່ມີລາຍລະອຽດເພີ່ມເຕີມທີ່ບັນທຶກໄວ້.",
       "systemOrDeletedUser": "ລະບົບ / ຜູ້ໃຊ້ທີ່ຖືກລຶບ",
-      "title": "ລາຍລະອຽດ"
+      "title": "ລາຍລະອຽດ",
+      "ipNotTracked": "ບໍ່ໄດ້ບັນທຶກ"
     },
     "entity": {
       "customer": "ລູກຄ້າ",
       "lead": "ໂອກາດການຂາຍ",
       "note": "ໝາຍເຫດ",
-      "user": "ຜູ້ໃຊ້"
+      "user": "ຜູ້ໃຊ້",
+      "invoice": "ໃບແຈ້ງໜີ້",
+      "payment": "ການຊຳລະເງິນ",
+      "deposit": "ເງິນມັດຈຳ",
+      "revenue_recognition": "ການຮັບຮູ້ລາຍຮັບ",
+      "project": "ໂຄງການ",
+      "project_milestone": "ຈຸດສຳຄັນຂອງໂຄງການ",
+      "setting": "ການຕັ້ງຄ່າ",
+      "inventory_import": "ການນຳເຂົ້າຂໍ້ມູນສາງ",
+      "notification_preference": "ການຕັ້ງຄ່າແຈ້ງເຕືອນ"
     },
     "eventsLoaded": "ໂຫຼດເຫດການແລ້ວ {{count}} ລາຍການ",
     "filters": {
@@ -1430,7 +1502,8 @@
       "noActivityFound": "ບໍ່ພົບກິດຈະກຳ",
       "noActivityYet": "ກິດຈະກຳຈະປາກົດຢູ່ບ່ອນນີ້ເມື່ອຜູ້ໃຊ້ເລີ່ມນຳໃຊ້ລະບົບ.",
       "timestamp": "ເວລາ",
-      "user": "ຜູ້ໃຊ້"
+      "user": "ຜູ້ໃຊ້",
+      "ipAddress": "ທີ່ຢູ່ IP"
     },
     "title": "ບັນທຶກກິດຈະກຳ"
   },

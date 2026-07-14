@@ -17,6 +17,9 @@ class NotificationCreate(BaseModel):
     entity_type: str | None = Field(default=None, max_length=50)
     entity_id: int | None = None
 
+    # Set when this is a staff-facing alert for a subscribed User (Smart Audit).
+    recipient_user_id: int | None = None
+
     @model_validator(mode="after")
     def require_at_least_one_recipient(self) -> "NotificationCreate":
         if not self.recipient_phone and not self.recipient_email:
@@ -38,6 +41,8 @@ class NotificationOut(BaseModel):
     event_type: str | None = None
     entity_type: str | None = None
     entity_id: int | None = None
+    recipient_user_id: int | None = None
+    is_read: bool = False
     created_at: datetime
     sent_at: datetime | None = None
 
@@ -45,3 +50,7 @@ class NotificationOut(BaseModel):
 class NotificationListResponse(BaseModel):
     items: list[NotificationOut]
     total: int
+
+
+class UnreadCountOut(BaseModel):
+    count: int

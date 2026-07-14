@@ -64,6 +64,12 @@ class InventoryRepository:
             stmt = stmt.where(SparePart.id != exclude_id)
         return (await self.db.execute(stmt)).scalar_one_or_none() is not None
 
+    async def get_part_by_number(self, pn: str) -> SparePart | None:
+        result = await self.db.execute(
+            select(SparePart).options(selectinload(SparePart.brand)).where(SparePart.part_number == pn)
+        )
+        return result.scalar_one_or_none()
+
     async def create_part(self, part: SparePart) -> SparePart:
         self.db.add(part)
         try:

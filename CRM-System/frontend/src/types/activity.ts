@@ -69,6 +69,37 @@ export type ActionType =
   | 'rental_extension_approved'
   | 'rental_extension_rejected'
   | 'rental_billing_created'
+  // Billing & Payments
+  | 'invoice_created'
+  | 'invoice_updated'
+  | 'invoice_issued'
+  | 'invoice_sent'
+  | 'invoice_cancelled'
+  | 'invoice_voided'
+  | 'payment_recorded'
+  | 'payment_confirmed'
+  | 'payment_rejected'
+  | 'payment_allocated'
+  | 'deposit_created'
+  | 'deposit_received'
+  | 'deposit_refunded'
+  | 'deposit_forfeited'
+  | 'deposit_applied'
+  | 'revenue_recognized'
+  | 'revenue_reversed'
+  // Warehouse Projects
+  | 'project_created'
+  | 'project_updated'
+  | 'project_deleted'
+  | 'project_milestone_status_changed'
+  // Global Settings
+  | 'setting_updated'
+  // Inventory Import
+  | 'inventory_import_executed'
+  // Notification Preferences
+  | 'notification_preference_created'
+  | 'notification_preference_updated'
+  | 'notification_preference_deleted'
 
 export type EntityType =
   | 'user'
@@ -82,6 +113,15 @@ export type EntityType =
   | 'forklift'
   | 'quotation'
   | 'rental_contract'
+  | 'invoice'
+  | 'payment'
+  | 'deposit'
+  | 'revenue_recognition'
+  | 'project'
+  | 'project_milestone'
+  | 'setting'
+  | 'inventory_import'
+  | 'notification_preference'
 
 export interface ActivityLog {
   id: number
@@ -91,5 +131,6 @@ export interface ActivityLog {
   entity_type: EntityType | null
   entity_id: number | null
   details: Record<string, unknown> | null
+  ip_address: string | null
   created_at: string
 }
