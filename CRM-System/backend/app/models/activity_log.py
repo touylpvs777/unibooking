@@ -98,6 +98,11 @@ class ActionType(str, enum.Enum):
     DEPOSIT_APPLIED = "deposit_applied"
     REVENUE_RECOGNIZED = "revenue_recognized"
     REVENUE_REVERSED = "revenue_reversed"
+    # ── Warehouse Projects ─────────────────────────────────────────
+    PROJECT_CREATED = "project_created"
+    PROJECT_UPDATED = "project_updated"
+    PROJECT_DELETED = "project_deleted"
+    PROJECT_MILESTONE_STATUS_CHANGED = "project_milestone_status_changed"
 
 
 class EntityType(str, enum.Enum):
@@ -116,6 +121,8 @@ class EntityType(str, enum.Enum):
     PAYMENT = "payment"
     DEPOSIT = "deposit"
     REVENUE_RECOGNITION = "revenue_recognition"
+    PROJECT = "project"
+    PROJECT_MILESTONE = "project_milestone"
 
 
 class ActivityLog(Base):

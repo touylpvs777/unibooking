@@ -43,6 +43,7 @@ from app.models.purchase_order_item import PurchaseOrderItem
 from app.models.part_consumption import PartConsumption
 from app.models.payment import Payment
 from app.models.payment_allocation import PaymentAllocation
+from app.models.project import BOQItem, Project, ProjectMilestone
 from app.models.lead import Lead
 from app.models.lead_note import LeadNote
 from app.models.notification import Notification
@@ -71,4 +72,5 @@ __all__ = [
     "MaintenancePlan", "MaintenanceSchedule", "WorkOrder", "ServiceHistory", "MaintenanceCost",
     "SparePart", "Warehouse", "InventoryBalance", "InventoryTransaction",
     "PurchaseOrder", "PurchaseOrderItem", "PartConsumption",
+    "Project", "ProjectMilestone", "BOQItem",
 ]

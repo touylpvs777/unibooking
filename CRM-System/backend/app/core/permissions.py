@@ -41,6 +41,13 @@ class PermissionName(str, enum.Enum):
     BILLING_CREATE = "billing.create"
     BILLING_UPDATE = "billing.update"
     BILLING_APPROVE = "billing.approve"
+    PROJECT_READ = "project.read"
+    PROJECT_CREATE = "project.create"
+    PROJECT_UPDATE = "project.update"
+    PROJECT_DELETE = "project.delete"
+    PROJECT_APPROVE = "project.approve"
+    PROJECT_BOQ_MANAGE = "project.boq_manage"
+    PROJECT_MILESTONE_UPDATE = "project.milestone_update"
 
 
 # Design-time mapping — permissions are constants, not runtime config.
@@ -78,6 +85,13 @@ ROLE_PERMISSIONS: dict[RoleName, frozenset[PermissionName]] = {
         PermissionName.BILLING_CREATE,
         PermissionName.BILLING_UPDATE,
         PermissionName.BILLING_APPROVE,
+        PermissionName.PROJECT_READ,
+        PermissionName.PROJECT_CREATE,
+        PermissionName.PROJECT_UPDATE,
+        PermissionName.PROJECT_DELETE,
+        PermissionName.PROJECT_APPROVE,
+        PermissionName.PROJECT_BOQ_MANAGE,
+        PermissionName.PROJECT_MILESTONE_UPDATE,
     }),
     RoleName.SALES: frozenset({
         PermissionName.VIEW_DASHBOARD,
@@ -93,6 +107,7 @@ ROLE_PERMISSIONS: dict[RoleName, frozenset[PermissionName]] = {
         PermissionName.RENTAL_CREATE,
         PermissionName.RENTAL_UPDATE,
         PermissionName.BILLING_READ,
+        PermissionName.PROJECT_READ,
     }),
     RoleName.SUPPORT: frozenset({
         PermissionName.VIEW_DASHBOARD,
@@ -102,6 +117,10 @@ ROLE_PERMISSIONS: dict[RoleName, frozenset[PermissionName]] = {
         PermissionName.QUOTATION_READ,
         PermissionName.RENTAL_READ,
         PermissionName.BILLING_READ,
+        # "Coordinators/technicians": can see project workflows and toggle
+        # milestone status, but not create/approve/edit BOQ.
+        PermissionName.PROJECT_READ,
+        PermissionName.PROJECT_MILESTONE_UPDATE,
     }),
 }
 

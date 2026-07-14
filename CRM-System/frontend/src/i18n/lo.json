@@ -13,7 +13,8 @@
       "maintenance": "ການບຳລຸງຮັກສາ",
       "inventory": "ຄັງສິນຄ້າ",
       "finance": "ການເງິນ",
-      "executive": "ຂໍ້ມູນຜູ້ບໍລິຫານ"
+      "executive": "ຂໍ້ມູນຜູ້ບໍລິຫານ",
+      "projects": "Projects"
     },
     "items": {
       "overview": "ພາບລວມ",
@@ -32,7 +33,8 @@
       "activity": "ກິດຈະກຳ",
       "reports": "ລາຍງານ",
       "analytics": "ການວິເຄາະ",
-      "settings": "ຕັ້ງຄ່າ"
+      "settings": "ຕັ້ງຄ່າ",
+      "warehouseProjects": "Warehouse Projects"
     },
     "expandSidebar": "ຂະຫຍາຍແຖບເມນູ",
     "collapseSidebar": "ຫຍໍ້ແຖບເມນູ"
@@ -168,6 +170,8 @@
     "partDetail": "ລາຍລະອຽດອະໄຫຼ່",
     "warehouses": "ສາງເກັບເຄື່ອງ",
     "purchaseOrders": "ໃບສັ່ງຊື້",
-    "executiveDashboard": "ໜ້າຫຼັກຜູ້ບໍລິຫານ"
+    "executiveDashboard": "ໜ້າຫຼັກຜູ້ບໍລິຫານ",
+    "projects": "Warehouse Projects",
+    "projectDetail": "Project Detail"
   }
 }

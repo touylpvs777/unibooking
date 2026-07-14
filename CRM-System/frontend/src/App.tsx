@@ -50,6 +50,8 @@ const SparePartDetailPage = lazy(() => import('@/pages/Inventory/SparePartDetail
 const WarehousePage = lazy(() => import('@/pages/Inventory/WarehousePage'))
 const PurchaseOrderPage = lazy(() => import('@/pages/Inventory/PurchaseOrderPage'))
 const ExecutiveDashboardPage = lazy(() => import('@/pages/Executive/ExecutiveDashboardPage'))
+const ProjectListPage = lazy(() => import('@/pages/Projects/ProjectListPage'))
+const ProjectDetailPage = lazy(() => import('@/pages/Projects/ProjectDetailPage'))
 
 function PageLoader() {
   return (
@@ -129,6 +131,9 @@ export default function App() {
             <Route path="/inventory/purchase-orders"      element={<Suspense fallback={<PageLoader />}><PurchaseOrderPage /></Suspense>} />
 
             <Route path="/executive"                     element={<Suspense fallback={<PageLoader />}><ExecutiveDashboardPage /></Suspense>} />
+
+            <Route path="/projects"               element={<Suspense fallback={<PageLoader />}><ProjectListPage /></Suspense>} />
+            <Route path="/projects/:id"           element={<Suspense fallback={<PageLoader />}><ProjectDetailPage /></Suspense>} />
           </Route>
         </Route>
 

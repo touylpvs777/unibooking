@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Users, TrendingUp, Activity, BarChart2, Settings,
   Package, Truck, FileText, ClipboardList,
   Building2, ChevronDown, PanelLeftClose, PanelLeftOpen, ArrowRightLeft, Wrench,
-  Box, Receipt, CreditCard, Landmark, FileSpreadsheet, PieChart,
+  Box, Receipt, CreditCard, Landmark, FileSpreadsheet, PieChart, Warehouse,
 } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import { useSidebarStore } from '@/store/sidebarStore'
@@ -61,6 +61,13 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { to: '/inventory', labelKey: 'nav.items.dashboard', icon: Box },
       { to: '/catalog', labelKey: 'nav.items.products', icon: Package },
+    ],
+  },
+  {
+    id: 'projects',
+    labelKey: 'nav.groups.projects',
+    items: [
+      { to: '/projects', labelKey: 'nav.items.warehouseProjects', icon: Warehouse },
     ],
   },
   {

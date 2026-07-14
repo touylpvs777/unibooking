@@ -27,7 +27,7 @@ from app.database.session import AsyncSessionLocal, engine
 # Import all models so Base.metadata knows about every table before create_all runs.
 import app.models as _models  # noqa: F401, E402
 
-from app.routes import activity, auth, billing, customers, dashboard, forklifts, inventory, leads, maintenance, movements, notifications, quotations, rentals, reports, roles, users, uploads
+from app.routes import activity, auth, billing, customers, dashboard, forklifts, inventory, leads, maintenance, movements, notifications, projects, quotations, rentals, reports, roles, users, uploads
 from app.routes.catalog import router as catalog_router
 from app.scheduler import shutdown_scheduler, start_scheduler
 from app.services.notification_subscribers import register_notification_subscribers
@@ -161,6 +161,7 @@ app.include_router(inventory.router, prefix="/api/v1")
 app.include_router(billing.router, prefix="/api/v1")
 app.include_router(uploads.router, prefix="/api/v1")
 app.include_router(notifications.router, prefix="/api/v1")
+app.include_router(projects.router, prefix="/api/v1")
 
 _uploads_dir = Path(settings.UPLOAD_DIR)
 _uploads_dir.mkdir(parents=True, exist_ok=True)

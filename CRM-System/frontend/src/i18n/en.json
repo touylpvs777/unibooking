@@ -13,7 +13,8 @@
       "maintenance": "Maintenance",
       "inventory": "Inventory",
       "finance": "Finance",
-      "executive": "Executive BI"
+      "executive": "Executive BI",
+      "projects": "Projects"
     },
     "items": {
       "overview": "Overview",
@@ -32,7 +33,8 @@
       "activity": "Activity",
       "reports": "Reports",
       "analytics": "Analytics",
-      "settings": "Settings"
+      "settings": "Settings",
+      "warehouseProjects": "Warehouse Projects"
     },
     "expandSidebar": "Expand sidebar",
     "collapseSidebar": "Collapse sidebar"
@@ -168,6 +170,8 @@
     "partDetail": "Part Detail",
     "warehouses": "Warehouses",
     "purchaseOrders": "Purchase Orders",
-    "executiveDashboard": "Executive Dashboard"
+    "executiveDashboard": "Executive Dashboard",
+    "projects": "Warehouse Projects",
+    "projectDetail": "Project Detail"
   }
 }

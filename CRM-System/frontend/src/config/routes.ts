@@ -52,6 +52,8 @@ export const ROUTE_CONFIG: RouteConfig[] = [
   { path: '/inventory/warehouses',          labelKey: 'routes.warehouses',        parent: '/inventory' },
   { path: '/inventory/purchase-orders',     labelKey: 'routes.purchaseOrders',    parent: '/inventory' },
   { path: '/executive',                    labelKey: 'routes.executiveDashboard' },
+  { path: '/projects',                     labelKey: 'routes.projects' },
+  { path: '/projects/:id',                 labelKey: 'routes.projectDetail', parent: '/projects' },
 ]
 
 export function matchRoute(pathname: string): RouteConfig | undefined {
