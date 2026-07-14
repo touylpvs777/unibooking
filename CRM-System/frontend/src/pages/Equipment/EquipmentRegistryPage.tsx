@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   Plus, Truck, RefreshCw,
   ChevronLeft, ChevronRight, Pencil, Trash2, Gauge, Clock, Calendar, Wrench,
@@ -25,6 +26,7 @@ function fmtDate(iso: string) {
 }
 
 export default function EquipmentRegistryPage() {
+  const { t } = useTranslation()
   const {
     forklifts, total, pages, page: currentPage,
     params, isLoading, error,
@@ -100,16 +102,16 @@ export default function EquipmentRegistryPage() {
         />
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16, position: 'relative', zIndex: 1 }}>
           <div>
-            <div className="mp-hero-title">Equipment Registry</div>
-            <div className="mp-hero-sub">Manage and monitor your forklift fleet</div>
+            <div className="mp-hero-title">{t('equipment.registry.title')}</div>
+            <div className="mp-hero-sub">{t('equipment.registry.subtitle')}</div>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
             <button className="btn btn-ghost" onClick={refetch} disabled={isLoading}
               style={{ background: 'var(--color-hero-btn-bg)', borderColor: 'var(--color-hero-btn-border)', color: 'var(--color-on-hero)' }}>
-              <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> Refresh
+              <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('equipment.registry.refresh')}
             </button>
             <button className="btn btn-primary" onClick={openCreate}>
-              <Plus size={15} /> Register Forklift
+              <Plus size={15} /> {t('equipment.registry.registerForklift')}
             </button>
           </div>
         </div>
@@ -117,7 +119,7 @@ export default function EquipmentRegistryPage() {
           <EquipmentSearch
             value={params.q ?? ''}
             onChange={(q) => applyParams({ q: q || undefined, page: 1 })}
-            placeholder="Search serial number, name, model..."
+            placeholder={t('equipment.registry.searchPlaceholder')}
           />
         </div>
       </div>
@@ -133,32 +135,32 @@ export default function EquipmentRegistryPage() {
       <div className="mp-kpi-strip" style={{ marginBottom: 16 }}>
         <div className="mp-kpi-widget" style={{ '--kpi-color': 'var(--color-primary-600)' } as React.CSSProperties}>
           <div className="mp-kpi-header">
-            <span className="mp-kpi-label">Utilization</span>
+            <span className="mp-kpi-label">{t('equipment.registry.kpi.utilization')}</span>
             <div className="mp-kpi-icon"><Gauge size={14} /></div>
           </div>
           <div className="mp-kpi-value">{fleetStats.utilization}%</div>
         </div>
         <div className="mp-kpi-widget" style={{ '--kpi-color': 'var(--color-info-600)' } as React.CSSProperties}>
           <div className="mp-kpi-header">
-            <span className="mp-kpi-label">Avg Hours</span>
+            <span className="mp-kpi-label">{t('equipment.registry.kpi.avgHours')}</span>
             <div className="mp-kpi-icon"><Clock size={14} /></div>
           </div>
           <div className="mp-kpi-value">{fleetStats.avgHours.toLocaleString()}</div>
         </div>
         <div className="mp-kpi-widget" style={{ '--kpi-color': 'var(--color-warning-600)' } as React.CSSProperties}>
           <div className="mp-kpi-header">
-            <span className="mp-kpi-label">PM Due</span>
+            <span className="mp-kpi-label">{t('equipment.registry.kpi.pmDue')}</span>
             <div className="mp-kpi-icon"><Wrench size={14} /></div>
           </div>
           <div className="mp-kpi-value">{fleetStats.pmDue}</div>
-          {fleetStats.criticalPm > 0 && <div className="mp-kpi-change negative">{fleetStats.criticalPm} critical</div>}
+          {fleetStats.criticalPm > 0 && <div className="mp-kpi-change negative">{t('equipment.registry.kpi.critical', { count: fleetStats.criticalPm })}</div>}
         </div>
         <div className="mp-kpi-widget" style={{ '--kpi-color': 'var(--color-gray-500)' } as React.CSSProperties}>
           <div className="mp-kpi-header">
-            <span className="mp-kpi-label">Avg Age</span>
+            <span className="mp-kpi-label">{t('equipment.registry.kpi.avgAge')}</span>
             <div className="mp-kpi-icon"><Calendar size={14} /></div>
           </div>
-          <div className="mp-kpi-value">{fleetStats.avgAge} yr</div>
+          <div className="mp-kpi-value">{t('equipment.registry.kpi.years', { count: fleetStats.avgAge })}</div>
         </div>
       </div>
 
@@ -200,13 +202,13 @@ export default function EquipmentRegistryPage() {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Forklift</th>
-                  <th>Serial Number</th>
-                  <th>Status</th>
-                  <th>Condition</th>
-                  <th className="col-hide-sm">Brand</th>
-                  <th className="col-hide-sm">Hours</th>
-                  <th className="col-hide-sm">Created</th>
+                  <th>{t('equipment.registry.table.forklift')}</th>
+                  <th>{t('equipment.form.serialNumber')}</th>
+                  <th>{t('common.status')}</th>
+                  <th>{t('equipment.form.condition')}</th>
+                  <th className="col-hide-sm">{t('equipment.form.brand')}</th>
+                  <th className="col-hide-sm">{t('equipment.registry.table.hours')}</th>
+                  <th className="col-hide-sm">{t('common.createdAt')}</th>
                   <th style={{ width: 80 }}></th>
                 </tr>
               </thead>
@@ -225,7 +227,7 @@ export default function EquipmentRegistryPage() {
                     </tr>
                   ))
                 ) : forklifts.length === 0 ? (
-                  <tr><td colSpan={8}><div className="table-empty"><Truck size={36} /><p>No forklifts found</p></div></td></tr>
+                  <tr><td colSpan={8}><div className="table-empty"><Truck size={36} /><p>{t('equipment.registry.noForkliftsFound')}</p></div></td></tr>
                 ) : forklifts.map((f) => (
                   <tr key={f.id} style={{ cursor: 'pointer' }} onClick={() => setDrawerTarget(f)}>
                     <td>
@@ -245,8 +247,8 @@ export default function EquipmentRegistryPage() {
                     <td className="cell-muted col-hide-sm">{fmtDate(f.created_at)}</td>
                     <td>
                       <div className="row-actions" onClick={(e) => e.stopPropagation()}>
-                        <button className="action-btn" title="Edit" onClick={() => openEdit(f)}><Pencil size={14} /></button>
-                        <button className="action-btn danger" title="Delete" onClick={() => setDeleteTarget(f)}><Trash2 size={14} /></button>
+                        <button className="action-btn" title={t('common.edit')} onClick={() => openEdit(f)}><Pencil size={14} /></button>
+                        <button className="action-btn danger" title={t('common.delete')} onClick={() => setDeleteTarget(f)}><Trash2 size={14} /></button>
                       </div>
                     </td>
                   </tr>
@@ -260,7 +262,7 @@ export default function EquipmentRegistryPage() {
       {/* Pagination */}
       {!isLoading && pages > 1 && (
         <div className="pagination" style={{ marginTop: 16, background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '12px 16px' }}>
-          <span className="pagination-info">Page {currentPage} of {pages} ({total} total)</span>
+          <span className="pagination-info">{t('equipment.registry.pageInfo', { page: currentPage, pages, total })}</span>
           <div className="pagination-controls">
             <button className="page-btn" disabled={currentPage === 1} onClick={() => applyParams({ page: currentPage - 1 })}><ChevronLeft size={14} /></button>
             {pageNumbers.map((p, i) =>
@@ -282,7 +284,7 @@ export default function EquipmentRegistryPage() {
       />
 
       <ForkliftForm isOpen={formOpen} onClose={() => setFormOpen(false)} onSubmit={handleFormSubmit} forklift={editTarget} brands={brands} />
-      <ConfirmDialog isOpen={!!deleteTarget} onClose={() => setDeleteTarget(null)} onConfirm={handleDelete} isLoading={isDeleting} title="Delete Forklift" message={deleteTarget ? `Delete "${deleteTarget.name_en}" (S/N: ${deleteTarget.serial_number})? This cannot be undone.` : ''} />
+      <ConfirmDialog isOpen={!!deleteTarget} onClose={() => setDeleteTarget(null)} onConfirm={handleDelete} isLoading={isDeleting} title={t('equipment.registry.deleteTitle')} message={deleteTarget ? t('equipment.registry.deleteMessage', { name: deleteTarget.name_en, serial: deleteTarget.serial_number }) : ''} />
     </div>
   )
 }

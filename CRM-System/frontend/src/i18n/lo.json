@@ -2,7 +2,174 @@
   "common": {
     "brandName": "DK Service",
     "brandTagline": "ແພລດຟອມວິສາຫະກິດ",
-    "language": "ພາສາ"
+    "language": "ພາສາ",
+    "noDataYet": "ຍັງບໍ່ມີຂໍ້ມູນ",
+    "dataWillAppear": "ຂໍ້ມູນຈະປາກົດຢູ່ນີ້ເມື່ອມີລາຍການ",
+    "save": "ບັນທຶກ",
+    "saving": "ກຳລັງບັນທຶກ…",
+    "cancel": "ຍົກເລີກ",
+    "delete": "ລຶບ",
+    "deleting": "ກຳລັງລຶບ…",
+    "edit": "ແກ້ໄຂ",
+    "create": "ສ້າງ",
+    "add": "ເພີ່ມ",
+    "remove": "ເອົາອອກ",
+    "search": "ຄົ້ນຫາ",
+    "filter": "ກັ່ນຕອງ",
+    "filters": "ຕົວກັ່ນຕອງ",
+    "actions": "ຈັດການ",
+    "status": "ສະຖານະ",
+    "loading": "ກຳລັງໂຫຼດ…",
+    "close": "ປິດ",
+    "confirm": "ຢືນຢັນ",
+    "back": "ກັບຄືນ",
+    "next": "ຕໍ່ໄປ",
+    "previous": "ກ່ອນໜ້າ",
+    "submit": "ສົ່ງ",
+    "view": "ເບິ່ງ",
+    "viewDetails": "ເບິ່ງລາຍລະອຽດ",
+    "download": "ດາວໂຫຼດ",
+    "upload": "ອັບໂຫຼດ",
+    "yes": "ແມ່ນ",
+    "no": "ບໍ່",
+    "required": "ຈຳເປັນ",
+    "optional": "ບໍ່ບັງຄັບ",
+    "name": "ຊື່",
+    "email": "ອີເມວ",
+    "phone": "ໂທລະສັບ",
+    "address": "ທີ່ຢູ່",
+    "date": "ວັນທີ",
+    "description": "ລາຍລະອຽດ",
+    "notes": "ໝາຍເຫດ",
+    "total": "ລວມ",
+    "subtotal": "ລວມຍ່ອຍ",
+    "quantity": "ຈຳນວນ",
+    "price": "ລາຄາ",
+    "amount": "ຈຳນວນເງິນ",
+    "type": "ປະເພດ",
+    "category": "ໝວດໝູ່",
+    "all": "ທັງໝົດ",
+    "none": "ບໍ່ມີ",
+    "unknown": "ບໍ່ຮູ້ຈັກ",
+    "active": "ໃຊ້ງານຢູ່",
+    "inactive": "ບໍ່ໄດ້ໃຊ້ງານ",
+    "pending": "ລໍຖ້າ",
+    "approved": "ອະນຸມັດແລ້ວ",
+    "rejected": "ປະຕິເສດແລ້ວ",
+    "completed": "ສຳເລັດແລ້ວ",
+    "cancelled": "ຍົກເລີກແລ້ວ",
+    "noResultsFound": "ບໍ່ພົບຜົນລັບ",
+    "tryAdjustingFilters": "ລອງປັບຕົວກັ່ນຕອງ ຫຼື ຄຳຄົ້ນຫາ",
+    "somethingWentWrong": "ມີບາງຢ່າງຜິດພາດ",
+    "retry": "ລອງໃໝ່",
+    "clearFilters": "ລ້າງຕົວກັ່ນຕອງ",
+    "export": "ສົ່ງອອກ",
+    "print": "ພິມ",
+    "closeDialog": "ປິດກ່ອງໂຕ້ຕອບ",
+    "closePanel": "ປິດແຜງ",
+    "dismissNotification": "ປິດການແຈ້ງເຕືອນ",
+    "gridView": "ມຸມມອງຕາຕະລາງ",
+    "listView": "ມຸມມອງລາຍການ",
+    "page": "ໜ້າ",
+    "of": "ຈາກ",
+    "rowsPerPage": "ແຖວຕໍ່ໜ້າ",
+    "selectAll": "ເລືອກທັງໝົດ",
+    "createdAt": "ສ້າງເມື່ອ",
+    "updatedAt": "ອັບເດດເມື່ອ"
+  },
+  "customers": {
+    "status": {
+      "active": "ໃຊ້ງານຢູ່",
+      "prospect": "ລູກຄ້າທ່າແຮງ",
+      "inactive": "ບໍ່ໄດ້ໃຊ້ງານ",
+      "churned": "ເລີກໃຊ້ບໍລິການ"
+    },
+    "form": {
+      "editTitle": "ແກ້ໄຂຂໍ້ມູນລູກຄ້າ",
+      "newTitle": "ລູກຄ້າໃໝ່",
+      "saveChanges": "ບັນທຶກການປ່ຽນແປງ",
+      "createCustomer": "ສ້າງລູກຄ້າ",
+      "firstNameLabel": "ຊື່",
+      "firstNamePlaceholder": "ຈອນ",
+      "lastNameLabel": "ນາມສະກຸນ",
+      "lastNamePlaceholder": "ໂດ",
+      "emailPlaceholder": "john@example.com",
+      "phonePlaceholder": "+1 555 000 0000",
+      "companyLabel": "ບໍລິສັດ",
+      "companyPlaceholder": "ອາຄມີ ຄໍປໍເຣຊັນ",
+      "notesPlaceholder": "ໝາຍເຫດເພີ່ມເຕີມ…"
+    },
+    "list": {
+      "title": "ລູກຄ້າ",
+      "totalCount": "ລູກຄ້າທັງໝົດ {{count}} ຄົນ",
+      "newCustomer": "ລູກຄ້າໃໝ່",
+      "searchPlaceholder": "ຄົ້ນຫາຊື່, ອີເມວ, ເບີໂທ…",
+      "allStatuses": "ທຸກສະຖານະ",
+      "resultsCount": "{{count}} ຜົນລັບ",
+      "colCustomer": "ລູກຄ້າ",
+      "noCustomersFound": "ບໍ່ພົບລູກຄ້າ",
+      "createFirstCustomer": "ສ້າງລູກຄ້າຄົນທຳອິດຂອງທ່ານເພື່ອເລີ່ມຕົ້ນ.",
+      "showingRange": "ສະແດງ {{start}}–{{end}} ຈາກ {{total}}",
+      "deleteTitle": "ລຶບລູກຄ້າ",
+      "deleteMessage": "ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການລຶບ \"{{name}}\"? ບໍ່ສາມາດຍົກເລີກການກະທຳນີ້ໄດ້."
+    }
+  },
+  "leads": {
+    "status": {
+      "new": "ໃໝ່",
+      "contacted": "ຕິດຕໍ່ແລ້ວ",
+      "qualified": "ມີຄຸນສົມບັດ",
+      "proposal": "ສະເໜີລາຄາ",
+      "won": "ສຳເລັດ",
+      "lost": "ພາດໂອກາດ"
+    },
+    "form": {
+      "editTitle": "ແກ້ໄຂໂອກາດການຂາຍ",
+      "newTitle": "ໂອກາດການຂາຍໃໝ່",
+      "saveChanges": "ບັນທຶກການປ່ຽນແປງ",
+      "createLead": "ສ້າງໂອກາດການຂາຍ",
+      "titleLabel": "ຫົວຂໍ້",
+      "titlePlaceholder": "ຕົວຢ່າງ: ຂໍ້ຕົກລົງຊອບແວອົງກອນ",
+      "wonLeadsCannotChange": "ໂອກາດການຂາຍທີ່ສຳເລັດແລ້ວບໍ່ສາມາດປ່ຽນສະຖານະໄດ້.",
+      "sourceLabel": "ແຫຼ່ງທີ່ມາ",
+      "sourceNone": "— ບໍ່ມີ —",
+      "valueLabel": "ມູນຄ່າ ($)",
+      "descriptionPlaceholder": "ບັນທຶກຫຍໍ້ກ່ຽວກັບໂອກາດການຂາຍນີ້…"
+    },
+    "source": {
+      "website": "ເວັບໄຊ",
+      "referral": "ການແນະນຳ",
+      "coldCall": "ໂທຫາໂດຍກົງ",
+      "email": "ອີເມວ",
+      "socialMedia": "ສື່ສັງຄົມອອນລາຍ",
+      "other": "ອື່ນໆ"
+    },
+    "list": {
+      "title": "ໂອກາດການຂາຍ",
+      "totalCount": "ໂອກາດການຂາຍທັງໝົດ {{count}} ລາຍການ",
+      "newLead": "ໂອກາດການຂາຍໃໝ່",
+      "searchPlaceholder": "ຄົ້ນຫາໂອກາດການຂາຍ…",
+      "allSources": "ທຸກແຫຼ່ງທີ່ມາ",
+      "resultsCount": "{{count}} ຜົນລັບ",
+      "colLead": "ໂອກາດການຂາຍ",
+      "colSource": "ແຫຼ່ງທີ່ມາ",
+      "colValue": "ມູນຄ່າ",
+      "noLeadsFound": "ບໍ່ພົບໂອກາດການຂາຍ",
+      "createFirstLead": "ສ້າງໂອກາດການຂາຍທຳອິດຂອງທ່ານເພື່ອເລີ່ມຕົ້ນ.",
+      "showingRange": "ສະແດງ {{start}}–{{end}} ຈາກ {{total}}",
+      "deleteTitle": "ລຶບໂອກາດການຂາຍ",
+      "deleteMessage": "ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການລຶບ \"{{title}}\"? ບໍ່ສາມາດຍົກເລີກການກະທຳນີ້ໄດ້."
+    }
+  },
+  "imageUpload": {
+    "invalidFormat": "ອະນຸຍາດສະເພາະຮູບພາບ JPG, PNG, ແລະ WebP ເທົ່ານັ້ນ.",
+    "fileTooLarge": "ຂະໜາດໄຟລ໌ເກີນຂອບເຂດ {{size}} MB.",
+    "invalidImage": "ໄຟລ໌ນີ້ບໍ່ແມ່ນຮູບພາບທີ່ຖືກຕ້ອງ.",
+    "uploadFailed": "ອັບໂຫຼດບໍ່ສຳເລັດ. ກະລຸນາລອງໃໝ່ອີກຄັ້ງ.",
+    "remove": "ເອົາອອກ",
+    "uploadedSuccessfully": "ອັບໂຫຼດສຳເລັດແລ້ວ",
+    "clickOrDrag": "ຄລິກ ຫຼື ລາກຮູບພາບເພື່ອອັບໂຫຼດ",
+    "hint": "JPG, PNG, WebP · ສູງສຸດ {{size}} MB"
   },
   "nav": {
     "groups": {
@@ -14,7 +181,7 @@
       "inventory": "ຄັງສິນຄ້າ",
       "finance": "ການເງິນ",
       "executive": "ຂໍ້ມູນຜູ້ບໍລິຫານ",
-      "projects": "Projects"
+      "projects": "ໂຄງການ"
     },
     "items": {
       "overview": "ພາບລວມ",
@@ -34,7 +201,7 @@
       "reports": "ລາຍງານ",
       "analytics": "ການວິເຄາະ",
       "settings": "ຕັ້ງຄ່າ",
-      "warehouseProjects": "Warehouse Projects"
+      "warehouseProjects": "ໂຄງການສາງເກັບເຄື່ອງ"
     },
     "expandSidebar": "ຂະຫຍາຍແຖບເມນູ",
     "collapseSidebar": "ຫຍໍ້ແຖບເມນູ"
@@ -60,7 +227,19 @@
     "settings": "ຕັ້ງຄ່າ",
     "logout": "ອອກຈາກລະບົບ",
     "roleAdmin": "ຜູ້ດູແລລະບົບ",
-    "roleUser": "ຜູ້ໃຊ້"
+    "roleUser": "ຜູ້ໃຊ້",
+    "justNow": "ຫາກໍ່ນີ້",
+    "minutesAgo": "{{count}} ນາທີກ່ອນ",
+    "hoursAgo": "{{count}} ຊົ່ວໂມງກ່ອນ",
+    "daysAgo": "{{count}} ມື້ກ່ອນ",
+    "notifications": "ການແຈ້ງເຕືອນ",
+    "notificationsUnread": "ການແຈ້ງເຕືອນ, {{count}} ລາຍການທີ່ຍັງບໍ່ໄດ້ອ່ານ",
+    "noRecentActivity": "ບໍ່ມີກິດຈະກຳຫຼ້າສຸດ",
+    "systemUser": "ລະບົບ",
+    "viewAllActivity": "ເບິ່ງກິດຈະກຳທັງໝົດ →",
+    "searchResults": "ຜົນການຄົ້ນຫາ",
+    "breadcrumb": "ເສັ້ນທາງນຳທາງ",
+    "userActions": "ຄຳສັ່ງຜູ້ໃຊ້"
   },
   "login": {
     "subtitle": "ເຂົ້າສູ່ລະບົບເພື່ອດຳເນີນການຕໍ່",
@@ -87,7 +266,107 @@
     "upcomingTasks": "ວຽກທີ່ໃກ້ຈະມາເຖິງ",
     "customerOverview": "ພາບລວມລູກຄ້າ",
     "leadPipeline": "ຂັ້ນຕອນໂອກາດການຂາຍ",
-    "resultsConversion": "ຜົນລັບ ແລະ ອັດຕາການປ່ຽນ"
+    "resultsConversion": "ຜົນລັບ ແລະ ອັດຕາການປ່ຽນ",
+    "recentActivity": "ກິດຈະກຳຫຼ້າສຸດ",
+    "viewAll": "ເບິ່ງທັງໝົດ",
+    "noRecentActivity": "ບໍ່ມີກິດຈະກຳຫຼ້າສຸດ",
+    "loadError": "ບໍ່ສາມາດໂຫຼດຂໍ້ມູນໜ້າຫຼັກໄດ້.",
+    "kpi": {
+      "totalRevenue": "ລາຍຮັບລວມ",
+      "activeRentals": "ສັນຍາເຊົ່າທີ່ໃຊ້ງານ",
+      "overdueCount": "{{count}} ລາຍການເກີນກຳນົດ",
+      "fleetUtilization": "ອັດຕາການໃຊ້ງານຍານພາຫະນະ",
+      "rentedOfFleet": "{{rented}} ຈາກ {{total}} ຄັນຖືກເຊົ່າ",
+      "maintenanceDue": "ຄົບກຳນົດບຳລຸງຮັກສາ",
+      "criticalCount": "{{count}} ລາຍການວິກິດ",
+      "lowStock": "ສະຕັອກຕ່ຳ",
+      "outstandingInvoices": "ໃບແຈ້ງໜີ້ຄ້າງຊຳລະ",
+      "amountOverdue": "{{amount}} ເກີນກຳນົດຊຳລະ",
+      "totalCustomers": "ລູກຄ້າທັງໝົດ",
+      "active": "ໃຊ້ງານຢູ່",
+      "percentOfTotal": "{{pct}} ຂອງທັງໝົດ",
+      "prospects": "ລູກຄ້າເປົ້າໝາຍ",
+      "totalLeads": "ໂອກາດການຂາຍທັງໝົດ",
+      "new": "ໃໝ່",
+      "contacted": "ຕິດຕໍ່ແລ້ວ",
+      "qualified": "ຜ່ານເງື່ອນໄຂ",
+      "proposal": "ສະເໜີລາຄາແລ້ວ",
+      "won": "ປິດການຂາຍສຳເລັດ",
+      "lost": "ເສຍໂອກາດ",
+      "conversion": "ອັດຕາການປ່ຽນ",
+      "winRate": "ອັດຕາການປິດການຂາຍ",
+      "lostRate": "ອັດຕາການເສຍໂອກາດ",
+      "wonOverTotal": "ສຳເລັດ / ທັງໝົດ",
+      "wonOverWonLost": "ສຳເລັດ / (ສຳເລັດ+ເສຍໂອກາດ)",
+      "lostOverWonLost": "ເສຍໂອກາດ / (ສຳເລັດ+ເສຍໂອກາດ)"
+    },
+    "quickAction": {
+      "createRental": "ສ້າງສັນຍາເຊົ່າ",
+      "createRentalDesc": "ສັນຍາເຊົ່າໃໝ່",
+      "addEquipment": "ເພີ່ມອຸປະກອນ",
+      "addEquipmentDesc": "ລົງທະບຽນລົດຍົກ",
+      "createInvoice": "ສ້າງໃບແຈ້ງໜີ້",
+      "createInvoiceDesc": "ອອກໃບແຈ້ງໜີ້",
+      "purchaseOrder": "ໃບສັ່ງຊື້",
+      "purchaseOrderDesc": "ສັ່ງຊື້ອະໄຫຼ່",
+      "maintenance": "ການບຳລຸງຮັກສາ",
+      "maintenanceDesc": "ຈັດຕາຕະລາງບໍລິການ"
+    },
+    "chart": {
+      "revenueTrend": "ແນວໂນ້ມລາຍຮັບ",
+      "revenueTrendSub": "ລາຍຮັບຈາກໃບແຈ້ງໜີ້ລາຍເດືອນ",
+      "noRevenueData": "ຍັງບໍ່ມີຂໍ້ມູນລາຍຮັບ",
+      "rentalTrend": "ແນວໂນ້ມການເຊົ່າ",
+      "rentalTrendSub": "ສັນຍາທີ່ໃຊ້ງານຕໍ່ເດືອນ",
+      "noRentalData": "ຍັງບໍ່ມີຂໍ້ມູນການເຊົ່າ",
+      "fleetUtilization": "ອັດຕາການໃຊ້ງານຍານພາຫະນະ",
+      "fleetUtilizationSub": "ອຸປະກອນຕາມສະຖານະ",
+      "noFleetData": "ບໍ່ມີຂໍ້ມູນຍານພາຫະນະ",
+      "total": "ທັງໝົດ",
+      "maintenanceCost": "ຄ່າໃຊ້ຈ່າຍບຳລຸງຮັກສາ",
+      "maintenanceCostSub": "ຄ່າໃຊ້ຈ່າຍບໍລິການລາຍເດືອນ",
+      "noMaintenanceCostData": "ບໍ່ມີຂໍ້ມູນຄ່າໃຊ້ຈ່າຍບຳລຸງຮັກສາ",
+      "fleetByFuelType": "ຍານພາຫະນະຕາມປະເພດເຊື້ອໄຟ",
+      "units": "ໜ່ວຍ"
+    },
+    "task": {
+      "loading": "ກຳລັງໂຫຼດ...",
+      "contractsExpiring": "ສັນຍາໃກ້ໝົດອາຍຸ",
+      "countInDays": "{{count}} ລາຍການໃນ {{days}} ມື້",
+      "noContractsExpiring": "ບໍ່ມີສັນຍາໃກ້ໝົດອາຍຸ",
+      "viewAllContracts": "ເບິ່ງສັນຍາທັງໝົດ →",
+      "quotationsExpiring": "ໃບສະເໜີລາຄາໃກ້ໝົດອາຍຸ",
+      "noQuotationsExpiring": "ບໍ່ມີໃບສະເໜີລາຄາໃກ້ໝົດອາຍຸ",
+      "viewAllQuotations": "ເບິ່ງໃບສະເໜີລາຄາທັງໝົດ →",
+      "pmServiceDue": "ຄົບກຳນົດບຳລຸງຮັກສາ / ບໍລິການ",
+      "approaching": "{{count}} ລາຍການໃກ້ຄົບກຳນົດ",
+      "allWithinServiceRange": "ລົດຍົກທັງໝົດຢູ່ໃນຊ່ວງບໍລິການປົກກະຕິ",
+      "hoursMeter": "{{hours}} ຊົ່ວໂມງ",
+      "viewAllEquipment": "ເບິ່ງອຸປະກອນທັງໝົດ →"
+    },
+    "fleetStatus": {
+      "inStock": "ມີໃນສະຕັອກ",
+      "rented": "ຖືກເຊົ່າ",
+      "inService": "ກຳລັງບໍລິການ",
+      "reserved": "ຈອງແລ້ວ",
+      "sold": "ຂາຍແລ້ວ",
+      "decommissioned": "ປົດລະວາງ"
+    },
+    "fuelType": {
+      "diesel": "ດີເຊວ",
+      "electric": "ໄຟຟ້າ",
+      "lpg": "ອາຍແກັດ",
+      "dualFuel": "ເຊື້ອໄຟຄູ່",
+      "unknown": "ບໍ່ຮູ້ຈັກ"
+    },
+    "catalog": {
+      "title": "ລາຍການສິນຄ້າ",
+      "viewCatalog": "ເບິ່ງລາຍການສິນຄ້າ →",
+      "loadError": "ບໍ່ສາມາດໂຫຼດສະຖິຕິລາຍການສິນຄ້າໄດ້.",
+      "totalProducts": "ສິນຄ້າທັງໝົດ",
+      "brands": "ຍີ່ຫໍ້",
+      "categories": "ໝວດໝູ່"
+    }
   },
   "customer360": {
     "backToCustomers": "ກັບໄປລູກຄ້າ",
@@ -122,6 +401,204 @@
     "colTotalAmount": "ຍອດລວມ",
     "colBalanceDue": "ຍອດຄ້າງຊຳລະ",
     "colDueDate": "ວັນຄົບກຳນົດ"
+  },
+  "projects": {
+    "title": "ໂຄງການສາງເກັບເຄື່ອງ",
+    "totalCount": "ທັງໝົດ: {{count}}",
+    "createProject": "ສ້າງໂຄງການ",
+    "allStatuses": "ທຸກສະຖານະ",
+    "status": {
+      "draft": "ຮ່າງ",
+      "survey": "ສຳຫຼວດ",
+      "design": "ອອກແບບ",
+      "boq_approved": "ອະນຸມັດ BOQ ແລ້ວ",
+      "installation": "ຕິດຕັ້ງ",
+      "handover": "ສົ່ງມອບ",
+      "completed": "ສຳເລັດ"
+    },
+    "milestoneStatus": {
+      "pending": "ລໍຖ້າດຳເນີນການ",
+      "in_progress": "ກຳລັງດຳເນີນການ",
+      "completed": "ສຳເລັດ"
+    },
+    "colProject": "ໂຄງການ",
+    "colCustomer": "ລູກຄ້າ",
+    "colStartEnd": "ເລີ່ມຕົ້ນ / ສິ້ນສຸດ",
+    "colStatus": "ສະຖານະ",
+    "colProgress": "ຄວາມຄືບໜ້າ",
+    "noProjectsFound": "ບໍ່ພົບໂຄງການ",
+    "createToGetStarted": "ສ້າງໂຄງການເພື່ອເລີ່ມຕົ້ນນຳໃຊ້.",
+    "noPermissionView": "ທ່ານບໍ່ມີສິດເຂົ້າເບິ່ງໂຄງການ.",
+    "loadFailed": "ບໍ່ສາມາດໂຫຼດໂຄງການໄດ້.",
+    "resultsCount": "ຜົນລັບ: {{count}}",
+    "pageOf": "ໜ້າ {{page}} ຈາກ {{pages}} ({{total}} ລາຍການ)",
+    "milestonesOf": "{{completed}}/{{total}} ເປົ້າໝາຍ",
+    "form": {
+      "editProject": "ແກ້ໄຂໂຄງການ",
+      "newProject": "ໂຄງການໃໝ່",
+      "cancel": "ຍົກເລີກ",
+      "saving": "ກຳລັງບັນທຶກ…",
+      "saveChanges": "ບັນທຶກການປ່ຽນແປງ",
+      "createProject": "ສ້າງໂຄງການ",
+      "projectName": "ຊື່ໂຄງການ",
+      "projectNamePlaceholder": "ຕົວຢ່າງ: ໂຄງການຊັ້ນວາງສິນຄ້າສາງວຽງຈັນ",
+      "customer": "ລູກຄ້າ",
+      "selectCustomer": "ເລືອກລູກຄ້າ…",
+      "status": "ສະຖານະ",
+      "startDate": "ວັນທີ່ເລີ່ມຕົ້ນ",
+      "endDate": "ວັນທີ່ສິ້ນສຸດ",
+      "notes": "ໝາຍເຫດ",
+      "notesPlaceholder": "ໝາຍເຫດເພີ່ມເຕີມ…"
+    },
+    "detail": {
+      "backToProjects": "ກັບໄປໂຄງການ",
+      "notFound": "ບໍ່ພົບໂຄງການ.",
+      "noPermissionView": "ທ່ານບໍ່ມີສິດເຂົ້າເບິ່ງໂຄງການນີ້.",
+      "edit": "ແກ້ໄຂ",
+      "approveBoq": "ອະນຸມັດ BOQ",
+      "delete": "ລຶບ",
+      "startDate": "ວັນທີ່ເລີ່ມຕົ້ນ",
+      "endDate": "ວັນທີ່ສິ້ນສຸດ",
+      "milestones": "ເປົ້າໝາຍ",
+      "boqTotal": "ຍອດລວມ BOQ",
+      "notes": "ໝາຍເຫດ",
+      "addMilestone": "ເພີ່ມເປົ້າໝາຍ",
+      "noMilestonesYet": "ຍັງບໍ່ມີເປົ້າໝາຍ.",
+      "colMilestone": "ເປົ້າໝາຍ",
+      "colDueDate": "ວັນຄົບກຳນົດ",
+      "colStatus": "ສະຖານະ",
+      "markStatus": "ໝາຍເປັນ {{status}}",
+      "addBoqItem": "ເພີ່ມລາຍການ BOQ",
+      "noBoqItemsYet": "ຍັງບໍ່ມີລາຍການ BOQ.",
+      "colDescription": "ລາຍລະອຽດ",
+      "colQty": "ຈຳນວນ",
+      "colUnitPrice": "ລາຄາຕໍ່ໜ່ວຍ",
+      "colTotal": "ຍອດລວມ",
+      "totalRow": "ຍອດລວມ",
+      "billOfQuantities": "ລາຍການປະລິມານງານ (BOQ)",
+      "deleteProjectTitle": "ລຶບໂຄງການ",
+      "deleteMilestoneTitle": "ລຶບເປົ້າໝາຍ",
+      "deleteBoqItemTitle": "ລຶບລາຍການ BOQ",
+      "deleteProjectMessage": "ການດຳເນີນການນີ້ຈະລຶບໂຄງການພ້ອມເປົ້າໝາຍ ແລະ ລາຍການ BOQ ທັງໝົດຢ່າງຖາວອນ. ບໍ່ສາມາດຍ້ອນກັບໄດ້.",
+      "deleteGenericMessage": "ການດຳເນີນການນີ້ບໍ່ສາມາດຍ້ອນກັບໄດ້.",
+      "confirmDelete": "ລຶບ",
+      "milestoneModalTitle": "ເພີ່ມເປົ້າໝາຍ",
+      "milestoneName": "ຊື່ເປົ້າໝາຍ",
+      "milestoneNamePlaceholder": "ສຳຫຼວດ",
+      "dueDate": "ວັນຄົບກຳນົດ",
+      "adding": "ກຳລັງເພີ່ມ…",
+      "boqModalTitle": "ເພີ່ມລາຍການ BOQ",
+      "linkInventoryPart": "ເຊື່ອມໂຍງກັບອະໄຫຼ່ໃນຄັງ (ບໍ່ບັງຄັບ)",
+      "notLinked": "— ບໍ່ເຊື່ອມໂຍງ —",
+      "description": "ລາຍລະອຽດ",
+      "quantity": "ຈຳນວນ",
+      "unitPrice": "ລາຄາຕໍ່ໜ່ວຍ",
+      "addItem": "ເພີ່ມລາຍການ",
+      "descriptionPriceRequired": "ຈຳເປັນຕ້ອງລະບຸລາຍລະອຽດ ແລະ ລາຄາຕໍ່ໜ່ວຍ.",
+      "projectUpdated": "ອັບເດດໂຄງການແລ້ວ.",
+      "projectUpdateFailed": "ບໍ່ສາມາດອັບເດດໂຄງການໄດ້.",
+      "boqApproved": "ອະນຸມັດ BOQ ແລ້ວ.",
+      "boqApproveFailed": "ບໍ່ສາມາດອະນຸມັດ BOQ ໄດ້.",
+      "projectDeleted": "ລຶບໂຄງການແລ້ວ.",
+      "projectDeleteFailed": "ບໍ່ສາມາດລຶບໂຄງການໄດ້.",
+      "milestoneStatusUpdateFailed": "ບໍ່ສາມາດອັບເດດສະຖານະເປົ້າໝາຍໄດ້.",
+      "milestoneRemoved": "ລຶບເປົ້າໝາຍແລ້ວ.",
+      "milestoneRemoveFailed": "ບໍ່ສາມາດລຶບເປົ້າໝາຍໄດ້.",
+      "boqItemRemoved": "ລຶບລາຍການ BOQ ແລ້ວ.",
+      "boqItemRemoveFailed": "ບໍ່ສາມາດລຶບລາຍການ BOQ ໄດ້.",
+      "milestoneAdded": "ເພີ່ມເປົ້າໝາຍແລ້ວ.",
+      "milestoneAddFailed": "ບໍ່ສາມາດເພີ່ມເປົ້າໝາຍໄດ້.",
+      "boqItemAdded": "ເພີ່ມລາຍການ BOQ ແລ້ວ.",
+      "boqItemAddFailed": "ບໍ່ສາມາດເພີ່ມລາຍການ BOQ ໄດ້.",
+      "projectCreated": "ສ້າງໂຄງການແລ້ວ.",
+      "projectCreateFailed": "ບໍ່ສາມາດສ້າງໂຄງການໄດ້."
+    }
+  },
+  "reports": {
+    "title": "ລາຍງານ",
+    "subtitle": "ການວິເຄາະ, ຕົວຊີ້ວັດການປ່ຽນເປັນລູກຄ້າ, ແລະການສົ່ງອອກຂໍ້ມູນ",
+    "refresh": "ໂຫຼດຄືນໃໝ່",
+    "retry": "ລອງໃໝ່",
+    "keyMetrics": "ຕົວຊີ້ວັດຫຼັກ",
+    "wonLeads": "ໂອກາດການຂາຍທີ່ສຳເລັດ",
+    "totalCustomers": "ລູກຄ້າທັງໝົດ",
+    "conversionRate": "ອັດຕາການປ່ຽນເປັນລູກຄ້າ",
+    "winRate": "ອັດຕາການສຳເລັດ",
+    "wonOverTotalLeads": "ສຳເລັດ ÷ ໂອກາດການຂາຍທັງໝົດ",
+    "wonOverWonPlusLost": "ສຳເລັດ ÷ (ສຳເລັດ + ພາດໂອກາດ)",
+    "exportData": "ສົ່ງອອກຂໍ້ມູນ",
+    "downloadReports": "ດາວໂຫຼດລາຍງານ",
+    "format": "ຮູບແບບ",
+    "fromDate": "ຈາກວັນທີ",
+    "toDate": "ຫາວັນທີ",
+    "clearDates": "ລ້າງວັນທີ",
+    "downloading": "ກຳລັງດາວໂຫຼດ…",
+    "exportNote": "ຖ້າຈຸດປາຍທາງລາຍງານບໍ່ສາມາດໃຊ້ໄດ້, ຈະສ້າງໄຟລ໌ CSV ສະຫຼຸບຢູ່ຝັ່ງລູກຄ້າແທນ.",
+    "customers": "ລູກຄ້າ",
+    "leads": "ໂອກາດການຂາຍ",
+    "sales": "ການຂາຍ",
+    "downloadSuccess": "ດາວໂຫຼດລາຍງານ{{type}}ສຳເລັດແລ້ວ.",
+    "downloadError": "ດາວໂຫຼດລາຍງານ{{type}}ບໍ່ສຳເລັດ.",
+    "trends": "ແນວໂນ້ມ — 12 ເດືອນຫຼ້າສຸດ",
+    "syntheticPreview": "ຂໍ້ມູນຕົວຢ່າງຈຳລອງ",
+    "leadVolume": "ປະລິມານໂອກາດການຂາຍ",
+    "leadVolumeSub": "ໂອກາດການຂາຍໃໝ່ລາຍເດືອນ",
+    "noLeadTrend": "ບໍ່ມີຂໍ້ມູນແນວໂນ້ມໂອກາດການຂາຍ",
+    "leadTrendWillAppear": "ແນວໂນ້ມໂອກາດການຂາຍຈະປາກົດເມື່ອເຊື່ອມຕໍ່ຈຸດປາຍທາງແລ້ວ",
+    "customerGrowth": "ການເຕີບໂຕຂອງລູກຄ້າ",
+    "customerGrowthSub": "ລູກຄ້າໃໝ່ລາຍເດືອນ",
+    "noCustomerTrend": "ບໍ່ມີຂໍ້ມູນແນວໂນ້ມລູກຄ້າ",
+    "customerTrendWillAppear": "ແນວໂນ້ມລູກຄ້າຈະປາກົດເມື່ອເຊື່ອມຕໍ່ຈຸດປາຍທາງແລ້ວ",
+    "leadAnalysis": "ການວິເຄາະໂອກາດການຂາຍ",
+    "statusDistribution": "ການແຈກຢາຍຕາມສະຖານະ",
+    "statusDistributionSub": "ໂອກາດການຂາຍຕາມຂັ້ນຕອນປັດຈຸບັນ",
+    "noStatusData": "ບໍ່ມີຂໍ້ມູນສະຖານະໂອກາດການຂາຍ",
+    "createLeadsToSeeDistribution": "ສ້າງໂອກາດການຂາຍເພື່ອເບິ່ງການແຈກຢາຍ",
+    "sourceBreakdown": "ແຫຼ່ງທີ່ມາ",
+    "sourceBreakdownSub": "ໂອກາດການຂາຍມາຈາກໃສ",
+    "noSourceData": "ບໍ່ມີຂໍ້ມູນແຫຼ່ງທີ່ມາ",
+    "addSourceWhenCreating": "ເພີ່ມແຫຼ່ງທີ່ມາເມື່ອສ້າງໂອກາດການຂາຍ",
+    "conversionMetrics": "ຕົວຊີ້ວັດການປ່ຽນເປັນລູກຄ້າ",
+    "metric": "ຕົວຊີ້ວັດ",
+    "rate": "ອັດຕາ",
+    "breakdown": "ລາຍລະອຽດ",
+    "formula": "ສູດຄຳນວນ",
+    "lostRate": "ອັດຕາການພາດໂອກາດ",
+    "activeCustomers": "ລູກຄ້າທີ່ໃຊ້ງານຢູ່",
+    "leadsInPipeline": "ໂອກາດການຂາຍໃນຂະບວນການ",
+    "ofTotal": "ຈາກ {{count}} ທັງໝົດ",
+    "wonOverTotalFormula": "ສຳເລັດ ÷ ໂອກາດການຂາຍທັງໝົດ × 100",
+    "wonOverWonLostFormula": "ສຳເລັດ ÷ (ສຳເລັດ + ພາດໂອກາດ) × 100",
+    "lostOverWonLostFormula": "ພາດໂອກາດ ÷ (ສຳເລັດ + ພາດໂອກາດ) × 100",
+    "activeOverTotalFormula": "ໃຊ້ງານຢູ່ ÷ ລູກຄ້າທັງໝົດ × 100",
+    "pipelineFormula": "ໃໝ່ + ຕິດຕໍ່ແລ້ວ + ມີຄຸນສົມບັດ + ສະເໜີລາຄາ",
+    "moduleRoadmap": "ແຜນພັດທະນາໂມດູນ",
+    "sourceLabels": {
+      "website": "ເວັບໄຊທ໌",
+      "referral": "ຜູ້ແນະນຳ",
+      "coldCall": "ໂທຫາໂດຍກົງ",
+      "email": "ອີເມວ",
+      "socialMedia": "ສື່ສັງຄົມ",
+      "other": "ອື່ນໆ"
+    },
+    "modules": {
+      "projects": {
+        "label": "ໂຄງການ",
+        "description": "ການຄຸ້ມຄອງໂຄງການດ້ວຍຫຼັກໄມ, ກະດານສະຖານະ, ແລະການມອບໝາຍທີມ"
+      },
+      "services": {
+        "label": "ບໍລິການ",
+        "description": "ລາຍການບໍລິການ, ລະດັບລາຄາ, ແລະການມອບໝາຍບໍລິການໃຫ້ລູກຄ້າ"
+      },
+      "tasks": {
+        "label": "ວຽກງານ",
+        "description": "ກະດານວຽກງານພ້ອມການມອບໝາຍ, ວັນກຳນົດ, ແລະລະດັບຄວາມສຳຄັນ"
+      },
+      "invoices": {
+        "label": "ໃບແຈ້ງໜີ້",
+        "description": "ການອອກໃບແຈ້ງໜີ້, ການຕິດຕາມການຊຳລະ, ແລະການລາຍງານລາຍຮັບ"
+      }
+    }
   },
   "routes": {
     "dashboard": "ໜ້າຫຼັກ",
@@ -171,7 +648,1625 @@
     "warehouses": "ສາງເກັບເຄື່ອງ",
     "purchaseOrders": "ໃບສັ່ງຊື້",
     "executiveDashboard": "ໜ້າຫຼັກຜູ້ບໍລິຫານ",
-    "projects": "Warehouse Projects",
-    "projectDetail": "Project Detail"
+    "projects": "ໂຄງການສາງເກັບເຄື່ອງ",
+    "projectDetail": "ລາຍລະອຽດໂຄງການ"
+  },
+  "inventory": {
+    "common": {
+      "refresh": "ໂຫຼດຂໍ້ມູນໃໝ່",
+      "resultCount_one": "{{count}} ຜົນລັບ",
+      "resultCount_other": "{{count}} ຜົນລັບ",
+      "paginationInfo": "ໜ້າ {{page}} ຈາກ {{pages}}"
+    },
+    "dashboard": {
+      "title": "ຄັງສິນຄ້າ ແລະ ອາໄຫຼ່",
+      "subtitle": "ພາບລວມການຄຸ້ມຄອງສາງ ແລະ ການຈັດຊື້",
+      "purchaseOrdersButton": "ໃບສັ່ງຊື້",
+      "sparePartsButton": "ອາໄຫຼ່",
+      "quickAccess": "ທາງລັດ",
+      "loadError": "ບໍ່ສາມາດໂຫຼດຂໍ້ມູນຄັງສິນຄ້າໄດ້."
+    },
+    "purchaseOrder": {
+      "title": "ໃບສັ່ງຊື້",
+      "subtitle_one": "{{count}} ໃບສັ່ງຊື້",
+      "subtitle_other": "{{count}} ໃບສັ່ງຊື້",
+      "loadError": "ບໍ່ສາມາດໂຫຼດໃບສັ່ງຊື້ໄດ້.",
+      "status": {
+        "all": "ທຸກສະຖານະ",
+        "draft": "ຮ່າງ",
+        "ordered": "ສັ່ງຊື້ແລ້ວ",
+        "partial": "ໄດ້ຮັບບາງສ່ວນ",
+        "received": "ໄດ້ຮັບແລ້ວ",
+        "cancelled": "ຍົກເລີກແລ້ວ"
+      }
+    },
+    "spareParts": {
+      "unitPrice": "ລາຄາຕໍ່ໜ່ວຍ",
+      "unit": "ໜ່ວຍ",
+      "categories": {
+        "all": "ທຸກໝວດໝູ່",
+        "filter": "ກັ່ນຕອງ",
+        "belt": "ສາຍພານ",
+        "brake": "ເບກ",
+        "hydraulic": "ລະບົບໄຮໂດຼລິກ",
+        "electrical": "ໄຟຟ້າ",
+        "engine": "ເຄື່ອງຈັກ",
+        "tire": "ຢາງລໍ້",
+        "chain": "ໂສ້",
+        "battery": "ໝໍ້ໄຟ",
+        "lubricant": "ນ້ຳມັນຫຼໍ່ລື່ນ",
+        "general": "ທົ່ວໄປ"
+      },
+      "list": {
+        "title": "ອາໄຫຼ່",
+        "subtitle_one": "{{count}} ລາຍການອາໄຫຼ່",
+        "subtitle_other": "{{count}} ລາຍການອາໄຫຼ່",
+        "addPart": "ເພີ່ມອາໄຫຼ່",
+        "loadError": "ບໍ່ສາມາດໂຫຼດອາໄຫຼ່ໄດ້.",
+        "searchPlaceholder": "ຄົ້ນຫາໝາຍເລກອາໄຫຼ່, ຊື່...",
+        "noPartsFound": "ບໍ່ພົບອາໄຫຼ່",
+        "columns": {
+          "partNumber": "ເລກອາໄຫຼ່",
+          "minStock": "ສະຕັອກຂັ້ນຕ່ຳ"
+        }
+      },
+      "detail": {
+        "backToList": "ກັບໄປລາຍການອາໄຫຼ່",
+        "notFound": "ບໍ່ພົບຂໍ້ມູນ.",
+        "loadError": "ບໍ່ພົບອາໄຫຼ່.",
+        "totalStock": "ສະຕັອກທັງໝົດ",
+        "minLevel": "ລະດັບຂັ້ນຕ່ຳ",
+        "reorderQty": "ຈຳນວນສັ່ງຊື້ຄືນ",
+        "brand": "ຍີ່ຫໍ້",
+        "leadTime": "ໄລຍະເວລາຈັດສົ່ງ",
+        "leadTimeDays_one": "{{count}} ມື້",
+        "leadTimeDays_other": "{{count}} ມື້",
+        "created": "ສ້າງເມື່ອ",
+        "active": "ໃຊ້ງານຢູ່",
+        "stockByWarehouse": "ສະຕັອກຕາມສາງ",
+        "recentTransactions": "ທຸລະກຳຫຼ້າສຸດ",
+        "columns": {
+          "warehouse": "ສາງ",
+          "onHand": "ໃນມື",
+          "reserved": "ຖືກຈອງ",
+          "available": "ພ້ອມໃຊ້",
+          "number": "ໝາຍເລກ",
+          "qty": "ຈຳນວນ",
+          "cost": "ຕົ້ນທຶນ"
+        }
+      }
+    },
+    "warehouse": {
+      "title": "ສາງ",
+      "list": {
+        "subtitle_one": "{{count}} ສາງ",
+        "subtitle_other": "{{count}} ສາງ",
+        "addWarehouse": "ເພີ່ມສາງ",
+        "loadError": "ບໍ່ສາມາດໂຫຼດສາງໄດ້."
+      },
+      "form": {
+        "codeLabel": "ລະຫັດ",
+        "codePlaceholder": "WH-A",
+        "namePlaceholder": "ສາງອານຟາ",
+        "addressPlaceholder": "ທີ່ຢູ່ເຕັມ (ບໍ່ບັງຄັບ)",
+        "codeNameRequired": "ຕ້ອງລະບຸລະຫັດ ແລະ ຊື່.",
+        "createSuccess": "ສ້າງສາງສຳເລັດແລ້ວ.",
+        "createError": "ບໍ່ສາມາດສ້າງສາງໄດ້.",
+        "creating": "ກຳລັງສ້າງ..."
+      }
+    },
+    "stockBadge": {
+      "inStock": "ມີສະຕັອກ",
+      "lowStock": "ສະຕັອກຕ່ຳ",
+      "outOfStock": "ສະຕັອກໝົດ"
+    },
+    "reorderAlert": {
+      "title": "ການແຈ້ງເຕືອນສັ່ງຊື້ຄືນ ({{count}})",
+      "detail": "{{warehouseCode}}: ພ້ອມໃຊ້ {{available}} (ຂັ້ນຕ່ຳ: {{minLevel}}) — ສັ່ງຊື້ຄືນ {{reorderQuantity}}"
+    },
+    "kpi": {
+      "belowMinimum": "{{count}} ຕ່ຳກວ່າຂັ້ນຕ່ຳ",
+      "lowStock": "ສະຕັອກຕ່ຳ",
+      "pendingPOs": "ໃບສັ່ງຊື້ທີ່ລໍຖ້າ",
+      "spareParts": "ອາໄຫຼ່",
+      "stockValue": "ມູນຄ່າສະຕັອກ",
+      "warehouses": "ສາງ"
+    },
+    "lowStock": {
+      "allHealthy": "ລະດັບສະຕັອກທັງໝົດປົກກະຕິດີ",
+      "min": "ຂັ້ນຕ່ຳ",
+      "reorder": "ສັ່ງຊື້ຄືນ",
+      "title": "ການແຈ້ງເຕືອນສະຕັອກຕ່ຳ",
+      "viewAll": "ເບິ່ງທັງໝົດ"
+    },
+    "purchaseOrderTable": {
+      "empty": "ບໍ່ພົບໃບສັ່ງຊື້",
+      "orderDate": "ວັນທີສັ່ງຊື້",
+      "paginationInfo": "ໜ້າ {{page}} ຈາກ {{pages}} (ທັງໝົດ {{total}})",
+      "poNumber": "ເລກທີໃບສັ່ງຊື້",
+      "vendor": "ຜູ້ສະໜອງ",
+      "warehouse": "ສາງ"
+    },
+    "quickNav": {
+      "catalog": {
+        "desc": "ລາຍການສິນຄ້າທັງໝົດ",
+        "label": "ລາຍການສິນຄ້າ"
+      },
+      "parts": {
+        "desc": "ເບິ່ງຄັງສິນຄ້າ",
+        "label": "ອາໄຫຼ່"
+      },
+      "purchaseOrders": {
+        "desc": "ການຈັດຊື້",
+        "label": "ໃບສັ່ງຊື້"
+      },
+      "warehouses": {
+        "desc": "ຈັດການສະຖານທີ່",
+        "label": "ສາງ"
+      }
+    },
+    "stockDistributionChart": {
+      "empty": "ບໍ່ມີຂໍ້ມູນສະຕັອກ",
+      "subtitle": "ອາໄຫຼ່ຕໍ່ໝວດໝູ່",
+      "title": "ສະຕັອກຕາມໝວດໝູ່"
+    },
+    "warehouseGrid": {
+      "noneFound": "ບໍ່ມີສາງ",
+      "noneFoundHint": "ສ້າງສາງທຳອິດຂອງທ່ານເພື່ອເລີ່ມຕິດຕາມຄັງສິນຄ້າ"
+    }
+  },
+  "billing": {
+    "aging": {
+      "buckets": {
+        "current": "ປັດຈຸບັນ",
+        "days1to30": "1-30 ມື້",
+        "days31to60": "31-60 ມື້",
+        "days61to90": "61-90 ມື້",
+        "days90plus": "90+ ມື້"
+      },
+      "title": "ໜີ້ຄ້າງຮັບຕາມອາຍຸ"
+    },
+    "common": {
+      "markOverdue": "ໝາຍເປັນເກີນກຳນົດ",
+      "markOverdueError": "ບໍ່ສາມາດໝາຍໃບແຈ້ງໜີ້ເປັນເກີນກຳນົດໄດ້",
+      "markOverdueSuccess": "ໝາຍໃບແຈ້ງໜີ້ {{count}} ໃບເປັນເກີນກຳນົດແລ້ວ",
+      "refresh": "ໂຫຼດຂໍ້ມູນໃໝ່"
+    },
+    "dashboard": {
+      "loadError": "ບໍ່ສາມາດໂຫຼດຂໍ້ມູນສະຫຼຸບການເງິນໄດ້.",
+      "quickAccess": "ທາງລັດ",
+      "subtitle": "ພາບລວມການເງິນ ແລະ ຄຳສັ່ງດ່ວນ",
+      "title": "ໃບແຈ້ງໜີ້ ແລະ ການຊຳລະເງິນ"
+    },
+    "deposit": {
+      "actions": {
+        "applyToInvoice": "ນຳໃຊ້ກັບໃບແຈ້ງໜີ້",
+        "forfeit": "ຮິບເງິນມັດຈຳ",
+        "markReceived": "ໝາຍວ່າໄດ້ຮັບແລ້ວ",
+        "refund": "ຄືນເງິນ"
+      },
+      "detail": {
+        "actionFailed": "ດຳເນີນການບໍ່ສຳເລັດ.",
+        "contractLabel": "ສັນຍາ:",
+        "invoicesLoadError": "ບໍ່ສາມາດໂຫຼດໃບແຈ້ງໜີ້ໄດ້.",
+        "loadError": "ບໍ່ສາມາດໂຫຼດເງິນມັດຈຳໄດ້.",
+        "notFound": "ບໍ່ພົບຂໍ້ມູນ",
+        "notesLabel": "ໝາຍເຫດ:",
+        "receivedLabel": "ໄດ້ຮັບ: {{date}}",
+        "refundDateLabel": "ວັນທີຄືນເງິນ: {{date}}"
+      },
+      "list": {
+        "empty": "ບໍ່ພົບເງິນມັດຈຳ",
+        "loadError": "ບໍ່ສາມາດໂຫຼດເງິນມັດຈຳໄດ້.",
+        "resultsCount": "{{count}} ຜົນລັບ",
+        "subtitle": "{{count}} ເງິນມັດຈຳ",
+        "title": "ເງິນມັດຈຳ"
+      },
+      "modal": {
+        "apply": {
+          "amountLabel": "ຈຳນວນເງິນ (ສູງສຸດ: {{max}})",
+          "confirm": "ນຳໃຊ້",
+          "invoiceLabel": "ໃບແຈ້ງໜີ້",
+          "invoiceOption": "{{number}} — ຍອດຄ້າງ: {{balance}} {{currency}}",
+          "selectInvoicePlaceholder": "ເລືອກໃບແຈ້ງໜີ້...",
+          "title": "ນຳໃຊ້ເງິນມັດຈຳກັບໃບແຈ້ງໜີ້"
+        },
+        "forfeit": {
+          "amountLabel": "ຈຳນວນເງິນທີ່ຮິບ (ສູງສຸດ: {{max}})",
+          "reasonLabel": "ເຫດຜົນ",
+          "title": "ຮິບເງິນມັດຈຳ"
+        },
+        "markReceived": {
+          "confirm": "ຢືນຢັນການໄດ້ຮັບ",
+          "depositLabel": "ເງິນມັດຈຳ",
+          "receivedDateLabel": "ວັນທີໄດ້ຮັບ",
+          "title": "ໝາຍເງິນມັດຈຳວ່າໄດ້ຮັບແລ້ວ"
+        },
+        "refund": {
+          "amountLabel": "ຈຳນວນເງິນຄືນ (ສູງສຸດ: {{max}})",
+          "dateLabel": "ວັນທີຄືນເງິນ",
+          "title": "ຄືນເງິນມັດຈຳ"
+        }
+      },
+      "pagination": {
+        "info": "ໜ້າ {{page}} ຈາກ {{pages}} (ທັງໝົດ {{total}})"
+      },
+      "status": {
+        "all": "ທຸກສະຖານະ",
+        "applied": "ນຳໃຊ້ແລ້ວ",
+        "forfeited": "ຖືກຮິບແລ້ວ",
+        "partiallyRefunded": "ຄືນເງິນບາງສ່ວນ",
+        "pending": "ລໍຖ້າ",
+        "received": "ໄດ້ຮັບແລ້ວ",
+        "refunded": "ຄືນເງິນແລ້ວ"
+      },
+      "summary": {
+        "amount": "ຈຳນວນເງິນມັດຈຳ",
+        "applied": "ນຳໃຊ້ແລ້ວ",
+        "forfeited": "ຖືກຮິບແລ້ວ",
+        "refunded": "ຄືນເງິນແລ້ວ",
+        "remaining": "ຍອດຄົງເຫຼືອ"
+      },
+      "summaryCard": {
+        "active": "ໃຊ້ງານຢູ່",
+        "title": "ເງິນມັດຈຳ"
+      },
+      "table": {
+        "contract": "ສັນຍາ",
+        "customer": "ລູກຄ້າ",
+        "number": "ເລກທີເງິນມັດຈຳ",
+        "received": "ໄດ້ຮັບແລ້ວ"
+      },
+      "toast": {
+        "receiveError": "ບໍ່ສາມາດຮັບເງິນມັດຈຳໄດ້",
+        "received": "ຮັບເງິນມັດຈຳແລ້ວ"
+      },
+      "type": {
+        "advance": "ເງິນລ່ວງໜ້າ",
+        "all": "ທຸກປະເພດ",
+        "guarantee": "ເງິນຄ້ຳປະກັນ",
+        "security": "ເງິນປະກັນ"
+      }
+    },
+    "finance": {
+      "loadError": "ບໍ່ສາມາດໂຫຼດຂໍ້ມູນການເງິນໄດ້.",
+      "subtitle": "ຜົນປະຕິບັດງານລາຍຮັບ, ໜີ້ຄ້າງຮັບ, ແລະ ການຕິດຕາມການເກັບເງິນ",
+      "title": "ການວິເຄາະການເງິນ"
+    },
+    "invoice": {
+      "actions": {
+        "issue": "ອອກໃບແຈ້ງໜີ້",
+        "send": "ສົ່ງ",
+        "void": "ຍົກເລີກໃຊ້ງານ"
+      },
+      "allocations": {
+        "payment": "ການຊຳລະເງິນ",
+        "paymentLabel": "ການຊຳລະເງິນ #{{id}}",
+        "title": "ການແບ່ງສັນການຊຳລະເງິນ"
+      },
+      "amountSummary": {
+        "balanceDue": "ຍອດຄ້າງຊຳລະ",
+        "discount": "ສ່ວນຫຼຸດ",
+        "paid": "ຊຳລະແລ້ວ",
+        "tax": "ພາສີ ({{rate}}%)"
+      },
+      "card": {
+        "balance": "ຍອດຄົງເຫຼືອ: {{amount}} {{currency}}",
+        "due": "ຄົບກຳນົດ {{date}}"
+      },
+      "detail": {
+        "actionFailed": "ບໍ່ສຳເລັດ: {{action}}",
+        "cancellationReason": "ເຫດຜົນການຍົກເລີກ",
+        "internalNotes": "ໝາຍເຫດພາຍໃນ",
+        "loadError": "ບໍ່ສາມາດໂຫຼດໃບແຈ້ງໜີ້ໄດ້.",
+        "notFound": "ບໍ່ພົບໃບແຈ້ງໜີ້"
+      },
+      "filter": {
+        "all": "ທຸກສະຖານະ",
+        "partially_paid": "ຊຳລະບາງສ່ວນ"
+      },
+      "lineItems": {
+        "empty": "ບໍ່ມີລາຍການ",
+        "number": "#",
+        "qty": "ຈຳນວນ",
+        "rate": "ອັດຕາ",
+        "tax": "ພາສີ",
+        "title": "ລາຍການ"
+      },
+      "list": {
+        "empty": "ບໍ່ພົບໃບແຈ້ງໜີ້",
+        "loadError": "ບໍ່ສາມາດໂຫຼດໃບແຈ້ງໜີ້ໄດ້.",
+        "resultsCount": "{{count}} ຜົນລັບ",
+        "searchPlaceholder": "ຄົ້ນຫາເລກທີໃບແຈ້ງໜີ້...",
+        "subtitle": "{{count}} ໃບແຈ້ງໜີ້",
+        "title": "ໃບແຈ້ງໜີ້"
+      },
+      "meta": {
+        "contract": "ສັນຍາ",
+        "createdBy": "ສ້າງໂດຍ",
+        "dueDate": "ວັນຄົບກຳນົດ",
+        "issueDate": "ວັນທີອອກ",
+        "paidDate": "ວັນທີຊຳລະ",
+        "period": "ໄລຍະເວລາ"
+      },
+      "modal": {
+        "cancel": {
+          "reasonLabel": "ເຫດຜົນການຍົກເລີກ",
+          "reasonPlaceholder": "ປ້ອນເຫດຜົນ...",
+          "title": "ຍົກເລີກໃບແຈ້ງໜີ້"
+        }
+      },
+      "pagination": {
+        "info": "ໜ້າ {{page}} ຈາກ {{pages}} (ທັງໝົດ {{total}})"
+      },
+      "status": {
+        "cancelled": "ຍົກເລີກແລ້ວ",
+        "draft": "ຮ່າງ",
+        "issued": "ອອກແລ້ວ",
+        "overdue": "ເກີນກຳນົດ",
+        "paid": "ຊຳລະແລ້ວ",
+        "partially_paid": "ຊຳລະບາງສ່ວນ",
+        "sent": "ສົ່ງແລ້ວ",
+        "voided": "ຍົກເລີກໃຊ້ງານແລ້ວ"
+      },
+      "summary": {
+        "count": "ຈຳນວນ",
+        "outstanding": "ຍອດຄ້າງຊຳລະ",
+        "overdue": "ເກີນກຳນົດ",
+        "title": "ໃບແຈ້ງໜີ້"
+      },
+      "table": {
+        "balance": "ຍອດຄົງເຫຼືອ",
+        "customer": "ລູກຄ້າ",
+        "number": "ເລກທີໃບແຈ້ງໜີ້"
+      },
+      "toast": {
+        "cancelled": "ຍົກເລີກໃບແຈ້ງໜີ້ແລ້ວ",
+        "issued": "ອອກໃບແຈ້ງໜີ້ແລ້ວ",
+        "sent": "ສົ່ງໃບແຈ້ງໜີ້ແລ້ວ",
+        "voided": "ຍົກເລີກໃຊ້ງານໃບແຈ້ງໜີ້ແລ້ວ"
+      }
+    },
+    "payment": {
+      "actions": {
+        "allocateToInvoice": "ແບ່ງສັນໃຫ້ໃບແຈ້ງໜີ້",
+        "reject": "ປະຕິເສດ"
+      },
+      "allocate": {
+        "amountPlaceholder": "0.00",
+        "balance": "ຍອດຄົງເຫຼືອ",
+        "invoiceLabel": "ໃບແຈ້ງໜີ້",
+        "selectPlaceholder": "ເລືອກໃບແຈ້ງໜີ້...",
+        "submit": "ແບ່ງສັນ",
+        "title": "ແບ່ງສັນການຊຳລະເງິນໃຫ້ໃບແຈ້ງໜີ້"
+      },
+      "empty": "ບໍ່ພົບການຊຳລະເງິນ",
+      "fields": {
+        "confirmedAt": "ຢືນຢັນເມື່ອ",
+        "confirmedBy": "ຢືນຢັນໂດຍ",
+        "contract": "ສັນຍາ",
+        "createdBy": "ສ້າງໂດຍ",
+        "method": "ວິທີການ",
+        "paymentDate": "ວັນທີຊຳລະເງິນ",
+        "received": "ໄດ້ຮັບແລ້ວ",
+        "reference": "ເລກອ້າງອີງ"
+      },
+      "list": {
+        "resultsCount": "{{count}} ຜົນລັບ",
+        "subtitle": "{{count}} ການຊຳລະເງິນ",
+        "title": "ການຊຳລະເງິນ"
+      },
+      "method": {
+        "bank_transfer": "ໂອນຜ່ານທະນາຄານ",
+        "cash": "ເງິນສົດ",
+        "check": "ເຊັກ",
+        "credit_card": "ບັດເຄຣດິດ",
+        "mobile_payment": "ການຊຳລະຜ່ານມືຖື",
+        "mobile_paymentShort": "ມືຖື",
+        "other": "ອື່ນໆ"
+      },
+      "methodFilter": {
+        "all": "ທຸກວິທີການ"
+      },
+      "notFound": "ບໍ່ພົບການຊຳລະເງິນ",
+      "pagination": {
+        "pageOf": "ໜ້າ {{page}} ຈາກ {{pages}} (ທັງໝົດ {{total}})"
+      },
+      "searchPlaceholder": "ຄົ້ນຫາການຊຳລະເງິນ / ເລກອ້າງອີງ...",
+      "status": {
+        "confirmed": "ຢືນຢັນແລ້ວ",
+        "pending": "ລໍຖ້າ",
+        "refunded": "ຄືນເງິນແລ້ວ",
+        "rejected": "ຖືກປະຕິເສດ"
+      },
+      "statusFilter": {
+        "all": "ທຸກສະຖານະ"
+      },
+      "summary": {
+        "title": "ການຊຳລະເງິນ",
+        "transactions": "ທຸລະກຳ"
+      },
+      "table": {
+        "customer": "ລູກຄ້າ",
+        "number": "ເລກທີການຊຳລະເງິນ"
+      },
+      "toast": {
+        "actionFailed": "ບໍ່ສຳເລັດ: {{action}}",
+        "allocated": "ແບ່ງສັນການຊຳລະເງິນແລ້ວ",
+        "confirmed": "ຢືນຢັນການຊຳລະເງິນແລ້ວ",
+        "loadFailed": "ບໍ່ສາມາດໂຫຼດການຊຳລະເງິນໄດ້.",
+        "loadInvoicesFailed": "ບໍ່ສາມາດໂຫຼດໃບແຈ້ງໜີ້ໄດ້",
+        "loadPaymentsFailed": "ບໍ່ສາມາດໂຫຼດການຊຳລະເງິນໄດ້.",
+        "rejected": "ປະຕິເສດການຊຳລະເງິນແລ້ວ"
+      }
+    },
+    "revenue": {
+      "actionError": "ດຳເນີນການບໍ່ສຳເລັດ.",
+      "columns": {
+        "number": "ເລກທີ REV",
+        "period": "ໄລຍະເວລາ"
+      },
+      "empty": "ບໍ່ມີລາຍການຮັບຮູ້ລາຍຮັບ",
+      "entriesCount": "{{count}} ລາຍການ",
+      "loadError": "ບໍ່ສາມາດໂຫຼດການຮັບຮູ້ລາຍຮັບໄດ້.",
+      "paginationInfo": "ໜ້າ {{page}} ຈາກ {{pages}} (ທັງໝົດ {{total}})",
+      "recognize": "ຮັບຮູ້ລາຍຮັບ",
+      "resultsCount": "{{count}} ຜົນລັບ",
+      "reverse": "ຍົກເລີກການຮັບຮູ້",
+      "statusOptions": {
+        "all": "ທຸກສະຖານະ",
+        "recognized": "ຮັບຮູ້ແລ້ວ",
+        "reversed": "ຍົກເລີກແລ້ວ",
+        "scheduled": "ກຳນົດການແລ້ວ"
+      },
+      "title": "ການຮັບຮູ້ລາຍຮັບ",
+      "typeLabels": {
+        "damageRecovery": "ການທົດແທນຄວາມເສຍຫາຍ",
+        "depositForfeiture": "ການຮິບເງິນມັດຈຳ",
+        "penaltyFee": "ຄ່າປັບໄໝ",
+        "rentalIncome": "ລາຍຮັບຈາກການເຊົ່າ",
+        "serviceFee": "ຄ່າບໍລິການ"
+      },
+      "typeOptions": {
+        "all": "ທຸກປະເພດ",
+        "damageRecovery": "ການທົດແທນຄວາມເສຍຫາຍ",
+        "depositForfeiture": "ການຮິບເງິນມັດຈຳ",
+        "penaltyFee": "ຄ່າປັບໄໝ",
+        "rentalIncome": "ລາຍຮັບຈາກການເຊົ່າ",
+        "serviceFee": "ຄ່າບໍລິການ"
+      }
+    },
+    "revenueChart": {
+      "empty": "ບໍ່ມີຂໍ້ມູນ",
+      "invoiced": "ອອກໃບແຈ້ງໜີ້ແລ້ວ",
+      "invoicedTooltip": "ອອກໃບແຈ້ງໜີ້ແລ້ວ: {{amount}}",
+      "paid": "ຊຳລະແລ້ວ",
+      "paidTooltip": "ຊຳລະແລ້ວ: {{amount}}",
+      "title": "ແນວໂນ້ມລາຍຮັບ (6 ເດືອນຫຼ້າສຸດ)"
+    },
+    "statement": {
+      "columns": {
+        "balance": "ຍອດຄົງເຫຼືອ",
+        "charges": "ຄ່າໃຊ້ຈ່າຍ",
+        "invoiceNumber": "ເລກທີໃບແຈ້ງໜີ້",
+        "payments": "ການຊຳລະເງິນ"
+      },
+      "emptySub": "ບໍ່ພົບໃບແຈ້ງໜີ້ທີ່ກົງກັບການຄົ້ນຫາຂອງທ່ານ",
+      "entriesCount": "{{count}} ລາຍການ",
+      "loadError": "ບໍ່ສາມາດໂຫຼດຂໍ້ມູນໃບແຈ້ງຍອດໄດ້.",
+      "loading": "ກຳລັງໂຫຼດໃບແຈ້ງຍອດ...",
+      "noEntries": "ບໍ່ມີລາຍການໃນໃບແຈ້ງຍອດ",
+      "outstandingBalance": "ຍອດຄ້າງຊຳລະ",
+      "searchPlaceholder": "ຄົ້ນຫາໃບແຈ້ງໜີ້...",
+      "subtitle": "ກິດຈະກຳໃບແຈ້ງໜີ້ທັງໝົດພ້ອມຍອດຄົງເຫຼືອ",
+      "title": "ໃບແຈ້ງຍອດບັນຊີ",
+      "totalCharges": "ຄ່າໃຊ້ຈ່າຍທັງໝົດ",
+      "totalPayments": "ການຊຳລະເງິນທັງໝົດ"
+    }
+  },
+  "maintenance": {
+    "actions": {
+      "refresh": "ໂຫຼດຂໍ້ມູນໃໝ່"
+    },
+    "dashboard": {
+      "cards": {
+        "activeSchedules": "ຕາຕະລາງທີ່ໃຊ້ງານຢູ່",
+        "completedThisMonth": "ສຳເລັດແລ້ວ (ເດືອນນີ້)",
+        "costThisMonth": "ຄ່າໃຊ້ຈ່າຍ (ເດືອນນີ້)",
+        "pmPlans": "ແຜນ PM"
+      },
+      "loadError": "ບໍ່ສາມາດໂຫຼດແດຊບອດໄດ້.",
+      "pmSchedulesButton": "ຕາຕະລາງ PM",
+      "subtitle": "ແດຊບອດການບຳລຸງຮັກສາເຊິງປ້ອງກັນ",
+      "title": "ການບຳລຸງຮັກສາ ແລະ PM",
+      "workOrdersButton": "ໃບສັ່ງງານ"
+    },
+    "overdue": "ເກີນກຳນົດ",
+    "priority": {
+      "critical": "ວິກິດ",
+      "high": "ສູງ",
+      "low": "ຕ່ຳ",
+      "normal": "ປົກກະຕິ"
+    },
+    "schedule": {
+      "activeSchedules": "{{count}} ຕາຕະລາງທີ່ໃຊ້ງານຢູ່",
+      "emptyState": "ບໍ່ມີຕາຕະລາງ PM ທີ່ໃຊ້ງານຢູ່. ສ້າງແຜນບຳລຸງຮັກສາ ແລະ ມອບໝາຍໃຫ້ອຸປະກອນ.",
+      "interval": "ໄລຍະຫ່າງ",
+      "loadError": "ບໍ່ສາມາດໂຫຼດຕາຕະລາງໄດ້.",
+      "nextDue": "ຄົບກຳນົດຄັ້ງຕໍ່ໄປ",
+      "serviced": "ບໍລິການແລ້ວ",
+      "title": "ຕາຕະລາງ PM"
+    },
+    "status": {
+      "due": "ຄົບກຳນົດ",
+      "inProgress": "ກຳລັງດຳເນີນການ",
+      "scheduled": "ກຳນົດການແລ້ວ",
+      "verified": "ຢືນຢັນແລ້ວ"
+    },
+    "type": {
+      "corrective": "ການແກ້ໄຂ",
+      "emergency": "ສຸກເສີນ",
+      "inspection": "ການກວດກາ",
+      "preventive": "ການປ້ອງກັນ"
+    },
+    "workOrders": {
+      "detail": {
+        "actionFailed": "ບໍ່ສຳເລັດ: {{label}}",
+        "addCost": "ເພີ່ມຄ່າໃຊ້ຈ່າຍ",
+        "backToList": "ກັບໄປລາຍການໃບສັ່ງງານ",
+        "cancellationReason": "ເຫດຜົນການຍົກເລີກ",
+        "completeAction": "ສຳເລັດ",
+        "completeModal": {
+          "completing": "ກຳລັງດຳເນີນການໃຫ້ສຳເລັດ...",
+          "findingsPlaceholder": "ສິ່ງທີ່ພົບໃນລະຫວ່າງການກວດກາ...",
+          "resolutionPlaceholder": "ສິ່ງທີ່ໄດ້ດຳເນີນການແກ້ໄຂ...",
+          "title": "ດຳເນີນໃບສັ່ງງານໃຫ້ສຳເລັດ"
+        },
+        "costBreakdown": "ລາຍລະອຽດຄ່າໃຊ້ຈ່າຍ ({{count}})",
+        "costModal": {
+          "adding": "ກຳລັງເພີ່ມ...",
+          "costAdded": "ເພີ່ມຄ່າໃຊ້ຈ່າຍແລ້ວ.",
+          "costType": "ປະເພດຄ່າໃຊ້ຈ່າຍ",
+          "descRateRequired": "ຕ້ອງລະບຸລາຍລະອຽດ ແລະ ອັດຕາ.",
+          "failed": "ບໍ່ສຳເລັດ.",
+          "title": "ເພີ່ມລາຍການຄ່າໃຊ້ຈ່າຍ",
+          "typeExternalService": "ບໍລິການພາຍນອກ",
+          "typeLabor": "ຄ່າແຮງງານ",
+          "typeOther": "ອື່ນໆ",
+          "typeParts": "ອາໄຫຼ່",
+          "unitRate": "ອັດຕາຕໍ່ໜ່ວຍ"
+        },
+        "fields": {
+          "actualCost": "ຄ່າໃຊ້ຈ່າຍຕົວຈິງ",
+          "actualHours": "ຊົ່ວໂມງຕົວຈິງ",
+          "created": "ສ້າງເມື່ອ",
+          "equipment": "ອຸປະກອນ",
+          "estHours": "ຊົ່ວໂມງໂດຍປະມານ",
+          "hourMeter": "ໂມງບັນທຶກຊົ່ວໂມງ",
+          "pmPlan": "ແຜນ PM",
+          "started": "ເລີ່ມເມື່ອ",
+          "technician": "ຊ່າງເຕັກນິກ",
+          "verifiedBy": "ຢືນຢັນໂດຍ"
+        },
+        "findings": "ຜົນການກວດພົບ",
+        "notFound": "ບໍ່ພົບໃບສັ່ງງານ.",
+        "rate": "ອັດຕາ",
+        "resolution": "ການແກ້ໄຂ",
+        "startModal": {
+          "hourMeterReading": "ຄ່າອ່ານໂມງບັນທຶກຊົ່ວໂມງ",
+          "start": "ເລີ່ມ",
+          "starting": "ກຳລັງເລີ່ມ...",
+          "title": "ເລີ່ມໃບສັ່ງງານ"
+        },
+        "startWork": "ເລີ່ມວຽກ",
+        "toastStarted": "ເລີ່ມວຽກແລ້ວ",
+        "verify": "ຢືນຢັນ"
+      },
+      "list": {
+        "allStatuses": "ທຸກສະຖານະ",
+        "allTypes": "ທຸກປະເພດ",
+        "columns": {
+          "priority": "ຄວາມສຳຄັນ",
+          "workOrder": "ໃບສັ່ງງານ"
+        },
+        "loadError": "ບໍ່ສາມາດໂຫຼດໃບສັ່ງງານໄດ້.",
+        "newWorkOrder": "ໃບສັ່ງງານໃໝ່",
+        "paginationInfo": "ໜ້າ {{page}} ຈາກ {{pages}} (ທັງໝົດ {{total}})",
+        "resultsCount": "{{count}} ຜົນລັບ",
+        "searchPlaceholder": "ຄົ້ນຫາເລກທີ, ຫົວຂໍ້...",
+        "subtitle": "{{count}} ໃບສັ່ງງານ",
+        "title": "ໃບສັ່ງງານ"
+      }
+    }
+  },
+  "movement": {
+    "card": {
+      "customer": "ລູກຄ້າ: {{name}}"
+    },
+    "detail": {
+      "actionFailed": "ບໍ່ສຳເລັດ: {{action}}",
+      "actions": {
+        "markComplete": "ໝາຍວ່າສຳເລັດ",
+        "recordArrival": "ບັນທຶກການມາຮອດ",
+        "recordDeparture": "ບັນທຶກການອອກເດີນທາງ",
+        "startPreparing": "ເລີ່ມກຽມພ້ອມ"
+      },
+      "arrivalHourMeter": "ໂມງບັນທຶກຊົ່ວໂມງເມື່ອມາຮອດ",
+      "arrivalHours": "ຊົ່ວໂມງເມື່ອມາຮອດ",
+      "arrived": "ມາຮອດແລ້ວ",
+      "cancellationReason": "ເຫດຜົນການຍົກເລີກ",
+      "cancelledByUser": "ຍົກເລີກໂດຍຜູ້ໃຊ້",
+      "contract": "ສັນຍາ",
+      "customer": "ລູກຄ້າ",
+      "departed": "ອອກເດີນທາງແລ້ວ",
+      "departureHourMeter": "ໂມງບັນທຶກຊົ່ວໂມງເມື່ອອອກເດີນທາງ",
+      "departureHours": "ຊົ່ວໂມງເມື່ອອອກເດີນທາງ",
+      "driver": "ຄົນຂັບ",
+      "equipment": "ອຸປະກອນ",
+      "from": "ຈາກ",
+      "internalNote": "ໝາຍເຫດພາຍໃນ",
+      "notFound": "ບໍ່ພົບການເຄື່ອນຍ້າຍ.",
+      "scheduled": "ກຳນົດການແລ້ວ",
+      "to": "ໄປ",
+      "toasts": {
+        "arrived": "ມາຮອດແລ້ວ",
+        "cancelled": "ຍົກເລີກແລ້ວ",
+        "departed": "ອອກເດີນທາງແລ້ວ",
+        "movementCompleted": "ການເຄື່ອນຍ້າຍສຳເລັດແລ້ວ",
+        "preparationStarted": "ເລີ່ມການກຽມພ້ອມແລ້ວ"
+      },
+      "trackingCode": "ລະຫັດຕິດຕາມ"
+    },
+    "form": {
+      "addressPlaceholder": "ທີ່ຢູ່ເຕັມ (ບໍ່ບັງຄັບ)",
+      "backToMovements": "ກັບໄປການເຄື່ອນຍ້າຍ",
+      "createFailed": "ບໍ່ສາມາດສ້າງການເຄື່ອນຍ້າຍໄດ້.",
+      "createMovement": "ສ້າງການເຄື່ອນຍ້າຍ",
+      "created": "ສ້າງການເຄື່ອນຍ້າຍ {{number}} ແລ້ວ.",
+      "creating": "ກຳລັງສ້າງ...",
+      "customerId": "ລະຫັດລູກຄ້າ",
+      "errors": {
+        "forkliftRequired": "ຕ້ອງລະບຸລະຫັດລົດຍົກ.",
+        "fromLocationRequired": "ຕ້ອງລະບຸສະຖານທີ່ຕົ້ນທາງ.",
+        "scheduledDateRequired": "ຕ້ອງລະບຸວັນທີກຳນົດການ.",
+        "toLocationRequired": "ຕ້ອງລະບຸສະຖານທີ່ປາຍທາງ."
+      },
+      "forkliftId": "ລະຫັດລົດຍົກ",
+      "forkliftIdPlaceholder": "ປ້ອນລະຫັດລົດຍົກ",
+      "fromAddress": "ທີ່ຢູ່ຕົ້ນທາງ",
+      "fromLocation": "ສະຖານທີ່ຕົ້ນທາງ",
+      "fromLocationPlaceholder": "ສາງ DK A",
+      "internalNotes": "ໝາຍເຫດພາຍໃນ",
+      "internalNotesPlaceholder": "ສະເພາະພາຍໃນ...",
+      "movementType": "ປະເພດການເຄື່ອນຍ້າຍ",
+      "notesPlaceholder": "ໝາຍເຫດທີ່ເບິ່ງເຫັນໄດ້...",
+      "priority": "ຄວາມສຳຄັນ",
+      "scheduledDate": "ວັນທີກຳນົດການ",
+      "title": "ການເຄື່ອນຍ້າຍໃໝ່",
+      "toAddress": "ທີ່ຢູ່ປາຍທາງ",
+      "toLocation": "ສະຖານທີ່ປາຍທາງ",
+      "toLocationPlaceholder": "ສະຖານທີ່ລູກຄ້າ X",
+      "trackingCode": "ລະຫັດຕິດຕາມ / QR",
+      "trackingCodePlaceholder": "ລະຫັດ QR ຫຼື ບາໂຄ້ດອ້າງອີງ"
+    },
+    "list": {
+      "allStatuses": "ທຸກສະຖານະ",
+      "allTypes": "ທຸກປະເພດ",
+      "colEquipment": "ອຸປະກອນ",
+      "colFromTo": "ຈາກ → ໄປ",
+      "colMovement": "ການເຄື່ອນຍ້າຍ",
+      "colPriority": "ຄວາມສຳຄັນ",
+      "colScheduled": "ກຳນົດການ",
+      "loadFailed": "ບໍ່ສາມາດໂຫຼດການເຄື່ອນຍ້າຍໄດ້.",
+      "newMovement": "ການເຄື່ອນຍ້າຍໃໝ່",
+      "noMovementsFound": "ບໍ່ພົບການເຄື່ອນຍ້າຍ",
+      "pageOf": "ໜ້າ {{page}} ຈາກ {{pages}} (ທັງໝົດ {{total}})",
+      "refresh": "ໂຫຼດຂໍ້ມູນໃໝ່",
+      "resultsCount": "{{count}} ຜົນລັບ",
+      "searchPlaceholder": "ຄົ້ນຫາເລກທີ, ສະຖານທີ່, ລະຫັດ...",
+      "title": "ການຄວບຄຸມການເຄື່ອນຍ້າຍ",
+      "totalCount": "{{count}} ການເຄື່ອນຍ້າຍ"
+    },
+    "priority": {
+      "high": "ສູງ",
+      "low": "ຕ່ຳ",
+      "normal": "ປົກກະຕິ",
+      "urgent": "ດ່ວນ"
+    },
+    "status": {
+      "cancelled": "ຍົກເລີກແລ້ວ",
+      "completed": "ສຳເລັດແລ້ວ",
+      "delivered": "ສົ່ງແລ້ວ",
+      "draft": "ຮ່າງ",
+      "in_transit": "ກຳລັງຂົນສົ່ງ",
+      "preparing": "ກຳລັງກຽມພ້ອມ"
+    },
+    "timeline": {
+      "by": "ໂດຍ {{name}}",
+      "title": "ລຳດັບເຫດການເຄື່ອນຍ້າຍ"
+    },
+    "type": {
+      "customer_deployment": "ການນຳໄປໃຊ້ງານ",
+      "customer_return": "ການສົ່ງຄືນ",
+      "internal_relocation": "ການຍົກຍ້າຍພາຍໃນ",
+      "warehouse_transfer": "ການໂອນຍ້າຍສາງ"
+    }
+  },
+  "activity": {
+    "details": {
+      "drawerTitle": "ລາຍລະອຽດກິດຈະກຳ",
+      "eventInfo": "ຂໍ້ມູນເຫດການ",
+      "fieldsModified": "ຊ່ອງຂໍ້ມູນທີ່ແກ້ໄຂ:",
+      "group": "ກຸ່ມ: {{group}}",
+      "noneRecorded": "ບໍ່ມີລາຍລະອຽດເພີ່ມເຕີມທີ່ບັນທຶກໄວ້.",
+      "systemOrDeletedUser": "ລະບົບ / ຜູ້ໃຊ້ທີ່ຖືກລຶບ",
+      "title": "ລາຍລະອຽດ"
+    },
+    "entity": {
+      "customer": "ລູກຄ້າ",
+      "lead": "ໂອກາດການຂາຍ",
+      "note": "ໝາຍເຫດ",
+      "user": "ຜູ້ໃຊ້"
+    },
+    "eventsLoaded": "ໂຫຼດເຫດການແລ້ວ {{count}} ລາຍການ",
+    "filters": {
+      "action": "ການດຳເນີນການ",
+      "allActions": "ທຸກການດຳເນີນການ",
+      "allEntities": "ທຸກປະເພດ",
+      "dateFrom": "ຈາກ",
+      "dateTo": "ຫາ",
+      "entityType": "ປະເພດ",
+      "searchPlaceholder": "ຄົ້ນຫາຜູ້ໃຊ້ ຫຼື ການດຳເນີນການ…"
+    },
+    "pagination": {
+      "showing": "ສະແດງ {{start}}–{{end}} ຈາກ {{total}}"
+    },
+    "refresh": "ໂຫຼດຂໍ້ມູນໃໝ່",
+    "table": {
+      "action": "ການດຳເນີນການ",
+      "details": "ລາຍລະອຽດ",
+      "entity": "ປະເພດ",
+      "id": "ລະຫັດ",
+      "noActivityFound": "ບໍ່ພົບກິດຈະກຳ",
+      "noActivityYet": "ກິດຈະກຳຈະປາກົດຢູ່ບ່ອນນີ້ເມື່ອຜູ້ໃຊ້ເລີ່ມນຳໃຊ້ລະບົບ.",
+      "timestamp": "ເວລາ",
+      "user": "ຜູ້ໃຊ້"
+    },
+    "title": "ບັນທຶກກິດຈະກຳ"
+  },
+  "finance": {
+    "collectionRate": {
+      "collected": "ເກັບເງິນແລ້ວ",
+      "invoiced": "ອອກໃບແຈ້ງໜີ້ແລ້ວ",
+      "title": "ອັດຕາການເກັບເງິນ"
+    },
+    "invoiceStatusChart": {
+      "empty": "ບໍ່ມີໃບແຈ້ງໜີ້",
+      "title": "ການແຈກຢາຍຕາມສະຖານະ",
+      "totalCount": "ທັງໝົດ {{count}}"
+    },
+    "kpi": {
+      "collected": "ເກັບເງິນແລ້ວ",
+      "invoices": "ໃບແຈ້ງໜີ້",
+      "outstanding": "ຍອດຄ້າງຊຳລະ",
+      "overdue": "ເກີນກຳນົດ",
+      "pastDue": "{{amount}} ເກີນກຳນົດຊຳລະ",
+      "payments": "ການຊຳລະເງິນ",
+      "received": "ໄດ້ຮັບແລ້ວ",
+      "totalIssued": "ອອກທັງໝົດ",
+      "totalRevenue": "ລາຍຮັບລວມ"
+    },
+    "quickNav": {
+      "analytics": {
+        "desc": "ຕາຕະລາງ ແລະ ແນວໂນ້ມ",
+        "label": "ການວິເຄາະ"
+      },
+      "deposits": {
+        "desc": "ເງິນມັດຈຳຄ້ຳປະກັນ",
+        "label": "ເງິນມັດຈຳ"
+      },
+      "invoices": {
+        "desc": "ສ້າງ ແລະ ຈັດການ",
+        "label": "ໃບແຈ້ງໜີ້"
+      },
+      "payments": {
+        "desc": "ຕິດຕາມການເກັບເງິນ",
+        "label": "ການຊຳລະເງິນ"
+      },
+      "revenue": {
+        "desc": "ຕາຕະລາງການຮັບຮູ້ລາຍຮັບ",
+        "label": "ລາຍຮັບ"
+      },
+      "statements": {
+        "desc": "ກິດຈະກຳບັນຊີ",
+        "label": "ໃບແຈ້ງຍອດ"
+      }
+    },
+    "recentTransactions": {
+      "noInvoicesYet": "ຍັງບໍ່ມີໃບແຈ້ງໜີ້",
+      "noPaymentsYet": "ຍັງບໍ່ມີການຊຳລະເງິນ",
+      "recentInvoices": "ໃບແຈ້ງໜີ້ຫຼ້າສຸດ",
+      "recentPayments": "ການຊຳລະເງິນຫຼ້າສຸດ",
+      "viewAll": "ເບິ່ງທັງໝົດ"
+    },
+    "revenueChart": {
+      "empty": "ຍັງບໍ່ມີຂໍ້ມູນລາຍຮັບ",
+      "subtitle": "6 ເດືອນຫຼ້າສຸດ ({{currency}})",
+      "title": "ແນວໂນ້ມລາຍຮັບ"
+    }
+  },
+  "equipment": {
+    "card": {
+      "brand": "ຍີ່ຫໍ້",
+      "customer": "ລູກຄ້າ",
+      "editForklift": "ແກ້ໄຂລົດຍົກ",
+      "fuel": "ເຊື້ອໄຟ",
+      "hoursValue": "{{count}} ຊົ່ວໂມງ",
+      "serial": "ເລກຊີຣີ"
+    },
+    "condition": {
+      "new": "ໃໝ່",
+      "refurbished": "ປັບປຸງໃໝ່",
+      "used": "ໃຊ້ແລ້ວ"
+    },
+    "detail": {
+      "assetAge": "ອາຍຸຊັບສິນ",
+      "assetSummary": "ສະຫຼຸບຊັບສິນ",
+      "assignedCustomer": "ລູກຄ້າທີ່ມອບໝາຍ",
+      "backToEquipment": "ກັບໄປອຸປະກອນ",
+      "capacity": "ຄວາມສາມາດຍົກ",
+      "currentLocation": "ສະຖານທີ່ປັດຈຸບັນ",
+      "dailyAvg": "ສະເລ່ຍຕໍ່ມື້",
+      "documentTitle": "ຫົວຂໍ້",
+      "documents": "ເອກະສານ",
+      "estService": "ບໍລິການໂດຍປະມານ",
+      "estServiceDays": "~{{count}} ມື້",
+      "expired": "ໝົດອາຍຸແລ້ວ",
+      "expiry": "ວັນໝົດອາຍຸ",
+      "filesCount": "{{count}} ໄຟລ໌",
+      "hourMeter": "ໂມງບັນທຶກຊົ່ວໂມງ",
+      "hoursUnit": "ຊົ່ວໂມງ",
+      "hoursUsed": "ຊົ່ວໂມງທີ່ໃຊ້ໄປ",
+      "imagesCount": "{{count}} ຮູບພາບ",
+      "initial": "ເລີ່ມຕົ້ນ",
+      "mastType": "ປະເພດເສົາຍົກ",
+      "maxLiftHeight": "ຄວາມສູງຍົກສູງສຸດ",
+      "model": "ລຸ້ນ",
+      "newContract": "ສັນຍາໃໝ່",
+      "newQuote": "ໃບສະເໜີລາຄາໃໝ່",
+      "noDocumentsUploaded": "ຍັງບໍ່ໄດ້ອັບໂຫຼດເອກະສານ",
+      "noLocationRecorded": "ບໍ່ມີສະຖານທີ່ບັນທຶກໄວ້",
+      "notFound": "ບໍ່ພົບລົດຍົກ.",
+      "notFoundOrFailed": "ບໍ່ພົບລົດຍົກ ຫຼື ໂຫຼດຂໍ້ມູນບໍ່ສຳເລັດ.",
+      "pctOfThreshold": "{{pct}}% ຂອງ {{threshold}} ຊົ່ວໂມງ",
+      "photos": "ຮູບພາບ",
+      "serialAbbrev": "ເລກຊີຣີ",
+      "serviceInterval": "ໄລຍະຫ່າງການບໍລິການ",
+      "since": "ຕັ້ງແຕ່",
+      "specifications": "ຂໍ້ມູນສະເພາະ",
+      "statusChanges": "ການປ່ຽນແປງສະຖານະ",
+      "tabs": {
+        "contracts": "ສັນຍາ",
+        "documents": "ເອກະສານ",
+        "overview": "ພາບລວມ",
+        "photos": "ຮູບພາບ",
+        "timeline": "ລຳດັບເຫດການ"
+      },
+      "uploaded": "ອັບໂຫຼດແລ້ວ",
+      "valid": "ຍັງໃຊ້ໄດ້",
+      "viewContractsHint": "ເບິ່ງສັນຍາເຊົ່າທີ່ເຊື່ອມໂຍງກັບອຸປະກອນນີ້",
+      "viewRentalContracts": "ເບິ່ງສັນຍາເຊົ່າ",
+      "warranty": "ການຮັບປະກັນ",
+      "year": "ປີ",
+      "years": "{{count}} ປີ",
+      "zone": "ເຂດ"
+    },
+    "filters": {
+      "allBrands": "ທຸກຍີ່ຫໍ້",
+      "allConditions": "ທຸກສະພາບ",
+      "allFuelTypes": "ທຸກປະເພດເຊື້ອໄຟ",
+      "clear": "ລ້າງ",
+      "countLabel": "{{count}} ອຸປະກອນ",
+      "noneFound": "ບໍ່ພົບອຸປະກອນ",
+      "noneFoundHint": "ລອງປັບຕົວກັ່ນຕອງ ຫຼື ເພີ່ມອຸປະກອນໃໝ່",
+      "searchPlaceholder": "ຄົ້ນຫາອຸປະກອນ...",
+      "statusShort": {
+        "decommissioned": "ປົດລະວາງ",
+        "inService": "ບໍລິການ"
+      }
+    },
+    "form": {
+      "brand": "ຍີ່ຫໍ້",
+      "capacityKg": "ຄວາມສາມາດຍົກ (kg)",
+      "condition": "ສະພາບ",
+      "currentHourMeter": "ໂມງບັນທຶກຊົ່ວໂມງປັດຈຸບັນ",
+      "editTitle": "ແກ້ໄຂລົດຍົກ",
+      "fuelType": "ປະເພດເຊື້ອໄຟ",
+      "initialHourMeter": "ໂມງບັນທຶກຊົ່ວໂມງເລີ່ມຕົ້ນ",
+      "internalCode": "ລະຫັດພາຍໃນ",
+      "internalCodePlaceholder": "ປ້າຍຊັບສິນ DK",
+      "modelNumber": "ເລກລຸ້ນ",
+      "modelNumberPlaceholder": "ຕົວຢ່າງ: EFG 216k",
+      "nameEnglish": "ຊື່ (ພາສາອັງກິດ)",
+      "nameEnglishPlaceholder": "ຕົວຢ່າງ: Jungheinrich EFG 216k",
+      "nameLao": "ຊື່ (ພາສາລາວ)",
+      "nameRequired": "ຕ້ອງລະບຸຊື່.",
+      "noBrand": "— ບໍ່ມີຍີ່ຫໍ້ —",
+      "notesPlaceholder": "ໝາຍເຫດເພີ່ມເຕີມ (ບໍ່ບັງຄັບ)...",
+      "purchaseDate": "ວັນທີຊື້",
+      "registerTitle": "ລົງທະບຽນລົດຍົກ",
+      "saveChanges": "ບັນທຶກການປ່ຽນແປງ",
+      "saveFailed": "ບັນທຶກບໍ່ສຳເລັດ. ກະລຸນາລອງໃໝ່ອີກຄັ້ງ.",
+      "serialNumber": "ເລກຊີຣີ",
+      "serialNumberPlaceholder": "ຕົວຢ່າງ: JH-2024-001",
+      "serialRequired": "ຕ້ອງລະບຸເລກຊີຣີ.",
+      "warrantyExpiry": "ວັນໝົດອາຍຸການຮັບປະກັນ",
+      "yearManufactured": "ປີທີ່ຜະລິດ"
+    },
+    "fuel": {
+      "diesel": "ນ້ຳມັນດີເຊວ",
+      "dualFuel": "ສອງເຊື້ອໄຟ",
+      "electric": "ໄຟຟ້າ",
+      "lpg": "ອາຍແກັສ LPG",
+      "notSpecified": "— ບໍ່ໄດ້ລະບຸ —"
+    },
+    "gallery": {
+      "nextPhoto": "ຮູບຕໍ່ໄປ",
+      "noPhotos": "ຍັງບໍ່ໄດ້ອັບໂຫຼດຮູບພາບ",
+      "noPhotosHint": "ຮູບພາບຊ່ວຍລະບຸ ແລະ ບັນທຶກຂໍ້ມູນອຸປະກອນນີ້",
+      "previousPhoto": "ຮູບກ່ອນໜ້າ",
+      "viewFullscreen": "ເບິ່ງເຕັມຈໍ"
+    },
+    "quickActions": {
+      "maintenance": {
+        "desc": "ການບຳລຸງຮັກສາເຊິງປ້ອງກັນ",
+        "label": "ກຳນົດການບໍລິການ"
+      },
+      "movement": {
+        "desc": "ໂອນຍ້າຍອຸປະກອນ",
+        "label": "ສ້າງການເຄື່ອນຍ້າຍ"
+      },
+      "register": {
+        "desc": "ເພີ່ມລົດຍົກໃໝ່",
+        "label": "ລົງທະບຽນອຸປະກອນ"
+      },
+      "rental": {
+        "desc": "ມອບໝາຍໃຫ້ສັນຍາ",
+        "label": "ການເຊົ່າໃໝ່"
+      }
+    },
+    "registry": {
+      "deleteMessage": "ລຶບ \"{{name}}\" (ເລກຊີຣີ: {{serial}}) ບໍ່? ບໍ່ສາມາດຍົກເລີກການກະທຳນີ້ໄດ້.",
+      "deleteTitle": "ລຶບລົດຍົກ",
+      "kpi": {
+        "avgAge": "ອາຍຸສະເລ່ຍ",
+        "avgHours": "ຊົ່ວໂມງສະເລ່ຍ",
+        "critical": "{{count}} ວິກິດ",
+        "pmDue": "PM ຄົບກຳນົດ",
+        "utilization": "ອັດຕາການໃຊ້ງານ",
+        "years": "{{count}} ປີ"
+      },
+      "noForkliftsFound": "ບໍ່ພົບລົດຍົກ",
+      "pageInfo": "ໜ້າ {{page}} ຈາກ {{pages}} (ທັງໝົດ {{total}})",
+      "refresh": "ໂຫຼດຂໍ້ມູນໃໝ່",
+      "registerForklift": "ລົງທະບຽນລົດຍົກ",
+      "searchPlaceholder": "ຄົ້ນຫາເລກຊີຣີ, ຊື່, ລຸ້ນ...",
+      "subtitle": "ຈັດການ ແລະ ຕິດຕາມກຳລັງລົດຍົກຂອງທ່ານ",
+      "table": {
+        "forklift": "ລົດຍົກ",
+        "hours": "ຊົ່ວໂມງ"
+      },
+      "title": "ທະບຽນອຸປະກອນ"
+    },
+    "status": {
+      "decommissioned": "ປົດລະວາງ",
+      "inService": "ກຳລັງບໍລິການ",
+      "inStock": "ມີໃນສະຕັອກ",
+      "rented": "ຖືກເຊົ່າ",
+      "reserved": "ຈອງແລ້ວ",
+      "sold": "ຂາຍແລ້ວ"
+    },
+    "timeline": {
+      "noHistory": "ຍັງບໍ່ມີການປ່ຽນແປງສະຖານະບັນທຶກໄວ້.",
+      "system": "ລະບົບ"
+    }
+  },
+  "executive": {
+    "chart": {
+      "collected": "ເກັບເງິນແລ້ວ",
+      "customerGrowth": "ການເຕີບໂຕລູກຄ້າ (12 ເດືອນ)",
+      "fleetStatus": "ສະຖານະຍານພາຫະນະ",
+      "invoiced": "ອອກໃບແຈ້ງໜີ້ແລ້ວ",
+      "leadPipeline": "ຂັ້ນຕອນໂອກາດການຂາຍ (12 ເດືອນ)",
+      "months": {
+        "apr": "ມ.ສ",
+        "aug": "ສ.ຫ",
+        "dec": "ທ.ວ",
+        "feb": "ກ.ພ",
+        "jan": "ມ.ກ",
+        "jul": "ກ.ລ",
+        "jun": "ມິ.ຖ",
+        "mar": "ມີ.ນ",
+        "may": "ພ.ພ",
+        "nov": "ພ.ຈ",
+        "oct": "ຕ.ລ",
+        "sep": "ກ.ຍ"
+      },
+      "newCustomers": "ລູກຄ້າໃໝ່",
+      "newLeads": "ໂອກາດການຂາຍໃໝ່",
+      "noCustomerData": "ບໍ່ມີຂໍ້ມູນລູກຄ້າ",
+      "noFleetData": "ບໍ່ມີຂໍ້ມູນຍານພາຫະນະ",
+      "noLeadData": "ບໍ່ມີຂໍ້ມູນໂອກາດການຂາຍ",
+      "noRevenueData": "ບໍ່ມີຂໍ້ມູນລາຍຮັບ",
+      "revenueTrend": "ແນວໂນ້ມລາຍຮັບ"
+    },
+    "export": {
+      "customers": "ລູກຄ້າ",
+      "customersCsv": "ລູກຄ້າ (CSV)",
+      "customersExcel": "ລູກຄ້າ (Excel)",
+      "downloaded": "ດາວໂຫຼດລາຍງານ {{report}} ແລ້ວ",
+      "exportExcel": "ສົ່ງອອກ Excel",
+      "exportFailed": "ສົ່ງອອກບໍ່ສຳເລັດ",
+      "exportReports": "ສົ່ງອອກລາຍງານ",
+      "leads": "ໂອກາດການຂາຍ",
+      "leadsCsv": "ໂອກາດການຂາຍ (CSV)",
+      "leadsExcel": "ໂອກາດການຂາຍ (Excel)",
+      "sales": "ຍອດຂາຍ",
+      "salesCsv": "ຍອດຂາຍ (CSV)",
+      "salesExcel": "ຍອດຂາຍ (Excel)"
+    },
+    "kpi": {
+      "activeCount": "{{count}} ໃຊ້ງານຢູ່",
+      "collected": "ເກັບເງິນແລ້ວ {{amount}}",
+      "collectionRate": "ອັດຕາການເກັບເງິນ",
+      "conversionRate": "ອັດຕາການປ່ຽນ",
+      "customers": "ລູກຄ້າ",
+      "fleetUtilization": "ອັດຕາການໃຊ້ງານຍານພາຫະນະ",
+      "inventoryValue": "ມູນຄ່າຄັງສິນຄ້າ",
+      "invoicesCount": "{{count}} ໃບແຈ້ງໜີ້",
+      "partsCount": "{{count}} ອາໄຫຼ່",
+      "rentedOfTotal": "ເຊົ່າແລ້ວ {{rented}} / ທັງໝົດ {{total}}",
+      "totalRevenue": "ລາຍຮັບລວມ",
+      "winRate": "ອັດຕາຊະນະ: {{rate}}"
+    },
+    "loadFailed": "ບໍ່ສາມາດໂຫຼດຂໍ້ມູນຜູ້ບໍລິຫານໄດ້.",
+    "refresh": "ໂຫຼດຂໍ້ມູນໃໝ່",
+    "subtitle": "ຕົວຊີ້ວັດ ແລະ ການວິເຄາະປະສິດທິພາບຂອງອົງກອນທັງໝົດ",
+    "title": "ແດຊບອດຜູ້ບໍລິຫານ"
+  },
+  "catalog": {
+    "brandShowcase": {
+      "title": "ຊື້ຕາມຍີ່ຫໍ້"
+    },
+    "brands": {
+      "deleteDialog": {
+        "message": "ລຶບຍີ່ຫໍ້ \"{{name}}\" ບໍ່? ສິນຄ້າທີ່ອ້າງອີງຍີ່ຫໍ້ນີ້ຈະຖືກລ້າງຍີ່ຫໍ້ອອກ.",
+        "title": "ລຶບຍີ່ຫໍ້"
+      },
+      "editTitle": "ແກ້ໄຂຍີ່ຫໍ້",
+      "empty": {
+        "createHint": "ສ້າງຍີ່ຫໍ້ທຳອິດຂອງທ່ານເພື່ອເລີ່ມຕົ້ນ.",
+        "title": "ບໍ່ພົບຍີ່ຫໍ້"
+      },
+      "form": {
+        "countryLabel": "ປະເທດ",
+        "countryPlaceholder": "ຕົວຢ່າງ: ຍີ່ປຸ່ນ",
+        "createBrand": "ສ້າງຍີ່ຫໍ້",
+        "namePlaceholder": "ຊື່ຍີ່ຫໍ້",
+        "nameRequired": "ຕ້ອງລະບຸຊື່ຍີ່ຫໍ້.",
+        "roleLabel": "ບົດບາດ",
+        "websiteLabel": "ເວັບໄຊ",
+        "websitePlaceholder": "https://…"
+      },
+      "newBrand": "ຍີ່ຫໍ້ໃໝ່",
+      "newTitle": "ຍີ່ຫໍ້ໃໝ່",
+      "roles": {
+        "both": "ທັງສອງ",
+        "partsOnly": "ອາໄຫຼ່ເທົ່ານັ້ນ",
+        "primary": "ຫຼັກ"
+      },
+      "searchPlaceholder": "ຄົ້ນຫາຍີ່ຫໍ້…",
+      "subtitle": "{{count}} ຍີ່ຫໍ້",
+      "table": {
+        "brand": "ຍີ່ຫໍ້",
+        "country": "ປະເທດ",
+        "role": "ບົດບາດ"
+      },
+      "title": "ຍີ່ຫໍ້"
+    },
+    "browseAllProducts": "ເບິ່ງສິນຄ້າທັງໝົດ →",
+    "categories": {
+      "deleteDialog": {
+        "message": "ລຶບ \"{{name}}\" ບໍ່? ຈະລຶບບໍ່ໄດ້ຖ້າໝວດໝູ່ນີ້ມີໝວດຍ່ອຍ ຫຼື ສິນຄ້າຖືກມອບໝາຍໄວ້.",
+        "title": "ລຶບໝວດໝູ່"
+      },
+      "editTitle": "ແກ້ໄຂໝວດໝູ່",
+      "empty": {
+        "createHint": "ສ້າງໝວດໝູ່ທຳອິດຂອງທ່ານເພື່ອເລີ່ມຕົ້ນ.",
+        "title": "ບໍ່ພົບໝວດໝູ່"
+      },
+      "form": {
+        "createCategory": "ສ້າງໝວດໝູ່",
+        "nameEnLabel": "ຊື່ (ພາສາອັງກິດ)",
+        "nameLoLabel": "ຊື່ (ພາສາລາວ)",
+        "namePlaceholder": "ຊື່ໝວດໝູ່",
+        "nameRequired": "ຕ້ອງລະບຸຊື່ພາສາອັງກິດ.",
+        "parentLabel": "ໝວດໝູ່ຫຼັກ",
+        "topLevelOption": "— ຂັ້ນສູງສຸດ (ພະແນກ) —"
+      },
+      "levelLine": "L{{level}} — {{type}}",
+      "newCategory": "ໝວດໝູ່ໃໝ່",
+      "newTitle": "ໝວດໝູ່ໃໝ່",
+      "subtitle": "{{count}} ໝວດໝູ່ (ໂຄງສ້າງ 3 ຂັ້ນ)",
+      "table": {
+        "category": "ໝວດໝູ່",
+        "children": "ໝວດຍ່ອຍ",
+        "level": "ຂັ້ນ"
+      },
+      "title": "ໝວດໝູ່",
+      "types": {
+        "category": "ໝວດໝູ່",
+        "division": "ພະແນກ",
+        "subCategory": "ໝວດຍ່ອຍ"
+      }
+    },
+    "categorySlider": {
+      "title": "ເບິ່ງຕາມໝວດໝູ່"
+    },
+    "hero": {
+      "searchPlaceholder": "ຄົ້ນຫາສິນຄ້າ {{count}} ລາຍການຕາມຊື່, SKU, ລຸ້ນ...",
+      "subtitle": "ລົດຍົກ · ອຸປະກອນສາງ · ອາໄຫຼ່ · ອຸປະກອນເສີມ",
+      "title": "ລາຍການສິນຄ້າ"
+    },
+    "import": {
+      "analysing": "ກຳລັງວິເຄາະ…",
+      "autoDetectHint": "ຕົວນຳເຂົ້າຈະກວດຫາຊີດອັດຕະໂນມັດຕາມຊື່ທັງພາສາອັງກິດ ແລະ ພາສາລາວ.",
+      "clear": "ລ້າງ",
+      "dropzoneHint": "ຮອງຮັບໄຟລ໌ .xlsx ແລະ .xls ຈາກລາຍການສິນຄ້າ DK LAO",
+      "dropzoneText": "ລາກໄຟລ໌ Excel ຂອງທ່ານມາໃສ່ນີ້, ຫຼື ຄລິກເພື່ອເລືອກໄຟລ໌",
+      "errorRows": "ແຖວທີ່ຜິດພາດ",
+      "errorToast": "ນຳເຂົ້າສຳເລັດພ້ອມຂໍ້ຜິດພາດ {{count}} ລາຍການ.",
+      "errors": "ຂໍ້ຜິດພາດ",
+      "errorsCount": "{{count}} ຂໍ້ຜິດພາດ",
+      "executeFailed": "ນຳເຂົ້າບໍ່ສຳເລັດ. ກະລຸນາລອງໃໝ່ອີກຄັ້ງ.",
+      "failedRows": "ແຖວທີ່ບໍ່ສຳເລັດ",
+      "handlerLabel": "ຕົວຈັດການ: {{handler}}",
+      "importAnother": "ນຳເຂົ້າໄຟລ໌ອື່ນ",
+      "importCount": "ນຳເຂົ້າສິນຄ້າ {{count}} ລາຍການ",
+      "imported": "ນຳເຂົ້າແລ້ວ",
+      "importing": "ກຳລັງນຳເຂົ້າ…",
+      "invalidFileType": "ກະລຸນາເລືອກໄຟລ໌ Excel (.xlsx ຫຼື .xls)",
+      "noValidRows": "ບໍ່ມີແຖວທີ່ຖືກຕ້ອງໃຫ້ນຳເຂົ້າ. ກະລຸນາແກ້ໄຂຂໍ້ຜິດພາດ ແລະ ອັບໂຫຼດໃໝ່.",
+      "parseFailed": "ບໍ່ສາມາດອ່ານໄຟລ໌ Excel ໄດ້. ກະລຸນາກວດສອບຮູບແບບໄຟລ໌.",
+      "partialBanner": "ນຳເຂົ້າສຳເລັດພ້ອມຂໍ້ຜິດພາດ",
+      "previewImport": "ເບິ່ງຕົວຢ່າງກ່ອນນຳເຂົ້າ",
+      "productsToImport": "ສິນຄ້າທີ່ຈະນຳເຂົ້າ ({{count}})",
+      "rowsWithErrors": "ແຖວທີ່ມີຂໍ້ຜິດພາດ ({{count}})",
+      "sheetsDetected": "ຊີດທີ່ກວດພົບ",
+      "startOver": "ເລີ່ມໃໝ່",
+      "steps": {
+        "preview": "ເບິ່ງຕົວຢ່າງ",
+        "result": "ຜົນລັບ",
+        "upload": "ອັບໂຫຼດ"
+      },
+      "subtitle": "ອັບໂຫຼດໄຟລ໌ Excel ເພື່ອນຳເຂົ້າສິນຄ້າ, ຍີ່ຫໍ້, ແລະ ໝວດໝູ່ເປັນຈຳນວນຫຼາຍ.",
+      "successBanner": "ນຳເຂົ້າສຳເລັດແລ້ວ",
+      "successToast": "ນຳເຂົ້າສຳເລັດ: ນຳເຂົ້າສິນຄ້າ {{count}} ລາຍການແລ້ວ.",
+      "supportedSheetsLabel": "ຊີດທີ່ຮອງຮັບ:",
+      "supportedSheetsList": "ລົດຍົກ Jungheinrich, ລົດຍົກ Mitsubishi, ອຸປະກອນເສີມ (ອຸປະກອນ), ສາງ (ສາງ), ເຄື່ອງດູດຝຸ່ນ (ດູດຝຸ່ນ), ເຄື່ອງທຳຄວາມສະອາດພື້ນ (ເຊັດຄັດ), ຍີ່ຫໍ້ (ບໍລິການ).",
+      "table": {
+        "action": "ການດຳເນີນການ",
+        "brand": "ຍີ່ຫໍ້",
+        "error": "ຂໍ້ຜິດພາດ",
+        "model": "ລຸ້ນ",
+        "rowNum": "#",
+        "sheet": "ຊີດ",
+        "specs": "ຂໍ້ມູນສະເພາະ"
+      },
+      "title": "ນຳເຂົ້າສິນຄ້າ",
+      "validCount": "{{count}} ຖືກຕ້ອງ",
+      "validRows": "ແຖວທີ່ຖືກຕ້ອງ",
+      "viewCatalog": "ເບິ່ງລາຍການສິນຄ້າ"
+    },
+    "megaMenu": {
+      "allCategories": "ທຸກໝວດໝູ່"
+    },
+    "pageOf": "ໜ້າ {{page}} ຈາກ {{pages}} (ທັງໝົດ {{total}})",
+    "productDetail": {
+      "backToCatalog": "ກັບໄປລາຍການສິນຄ້າ",
+      "compatibleWith": "ໃຊ້ຮ່ວມກັບ",
+      "loadError": "ບໍ່ພົບສິນຄ້າ ຫຼື ໂຫຼດຂໍ້ມູນບໍ່ສຳເລັດ.",
+      "model": "ລຸ້ນ",
+      "notFound": "ບໍ່ພົບສິນຄ້າ.",
+      "specifications": "ຂໍ້ມູນສະເພາະ"
+    },
+    "products": {
+      "badges": {
+        "featured": "ແນະນຳ",
+        "rental": "ໃຫ້ເຊົ່າ",
+        "sale": "ຫຼຸດລາຄາ"
+      },
+      "deleteDialog": {
+        "message": "ລຶບ \"{{name}}\" ບໍ່? ບໍ່ສາມາດຍົກເລີກການກະທຳນີ້ໄດ້.",
+        "title": "ລຶບສິນຄ້າ"
+      },
+      "editTitle": "ແກ້ໄຂສິນຄ້າ",
+      "empty": {
+        "hint": "ລອງປັບຕົວກັ່ນຕອງ ຫຼື ສ້າງສິນຄ້າໃໝ່.",
+        "title": "ບໍ່ພົບສິນຄ້າ"
+      },
+      "featured": "ແນະນຳ",
+      "filterAllTypes": "ທຸກປະເພດ",
+      "forRental": "ສຳລັບເຊົ່າ",
+      "forSale": "ສຳລັບຂາຍ",
+      "form": {
+        "attributesLabel": "ຄຸນລັກສະນະ",
+        "brandLabel": "ຍີ່ຫໍ້",
+        "createProduct": "ສ້າງສິນຄ້າ",
+        "descriptionPlaceholder": "ລາຍລະອຽດສິນຄ້າ…",
+        "modelNumberLabel": "ເລກລຸ້ນ",
+        "modelNumberPlaceholder": "ຕົວຢ່າງ: EFG115",
+        "nameEnLabel": "ຊື່ (ພາສາອັງກິດ)",
+        "nameEnPlaceholder": "ຊື່ສິນຄ້າເປັນພາສາອັງກິດ",
+        "nameLoLabel": "ຊື່ (ພາສາລາວ)",
+        "nameRequired": "ຕ້ອງລະບຸຊື່ສິນຄ້າ.",
+        "noBrandOption": "— ບໍ່ມີຍີ່ຫໍ້ —",
+        "noCategoryOption": "— ບໍ່ມີໝວດໝູ່ —",
+        "saveFailed": "ບັນທຶກບໍ່ສຳເລັດ. ກະລຸນາລອງໃໝ່ອີກຄັ້ງ.",
+        "serviceItem": "ລາຍການບໍລິການ",
+        "skuPlaceholder": "ສ້າງອັດຕະໂນມັດຖ້າວ່າງໄວ້",
+        "usedAvailable": "ມີສິນຄ້າໃຊ້ແລ້ວ"
+      },
+      "newProduct": "ສິນຄ້າໃໝ່",
+      "newTitle": "ສິນຄ້າໃໝ່",
+      "pillBrand": "ຍີ່ຫໍ້: {{name}}",
+      "pillCategory": "ໝວດໝູ່: {{name}}",
+      "pillSearch": "ຄົ້ນຫາ: {{query}}",
+      "productCount": "{{count}} ສິນຄ້າ",
+      "refresh": "ໂຫຼດຂໍ້ມູນໃໝ່",
+      "skuPrefix": "SKU: {{sku}}",
+      "table": {
+        "brand": "ຍີ່ຫໍ້",
+        "product": "ສິນຄ້າ",
+        "sku": "SKU"
+      }
+    },
+    "resultsCount": "{{count}} ຜົນລັບ",
+    "saveChanges": "ບັນທຶກການປ່ຽນແປງ",
+    "saveFailed": "ບັນທຶກບໍ່ສຳເລັດ.",
+    "viewAll": "ເບິ່ງທັງໝົດ →"
+  },
+  "quotations": {
+    "detail": {
+      "actionFailed": "ບໍ່ສຳເລັດ: {{action}}",
+      "addItem": "ເພີ່ມລາຍການ",
+      "addItemModal": {
+        "addFailed": "ບໍ່ສາມາດເພີ່ມລາຍການໄດ້.",
+        "adding": "ກຳລັງເພີ່ມ...",
+        "daily": "ລາຍວັນ",
+        "descriptionPlaceholder": "ລາຍລະອຽດລາຍການ",
+        "descriptionRequired": "ຕ້ອງລະບຸລາຍລະອຽດ.",
+        "discountPercent": "ສ່ວນຫຼຸດ (%)",
+        "itemAdded": "ເພີ່ມລາຍການແລ້ວ.",
+        "itemType": "ປະເພດລາຍການ",
+        "monthly": "ລາຍເດືອນ",
+        "ratePeriod": "ໄລຍະເວລາອັດຕາ",
+        "rentalDuration": "ໄລຍະເວລາເຊົ່າ (ມື້)",
+        "selectRatePeriod": "— ເລືອກ —",
+        "title": "ເພີ່ມລາຍການ",
+        "unit": "ໜ່ວຍ",
+        "unitPrice": "ລາຄາຕໍ່ໜ່ວຍ",
+        "unitPriceRequired": "ຕ້ອງລະບຸລາຄາຕໍ່ໜ່ວຍ.",
+        "weekly": "ລາຍອາທິດ"
+      },
+      "addItemsHint": "ເພີ່ມລາຍການເພື່ອສ້າງໃບສະເໜີລາຄາ.",
+      "approvalHistory": "ປະຫວັດການອະນຸມັດ",
+      "approve": "ອະນຸມັດ",
+      "assignedTo": "ມອບໝາຍໃຫ້",
+      "backToQuotations": "ກັບໄປໃບສະເໜີລາຄາ",
+      "colBy": "ໂດຍ",
+      "colConditions": "ເງື່ອນໄຂ",
+      "colDecision": "ການຕັດສິນໃຈ",
+      "colDiscount": "ສ່ວນຫຼຸດ %",
+      "colFrom": "ຈາກ",
+      "colNumber": "#",
+      "colReason": "ເຫດຜົນ",
+      "colRev": "ຄັ້ງທີ່",
+      "colTo": "ໄປ",
+      "colUnitPrice": "ລາຄາຕໍ່ໜ່ວຍ",
+      "contact": "ຜູ້ຕິດຕໍ່",
+      "convert": "ປ່ຽນເປັນສັນຍາ",
+      "convertedTo": "ປ່ຽນເປັນ",
+      "customer": "ລູກຄ້າ",
+      "discount": "ສ່ວນຫຼຸດ",
+      "durationDays": "{{count}} ມື້ ({{period}})",
+      "internalNote": "ໝາຍເຫດພາຍໃນ",
+      "lineItems": "ລາຍການ ({{count}})",
+      "markAccepted": "ໝາຍວ່າຍອມຮັບແລ້ວ",
+      "markRejected": "ໝາຍວ່າຖືກປະຕິເສດ",
+      "noLineItems": "ຍັງບໍ່ມີລາຍການ.",
+      "notFoundError": "ບໍ່ພົບໃບສະເໜີລາຄາ ຫຼື ໂຫຼດຂໍ້ມູນບໍ່ສຳເລັດ.",
+      "reactivate": "ເປີດໃຊ້ງານຄືນ",
+      "requestRevision": "ຂໍໃຫ້ດັດແກ້",
+      "rev": "ຄັ້ງທີ {{number}}",
+      "sendToCustomer": "ສົ່ງໃຫ້ລູກຄ້າ",
+      "serialNumber": "ເລກຊີຣີ: {{serial}}",
+      "sku": "SKU: {{sku}}",
+      "statusHistory": "ປະຫວັດສະຖານະ",
+      "submit": "ສົ່ງ",
+      "taxWithRate": "ພາສີ ({{rate}}%)",
+      "toasts": {
+        "converted": "ປ່ຽນເປັນສັນຍາແລ້ວ",
+        "itemRemoved": "ລຶບລາຍການແລ້ວ",
+        "markedAccepted": "ໝາຍວ່າຍອມຮັບແລ້ວ",
+        "markedRejected": "ໝາຍວ່າຖືກປະຕິເສດແລ້ວ",
+        "reactivated": "ເປີດໃຊ້ງານຄືນແລ້ວ",
+        "revisionRequested": "ຂໍໃຫ້ດັດແກ້ແລ້ວ",
+        "sent": "ສົ່ງໃຫ້ລູກຄ້າແລ້ວ",
+        "submitted": "ສົ່ງເພື່ອກວດສອບແລ້ວ"
+      },
+      "validFrom": "ຖືກຕ້ອງຈາກ",
+      "validUntil": "ຖືກຕ້ອງຫາ"
+    },
+    "form": {
+      "backToQuotations": "ກັບໄປໃບສະເໜີລາຄາ",
+      "contactEmailLabel": "ອີເມວຜູ້ຕິດຕໍ່",
+      "contactEmailPlaceholder": "email@example.com",
+      "contactNameLabel": "ຊື່ຜູ້ຕິດຕໍ່",
+      "contactNamePlaceholder": "ທ້າວ / ນາງ",
+      "contactPhoneLabel": "ເບີໂທຜູ້ຕິດຕໍ່",
+      "contactPhonePlaceholder": "+856 20 ...",
+      "createFailed": "ບໍ່ສາມາດສ້າງໃບສະເໜີລາຄາໄດ້.",
+      "createQuotation": "ສ້າງໃບສະເໜີລາຄາ",
+      "createdToast": "ສ້າງໃບສະເໜີລາຄາ {{number}} ແລ້ວ.",
+      "creating": "ກຳລັງສ້າງ...",
+      "currencyLabel": "ສະກຸນເງິນ",
+      "internalNotesLabel": "ໝາຍເຫດພາຍໃນ",
+      "internalNotesPlaceholder": "ສະເພາະພາຍໃນ, ບໍ່ສະແດງໃຫ້ລູກຄ້າເຫັນ...",
+      "newQuotation": "ໃບສະເໜີລາຄາໃໝ່",
+      "notesLabel": "ໝາຍເຫດ (ລູກຄ້າເຫັນໄດ້)",
+      "notesPlaceholder": "ສະແດງຢູ່ໃນໄຟລ໌ PDF ໃບສະເໜີລາຄາ...",
+      "taxRateLabel": "ອັດຕາພາສີ (%)",
+      "titleLabel": "ຫົວຂໍ້",
+      "titlePlaceholder": "ຕົວຢ່າງ: ການເຊົ່າລົດຍົກ — ວຽງຈັນ ມໍເຕີສ",
+      "titleRequired": "ຕ້ອງລະບຸຫົວຂໍ້.",
+      "typeLabel": "ປະເພດໃບສະເໜີລາຄາ",
+      "typeOptions": {
+        "rental": "ໃບສະເໜີລາຄາການເຊົ່າ",
+        "sales": "ໃບສະເໜີລາຄາການຂາຍ",
+        "service": "ໃບສະເໜີລາຄາການບໍລິການ",
+        "spareParts": "ໃບສະເໜີລາຄາອາໄຫຼ່"
+      },
+      "validFromLabel": "ຖືກຕ້ອງຈາກ",
+      "validUntilLabel": "ຖືກຕ້ອງຫາ"
+    },
+    "itemType": {
+      "custom": "ກຳນົດເອງ",
+      "delivery": "ການຂົນສົ່ງ",
+      "forkliftRental": "ການເຊົ່າລົດຍົກ",
+      "forkliftSale": "ການຂາຍລົດຍົກ",
+      "insurance": "ປະກັນໄພ",
+      "service": "ບໍລິການ",
+      "sparePart": "ອາໄຫຼ່"
+    },
+    "list": {
+      "allStatuses": "ທຸກສະຖານະ",
+      "allTypes": "ທຸກປະເພດ",
+      "colCustomer": "ລູກຄ້າ",
+      "colQuotation": "ໃບສະເໜີລາຄາ",
+      "colValidUntil": "ຖືກຕ້ອງຫາ",
+      "createOrAdjust": "ສ້າງໃບສະເໜີລາຄາໃໝ່ ຫຼື ປັບຕົວກັ່ນຕອງຂອງທ່ານ.",
+      "deleteConfirmMessage": "ລຶບ \"{{number}}\" ບໍ່? ບໍ່ສາມາດຍົກເລີກການກະທຳນີ້ໄດ້.",
+      "deleteConfirmTitle": "ລຶບໃບສະເໜີລາຄາ",
+      "newQuotation": "ໃບສະເໜີລາຄາໃໝ່",
+      "noQuotationsFound": "ບໍ່ພົບໃບສະເໜີລາຄາ",
+      "pageOf": "ໜ້າ {{page}} ຈາກ {{pages}} (ທັງໝົດ {{total}})",
+      "refresh": "ໂຫຼດຂໍ້ມູນໃໝ່",
+      "resultsCount": "{{count}} ຜົນລັບ",
+      "searchPlaceholder": "ຄົ້ນຫາເລກທີ, ຫົວຂໍ້...",
+      "title": "ໃບສະເໜີລາຄາ",
+      "totalCount": "{{count}} ໃບສະເໜີລາຄາ"
+    },
+    "status": {
+      "accepted": "ຍອມຮັບແລ້ວ",
+      "approved": "ອະນຸມັດແລ້ວ",
+      "cancelled": "ຍົກເລີກແລ້ວ",
+      "converted": "ປ່ຽນເປັນສັນຍາແລ້ວ",
+      "draft": "ຮ່າງ",
+      "expired": "ໝົດອາຍຸແລ້ວ",
+      "rejected": "ຖືກປະຕິເສດ",
+      "revision": "ດັດແກ້",
+      "sent": "ສົ່ງແລ້ວ",
+      "underReview": "ກຳລັງກວດສອບ"
+    },
+    "type": {
+      "rental": "ການເຊົ່າ",
+      "sales": "ການຂາຍ",
+      "service": "ບໍລິການ",
+      "spareParts": "ອາໄຫຼ່"
+    }
+  },
+  "rental": {
+    "contractType": {
+      "longTerm": "ໄລຍະຍາວ",
+      "project": "ໂຄງການ",
+      "shortTerm": "ໄລຍະສັ້ນ"
+    },
+    "detail": {
+      "actionFailed": "ບໍ່ສຳເລັດ: {{action}}",
+      "activate": "ເປີດໃຊ້ງານ",
+      "activeReturns": "ການສົ່ງຄືນທີ່ໃຊ້ງານຢູ່ ({{count}})",
+      "actualEnd": "ວັນສິ້ນສຸດຕົວຈິງ",
+      "actualStart": "ວັນເລີ່ມຕົວຈິງ",
+      "addItem": "ເພີ່ມລາຍການ",
+      "addItemModal": {
+        "addFailed": "ບໍ່ສາມາດເພີ່ມລາຍການໄດ້.",
+        "adding": "ກຳລັງເພີ່ມ...",
+        "dailyRate": "ອັດຕາລາຍວັນ",
+        "dailyRateRequired": "ຕ້ອງລະບຸອັດຕາລາຍວັນ.",
+        "descriptionRequired": "ຕ້ອງລະບຸລາຍລະອຽດ.",
+        "forkliftId": "ລະຫັດລົດຍົກ",
+        "forkliftIdRequired": "ຕ້ອງລະບຸລະຫັດລົດຍົກ.",
+        "hourlyRate": "ອັດຕາລາຍຊົ່ວໂມງ",
+        "itemAdded": "ເພີ່ມລາຍການແລ້ວ.",
+        "monthlyRate": "ອັດຕາລາຍເດືອນ",
+        "monthlyRateRequired": "ຕ້ອງລະບຸອັດຕາລາຍເດືອນ.",
+        "title": "ເພີ່ມລາຍການສັນຍາ"
+      },
+      "addItemsHint": "ເພີ່ມລາຍການເພື່ອສ້າງສັນຍາ.",
+      "approve": "ອະນຸມັດ",
+      "approvedBy": "ອະນຸມັດໂດຍ",
+      "assignedTo": "ມອບໝາຍໃຫ້",
+      "backToContracts": "ກັບໄປສັນຍາເຊົ່າ",
+      "billingInfo": "ການອອກໃບແຈ້ງໜີ້ — ຈະມີໃນເຟສ 4.",
+      "closeContract": "ປິດສັນຍາ",
+      "colBy": "ໂດຍ",
+      "colDailyRate": "ອັດຕາລາຍວັນ",
+      "colForklift": "ລົດຍົກ",
+      "colFrom": "ຈາກ",
+      "colLineTotal": "ລວມແຕ່ລະລາຍການ",
+      "colMonthlyRate": "ອັດຕາລາຍເດືອນ",
+      "colNewEnd": "ວັນສິ້ນສຸດໃໝ່",
+      "colNumber": "#",
+      "colOriginalEnd": "ວັນສິ້ນສຸດເດີມ",
+      "colReason": "ເຫດຜົນ",
+      "colRequested": "ຮ້ອງຂໍແລ້ວ",
+      "colReturnNumber": "ເລກທີການສົ່ງຄືນ",
+      "colScheduledPickup": "ກຳນົດການຮັບເຄື່ອງ",
+      "colTo": "ໄປ",
+      "completeInspection": "ດຳເນີນການກວດສອບໃຫ້ສຳເລັດ",
+      "customer": "ລູກຄ້າ",
+      "daysCount": "{{count}} ມື້",
+      "deliveryContact": "ຜູ້ຕິດຕໍ່ຈັດສົ່ງ",
+      "deliveryPhone": "ເບີໂທຈັດສົ່ງ",
+      "deposit": "ເງິນມັດຈຳ",
+      "discount": "ສ່ວນຫຼຸດ",
+      "extensionModal": {
+        "currentEndDate": "ວັນສິ້ນສຸດປັດຈຸບັນ",
+        "extensionRequested": "ຮ້ອງຂໍການຕໍ່ອາຍຸແລ້ວ.",
+        "newEndDate": "ວັນສິ້ນສຸດໃໝ່",
+        "newEndDateAfterCurrent": "ວັນສິ້ນສຸດໃໝ່ຕ້ອງຫຼັງຈາກວັນສິ້ນສຸດປັດຈຸບັນ.",
+        "newEndDateRequired": "ຕ້ອງລະບຸວັນສິ້ນສຸດໃໝ່.",
+        "rateAdjustment": "ການປັບອັດຕາ (%)",
+        "reason": "ເຫດຜົນ",
+        "reasonPlaceholder": "ເຫດຜົນສຳລັບການຂໍຕໍ່ອາຍຸ...",
+        "requestExtension": "ຂໍຕໍ່ອາຍຸ",
+        "requestFailed": "ບໍ່ສາມາດຮ້ອງຂໍການຕໍ່ອາຍຸໄດ້.",
+        "requesting": "ກຳລັງຮ້ອງຂໍ...",
+        "title": "ຮ້ອງຂໍການຕໍ່ອາຍຸສັນຍາ"
+      },
+      "extensions": "ການຕໍ່ອາຍຸ ({{count}})",
+      "generateBilling": "ອອກໃບແຈ້ງໜີ້",
+      "hoursUsed": "ຊົ່ວໂມງ: {{count}}",
+      "inspectionInfo": "ການດຳເນີນການກວດສອບໃຫ້ສຳເລັດ — ໃຊ້ແຜງການສົ່ງຄືນຂ້າງລຸ່ມ.",
+      "internalNote": "ໝາຍເຫດພາຍໃນ",
+      "lineItems": "ລາຍການ ({{count}})",
+      "noLineItems": "ຍັງບໍ່ມີລາຍການ.",
+      "notFoundError": "ບໍ່ພົບສັນຍາເຊົ່າ ຫຼື ໂຫຼດຂໍ້ມູນບໍ່ສຳເລັດ.",
+      "outstanding": "ຍອດຄ້າງຊຳລະ",
+      "paymentTerms": "ເງື່ອນໄຂການຊຳລະເງິນ",
+      "requestExtension": "ຂໍຕໍ່ອາຍຸ",
+      "requestReturn": "ຂໍສົ່ງຄືນ",
+      "requestRevision": "ຂໍໃຫ້ດັດແກ້",
+      "returnModal": {
+        "allEquipment": "— ອຸປະກອນທັງໝົດ —",
+        "early": "ກ່ອນກຳນົດ",
+        "earlyTermination": "ຍົກເລີກກ່ອນກຳນົດ (ອາດມີຄ່າປັບໄໝ)",
+        "equipmentToReturn": "ອຸປະກອນທີ່ຈະສົ່ງຄືນ",
+        "notesPlaceholder": "ຄຳແນະນຳເພີ່ມເຕີມ...",
+        "pickupAddress": "ທີ່ຢູ່ຮັບເຄື່ອງ",
+        "pickupAddressPlaceholder": "ທີ່ຢູ່ສະຖານທີ່ລູກຄ້າ",
+        "requestFailed": "ບໍ່ສາມາດສ້າງຄຳຮ້ອງຂໍສົ່ງຄືນໄດ້.",
+        "requestReturn": "ຂໍສົ່ງຄືນ",
+        "requestedDate": "ວັນທີຮ້ອງຂໍ",
+        "requestedDateRequired": "ຕ້ອງລະບຸວັນທີຮ້ອງຂໍ.",
+        "requesting": "ກຳລັງຮ້ອງຂໍ...",
+        "returnRequested": "ຮ້ອງຂໍການສົ່ງຄືນແລ້ວ.",
+        "returnType": "ປະເພດການສົ່ງຄືນ",
+        "scheduled": "ກຳນົດການແລ້ວ",
+        "scheduledPickupDate": "ວັນທີກຳນົດຮັບເຄື່ອງ",
+        "title": "ຂໍສົ່ງຄືນອຸປະກອນ"
+      },
+      "rev": "ຄັ້ງທີ {{number}}",
+      "serialNumber": "ເລກຊີຣີ: {{serial}}",
+      "statusHistory": "ປະຫວັດສະຖານະ",
+      "submit": "ສົ່ງ",
+      "taxWithRate": "ພາສີ ({{rate}}%)",
+      "toasts": {
+        "activated": "ເປີດໃຊ້ງານແລ້ວ",
+        "contractClosed": "ປິດສັນຍາແລ້ວ",
+        "extensionApproved": "ອະນຸມັດການຕໍ່ອາຍຸແລ້ວ",
+        "extensionRejected": "ປະຕິເສດການຕໍ່ອາຍຸແລ້ວ",
+        "itemRemoved": "ລຶບລາຍການແລ້ວ",
+        "revisionRequested": "ຂໍໃຫ້ດັດແກ້ແລ້ວ",
+        "submitted": "ສົ່ງເພື່ອອະນຸມັດແລ້ວ"
+      },
+      "totalBilled": "ອອກໃບແຈ້ງໜີ້ລວມ",
+      "totalPaid": "ຊຳລະລວມ"
+    },
+    "form": {
+      "backToContracts": "ກັບໄປສັນຍາເຊົ່າ",
+      "contractType": "ປະເພດສັນຍາ",
+      "createContract": "ສ້າງສັນຍາ",
+      "createFailed": "ບໍ່ສາມາດສ້າງສັນຍາເຊົ່າໄດ້.",
+      "createdToast": "ສ້າງສັນຍາ {{number}} ແລ້ວ.",
+      "creating": "ກຳລັງສ້າງ...",
+      "currencyLabel": "ສະກຸນເງິນ",
+      "customerId": "ລະຫັດລູກຄ້າ",
+      "customerIdPlaceholder": "ປ້ອນລະຫັດລູກຄ້າ",
+      "customerIdRequired": "ຕ້ອງລະບຸລະຫັດລູກຄ້າ.",
+      "deliveryAddress": "ທີ່ຢູ່ຈັດສົ່ງ",
+      "deliveryAddressPlaceholder": "ທີ່ຢູ່ຈັດສົ່ງເຕັມ",
+      "deliveryContactName": "ຊື່ຜູ້ຕິດຕໍ່ຈັດສົ່ງ",
+      "deliveryContactNamePlaceholder": "ທ້າວ / ນາງ",
+      "deliveryContactPhone": "ເບີໂທຜູ້ຕິດຕໍ່ຈັດສົ່ງ",
+      "deliveryContactPhonePlaceholder": "+856 20 ...",
+      "depositAmount": "ຈຳນວນເງິນມັດຈຳ",
+      "endDate": "ວັນສິ້ນສຸດ",
+      "endDateRequired": "ຕ້ອງລະບຸວັນສິ້ນສຸດ.",
+      "internalNotesLabel": "ໝາຍເຫດພາຍໃນ",
+      "internalNotesPlaceholder": "ສະເພາະພາຍໃນ, ບໍ່ສະແດງໃຫ້ລູກຄ້າເຫັນ...",
+      "newContract": "ສັນຍາເຊົ່າໃໝ່",
+      "notesLabel": "ໝາຍເຫດ (ລູກຄ້າເຫັນໄດ້)",
+      "notesPlaceholder": "ສະແດງຢູ່ໃນສັນຍາ...",
+      "startDate": "ວັນເລີ່ມຕົ້ນ",
+      "startDateRequired": "ຕ້ອງລະບຸວັນເລີ່ມຕົ້ນ.",
+      "taxRateLabel": "ອັດຕາພາສີ (%)"
+    },
+    "list": {
+      "allStatuses": "ທຸກສະຖານະ",
+      "allTypes": "ທຸກປະເພດ",
+      "colContract": "ສັນຍາ",
+      "colCustomer": "ລູກຄ້າ",
+      "colEndDate": "ວັນສິ້ນສຸດ",
+      "colStartDate": "ວັນເລີ່ມຕົ້ນ",
+      "colTotalValue": "ມູນຄ່າລວມ",
+      "createOrAdjust": "ສ້າງສັນຍາໃໝ່ ຫຼື ປັບຕົວກັ່ນຕອງຂອງທ່ານ.",
+      "deleteConfirmMessage": "ລຶບ \"{{number}}\" ບໍ່? ບໍ່ສາມາດຍົກເລີກການກະທຳນີ້ໄດ້.",
+      "deleteConfirmTitle": "ລຶບສັນຍາເຊົ່າ",
+      "newContract": "ສັນຍາໃໝ່",
+      "noContractsFound": "ບໍ່ພົບສັນຍາເຊົ່າ",
+      "pageOf": "ໜ້າ {{page}} ຈາກ {{pages}} (ທັງໝົດ {{total}})",
+      "refresh": "ໂຫຼດຂໍ້ມູນໃໝ່",
+      "resultsCount": "{{count}} ຜົນລັບ",
+      "searchPlaceholder": "ຄົ້ນຫາເລກທີ, ລູກຄ້າ...",
+      "title": "ສັນຍາເຊົ່າ",
+      "totalCount": "{{count}} ສັນຍາ"
+    },
+    "status": {
+      "active": "ໃຊ້ງານຢູ່",
+      "approved": "ອະນຸມັດແລ້ວ",
+      "cancelled": "ຍົກເລີກແລ້ວ",
+      "closed": "ປິດແລ້ວ",
+      "delivering": "ກຳລັງຈັດສົ່ງ",
+      "draft": "ຮ່າງ",
+      "inspecting": "ກຳລັງກວດສອບ",
+      "overdue": "ເກີນກຳນົດ",
+      "pendingApproval": "ລໍຖ້າອະນຸມັດ",
+      "reservation": "ການຈອງ",
+      "returning": "ກຳລັງສົ່ງຄືນ",
+      "revision": "ດັດແກ້",
+      "settling": "ກຳລັງຮຽບຮ້ອຍ"
+    }
   }
 }

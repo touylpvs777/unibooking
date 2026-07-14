@@ -1,15 +1,17 @@
 import { useNavigate } from 'react-router-dom'
 import { Package, Warehouse, ShoppingCart, ArrowRight } from 'lucide-react'
-
-const NAV_ITEMS = [
-  { id: 'parts', label: 'Spare Parts', desc: 'Browse inventory', icon: Package, color: 'var(--color-primary-600)', href: '/inventory/parts' },
-  { id: 'warehouses', label: 'Warehouses', desc: 'Manage locations', icon: Warehouse, color: 'var(--color-info-600)', href: '/inventory/warehouses' },
-  { id: 'po', label: 'Purchase Orders', desc: 'Procurement', icon: ShoppingCart, color: 'var(--color-warning-600)', href: '/inventory/purchase-orders' },
-  { id: 'catalog', label: 'Product Catalog', desc: 'Full catalog', icon: Package, color: 'var(--color-purple-600)', href: '/catalog' },
-]
+import { useTranslation } from 'react-i18next'
 
 export default function InventoryQuickNav() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
+
+  const NAV_ITEMS = [
+    { id: 'parts', label: t('inventory.quickNav.parts.label'), desc: t('inventory.quickNav.parts.desc'), icon: Package, color: 'var(--color-primary-600)', href: '/inventory/parts' },
+    { id: 'warehouses', label: t('inventory.quickNav.warehouses.label'), desc: t('inventory.quickNav.warehouses.desc'), icon: Warehouse, color: 'var(--color-info-600)', href: '/inventory/warehouses' },
+    { id: 'po', label: t('inventory.quickNav.purchaseOrders.label'), desc: t('inventory.quickNav.purchaseOrders.desc'), icon: ShoppingCart, color: 'var(--color-warning-600)', href: '/inventory/purchase-orders' },
+    { id: 'catalog', label: t('inventory.quickNav.catalog.label'), desc: t('inventory.quickNav.catalog.desc'), icon: Package, color: 'var(--color-purple-600)', href: '/catalog' },
+  ]
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10 }}>

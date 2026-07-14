@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Plus, AlertCircle, ChevronLeft, ChevronRight, Building2 } from 'lucide-react'
 import { getProjects, createProject } from '@/api/projects'
 import { ProjectStatusBadge } from '@/components/projects/ProjectStatusBadge'
@@ -9,16 +10,7 @@ import ProjectForm from './ProjectForm'
 import type { Project, ProjectCreate, ProjectUpdate } from '@/types/project'
 import '@/styles/shared.css'
 
-const STATUS_OPTS = [
-  { value: '', label: 'All Statuses' },
-  { value: 'draft', label: 'Draft' },
-  { value: 'survey', label: 'Survey' },
-  { value: 'design', label: 'Design' },
-  { value: 'boq_approved', label: 'BOQ Approved' },
-  { value: 'installation', label: 'Installation' },
-  { value: 'handover', label: 'Handover' },
-  { value: 'completed', label: 'Completed' },
-]
+const STATUS_VALUES = ['', 'draft', 'survey', 'design', 'boq_approved', 'installation', 'handover', 'completed']
 
 function fmtDate(iso: string | null) {
   if (!iso) return '—'
@@ -42,6 +34,7 @@ function SkeletonRows() {
 }
 
 export default function ProjectListPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [items, setItems] = useState<Project[]>([])
   const [total, setTotal] = useState(0)
@@ -59,23 +52,23 @@ export default function ProjectListPage() {
       setItems(data.items); setTotal(data.total); setPages(data.pages)
     } catch (e: unknown) {
       const status = (e as { response?: { status?: number } })?.response?.status
-      setError(status === 403 ? "You don't have permission to view projects." : 'Failed to load projects.')
+      setError(status === 403 ? t('projects.noPermissionView') : t('projects.loadFailed'))
     } finally {
       setIsLoading(false)
     }
-  }, [statusFilter, page])
+  }, [statusFilter, page, t])
 
   useEffect(() => { load() }, [load])
 
   const handleCreate = async (data: ProjectCreate | ProjectUpdate): Promise<boolean> => {
     try {
       await createProject(data as ProjectCreate)
-      toast.success('Project created.')
+      toast.success(t('projects.detail.projectCreated'))
       await load()
       return true
     } catch (e: unknown) {
       const detail = (e as { response?: { data?: { detail?: string } } })?.response?.data?.detail
-      toast.error(detail ?? 'Failed to create project.')
+      toast.error(detail ?? t('projects.detail.projectCreateFailed'))
       return false
     }
   }
@@ -84,11 +77,11 @@ export default function ProjectListPage() {
     <div>
       <div className="page-header">
         <div>
-          <h1>Warehouse Projects</h1>
-          <p className="page-header-sub">{total.toLocaleString()} project{total !== 1 ? 's' : ''}</p>
+          <h1>{t('projects.title')}</h1>
+          <p className="page-header-sub">{t('projects.totalCount', { count: total })}</p>
         </div>
         <button className="btn btn-primary" onClick={() => setFormOpen(true)}>
-          <Plus size={14} /> Create Project
+          <Plus size={14} /> {t('projects.createProject')}
         </button>
       </div>
 
@@ -96,9 +89,11 @@ export default function ProjectListPage() {
 
       <div className="toolbar">
         <select className="filter-select" value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1) }}>
-          {STATUS_OPTS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+          {STATUS_VALUES.map((v) => (
+            <option key={v} value={v}>{v ? t(`projects.status.${v}`) : t('projects.allStatuses')}</option>
+          ))}
         </select>
-        <span className="toolbar-count">{total} result{total !== 1 ? 's' : ''}</span>
+        <span className="toolbar-count">{t('projects.resultsCount', { count: total })}</span>
       </div>
 
       <div className="table-card">
@@ -106,17 +101,17 @@ export default function ProjectListPage() {
           <table className="data-table">
             <thead>
               <tr>
-                <th>Project</th>
-                <th>Customer</th>
-                <th className="col-hide-sm">Start / End</th>
-                <th>Status</th>
-                <th>Progress</th>
+                <th>{t('projects.colProject')}</th>
+                <th>{t('projects.colCustomer')}</th>
+                <th className="col-hide-sm">{t('projects.colStartEnd')}</th>
+                <th>{t('projects.colStatus')}</th>
+                <th>{t('projects.colProgress')}</th>
               </tr>
             </thead>
             <tbody>
               {isLoading ? <SkeletonRows /> : items.length === 0 ? (
                 <tr><td colSpan={5}>
-                  <div className="table-empty"><Building2 size={36} /><p>No projects found</p><small>Create a project to get started.</small></div>
+                  <div className="table-empty"><Building2 size={36} /><p>{t('projects.noProjectsFound')}</p><small>{t('projects.createToGetStarted')}</small></div>
                 </td></tr>
               ) : items.map((p) => (
                 <tr key={p.id} onClick={() => navigate(`/projects/${p.id}`)} style={{ cursor: 'pointer' }}>
@@ -136,7 +131,7 @@ export default function ProjectListPage() {
 
         {!isLoading && pages > 1 && (
           <div className="pagination">
-            <span className="pagination-info">Page {page} of {pages} ({total} total)</span>
+            <span className="pagination-info">{t('projects.pageOf', { page, pages, total })}</span>
             <div className="pagination-controls">
               <button className="page-btn" disabled={page === 1} onClick={() => setPage((p) => p - 1)}><ChevronLeft size={14} /></button>
               <button className="page-btn" disabled={page === pages} onClick={() => setPage((p) => p + 1)}><ChevronRight size={14} /></button>

@@ -1,8 +1,7 @@
 import { Fuel, Gauge, Calendar, Tag, User, Eye, Pencil } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { ForkliftStatusBadge, ForkliftConditionBadge } from '@/components/equipment/ForkliftStatusBadge'
 import type { Forklift } from '@/types/forklift'
-
-const FUEL_LABELS: Record<string, string> = { electric: 'Electric', diesel: 'Diesel', lpg: 'LPG', dual_fuel: 'Dual Fuel' }
 
 const PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="150" viewBox="0 0 24 24" fill="none" stroke="%23cbd5e1" stroke-width="1"%3E%3Crect x="1" y="3" width="22" height="14" rx="2"/%3E%3Cpath d="M5 21h2M17 21h2M6 17v4M18 17v4M3 17h18"/%3E%3C/svg%3E'
 
@@ -14,6 +13,13 @@ interface Props {
 }
 
 export default function EquipmentCard({ forklift, onClick, onEdit, compact }: Props) {
+  const { t } = useTranslation()
+  const FUEL_LABELS: Record<string, string> = {
+    electric: t('equipment.fuel.electric'),
+    diesel: t('equipment.fuel.diesel'),
+    lpg: t('equipment.fuel.lpg'),
+    dual_fuel: t('equipment.fuel.dualFuel'),
+  }
   const pct = Math.min((forklift.current_hour_meter / 5000) * 100, 100)
   const barColor = pct < 60 ? 'var(--color-success-500)' : pct < 85 ? 'var(--color-warning-500)' : 'var(--color-danger-500)'
 
@@ -92,7 +98,7 @@ export default function EquipmentCard({ forklift, onClick, onEdit, compact }: Pr
             <div style={{ height: '100%', width: `${pct}%`, background: barColor, borderRadius: 2, transition: 'width 0.4s' }} />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 3, fontSize: 10.5, color: 'var(--color-text-muted)' }}>
-            <span>{forklift.current_hour_meter.toLocaleString()} hrs</span>
+            <span>{t('equipment.card.hoursValue', { count: forklift.current_hour_meter.toLocaleString() })}</span>
             <span style={{ color: barColor, fontWeight: 600 }}>{Math.round(pct)}%</span>
           </div>
         </div>
@@ -111,12 +117,12 @@ export default function EquipmentCard({ forklift, onClick, onEdit, compact }: Pr
         <div className="mp-card-footer">
           {onClick && (
             <button className="btn btn-ghost btn-sm" onClick={(e) => { e.stopPropagation(); onClick() }} style={{ fontSize: 11.5, padding: '4px 10px' }}>
-              <Eye size={12} /> View
+              <Eye size={12} /> {t('common.view')}
             </button>
           )}
           {onEdit && (
             <button className="btn btn-ghost btn-sm" onClick={(e) => { e.stopPropagation(); onEdit() }} style={{ fontSize: 11.5, padding: '4px 10px' }}>
-              <Pencil size={12} /> Edit
+              <Pencil size={12} /> {t('common.edit')}
             </button>
           )}
         </div>

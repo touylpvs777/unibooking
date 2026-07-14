@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   TrendingUp, Search, Pencil, Trash2,
   ChevronUp, ChevronDown, ChevronLeft, ChevronRight,
@@ -16,9 +17,10 @@ const PAGE_SIZE = 20
 type SortField = 'title' | 'value' | 'created_at'
 type SortDir   = 'asc' | 'desc'
 
-const SOURCE_LABELS: Record<LeadSource, string> = {
-  website: 'Website', referral: 'Referral', cold_call: 'Cold Call',
-  email: 'Email', social_media: 'Social Media', other: 'Other',
+// Maps LeadSource values to the camelCase key suffix used under leads.source.*
+const SOURCE_KEY: Record<LeadSource, string> = {
+  website: 'website', referral: 'referral', cold_call: 'coldCall',
+  email: 'email', social_media: 'socialMedia', other: 'other',
 }
 
 const ALL_STATUSES: LeadStatus[] = ['new', 'contacted', 'qualified', 'proposal', 'won', 'lost']
@@ -66,6 +68,7 @@ function SkeletonRows() {
 }
 
 export default function LeadsPage() {
+  const { t } = useTranslation()
   const { leads, isLoading, error, create, update, remove } = useLeads()
 
   const [search, setSearch]               = useState('')
@@ -155,11 +158,11 @@ export default function LeadsPage() {
       {/* Header */}
       <div className="page-header">
         <div>
-          <h1>Leads</h1>
-          <p className="page-header-sub">{leads.length} total leads</p>
+          <h1>{t('leads.list.title')}</h1>
+          <p className="page-header-sub">{t('leads.list.totalCount', { count: leads.length })}</p>
         </div>
         <button className="btn btn-primary" onClick={openCreate}>
-          <TrendingUp size={15} /> New Lead
+          <TrendingUp size={15} /> {t('leads.list.newLead')}
         </button>
       </div>
 
@@ -173,7 +176,7 @@ export default function LeadsPage() {
           className={`pipeline-chip${statusFilter === 'all' ? ' active-chip' : ''}`}
           onClick={() => { setStatusFilter('all'); setPage(1) }}
         >
-          All
+          {t('common.all')}
           <span className="pipeline-chip-count">{leads.length}</span>
         </button>
         {ALL_STATUSES.map((s) => (
@@ -183,7 +186,7 @@ export default function LeadsPage() {
             onClick={() => { setStatusFilter(s); setPage(1) }}
             style={statusFilter === s ? { '--color-primary': STATUS_COLORS[s], '--color-primary-light': `${STATUS_COLORS[s]}18` } as React.CSSProperties : {}}
           >
-            {s.charAt(0).toUpperCase() + s.slice(1)}
+            {t(`leads.status.${s}`)}
             <span className="pipeline-chip-count">{statusCounts[s] ?? 0}</span>
           </button>
         ))}
@@ -195,7 +198,7 @@ export default function LeadsPage() {
           <Search size={14} />
           <input
             className="search-input"
-            placeholder="Search leads…"
+            placeholder={t('leads.list.searchPlaceholder')}
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1) }}
           />
@@ -205,12 +208,12 @@ export default function LeadsPage() {
           value={sourceFilter}
           onChange={(e) => { setSourceFilter(e.target.value as LeadSource | 'all'); setPage(1) }}
         >
-          <option value="all">All Sources</option>
-          {Object.entries(SOURCE_LABELS).map(([v, l]) => (
-            <option key={v} value={v}>{l}</option>
+          <option value="all">{t('leads.list.allSources')}</option>
+          {Object.entries(SOURCE_KEY).map(([v, key]) => (
+            <option key={v} value={v}>{t(`leads.source.${key}`)}</option>
           ))}
         </select>
-        <span className="toolbar-count">{filtered.length} result{filtered.length !== 1 ? 's' : ''}</span>
+        <span className="toolbar-count">{t('leads.list.resultsCount', { count: filtered.length })}</span>
       </div>
 
       {/* Table */}
@@ -220,15 +223,15 @@ export default function LeadsPage() {
             <thead>
               <tr>
                 <th className="sortable" onClick={() => toggleSort('title')}>
-                  Lead <SortIndicator field="title" active={sortField} dir={sortDir} />
+                  {t('leads.list.colLead')} <SortIndicator field="title" active={sortField} dir={sortDir} />
                 </th>
-                <th>Status</th>
-                <th className="col-hide-sm">Source</th>
+                <th>{t('common.status')}</th>
+                <th className="col-hide-sm">{t('leads.list.colSource')}</th>
                 <th className="sortable" onClick={() => toggleSort('value')}>
-                  Value <SortIndicator field="value" active={sortField} dir={sortDir} />
+                  {t('leads.list.colValue')} <SortIndicator field="value" active={sortField} dir={sortDir} />
                 </th>
                 <th className="sortable col-hide-sm" onClick={() => toggleSort('created_at')}>
-                  Created <SortIndicator field="created_at" active={sortField} dir={sortDir} />
+                  {t('common.createdAt')} <SortIndicator field="created_at" active={sortField} dir={sortDir} />
                 </th>
                 <th style={{ width: 80 }}></th>
               </tr>
@@ -241,11 +244,11 @@ export default function LeadsPage() {
                   <td colSpan={6}>
                     <div className="table-empty">
                       <TrendingUp size={36} />
-                      <p>No leads found</p>
+                      <p>{t('leads.list.noLeadsFound')}</p>
                       <small>
                         {search || statusFilter !== 'all' || sourceFilter !== 'all'
-                          ? 'Try adjusting your filters.'
-                          : 'Create your first lead to get started.'}
+                          ? t('common.tryAdjustingFilters')
+                          : t('leads.list.createFirstLead')}
                       </small>
                     </div>
                   </td>
@@ -263,7 +266,7 @@ export default function LeadsPage() {
                     </td>
                     <td><LeadStatusBadge status={l.status} /></td>
                     <td className="cell-muted col-hide-sm">
-                      {l.source ? SOURCE_LABELS[l.source] : '—'}
+                      {l.source ? t(`leads.source.${SOURCE_KEY[l.source]}`) : '—'}
                     </td>
                     <td>
                       {fmtValue(l.value)
@@ -274,10 +277,10 @@ export default function LeadsPage() {
                     <td className="cell-muted col-hide-sm">{fmtDate(l.created_at)}</td>
                     <td>
                       <div className="row-actions">
-                        <button className="action-btn" title="Edit" onClick={() => openEdit(l)}>
+                        <button className="action-btn" title={t('common.edit')} onClick={() => openEdit(l)}>
                           <Pencil size={14} />
                         </button>
-                        <button className="action-btn danger" title="Delete" onClick={() => setDeleteTarget(l)}>
+                        <button className="action-btn danger" title={t('common.delete')} onClick={() => setDeleteTarget(l)}>
                           <Trash2 size={14} />
                         </button>
                       </div>
@@ -293,7 +296,7 @@ export default function LeadsPage() {
         {!isLoading && filtered.length > PAGE_SIZE && (
           <div className="pagination">
             <span className="pagination-info">
-              Showing {startRow}–{endRow} of {filtered.length}
+              {t('leads.list.showingRange', { start: startRow, end: endRow, total: filtered.length })}
             </span>
             <div className="pagination-controls">
               <button className="page-btn" disabled={safePage === 1} onClick={() => setPage(safePage - 1)}>
@@ -330,10 +333,10 @@ export default function LeadsPage() {
         onClose={() => setDeleteTarget(null)}
         onConfirm={handleDelete}
         isLoading={isDeleting}
-        title="Delete Lead"
+        title={t('leads.list.deleteTitle')}
         message={
           deleteTarget
-            ? `Are you sure you want to delete "${deleteTarget.title}"? This cannot be undone.`
+            ? t('leads.list.deleteMessage', { title: deleteTarget.title })
             : ''
         }
       />

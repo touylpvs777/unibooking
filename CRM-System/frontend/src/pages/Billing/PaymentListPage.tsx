@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { AlertCircle, RefreshCw, ChevronLeft, ChevronRight, CreditCard, Search } from 'lucide-react'
 import { getPayments } from '@/api/billing'
 import { Badge, type BadgeVariant } from '@/components/ui/Badge'
@@ -9,27 +10,14 @@ import '@/styles/shared.css'
 function fmtDate(iso: string) { return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }
 function fmtAmt(n: number) { return n.toLocaleString(undefined, { maximumFractionDigits: 0 }) }
 
-const PAY_STATUS: Record<string, { variant: BadgeVariant; label: string }> = {
-  pending: { variant: 'amber', label: 'Pending' }, confirmed: { variant: 'green', label: 'Confirmed' },
-  rejected: { variant: 'red', label: 'Rejected' }, refunded: { variant: 'gray', label: 'Refunded' },
+const PAY_STATUS_VARIANTS: Record<string, BadgeVariant> = {
+  pending: 'amber', confirmed: 'green', rejected: 'red', refunded: 'gray',
 }
-const METHOD_LABELS: Record<string, string> = {
-  cash: 'Cash', bank_transfer: 'Bank Transfer', check: 'Check',
-  credit_card: 'Credit Card', mobile_payment: 'Mobile', other: 'Other',
-}
-
-const STATUS_OPTS = [
-  { value: '', label: 'All Statuses' }, { value: 'pending', label: 'Pending' },
-  { value: 'confirmed', label: 'Confirmed' }, { value: 'rejected', label: 'Rejected' },
-  { value: 'refunded', label: 'Refunded' },
-]
-const METHOD_OPTS = [
-  { value: '', label: 'All Methods' }, { value: 'cash', label: 'Cash' },
-  { value: 'bank_transfer', label: 'Bank Transfer' }, { value: 'check', label: 'Check' },
-  { value: 'credit_card', label: 'Credit Card' }, { value: 'mobile_payment', label: 'Mobile' },
-]
+const STATUSES = ['pending', 'confirmed', 'rejected', 'refunded']
+const METHODS = ['cash', 'bank_transfer', 'check', 'credit_card', 'mobile_payment']
 
 export default function PaymentListPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [items, setItems] = useState<PaymentOut[]>([])
   const [total, setTotal] = useState(0)
@@ -49,9 +37,9 @@ export default function PaymentListPage() {
         q: search || undefined, page, page_size: 20,
       })
       setItems(data.items); setTotal(data.total); setPages(data.pages)
-    } catch { setError('Failed to load payments.') }
+    } catch { setError(t('billing.payment.toast.loadPaymentsFailed')) }
     finally { setIsLoading(false) }
-  }, [statusFilter, methodFilter, search, page])
+  }, [statusFilter, methodFilter, search, page, t])
 
   useEffect(() => { load() }, [load])
 
@@ -59,11 +47,11 @@ export default function PaymentListPage() {
     <div>
       <div className="page-header">
         <div>
-          <h1>Payments</h1>
-          <p className="page-header-sub">{total.toLocaleString()} payments</p>
+          <h1>{t('billing.payment.list.title')}</h1>
+          <p className="page-header-sub">{t('billing.payment.list.subtitle', { count: total })}</p>
         </div>
         <button className="btn btn-ghost" onClick={load} disabled={isLoading}>
-          <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> Refresh
+          <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('billing.common.refresh')}
         </button>
       </div>
 
@@ -72,15 +60,17 @@ export default function PaymentListPage() {
       <div className="toolbar">
         <div className="search-wrap">
           <Search size={15} className="search-icon" />
-          <input className="search-input" placeholder="Search payment/ref #..." value={search} onChange={(e) => { setSearch(e.target.value); setPage(1) }} />
+          <input className="search-input" placeholder={t('billing.payment.searchPlaceholder')} value={search} onChange={(e) => { setSearch(e.target.value); setPage(1) }} />
         </div>
         <select className="filter-select" value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1) }}>
-          {STATUS_OPTS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+          <option value="">{t('billing.payment.statusFilter.all')}</option>
+          {STATUSES.map((s) => <option key={s} value={s}>{t(`billing.payment.status.${s}`, s)}</option>)}
         </select>
         <select className="filter-select" value={methodFilter} onChange={(e) => { setMethodFilter(e.target.value); setPage(1) }}>
-          {METHOD_OPTS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+          <option value="">{t('billing.payment.methodFilter.all')}</option>
+          {METHODS.map((m) => <option key={m} value={m}>{t(`billing.payment.method.${m}Short`, t(`billing.payment.method.${m}`, m))}</option>)}
         </select>
-        <span className="toolbar-count">{total} result{total !== 1 ? 's' : ''}</span>
+        <span className="toolbar-count">{t('billing.payment.list.resultsCount', { count: total })}</span>
       </div>
 
       <div className="table-card">
@@ -88,13 +78,13 @@ export default function PaymentListPage() {
           <table className="data-table">
             <thead>
               <tr>
-                <th>Payment #</th>
-                <th>Customer</th>
-                <th>Method</th>
-                <th>Status</th>
-                <th>Amount</th>
-                <th className="col-hide-sm">Date</th>
-                <th className="col-hide-sm">Reference</th>
+                <th>{t('billing.payment.table.number')}</th>
+                <th>{t('billing.payment.table.customer')}</th>
+                <th>{t('billing.payment.fields.method')}</th>
+                <th>{t('common.status')}</th>
+                <th>{t('common.amount')}</th>
+                <th className="col-hide-sm">{t('common.date')}</th>
+                <th className="col-hide-sm">{t('billing.payment.fields.reference')}</th>
               </tr>
             </thead>
             <tbody>
@@ -110,10 +100,10 @@ export default function PaymentListPage() {
                 </tr>
               )) : items.length === 0 ? (
                 <tr><td colSpan={7}>
-                  <div className="table-empty"><CreditCard size={40} /><p>No payments found</p></div>
+                  <div className="table-empty"><CreditCard size={40} /><p>{t('billing.payment.empty')}</p></div>
                 </td></tr>
               ) : items.map((p) => {
-                const cfg = PAY_STATUS[p.payment_status] ?? { variant: 'gray' as BadgeVariant, label: p.payment_status }
+                const variant = PAY_STATUS_VARIANTS[p.payment_status] ?? 'gray'
                 return (
                   <tr key={p.id} onClick={() => navigate(`/billing/payments/${p.id}`)} style={{ cursor: 'pointer' }}>
                     <td className="cell-desc">{p.payment_number}</td>
@@ -121,8 +111,8 @@ export default function PaymentListPage() {
                       <div className="cell-desc">{p.customer.first_name} {p.customer.last_name}</div>
                       {p.customer.company && <div className="cell-sub cell-muted">{p.customer.company}</div>}
                     </td>
-                    <td className="cell-muted cell-type">{METHOD_LABELS[p.payment_method] || p.payment_method}</td>
-                    <td><Badge variant={cfg.variant}>{cfg.label}</Badge></td>
+                    <td className="cell-muted cell-type">{t(`billing.payment.method.${p.payment_method}Short`, t(`billing.payment.method.${p.payment_method}`, p.payment_method))}</td>
+                    <td><Badge variant={variant}>{t(`billing.payment.status.${p.payment_status}`, p.payment_status)}</Badge></td>
                     <td className="cell-mono cell-total">{fmtAmt(p.amount)} {p.currency}</td>
                     <td className="cell-muted col-hide-sm">{fmtDate(p.payment_date)}</td>
                     <td className="cell-muted col-hide-sm">{p.reference_number || '—'}</td>
@@ -135,7 +125,7 @@ export default function PaymentListPage() {
 
         {!isLoading && pages > 1 && (
           <div className="pagination">
-            <span className="pagination-info">Page {page} of {pages} ({total} total)</span>
+            <span className="pagination-info">{t('billing.payment.pagination.pageOf', { page, pages, total })}</span>
             <div className="pagination-controls">
               <button className="page-btn" disabled={page === 1} onClick={() => setPage(page - 1)}><ChevronLeft size={14} /></button>
               {Array.from({ length: Math.min(pages, 5) }, (_, i) => {

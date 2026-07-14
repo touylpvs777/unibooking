@@ -1,4 +1,5 @@
 import { useState, useEffect, type FormEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import Modal from '@/components/ui/Modal'
 import type { Customer, CustomerCreate, CustomerStatus } from '@/types/customer'
 
@@ -20,6 +21,7 @@ const EMPTY = {
 }
 
 export default function CustomerForm({ isOpen, onClose, onSubmit, customer }: CustomerFormProps) {
+  const { t } = useTranslation()
   const isEdit = !!customer
   const [fields, setFields] = useState(EMPTY)
   const [isLoading, setIsLoading] = useState(false)
@@ -66,14 +68,14 @@ export default function CustomerForm({ isOpen, onClose, onSubmit, customer }: Cu
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={isEdit ? 'Edit Customer' : 'New Customer'}
+      title={isEdit ? t('customers.form.editTitle') : t('customers.form.newTitle')}
       footer={
         <>
           <button type="button" className="btn btn-ghost" onClick={onClose} disabled={isLoading}>
-            Cancel
+            {t('common.cancel')}
           </button>
           <button type="submit" form="customer-form" className="btn btn-primary" disabled={isLoading}>
-            {isLoading ? 'Saving…' : isEdit ? 'Save Changes' : 'Create Customer'}
+            {isLoading ? t('common.saving') : isEdit ? t('customers.form.saveChanges') : t('customers.form.createCustomer')}
           </button>
         </>
       }
@@ -81,44 +83,44 @@ export default function CustomerForm({ isOpen, onClose, onSubmit, customer }: Cu
       <form id="customer-form" onSubmit={handleSubmit} className="form-grid">
         <div className="form-row-2">
           <div className="form-group">
-            <label htmlFor="cf-first">First Name <span className="required">*</span></label>
-            <input id="cf-first" value={fields.first_name} onChange={set('first_name')} required placeholder="John" />
+            <label htmlFor="cf-first">{t('customers.form.firstNameLabel')} <span className="required">*</span></label>
+            <input id="cf-first" value={fields.first_name} onChange={set('first_name')} required placeholder={t('customers.form.firstNamePlaceholder')} />
           </div>
           <div className="form-group">
-            <label htmlFor="cf-last">Last Name <span className="required">*</span></label>
-            <input id="cf-last" value={fields.last_name} onChange={set('last_name')} required placeholder="Doe" />
+            <label htmlFor="cf-last">{t('customers.form.lastNameLabel')} <span className="required">*</span></label>
+            <input id="cf-last" value={fields.last_name} onChange={set('last_name')} required placeholder={t('customers.form.lastNamePlaceholder')} />
           </div>
         </div>
 
         <div className="form-group">
-          <label htmlFor="cf-email">Email</label>
-          <input id="cf-email" type="email" value={fields.email} onChange={set('email')} placeholder="john@example.com" />
+          <label htmlFor="cf-email">{t('common.email')}</label>
+          <input id="cf-email" type="email" value={fields.email} onChange={set('email')} placeholder={t('customers.form.emailPlaceholder')} />
         </div>
 
         <div className="form-row-2">
           <div className="form-group">
-            <label htmlFor="cf-phone">Phone</label>
-            <input id="cf-phone" value={fields.phone} onChange={set('phone')} placeholder="+1 555 000 0000" />
+            <label htmlFor="cf-phone">{t('common.phone')}</label>
+            <input id="cf-phone" value={fields.phone} onChange={set('phone')} placeholder={t('customers.form.phonePlaceholder')} />
           </div>
           <div className="form-group">
-            <label htmlFor="cf-status">Status</label>
+            <label htmlFor="cf-status">{t('common.status')}</label>
             <select id="cf-status" value={fields.status} onChange={set('status')}>
-              <option value="prospect">Prospect</option>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-              <option value="churned">Churned</option>
+              <option value="prospect">{t('customers.status.prospect')}</option>
+              <option value="active">{t('customers.status.active')}</option>
+              <option value="inactive">{t('customers.status.inactive')}</option>
+              <option value="churned">{t('customers.status.churned')}</option>
             </select>
           </div>
         </div>
 
         <div className="form-group">
-          <label htmlFor="cf-company">Company</label>
-          <input id="cf-company" value={fields.company} onChange={set('company')} placeholder="Acme Corp" />
+          <label htmlFor="cf-company">{t('customers.form.companyLabel')}</label>
+          <input id="cf-company" value={fields.company} onChange={set('company')} placeholder={t('customers.form.companyPlaceholder')} />
         </div>
 
         <div className="form-group">
-          <label htmlFor="cf-notes">Notes</label>
-          <textarea id="cf-notes" value={fields.notes} onChange={set('notes')} placeholder="Any additional notes…" rows={3} />
+          <label htmlFor="cf-notes">{t('common.notes')}</label>
+          <textarea id="cf-notes" value={fields.notes} onChange={set('notes')} placeholder={t('customers.form.notesPlaceholder')} rows={3} />
         </div>
       </form>
     </Modal>

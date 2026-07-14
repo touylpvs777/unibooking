@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { AlertCircle, ArrowLeft } from 'lucide-react'
 import { getDeposit, receiveDeposit, refundDeposit, forfeitDeposit, applyDeposit, getInvoices } from '@/api/billing'
 import type { DepositOut, InvoiceOut } from '@/types/billing'
@@ -13,12 +14,18 @@ const STATUS_COLORS: Record<string, string> = {
   pending: '#f59e0b', received: '#3b82f6', partially_refunded: '#8b5cf6',
   refunded: '#10b981', forfeited: '#ef4444', applied: '#6b7280',
 }
+const STATUS_LABEL_KEYS: Record<string, string> = {
+  pending: 'billing.deposit.status.pending', received: 'billing.deposit.status.received',
+  partially_refunded: 'billing.deposit.status.partiallyRefunded', refunded: 'billing.deposit.status.refunded',
+  forfeited: 'billing.deposit.status.forfeited', applied: 'billing.deposit.status.applied',
+}
 
-function StatusBadge({ status }: { status: string }) {
-  return <span style={{ fontSize: 12, fontWeight: 600, padding: '3px 10px', borderRadius: 9999, background: `${STATUS_COLORS[status] || '#6b7280'}18`, color: STATUS_COLORS[status] || '#6b7280' }}>{status.replace('_', ' ')}</span>
+function StatusBadge({ status, label }: { status: string; label: string }) {
+  return <span style={{ fontSize: 12, fontWeight: 600, padding: '3px 10px', borderRadius: 9999, background: `${STATUS_COLORS[status] || '#6b7280'}18`, color: STATUS_COLORS[status] || '#6b7280' }}>{label}</span>
 }
 
 export default function DepositDetailPage() {
+  const { t } = useTranslation()
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const [dep, setDep] = useState<DepositOut | null>(null)
@@ -35,7 +42,7 @@ export default function DepositDetailPage() {
   const load = async () => {
     setIsLoading(true)
     try { setDep((await getDeposit(Number(id))).data) }
-    catch { setError('Failed to load deposit.') }
+    catch { setError(t('billing.deposit.detail.loadError')) }
     finally { setIsLoading(false) }
   }
   useEffect(() => { load() }, [id])
@@ -43,7 +50,7 @@ export default function DepositDetailPage() {
   const action = async (fn: () => Promise<unknown>) => {
     setBusy(true)
     try { await fn(); setModal(null); await load() }
-    catch { alert('Action failed.') }
+    catch { alert(t('billing.deposit.detail.actionFailed')) }
     finally { setBusy(false) }
   }
 
@@ -57,14 +64,15 @@ export default function DepositDetailPage() {
       ]
       setInvoices(all)
       setModal('apply')
-    } catch { alert('Failed to load invoices.') }
+    } catch { alert(t('billing.deposit.detail.invoicesLoadError')) }
   }
 
-  if (isLoading) return <div style={{ padding: 40, textAlign: 'center', color: 'var(--color-text-muted)' }}>Loading...</div>
-  if (error || !dep) return <div className="page-error"><AlertCircle size={16} /> {error || 'Not found'}</div>
+  if (isLoading) return <div style={{ padding: 40, textAlign: 'center', color: 'var(--color-text-muted)' }}>{t('common.loading')}</div>
+  if (error || !dep) return <div className="page-error"><AlertCircle size={16} /> {error || t('billing.deposit.detail.notFound')}</div>
 
   const remaining = dep.amount - dep.refund_amount - dep.forfeit_amount - dep.applied_amount
   const s = dep.deposit_status
+  const statusLabel = STATUS_LABEL_KEYS[s] ? t(STATUS_LABEL_KEYS[s]) : s
 
   return (
     <div>
@@ -72,17 +80,17 @@ export default function DepositDetailPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <button className="btn btn-secondary" onClick={() => navigate('/billing/deposits')} style={{ padding: '6px 10px' }}><ArrowLeft size={16} /></button>
           <div>
-            <h1 style={{ display: 'flex', alignItems: 'center', gap: 10 }}>{dep.deposit_number} <StatusBadge status={s} /></h1>
+            <h1 style={{ display: 'flex', alignItems: 'center', gap: 10 }}>{dep.deposit_number} <StatusBadge status={s} label={statusLabel} /></h1>
             <p className="page-header-sub">{dep.customer.first_name} {dep.customer.last_name} — {dep.deposit_type}</p>
           </div>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          {s === 'pending' && <button className="btn btn-primary" disabled={busy} onClick={() => setModal('receive')}>Mark Received</button>}
+          {s === 'pending' && <button className="btn btn-primary" disabled={busy} onClick={() => setModal('receive')}>{t('billing.deposit.actions.markReceived')}</button>}
           {(s === 'received' || s === 'partially_refunded') && (
             <>
-              <button className="btn btn-secondary" disabled={busy} onClick={() => setModal('refund')}>Refund</button>
-              <button className="btn btn-secondary" style={{ color: 'var(--color-danger-500)' }} disabled={busy} onClick={() => setModal('forfeit')}>Forfeit</button>
-              <button className="btn btn-primary" disabled={busy} onClick={openApply}>Apply to Invoice</button>
+              <button className="btn btn-secondary" disabled={busy} onClick={() => setModal('refund')}>{t('billing.deposit.actions.refund')}</button>
+              <button className="btn btn-secondary" style={{ color: 'var(--color-danger-500)' }} disabled={busy} onClick={() => setModal('forfeit')}>{t('billing.deposit.actions.forfeit')}</button>
+              <button className="btn btn-primary" disabled={busy} onClick={openApply}>{t('billing.deposit.actions.applyToInvoice')}</button>
             </>
           )}
         </div>
@@ -91,11 +99,11 @@ export default function DepositDetailPage() {
       {/* Financial Summary */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 12, marginTop: 16 }}>
         {[
-          { label: 'Deposit Amount', value: dep.amount },
-          { label: 'Refunded', value: dep.refund_amount },
-          { label: 'Forfeited', value: dep.forfeit_amount },
-          { label: 'Applied', value: dep.applied_amount },
-          { label: 'Remaining', value: remaining },
+          { label: t('billing.deposit.summary.amount'), value: dep.amount },
+          { label: t('billing.deposit.summary.refunded'), value: dep.refund_amount },
+          { label: t('billing.deposit.summary.forfeited'), value: dep.forfeit_amount },
+          { label: t('billing.deposit.summary.applied'), value: dep.applied_amount },
+          { label: t('billing.deposit.summary.remaining'), value: remaining },
         ].map((c) => (
           <div key={c.label} style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: '12px 14px' }}>
             <div style={{ fontSize: 11, color: 'var(--color-text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>{c.label}</div>
@@ -105,14 +113,14 @@ export default function DepositDetailPage() {
       </div>
 
       <div style={{ display: 'flex', gap: 24, marginTop: 16, fontSize: 13, color: 'var(--color-text-muted)' }}>
-        <span>Received: {fmtDate(dep.received_date)}</span>
-        <span>Refund Date: {fmtDate(dep.refund_date)}</span>
-        <span>Contract: <span style={{ cursor: 'pointer', color: 'var(--color-primary-500)' }} onClick={() => navigate(`/rental-contracts/${dep.contract_id}`)}>{dep.contract.contract_number}</span></span>
+        <span>{t('billing.deposit.detail.receivedLabel', { date: fmtDate(dep.received_date) })}</span>
+        <span>{t('billing.deposit.detail.refundDateLabel', { date: fmtDate(dep.refund_date) })}</span>
+        <span>{t('billing.deposit.detail.contractLabel')} <span style={{ cursor: 'pointer', color: 'var(--color-primary-500)' }} onClick={() => navigate(`/rental-contracts/${dep.contract_id}`)}>{dep.contract.contract_number}</span></span>
       </div>
 
       {dep.notes && (
         <div style={{ marginTop: 16, padding: 16, background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', fontSize: 13 }}>
-          <strong>Notes:</strong> {dep.notes}
+          <strong>{t('billing.deposit.detail.notesLabel')}</strong> {dep.notes}
         </div>
       )}
 
@@ -122,54 +130,54 @@ export default function DepositDetailPage() {
           <div style={{ background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', padding: 24, width: 400, maxWidth: '90vw' }} onClick={(e) => e.stopPropagation()}>
             {modal === 'receive' && (
               <>
-                <h3>Mark Deposit Received</h3>
-                <label style={{ fontSize: 13, fontWeight: 600, display: 'block', marginTop: 12, marginBottom: 4 }}>Received Date</label>
+                <h3>{t('billing.deposit.modal.markReceived.title')}</h3>
+                <label style={{ fontSize: 13, fontWeight: 600, display: 'block', marginTop: 12, marginBottom: 4 }}>{t('billing.deposit.modal.markReceived.receivedDateLabel')}</label>
                 <input type="date" value={formDate} onChange={(e) => setFormDate(e.target.value)} style={{ width: '100%', padding: '8px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', fontSize: 13 }} />
                 <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 16 }}>
-                  <button className="btn btn-secondary" onClick={() => setModal(null)}>Cancel</button>
-                  <button className="btn btn-primary" disabled={busy} onClick={() => action(() => receiveDeposit(dep.id, { received_date: formDate }))}>Confirm</button>
+                  <button className="btn btn-secondary" onClick={() => setModal(null)}>{t('common.cancel')}</button>
+                  <button className="btn btn-primary" disabled={busy} onClick={() => action(() => receiveDeposit(dep.id, { received_date: formDate }))}>{t('common.confirm')}</button>
                 </div>
               </>
             )}
             {modal === 'refund' && (
               <>
-                <h3>Refund Deposit</h3>
-                <label style={{ fontSize: 13, fontWeight: 600, display: 'block', marginTop: 12, marginBottom: 4 }}>Refund Amount (max: {fmtAmt(remaining, '')})</label>
+                <h3>{t('billing.deposit.modal.refund.title')}</h3>
+                <label style={{ fontSize: 13, fontWeight: 600, display: 'block', marginTop: 12, marginBottom: 4 }}>{t('billing.deposit.modal.refund.amountLabel', { max: fmtAmt(remaining, '') })}</label>
                 <input type="number" step="0.01" min="0" max={remaining} value={formAmount} onChange={(e) => setFormAmount(e.target.value)} style={{ width: '100%', padding: '8px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', fontSize: 13 }} />
-                <label style={{ fontSize: 13, fontWeight: 600, display: 'block', marginTop: 12, marginBottom: 4 }}>Refund Date</label>
+                <label style={{ fontSize: 13, fontWeight: 600, display: 'block', marginTop: 12, marginBottom: 4 }}>{t('billing.deposit.modal.refund.dateLabel')}</label>
                 <input type="date" value={formDate} onChange={(e) => setFormDate(e.target.value)} style={{ width: '100%', padding: '8px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', fontSize: 13 }} />
                 <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 16 }}>
-                  <button className="btn btn-secondary" onClick={() => setModal(null)}>Cancel</button>
-                  <button className="btn btn-primary" disabled={busy || !formAmount || Number(formAmount) <= 0} onClick={() => action(() => refundDeposit(dep.id, { refund_amount: Number(formAmount), refund_date: formDate }))}>Refund</button>
+                  <button className="btn btn-secondary" onClick={() => setModal(null)}>{t('common.cancel')}</button>
+                  <button className="btn btn-primary" disabled={busy || !formAmount || Number(formAmount) <= 0} onClick={() => action(() => refundDeposit(dep.id, { refund_amount: Number(formAmount), refund_date: formDate }))}>{t('billing.deposit.actions.refund')}</button>
                 </div>
               </>
             )}
             {modal === 'forfeit' && (
               <>
-                <h3>Forfeit Deposit</h3>
-                <label style={{ fontSize: 13, fontWeight: 600, display: 'block', marginTop: 12, marginBottom: 4 }}>Forfeit Amount (max: {fmtAmt(remaining, '')})</label>
+                <h3>{t('billing.deposit.modal.forfeit.title')}</h3>
+                <label style={{ fontSize: 13, fontWeight: 600, display: 'block', marginTop: 12, marginBottom: 4 }}>{t('billing.deposit.modal.forfeit.amountLabel', { max: fmtAmt(remaining, '') })}</label>
                 <input type="number" step="0.01" min="0" max={remaining} value={formAmount} onChange={(e) => setFormAmount(e.target.value)} style={{ width: '100%', padding: '8px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', fontSize: 13 }} />
-                <label style={{ fontSize: 13, fontWeight: 600, display: 'block', marginTop: 12, marginBottom: 4 }}>Reason</label>
+                <label style={{ fontSize: 13, fontWeight: 600, display: 'block', marginTop: 12, marginBottom: 4 }}>{t('billing.deposit.modal.forfeit.reasonLabel')}</label>
                 <textarea value={formReason} onChange={(e) => setFormReason(e.target.value)} rows={2} style={{ width: '100%', padding: '8px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', fontSize: 13, resize: 'vertical' }} />
                 <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 16 }}>
-                  <button className="btn btn-secondary" onClick={() => setModal(null)}>Cancel</button>
-                  <button className="btn btn-primary" style={{ background: 'var(--color-danger-500)' }} disabled={busy || !formAmount || Number(formAmount) <= 0} onClick={() => action(() => forfeitDeposit(dep.id, { forfeit_amount: Number(formAmount), reason: formReason || undefined }))}>Forfeit</button>
+                  <button className="btn btn-secondary" onClick={() => setModal(null)}>{t('common.cancel')}</button>
+                  <button className="btn btn-primary" style={{ background: 'var(--color-danger-500)' }} disabled={busy || !formAmount || Number(formAmount) <= 0} onClick={() => action(() => forfeitDeposit(dep.id, { forfeit_amount: Number(formAmount), reason: formReason || undefined }))}>{t('billing.deposit.actions.forfeit')}</button>
                 </div>
               </>
             )}
             {modal === 'apply' && (
               <>
-                <h3>Apply Deposit to Invoice</h3>
-                <label style={{ fontSize: 13, fontWeight: 600, display: 'block', marginTop: 12, marginBottom: 4 }}>Invoice</label>
+                <h3>{t('billing.deposit.modal.apply.title')}</h3>
+                <label style={{ fontSize: 13, fontWeight: 600, display: 'block', marginTop: 12, marginBottom: 4 }}>{t('billing.deposit.modal.apply.invoiceLabel')}</label>
                 <select value={formInvoiceId} onChange={(e) => setFormInvoiceId(e.target.value ? Number(e.target.value) : '')} style={{ width: '100%', padding: '8px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', fontSize: 13 }}>
-                  <option value="">Select invoice...</option>
-                  {invoices.map((inv) => <option key={inv.id} value={inv.id}>{inv.invoice_number} — Balance: {inv.balance_due.toLocaleString()} {inv.currency}</option>)}
+                  <option value="">{t('billing.deposit.modal.apply.selectInvoicePlaceholder')}</option>
+                  {invoices.map((inv) => <option key={inv.id} value={inv.id}>{t('billing.deposit.modal.apply.invoiceOption', { number: inv.invoice_number, balance: inv.balance_due.toLocaleString(), currency: inv.currency })}</option>)}
                 </select>
-                <label style={{ fontSize: 13, fontWeight: 600, display: 'block', marginTop: 12, marginBottom: 4 }}>Amount (max: {fmtAmt(remaining, '')})</label>
+                <label style={{ fontSize: 13, fontWeight: 600, display: 'block', marginTop: 12, marginBottom: 4 }}>{t('billing.deposit.modal.apply.amountLabel', { max: fmtAmt(remaining, '') })}</label>
                 <input type="number" step="0.01" min="0" max={remaining} value={formAmount} onChange={(e) => setFormAmount(e.target.value)} style={{ width: '100%', padding: '8px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', fontSize: 13 }} />
                 <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 16 }}>
-                  <button className="btn btn-secondary" onClick={() => setModal(null)}>Cancel</button>
-                  <button className="btn btn-primary" disabled={busy || !formInvoiceId || !formAmount || Number(formAmount) <= 0} onClick={() => action(() => applyDeposit(dep.id, { apply_amount: Number(formAmount), invoice_id: Number(formInvoiceId) }))}>Apply</button>
+                  <button className="btn btn-secondary" onClick={() => setModal(null)}>{t('common.cancel')}</button>
+                  <button className="btn btn-primary" disabled={busy || !formInvoiceId || !formAmount || Number(formAmount) <= 0} onClick={() => action(() => applyDeposit(dep.id, { apply_amount: Number(formAmount), invoice_id: Number(formInvoiceId) }))}>{t('billing.deposit.modal.apply.confirm')}</button>
                 </div>
               </>
             )}

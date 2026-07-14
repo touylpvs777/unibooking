@@ -1,4 +1,5 @@
 import { useRef, useState, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Upload, X, CheckCircle2 } from 'lucide-react'
 import { uploadImage, type UploadResult } from '@/api/upload'
 import './ImageUpload.css'
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export default function ImageUpload({ onUploaded, className }: Props) {
+  const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement>(null)
   const [preview, setPreview] = useState<string | null>(null)
   const [progress, setProgress] = useState<number | null>(null)
@@ -31,13 +33,13 @@ export default function ImageUpload({ onUploaded, className }: Props) {
   const validate = (file: File): string | null => {
     const ext = file.name.split('.').pop()?.toLowerCase()
     if (!ext || !['jpg', 'jpeg', 'png', 'webp'].includes(ext)) {
-      return 'Only JPG, PNG, and WebP images are allowed.'
+      return t('imageUpload.invalidFormat')
     }
     if (file.size > MAX_SIZE_BYTES) {
-      return `File size exceeds ${MAX_SIZE_MB} MB limit.`
+      return t('imageUpload.fileTooLarge', { size: MAX_SIZE_MB })
     }
     if (!file.type.startsWith('image/')) {
-      return 'File is not a valid image.'
+      return t('imageUpload.invalidImage')
     }
     return null
   }
@@ -63,7 +65,7 @@ export default function ImageUpload({ onUploaded, className }: Props) {
       onUploaded?.(res)
     } catch (err) {
       const msg = (err as { response?: { data?: { detail?: string } } })
-        ?.response?.data?.detail || 'Upload failed. Please try again.'
+        ?.response?.data?.detail || t('imageUpload.uploadFailed')
       setError(msg)
       setProgress(null)
     }
@@ -86,7 +88,7 @@ export default function ImageUpload({ onUploaded, className }: Props) {
       <div className={className}>
         <div className="img-upload-preview">
           <img src={preview} alt="Upload preview" />
-          <button className="img-upload-remove" onClick={reset} title="Remove" type="button">
+          <button className="img-upload-remove" onClick={reset} title={t('imageUpload.remove')} type="button">
             <X size={14} />
           </button>
         </div>
@@ -102,7 +104,7 @@ export default function ImageUpload({ onUploaded, className }: Props) {
 
         {result && (
           <div className="img-upload-success">
-            <CheckCircle2 size={14} /> Uploaded successfully
+            <CheckCircle2 size={14} /> {t('imageUpload.uploadedSuccessfully')}
           </div>
         )}
 
@@ -128,8 +130,8 @@ export default function ImageUpload({ onUploaded, className }: Props) {
           hidden
         />
         <div className="img-upload-icon"><Upload size={28} /></div>
-        <div className="img-upload-label">Click or drag an image to upload</div>
-        <div className="img-upload-hint">JPG, PNG, WebP · Max {MAX_SIZE_MB} MB</div>
+        <div className="img-upload-label">{t('imageUpload.clickOrDrag')}</div>
+        <div className="img-upload-hint">{t('imageUpload.hint', { size: MAX_SIZE_MB })}</div>
       </div>
       {error && <div className="img-upload-error">{error}</div>}
     </div>

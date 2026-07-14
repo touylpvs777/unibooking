@@ -1,5 +1,6 @@
 import { useEffect, useRef, useCallback, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
+import { useTranslation } from 'react-i18next'
 import { X } from 'lucide-react'
 import './Modal.css'
 
@@ -20,6 +21,7 @@ export default function Modal({
   footer,
   width = 480,
 }: ModalProps) {
+  const { t } = useTranslation()
   const modalRef = useRef<HTMLDivElement>(null)
   const previousFocus = useRef<HTMLElement | null>(null)
 
@@ -71,7 +73,7 @@ export default function Modal({
       >
         <div className="modal-header">
           <span className="modal-title" id={titleId}>{title}</span>
-          <button className="modal-close" onClick={onClose} aria-label="Close dialog">
+          <button className="modal-close" onClick={onClose} aria-label={t('common.closeDialog')}>
             <X size={16} />
           </button>
         </div>

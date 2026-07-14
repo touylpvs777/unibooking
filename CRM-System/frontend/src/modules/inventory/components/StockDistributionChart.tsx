@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { ChartCard } from '@/components/charts'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 
@@ -10,8 +11,9 @@ const CATEGORY_COLORS: Record<string, string> = {
 interface StockItem { category: string; count: number }
 
 export default function StockDistributionChart({ data, loading }: { data: StockItem[]; loading: boolean }) {
+  const { t } = useTranslation()
   return (
-    <ChartCard title="Stock by Category" sub="Parts per category" loading={loading} isEmpty={data.length === 0} emptyMessage="No stock data">
+    <ChartCard title={t('inventory.stockDistributionChart.title')} sub={t('inventory.stockDistributionChart.subtitle')} loading={loading} isEmpty={data.length === 0} emptyMessage={t('inventory.stockDistributionChart.empty')}>
       <ResponsiveContainer width="100%" height={220}>
         <BarChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />

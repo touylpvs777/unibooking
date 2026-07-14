@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import Modal from '@/components/ui/Modal'
 import type { Forklift } from '@/types/forklift'
 import type { Brand } from '@/types/catalog'
@@ -33,26 +34,26 @@ const EMPTY = {
 }
 
 const STATUS_OPTIONS = [
-  { value: 'in_stock', label: 'In Stock' },
-  { value: 'sold', label: 'Sold' },
-  { value: 'rented', label: 'Rented' },
-  { value: 'in_service', label: 'In Service' },
-  { value: 'reserved', label: 'Reserved' },
-  { value: 'decommissioned', label: 'Decommissioned' },
+  { value: 'in_stock', labelKey: 'equipment.status.inStock' },
+  { value: 'sold', labelKey: 'equipment.status.sold' },
+  { value: 'rented', labelKey: 'equipment.status.rented' },
+  { value: 'in_service', labelKey: 'equipment.status.inService' },
+  { value: 'reserved', labelKey: 'equipment.status.reserved' },
+  { value: 'decommissioned', labelKey: 'equipment.status.decommissioned' },
 ]
 
 const CONDITION_OPTIONS = [
-  { value: 'new', label: 'New' },
-  { value: 'used', label: 'Used' },
-  { value: 'refurbished', label: 'Refurbished' },
+  { value: 'new', labelKey: 'equipment.condition.new' },
+  { value: 'used', labelKey: 'equipment.condition.used' },
+  { value: 'refurbished', labelKey: 'equipment.condition.refurbished' },
 ]
 
 const FUEL_OPTIONS = [
-  { value: '', label: '— Not specified —' },
-  { value: 'electric', label: 'Electric' },
-  { value: 'diesel', label: 'Diesel' },
-  { value: 'lpg', label: 'LPG' },
-  { value: 'dual_fuel', label: 'Dual Fuel' },
+  { value: '', labelKey: 'equipment.fuel.notSpecified' },
+  { value: 'electric', labelKey: 'equipment.fuel.electric' },
+  { value: 'diesel', labelKey: 'equipment.fuel.diesel' },
+  { value: 'lpg', labelKey: 'equipment.fuel.lpg' },
+  { value: 'dual_fuel', labelKey: 'equipment.fuel.dualFuel' },
 ]
 
 export default function ForkliftForm({
@@ -62,6 +63,7 @@ export default function ForkliftForm({
   forklift,
   brands,
 }: ForkliftFormProps) {
+  const { t } = useTranslation()
   const [form, setForm]         = useState({ ...EMPTY })
   const [isSaving, setIsSaving] = useState(false)
   const [err, setErr]           = useState<string | null>(null)
@@ -99,8 +101,8 @@ export default function ForkliftForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.serial_number.trim()) { setErr('Serial number is required.'); return }
-    if (!form.name_en.trim()) { setErr('Name is required.'); return }
+    if (!form.serial_number.trim()) { setErr(t('equipment.form.serialRequired')); return }
+    if (!form.name_en.trim()) { setErr(t('equipment.form.nameRequired')); return }
 
     setIsSaving(true)
     setErr(null)
@@ -131,14 +133,14 @@ export default function ForkliftForm({
     const ok = await onSubmit(payload)
     setIsSaving(false)
     if (ok) onClose()
-    else setErr('Save failed. Please try again.')
+    else setErr(t('equipment.form.saveFailed'))
   }
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={forklift ? 'Edit Forklift' : 'Register Forklift'}
+      title={forklift ? t('equipment.form.editTitle') : t('equipment.form.registerTitle')}
       width={660}
     >
       <form onSubmit={handleSubmit} className="form-grid">
@@ -147,21 +149,21 @@ export default function ForkliftForm({
         {/* Row 1: Serial + Name */}
         <div className="form-row-2">
           <div className="form-group">
-            <label>Serial Number <span className="required">*</span></label>
+            <label>{t('equipment.form.serialNumber')} <span className="required">*</span></label>
             <input
               value={form.serial_number}
               onChange={(e) => set('serial_number', e.target.value)}
-              placeholder="e.g. JH-2024-001"
+              placeholder={t('equipment.form.serialNumberPlaceholder')}
               required
               disabled={!!forklift}
             />
           </div>
           <div className="form-group">
-            <label>Name (English) <span className="required">*</span></label>
+            <label>{t('equipment.form.nameEnglish')} <span className="required">*</span></label>
             <input
               value={form.name_en}
               onChange={(e) => set('name_en', e.target.value)}
-              placeholder="e.g. Jungheinrich EFG 216k"
+              placeholder={t('equipment.form.nameEnglishPlaceholder')}
               required
             />
           </div>
@@ -170,7 +172,7 @@ export default function ForkliftForm({
         {/* Row 2: Name Lao + Internal Code */}
         <div className="form-row-2">
           <div className="form-group">
-            <label>Name (Lao)</label>
+            <label>{t('equipment.form.nameLao')}</label>
             <input
               value={form.name_lo}
               onChange={(e) => set('name_lo', e.target.value)}
@@ -178,11 +180,11 @@ export default function ForkliftForm({
             />
           </div>
           <div className="form-group">
-            <label>Internal Code</label>
+            <label>{t('equipment.form.internalCode')}</label>
             <input
               value={form.internal_code}
               onChange={(e) => set('internal_code', e.target.value)}
-              placeholder="DK asset tag"
+              placeholder={t('equipment.form.internalCodePlaceholder')}
             />
           </div>
         </div>
@@ -190,18 +192,18 @@ export default function ForkliftForm({
         {/* Row 3: Brand + Model Number */}
         <div className="form-row-2">
           <div className="form-group">
-            <label>Brand</label>
+            <label>{t('equipment.form.brand')}</label>
             <select value={form.brand_id} onChange={(e) => set('brand_id', e.target.value)}>
-              <option value="">— No brand —</option>
+              <option value="">{t('equipment.form.noBrand')}</option>
               {brands.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
             </select>
           </div>
           <div className="form-group">
-            <label>Model Number</label>
+            <label>{t('equipment.form.modelNumber')}</label>
             <input
               value={form.model_number}
               onChange={(e) => set('model_number', e.target.value)}
-              placeholder="e.g. EFG 216k"
+              placeholder={t('equipment.form.modelNumberPlaceholder')}
             />
           </div>
         </div>
@@ -209,15 +211,15 @@ export default function ForkliftForm({
         {/* Row 4: Status + Condition */}
         <div className="form-row-2">
           <div className="form-group">
-            <label>Status</label>
+            <label>{t('common.status')}</label>
             <select value={form.status} onChange={(e) => set('status', e.target.value)}>
-              {STATUS_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+              {STATUS_OPTIONS.map((o) => <option key={o.value} value={o.value}>{t(o.labelKey)}</option>)}
             </select>
           </div>
           <div className="form-group">
-            <label>Condition</label>
+            <label>{t('equipment.form.condition')}</label>
             <select value={form.condition} onChange={(e) => set('condition', e.target.value)}>
-              {CONDITION_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+              {CONDITION_OPTIONS.map((o) => <option key={o.value} value={o.value}>{t(o.labelKey)}</option>)}
             </select>
           </div>
         </div>
@@ -225,13 +227,13 @@ export default function ForkliftForm({
         {/* Row 5: Fuel + Capacity */}
         <div className="form-row-2">
           <div className="form-group">
-            <label>Fuel Type</label>
+            <label>{t('equipment.form.fuelType')}</label>
             <select value={form.fuel_type} onChange={(e) => set('fuel_type', e.target.value)}>
-              {FUEL_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+              {FUEL_OPTIONS.map((o) => <option key={o.value} value={o.value}>{t(o.labelKey)}</option>)}
             </select>
           </div>
           <div className="form-group">
-            <label>Capacity (kg)</label>
+            <label>{t('equipment.form.capacityKg')}</label>
             <input
               type="number"
               value={form.capacity_kg}
@@ -245,7 +247,7 @@ export default function ForkliftForm({
         {/* Row 6: Year + Hour Meter */}
         <div className="form-row-2">
           <div className="form-group">
-            <label>Year Manufactured</label>
+            <label>{t('equipment.form.yearManufactured')}</label>
             <input
               type="number"
               value={form.year_manufactured}
@@ -256,7 +258,7 @@ export default function ForkliftForm({
             />
           </div>
           <div className="form-group">
-            <label>{forklift ? 'Current Hour Meter' : 'Initial Hour Meter'}</label>
+            <label>{forklift ? t('equipment.form.currentHourMeter') : t('equipment.form.initialHourMeter')}</label>
             <input
               type="number"
               value={forklift ? form.current_hour_meter : form.initial_hour_meter}
@@ -272,7 +274,7 @@ export default function ForkliftForm({
         {!forklift && (
           <div className="form-row-2">
             <div className="form-group">
-              <label>Purchase Date</label>
+              <label>{t('equipment.form.purchaseDate')}</label>
               <input
                 type="date"
                 value={form.purchase_date}
@@ -280,7 +282,7 @@ export default function ForkliftForm({
               />
             </div>
             <div className="form-group">
-              <label>Warranty Expiry</label>
+              <label>{t('equipment.form.warrantyExpiry')}</label>
               <input
                 type="date"
                 value={form.warranty_expiry}
@@ -292,12 +294,12 @@ export default function ForkliftForm({
 
         {/* Notes */}
         <div className="form-group">
-          <label>Notes</label>
+          <label>{t('common.notes')}</label>
           <textarea
             value={form.notes}
             onChange={(e) => set('notes', e.target.value)}
             rows={2}
-            placeholder="Optional notes..."
+            placeholder={t('equipment.form.notesPlaceholder')}
           />
         </div>
 
@@ -310,17 +312,17 @@ export default function ForkliftForm({
               onChange={(e) => set('is_active', e.target.checked)}
               style={{ cursor: 'pointer' }}
             />
-            Active
+            {t('common.active')}
           </label>
         </div>
 
         {/* Actions */}
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 4 }}>
           <button type="button" className="btn btn-secondary" onClick={onClose} disabled={isSaving}>
-            Cancel
+            {t('common.cancel')}
           </button>
           <button type="submit" className="btn btn-primary" disabled={isSaving}>
-            {isSaving ? 'Saving...' : forklift ? 'Save Changes' : 'Register Forklift'}
+            {isSaving ? t('common.saving') : forklift ? t('equipment.form.saveChanges') : t('equipment.form.registerTitle')}
           </button>
         </div>
       </form>

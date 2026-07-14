@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Truck, MapPin, Calendar, ArrowRight } from 'lucide-react'
 import { MovementStatusBadge, MovementTypeBadge, MovementPriorityBadge } from './MovementStatusBadge'
 import type { Movement } from '@/types/movement'
@@ -7,6 +8,7 @@ function fmtDate(iso: string) {
 }
 
 export default function MovementCard({ movement, onClick }: { movement: Movement; onClick: () => void }) {
+  const { t } = useTranslation()
   return (
     <div
       onClick={onClick}
@@ -48,7 +50,7 @@ export default function MovementCard({ movement, onClick }: { movement: Movement
 
       {movement.customer && (
         <div style={{ fontSize: 12, color: 'var(--color-text-muted)', marginTop: 6 }}>
-          Customer: {movement.customer.first_name} {movement.customer.last_name}
+          {t('movement.card.customer', { name: `${movement.customer.first_name} ${movement.customer.last_name}` })}
           {movement.customer.company ? ` (${movement.customer.company})` : ''}
         </div>
       )}

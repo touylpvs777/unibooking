@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { AlertCircle, Package, Warehouse, ShoppingCart } from 'lucide-react'
 import { getDashboard, getParts } from '@/api/inventory'
 import {
@@ -11,6 +12,7 @@ import type { DashboardSummary, SparePart } from '@/types/inventory'
 import '@/styles/shared.css'
 
 export default function InventoryDashboardPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [data, setData] = useState<DashboardSummary | null>(null)
   const [parts, setParts] = useState<SparePart[]>([])
@@ -26,7 +28,7 @@ export default function InventoryDashboardPage() {
       ])
       setData(dashRes.data)
       setParts(partsRes.data.items)
-    } catch { setError('Failed to load inventory data.') }
+    } catch { setError(t('inventory.dashboard.loadError')) }
     finally { setIsLoading(false) }
   }
 
@@ -46,18 +48,18 @@ export default function InventoryDashboardPage() {
       <div className="mp-hero" style={{ background: 'linear-gradient(135deg, #0f4c75 0%, #1b262c 100%)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16 }}>
           <div>
-            <div className="mp-hero-title">Inventory & Spare Parts</div>
-            <div className="mp-hero-sub">Stock management and procurement overview</div>
+            <div className="mp-hero-title">{t('inventory.dashboard.title')}</div>
+            <div className="mp-hero-sub">{t('inventory.dashboard.subtitle')}</div>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
             <button className="btn btn-ghost" style={{ background: 'var(--color-hero-btn-bg)', borderColor: 'var(--color-hero-btn-border)', color: 'var(--color-on-hero)' }} onClick={() => navigate('/inventory/warehouses')}>
-              <Warehouse size={14} /> Warehouses
+              <Warehouse size={14} /> {t('inventory.warehouse.title')}
             </button>
             <button className="btn btn-ghost" style={{ background: 'var(--color-hero-btn-bg)', borderColor: 'var(--color-hero-btn-border)', color: 'var(--color-on-hero)' }} onClick={() => navigate('/inventory/purchase-orders')}>
-              <ShoppingCart size={14} /> POs
+              <ShoppingCart size={14} /> {t('inventory.dashboard.purchaseOrdersButton')}
             </button>
             <button className="btn btn-primary" onClick={() => navigate('/inventory/parts')}>
-              <Package size={14} /> Spare Parts
+              <Package size={14} /> {t('inventory.dashboard.sparePartsButton')}
             </button>
           </div>
         </div>
@@ -69,7 +71,7 @@ export default function InventoryDashboardPage() {
       {/* Quick Navigation */}
       <div className="mp-section">
         <div className="mp-section-header">
-          <span className="mp-section-title">Quick Access</span>
+          <span className="mp-section-title">{t('inventory.dashboard.quickAccess')}</span>
         </div>
         <InventoryQuickNav />
       </div>

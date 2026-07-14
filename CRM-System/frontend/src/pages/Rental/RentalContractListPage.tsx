@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   Search, Plus, AlertCircle, ChevronLeft, ChevronRight,
   FileText, RefreshCw, Trash2,
@@ -19,31 +20,8 @@ function fmtAmount(n: number, currency: string) {
   return `${n.toLocaleString(undefined, { maximumFractionDigits: 0 })} ${currency}`
 }
 
-const STATUS_OPTIONS = [
-  { value: '', label: 'All Statuses' },
-  { value: 'reservation', label: 'Reservation' },
-  { value: 'draft', label: 'Draft' },
-  { value: 'pending_approval', label: 'Pending Approval' },
-  { value: 'approved', label: 'Approved' },
-  { value: 'revision', label: 'Revision' },
-  { value: 'delivering', label: 'Delivering' },
-  { value: 'active', label: 'Active' },
-  { value: 'overdue', label: 'Overdue' },
-  { value: 'returning', label: 'Returning' },
-  { value: 'inspecting', label: 'Inspecting' },
-  { value: 'settling', label: 'Settling' },
-  { value: 'closed', label: 'Closed' },
-  { value: 'cancelled', label: 'Cancelled' },
-]
-
-const TYPE_OPTIONS = [
-  { value: '', label: 'All Types' },
-  { value: 'short_term', label: 'Short Term' },
-  { value: 'long_term', label: 'Long Term' },
-  { value: 'project', label: 'Project' },
-]
-
 export default function RentalContractListPage() {
+  const { t } = useTranslation()
   const {
     contracts, total, pages, page: currentPage,
     params, isLoading, error,
@@ -54,6 +32,30 @@ export default function RentalContractListPage() {
 
   const [deleteTarget, setDeleteTarget] = useState<RentalContract | null>(null)
   const [isDeleting, setIsDeleting]     = useState(false)
+
+  const STATUS_OPTIONS = [
+    { value: '', label: t('rental.list.allStatuses') },
+    { value: 'reservation', label: t('rental.status.reservation') },
+    { value: 'draft', label: t('rental.status.draft') },
+    { value: 'pending_approval', label: t('rental.status.pendingApproval') },
+    { value: 'approved', label: t('rental.status.approved') },
+    { value: 'revision', label: t('rental.status.revision') },
+    { value: 'delivering', label: t('rental.status.delivering') },
+    { value: 'active', label: t('rental.status.active') },
+    { value: 'overdue', label: t('rental.status.overdue') },
+    { value: 'returning', label: t('rental.status.returning') },
+    { value: 'inspecting', label: t('rental.status.inspecting') },
+    { value: 'settling', label: t('rental.status.settling') },
+    { value: 'closed', label: t('rental.status.closed') },
+    { value: 'cancelled', label: t('rental.status.cancelled') },
+  ]
+
+  const TYPE_OPTIONS = [
+    { value: '', label: t('rental.list.allTypes') },
+    { value: 'short_term', label: t('rental.contractType.shortTerm') },
+    { value: 'long_term', label: t('rental.contractType.longTerm') },
+    { value: 'project', label: t('rental.contractType.project') },
+  ]
 
   const handleDelete = async () => {
     if (!deleteTarget) return
@@ -76,15 +78,15 @@ export default function RentalContractListPage() {
     <div>
       <div className="page-header">
         <div>
-          <h1>Rental Contracts</h1>
-          <p className="page-header-sub">{total.toLocaleString()} contracts</p>
+          <h1>{t('rental.list.title')}</h1>
+          <p className="page-header-sub">{t('rental.list.totalCount', { count: total })}</p>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="btn btn-ghost" onClick={refetch} disabled={isLoading} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> Refresh
+            <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('rental.list.refresh')}
           </button>
           <button className="btn btn-primary" onClick={() => navigate('/rental-contracts/new')}>
-            <Plus size={15} /> New Contract
+            <Plus size={15} /> {t('rental.list.newContract')}
           </button>
         </div>
       </div>
@@ -100,7 +102,7 @@ export default function RentalContractListPage() {
           <Search size={14} />
           <input
             className="search-input"
-            placeholder="Search number, customer..."
+            placeholder={t('rental.list.searchPlaceholder')}
             value={params.q ?? ''}
             onChange={(e) => applyParams({ q: e.target.value || undefined, page: 1 })}
           />
@@ -127,11 +129,11 @@ export default function RentalContractListPage() {
             className="clear-btn"
             onClick={() => applyParams({ q: undefined, status: undefined, contract_type: undefined, page: 1 })}
           >
-            Clear
+            {t('common.clearFilters')}
           </button>
         )}
 
-        <span className="toolbar-count">{total} result{total !== 1 ? 's' : ''}</span>
+        <span className="toolbar-count">{t('rental.list.resultsCount', { count: total })}</span>
       </div>
 
       <div className="table-card">
@@ -139,13 +141,13 @@ export default function RentalContractListPage() {
           <table className="data-table">
             <thead>
               <tr>
-                <th>Contract</th>
-                <th>Type</th>
-                <th>Status</th>
-                <th className="col-hide-sm">Customer</th>
-                <th className="col-hide-sm">Total Value</th>
-                <th className="col-hide-sm">Start Date</th>
-                <th className="col-hide-sm">End Date</th>
+                <th>{t('rental.list.colContract')}</th>
+                <th>{t('common.type')}</th>
+                <th>{t('common.status')}</th>
+                <th className="col-hide-sm">{t('rental.list.colCustomer')}</th>
+                <th className="col-hide-sm">{t('rental.list.colTotalValue')}</th>
+                <th className="col-hide-sm">{t('rental.list.colStartDate')}</th>
+                <th className="col-hide-sm">{t('rental.list.colEndDate')}</th>
                 <th style={{ width: 50 }}></th>
               </tr>
             </thead>
@@ -168,8 +170,8 @@ export default function RentalContractListPage() {
                   <td colSpan={8}>
                     <div className="table-empty">
                       <FileText size={36} />
-                      <p>No rental contracts found</p>
-                      <small>Create a new contract or adjust your filters.</small>
+                      <p>{t('rental.list.noContractsFound')}</p>
+                      <small>{t('rental.list.createOrAdjust')}</small>
                     </div>
                   </td>
                 </tr>
@@ -204,7 +206,7 @@ export default function RentalContractListPage() {
                         <div className="row-actions" onClick={(e) => e.stopPropagation()}>
                           <button
                             className="action-btn danger"
-                            title="Delete"
+                            title={t('common.delete')}
                             onClick={() => setDeleteTarget(rc)}
                           >
                             <Trash2 size={14} />
@@ -222,7 +224,7 @@ export default function RentalContractListPage() {
         {!isLoading && pages > 1 && (
           <div className="pagination">
             <span className="pagination-info">
-              Page {currentPage} of {pages} ({total} total)
+              {t('rental.list.pageOf', { page: currentPage, pages, total })}
             </span>
             <div className="pagination-controls">
               <button className="page-btn" disabled={currentPage === 1} onClick={() => applyParams({ page: currentPage - 1 })}>
@@ -250,8 +252,8 @@ export default function RentalContractListPage() {
         onClose={() => setDeleteTarget(null)}
         onConfirm={handleDelete}
         isLoading={isDeleting}
-        title="Delete Rental Contract"
-        message={deleteTarget ? `Delete "${deleteTarget.contract_number}"? This cannot be undone.` : ''}
+        title={t('rental.list.deleteConfirmTitle')}
+        message={deleteTarget ? t('rental.list.deleteConfirmMessage', { number: deleteTarget.contract_number }) : ''}
       />
     </div>
   )

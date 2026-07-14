@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import type { InvoiceOut } from '@/types/billing'
 
 function fmtAmt(n: number) { return n.toLocaleString(undefined, { maximumFractionDigits: 0 }) }
@@ -8,20 +9,21 @@ interface Props {
 }
 
 interface AgingBucket {
-  label: string
+  labelKey: string
   amount: number
   count: number
   color: string
 }
 
 export default function AgingChart({ invoices, currency }: Props) {
+  const { t } = useTranslation()
   const today = new Date()
   const buckets: AgingBucket[] = [
-    { label: 'Current', amount: 0, count: 0, color: 'var(--color-success-500)' },
-    { label: '1-30 days', amount: 0, count: 0, color: 'var(--color-info-500)' },
-    { label: '31-60 days', amount: 0, count: 0, color: 'var(--color-warning-500)' },
-    { label: '61-90 days', amount: 0, count: 0, color: 'var(--color-amber-600, #d97706)' },
-    { label: '90+ days', amount: 0, count: 0, color: 'var(--color-danger-500)' },
+    { labelKey: 'billing.aging.buckets.current', amount: 0, count: 0, color: 'var(--color-success-500)' },
+    { labelKey: 'billing.aging.buckets.days1to30', amount: 0, count: 0, color: 'var(--color-info-500)' },
+    { labelKey: 'billing.aging.buckets.days31to60', amount: 0, count: 0, color: 'var(--color-warning-500)' },
+    { labelKey: 'billing.aging.buckets.days61to90', amount: 0, count: 0, color: 'var(--color-amber-600, #d97706)' },
+    { labelKey: 'billing.aging.buckets.days90plus', amount: 0, count: 0, color: 'var(--color-danger-500)' },
   ]
 
   invoices
@@ -51,7 +53,7 @@ export default function AgingChart({ invoices, currency }: Props) {
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <span style={{ fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5, color: 'var(--color-text-muted)' }}>
-          Aging Receivables
+          {t('billing.aging.title')}
         </span>
         <span style={{ fontSize: 13, fontWeight: 700, color: totalOutstanding > 0 ? 'var(--color-danger-600)' : 'var(--color-text)' }}>
           {fmtAmt(totalOutstanding)} {currency}
@@ -59,9 +61,9 @@ export default function AgingChart({ invoices, currency }: Props) {
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {buckets.map((b) => (
-          <div key={b.label}>
+          <div key={b.labelKey}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 3 }}>
-              <span style={{ fontSize: 12, color: 'var(--color-text-muted)' }}>{b.label}</span>
+              <span style={{ fontSize: 12, color: 'var(--color-text-muted)' }}>{t(b.labelKey)}</span>
               <span style={{ fontSize: 12, fontWeight: 600, fontVariantNumeric: 'tabular-nums', color: b.amount > 0 ? 'var(--color-text)' : 'var(--color-text-muted)' }}>
                 {fmtAmt(b.amount)} {b.count > 0 ? `(${b.count})` : ''}
               </span>

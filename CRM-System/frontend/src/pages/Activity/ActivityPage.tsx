@@ -1,4 +1,5 @@
 import { useState, useMemo, type CSSProperties } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   Activity, ChevronLeft, ChevronRight,
   AlertCircle, Clock, User, Layers, FileText, RefreshCw,
@@ -161,6 +162,7 @@ function JsonHighlight({ data }: { data: Record<string, unknown> }) {
 
 // ── Details drawer content ────────────────────────────────
 function ActivityDetails({ log }: { log: ActivityLog }) {
+  const { t } = useTranslation()
   const { details } = log
   const hasDetails = details && Object.keys(details).length > 0
   const isStatusChange = hasDetails && 'from' in details && 'to' in details
@@ -174,18 +176,18 @@ function ActivityDetails({ log }: { log: ActivityLog }) {
       <div style={{ marginBottom: 20 }}>
         <ActionBadge action={log.action} size="lg" />
         <div style={{ fontSize: 11.5, color: 'var(--color-text-muted)', marginTop: 6 }}>
-          Group: {ACTION_GROUPS[log.action] ?? '—'}
+          {t('activity.details.group', { group: ACTION_GROUPS[log.action] ?? '—' })}
         </div>
       </div>
 
       {/* Info rows */}
       <div className="drawer-section">
-        <div className="drawer-section-label">Event Info</div>
+        <div className="drawer-section-label">{t('activity.details.eventInfo')}</div>
         <div className="drawer-info-grid">
           <div className="drawer-info-row">
             <div className="drawer-info-icon"><Clock size={14} /></div>
             <div className="drawer-info-content">
-              <div className="drawer-info-key">Timestamp</div>
+              <div className="drawer-info-key">{t('activity.table.timestamp')}</div>
               <div className="drawer-info-value">{ts}</div>
             </div>
           </div>
@@ -193,11 +195,11 @@ function ActivityDetails({ log }: { log: ActivityLog }) {
           <div className="drawer-info-row">
             <div className="drawer-info-icon"><User size={14} /></div>
             <div className="drawer-info-content">
-              <div className="drawer-info-key">User</div>
+              <div className="drawer-info-key">{t('activity.table.user')}</div>
               <div className="drawer-info-value">
                 {log.user
                   ? `${log.user.username}${log.user.full_name ? ` (${log.user.full_name})` : ''}`
-                  : 'System / Deleted User'}
+                  : t('activity.details.systemOrDeletedUser')}
               </div>
             </div>
           </div>
@@ -206,9 +208,9 @@ function ActivityDetails({ log }: { log: ActivityLog }) {
             <div className="drawer-info-row">
               <div className="drawer-info-icon"><Layers size={14} /></div>
               <div className="drawer-info-content">
-                <div className="drawer-info-key">Entity</div>
+                <div className="drawer-info-key">{t('activity.table.entity')}</div>
                 <div className="drawer-info-value">
-                  {ENTITY_LABELS[log.entity_type] ?? log.entity_type}
+                  {t(`activity.entity.${log.entity_type}`, { defaultValue: ENTITY_LABELS[log.entity_type] ?? log.entity_type })}
                   {log.entity_id ? ` #${log.entity_id}` : ''}
                 </div>
               </div>
@@ -219,10 +221,10 @@ function ActivityDetails({ log }: { log: ActivityLog }) {
 
       {/* Details */}
       <div className="drawer-section">
-        <div className="drawer-section-label">Details</div>
+        <div className="drawer-section-label">{t('activity.details.title')}</div>
 
         {!hasDetails ? (
-          <div className="no-details">No additional details recorded.</div>
+          <div className="no-details">{t('activity.details.noneRecorded')}</div>
         ) : isStatusChange ? (
           <div>
             <div className="status-diff">
@@ -242,7 +244,7 @@ function ActivityDetails({ log }: { log: ActivityLog }) {
         ) : hasChangedFields ? (
           <div>
             <div style={{ fontSize: 12.5, color: 'var(--color-text-muted)', marginBottom: 8 }}>
-              Fields modified:
+              {t('activity.details.fieldsModified')}
             </div>
             <div className="changed-fields">
               {(details.changed_fields as string[]).map((f) => (
@@ -266,6 +268,7 @@ const ALL_ACTIONS = Object.keys(ACTION_META) as ActionType[]
 const ENTITY_TYPES = ['user', 'customer', 'lead', 'note']
 
 export default function ActivityPage() {
+  const { t } = useTranslation()
   const [filters, setFilters] = useState<ActivityFilters>({})
   const [search, setSearch]   = useState('')
   const [page, setPage]       = useState(1)
@@ -319,11 +322,11 @@ export default function ActivityPage() {
       {/* Header */}
       <div className="page-header">
         <div>
-          <h1>Activity Log</h1>
-          <p className="page-header-sub">{filtered.length} events loaded</p>
+          <h1>{t('activity.title')}</h1>
+          <p className="page-header-sub">{t('activity.eventsLoaded', { count: filtered.length })}</p>
         </div>
         <button className="btn btn-ghost" onClick={refetch} disabled={isLoading}>
-          <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> Refresh
+          <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('activity.refresh')}
         </button>
       </div>
 
@@ -338,7 +341,7 @@ export default function ActivityPage() {
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           <input
             className="search-input"
-            placeholder="Search user or action…"
+            placeholder={t('activity.filters.searchPlaceholder')}
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1) }}
           />
@@ -348,13 +351,13 @@ export default function ActivityPage() {
 
         {/* Action */}
         <div className="filter-group">
-          <label>Action</label>
+          <label>{t('activity.filters.action')}</label>
           <select
             className="filter-select"
             value={filters.action ?? ''}
             onChange={(e) => patchFilter({ action: e.target.value || undefined })}
           >
-            <option value="">All Actions</option>
+            <option value="">{t('activity.filters.allActions')}</option>
             {ALL_ACTIONS.map((a) => (
               <option key={a} value={a}>{ACTION_META[a].label} ({ACTION_GROUPS[a]})</option>
             ))}
@@ -363,15 +366,15 @@ export default function ActivityPage() {
 
         {/* Entity type */}
         <div className="filter-group">
-          <label>Entity</label>
+          <label>{t('activity.filters.entityType')}</label>
           <select
             className="filter-select"
             value={filters.entity_type ?? ''}
             onChange={(e) => patchFilter({ entity_type: e.target.value || undefined })}
           >
-            <option value="">All Entities</option>
-            {ENTITY_TYPES.map((t) => (
-              <option key={t} value={t}>{ENTITY_LABELS[t]}</option>
+            <option value="">{t('activity.filters.allEntities')}</option>
+            {ENTITY_TYPES.map((et) => (
+              <option key={et} value={et}>{t(`activity.entity.${et}`, { defaultValue: ENTITY_LABELS[et] ?? et })}</option>
             ))}
           </select>
         </div>
@@ -380,7 +383,7 @@ export default function ActivityPage() {
 
         {/* Date range */}
         <div className="filter-group">
-          <label>From</label>
+          <label>{t('activity.filters.dateFrom')}</label>
           <input
             type="date"
             className="date-input"
@@ -389,7 +392,7 @@ export default function ActivityPage() {
           />
         </div>
         <div className="filter-group">
-          <label>To</label>
+          <label>{t('activity.filters.dateTo')}</label>
           <input
             type="date"
             className="date-input"
@@ -400,7 +403,7 @@ export default function ActivityPage() {
 
         {hasActiveFilters && (
           <button className="clear-btn" onClick={clearFilters}>
-            Clear filters
+            {t('common.clearFilters')}
           </button>
         )}
       </div>
@@ -411,12 +414,12 @@ export default function ActivityPage() {
           <table className="data-table">
             <thead>
               <tr>
-                <th style={{ minWidth: 140 }}>Timestamp</th>
-                <th style={{ minWidth: 130 }}>User</th>
-                <th style={{ minWidth: 160 }}>Action</th>
-                <th className="col-hide-sm">Entity</th>
-                <th className="col-hide-sm" style={{ width: 80 }}>ID</th>
-                <th style={{ width: 80 }}>Details</th>
+                <th style={{ minWidth: 140 }}>{t('activity.table.timestamp')}</th>
+                <th style={{ minWidth: 130 }}>{t('activity.table.user')}</th>
+                <th style={{ minWidth: 160 }}>{t('activity.table.action')}</th>
+                <th className="col-hide-sm">{t('activity.table.entity')}</th>
+                <th className="col-hide-sm" style={{ width: 80 }}>{t('activity.table.id')}</th>
+                <th style={{ width: 80 }}>{t('activity.table.details')}</th>
               </tr>
             </thead>
             <tbody>
@@ -438,8 +441,8 @@ export default function ActivityPage() {
                   <td colSpan={6}>
                     <div className="table-empty">
                       <Activity size={36} />
-                      <p>No activity found</p>
-                      <small>{hasActiveFilters ? 'Try adjusting your filters.' : 'Activity will appear here once users interact with the system.'}</small>
+                      <p>{t('activity.table.noActivityFound')}</p>
+                      <small>{hasActiveFilters ? t('common.tryAdjustingFilters') : t('activity.table.noActivityYet')}</small>
                     </div>
                   </td>
                 </tr>
@@ -468,7 +471,7 @@ export default function ActivityPage() {
                         {log.entity_type ? (
                           <div className="entity-cell">
                             <span className="entity-type">
-                              {ENTITY_LABELS[log.entity_type] ?? log.entity_type}
+                              {t(`activity.entity.${log.entity_type}`, { defaultValue: ENTITY_LABELS[log.entity_type] ?? log.entity_type })}
                             </span>
                           </div>
                         ) : (
@@ -482,7 +485,7 @@ export default function ActivityPage() {
                         {hasDetails ? (
                           <button className="view-btn" onClick={() => setSelected(log)}>
                             <FileText size={11} style={{ marginRight: 4, verticalAlign: 'middle' }} />
-                            View
+                            {t('common.view')}
                           </button>
                         ) : (
                           <span className="cell-muted" style={{ fontSize: 12 }}>—</span>
@@ -500,7 +503,7 @@ export default function ActivityPage() {
         {!isLoading && filtered.length > PAGE_SIZE && (
           <div className="pagination">
             <span className="pagination-info">
-              Showing {startRow}–{endRow} of {filtered.length}
+              {t('activity.pagination.showing', { start: startRow, end: endRow, total: filtered.length })}
             </span>
             <div className="pagination-controls">
               <button className="page-btn" disabled={safePage === 1} onClick={() => setPage(safePage - 1)}>
@@ -527,7 +530,7 @@ export default function ActivityPage() {
       <Drawer
         isOpen={!!selected}
         onClose={() => setSelected(null)}
-        title="Activity Details"
+        title={t('activity.details.drawerTitle')}
         width={440}
       >
         {selected && <ActivityDetails log={selected} />}

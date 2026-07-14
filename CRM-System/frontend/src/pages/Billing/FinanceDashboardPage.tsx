@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { AlertCircle, AlertTriangle, RefreshCw } from 'lucide-react'
 import { getBillingSummary, getInvoices, getPayments, markOverdueInvoices } from '@/api/billing'
 import {
@@ -12,6 +13,7 @@ import type { BillingDashboardSummary, InvoiceOut, PaymentOut } from '@/types/bi
 import '@/styles/shared.css'
 
 export default function FinanceDashboardPage() {
+  const { t } = useTranslation()
   const [summary, setSummary] = useState<BillingDashboardSummary | null>(null)
   const [recentInvoices, setRecentInvoices] = useState<InvoiceOut[]>([])
   const [allInvoices, setAllInvoices] = useState<InvoiceOut[]>([])
@@ -32,7 +34,7 @@ export default function FinanceDashboardPage() {
       setRecentInvoices(invRes.data.items)
       setAllInvoices(allRes.data.items)
       setRecentPayments(payRes.data.items)
-    } catch { setError('Failed to load finance data.') }
+    } catch { setError(t('billing.finance.loadError')) }
     finally { setIsLoading(false) }
   }
 
@@ -41,9 +43,9 @@ export default function FinanceDashboardPage() {
   const handleMarkOverdue = async () => {
     try {
       const { data } = await markOverdueInvoices()
-      toast.success(`Marked ${data.marked_overdue} invoice(s) as overdue`)
+      toast.success(t('billing.common.markOverdueSuccess', { count: data.marked_overdue }))
       await load()
-    } catch { toast.error('Failed to mark overdue invoices') }
+    } catch { toast.error(t('billing.common.markOverdueError')) }
   }
 
   if (error) return <div className="page-error"><AlertCircle size={16} /> {error}</div>
@@ -54,15 +56,15 @@ export default function FinanceDashboardPage() {
       <div className="mp-hero">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16 }}>
           <div>
-            <div className="mp-hero-title">Finance Analytics</div>
-            <div className="mp-hero-sub">Revenue performance, receivables, and collection tracking</div>
+            <div className="mp-hero-title">{t('billing.finance.title')}</div>
+            <div className="mp-hero-sub">{t('billing.finance.subtitle')}</div>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
             <button className="btn btn-ghost" style={{ background: 'var(--color-hero-btn-bg)', borderColor: 'var(--color-hero-btn-border)', color: 'var(--color-on-hero)' }} onClick={handleMarkOverdue}>
-              <AlertTriangle size={14} /> Mark Overdue
+              <AlertTriangle size={14} /> {t('billing.common.markOverdue')}
             </button>
             <button className="btn btn-ghost" style={{ background: 'var(--color-hero-btn-bg)', borderColor: 'var(--color-hero-btn-border)', color: 'var(--color-on-hero)' }} onClick={load} disabled={isLoading}>
-              <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> Refresh
+              <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('billing.common.refresh')}
             </button>
           </div>
         </div>

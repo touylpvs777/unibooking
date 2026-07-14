@@ -1,5 +1,6 @@
 import { Search, X } from 'lucide-react'
 import { useState, useCallback, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   value: string
@@ -7,7 +8,8 @@ interface Props {
   placeholder?: string
 }
 
-export default function EquipmentSearch({ value, onChange, placeholder = 'Search equipment...' }: Props) {
+export default function EquipmentSearch({ value, onChange, placeholder }: Props) {
+  const { t } = useTranslation()
   const [local, setLocal] = useState(value)
 
   useEffect(() => { setLocal(value) }, [value])
@@ -32,7 +34,7 @@ export default function EquipmentSearch({ value, onChange, placeholder = 'Search
       <input
         value={local}
         onChange={(e) => handleChange(e.target.value)}
-        placeholder={placeholder}
+        placeholder={placeholder ?? t('equipment.filters.searchPlaceholder')}
         style={{
           flex: 1, border: 'none', outline: 'none', background: 'transparent',
           fontSize: 14, color: 'var(--color-text)', fontFamily: 'inherit',

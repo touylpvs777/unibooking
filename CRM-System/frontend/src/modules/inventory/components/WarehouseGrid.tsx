@@ -1,4 +1,5 @@
 import { Warehouse as WarehouseIcon, MapPin, Phone, User } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import type { Warehouse } from '@/types/inventory'
 
 export function WarehouseGridSkeleton() {
@@ -18,12 +19,13 @@ export function WarehouseGridSkeleton() {
 }
 
 export default function WarehouseGrid({ warehouses, onSelect }: { warehouses: Warehouse[]; onSelect?: (w: Warehouse) => void }) {
+  const { t } = useTranslation()
   if (warehouses.length === 0) {
     return (
       <div className="mp-empty">
         <div className="mp-empty-icon"><WarehouseIcon size={28} /></div>
-        <div className="mp-empty-title">No warehouses</div>
-        <div className="mp-empty-sub">Create your first warehouse to start tracking inventory</div>
+        <div className="mp-empty-title">{t('inventory.warehouseGrid.noneFound')}</div>
+        <div className="mp-empty-sub">{t('inventory.warehouseGrid.noneFoundHint')}</div>
       </div>
     )
   }
@@ -45,7 +47,7 @@ export default function WarehouseGrid({ warehouses, onSelect }: { warehouses: Wa
                 <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-primary-500)', textTransform: 'uppercase', letterSpacing: 0.5 }}>{w.code}</div>
               </div>
               {!w.is_active && (
-                <span style={{ fontSize: 10, fontWeight: 600, padding: '2px 6px', borderRadius: 'var(--radius-full)', background: 'var(--color-danger-50)', color: 'var(--color-danger-600)' }}>Inactive</span>
+                <span style={{ fontSize: 10, fontWeight: 600, padding: '2px 6px', borderRadius: 'var(--radius-full)', background: 'var(--color-danger-50)', color: 'var(--color-danger-600)' }}>{t('common.inactive')}</span>
               )}
             </div>
 

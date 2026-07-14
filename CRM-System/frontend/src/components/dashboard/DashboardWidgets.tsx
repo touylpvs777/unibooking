@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   Users, ClipboardList, Truck, DollarSign, Wrench, FileText,
   CalendarClock, Gauge, Activity, TrendingUp,
@@ -187,9 +188,10 @@ export function FleetStatusDonut({ data, loading }: { data: { name: string; valu
 const FUEL_COLORS: Record<string, string> = { diesel: '#f59e0b', electric: '#22c55e', lpg: '#3b82f6', dual_fuel: '#7c3aed', unknown: '#94a3b8' }
 
 export function FleetByFuelChart({ data, loading }: { data: BarItem[]; loading: boolean }) {
+  const { t } = useTranslation()
   return (
-    <ChartCard title="Fleet by Fuel Type" loading={loading} isEmpty={data.length === 0} height={200}>
-      <HorizontalBarChart data={data} colorMap={FUEL_COLORS} label="Units" height={200} />
+    <ChartCard title={t('dashboard.chart.fleetByFuelType')} loading={loading} isEmpty={data.length === 0} height={200}>
+      <HorizontalBarChart data={data} colorMap={FUEL_COLORS} label={t('dashboard.chart.units')} height={200} />
     </ChartCard>
   )
 }
@@ -262,18 +264,19 @@ function daysUntil(d: string) { return Math.ceil((new Date(d).getTime() - Date.n
 function urgencyClass(days: number) { return days <= 7 ? 'urgent' : days <= 14 ? 'warning' : 'normal' }
 
 export function ExpiringContractsCard({ contracts, loading }: { contracts: RentalContract[]; loading: boolean }) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
-  if (loading) return <div className="task-card"><div className="task-empty">Loading...</div></div>
+  if (loading) return <div className="task-card"><div className="task-empty">{t('dashboard.task.loading')}</div></div>
 
   return (
     <div className="task-card">
       <div className="task-card-header">
-        <span className="task-card-title"><ClipboardList size={14} /> Contracts Expiring</span>
-        <span className="task-card-count">{contracts.length} in 30 days</span>
+        <span className="task-card-title"><ClipboardList size={14} /> {t('dashboard.task.contractsExpiring')}</span>
+        <span className="task-card-count">{t('dashboard.task.countInDays', { count: contracts.length, days: 30 })}</span>
       </div>
       <div className="task-card-body">
         {contracts.length === 0 ? (
-          <div className="task-empty">No contracts expiring soon</div>
+          <div className="task-empty">{t('dashboard.task.noContractsExpiring')}</div>
         ) : (
           contracts.map((c) => {
             const days = daysUntil(c.end_date)
@@ -292,7 +295,7 @@ export function ExpiringContractsCard({ contracts, loading }: { contracts: Renta
           })
         )}
       </div>
-      <div className="task-card-footer"><Link to="/rental-contracts">View All Contracts →</Link></div>
+      <div className="task-card-footer"><Link to="/rental-contracts">{t('dashboard.task.viewAllContracts')}</Link></div>
     </div>
   )
 }
@@ -302,18 +305,19 @@ export function ExpiringContractsCard({ contracts, loading }: { contracts: Renta
    ================================================================ */
 
 export function ExpiringQuotationsCard({ quotations, loading }: { quotations: Quotation[]; loading: boolean }) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
-  if (loading) return <div className="task-card"><div className="task-empty">Loading...</div></div>
+  if (loading) return <div className="task-card"><div className="task-empty">{t('dashboard.task.loading')}</div></div>
 
   return (
     <div className="task-card">
       <div className="task-card-header">
-        <span className="task-card-title"><FileText size={14} /> Quotations Expiring</span>
-        <span className="task-card-count">{quotations.length} in 14 days</span>
+        <span className="task-card-title"><FileText size={14} /> {t('dashboard.task.quotationsExpiring')}</span>
+        <span className="task-card-count">{t('dashboard.task.countInDays', { count: quotations.length, days: 14 })}</span>
       </div>
       <div className="task-card-body">
         {quotations.length === 0 ? (
-          <div className="task-empty">No quotations expiring soon</div>
+          <div className="task-empty">{t('dashboard.task.noQuotationsExpiring')}</div>
         ) : (
           quotations.map((q) => {
             const days = q.valid_until ? daysUntil(q.valid_until) : 99
@@ -332,7 +336,7 @@ export function ExpiringQuotationsCard({ quotations, loading }: { quotations: Qu
           })
         )}
       </div>
-      <div className="task-card-footer"><Link to="/quotations">View All Quotations →</Link></div>
+      <div className="task-card-footer"><Link to="/quotations">{t('dashboard.task.viewAllQuotations')}</Link></div>
     </div>
   )
 }
@@ -342,19 +346,20 @@ export function ExpiringQuotationsCard({ quotations, loading }: { quotations: Qu
    ================================================================ */
 
 export function PmDueCard({ forklifts, loading }: { forklifts: Forklift[]; loading: boolean }) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const threshold = 5000
-  if (loading) return <div className="task-card"><div className="task-empty">Loading...</div></div>
+  if (loading) return <div className="task-card"><div className="task-empty">{t('dashboard.task.loading')}</div></div>
 
   return (
     <div className="task-card">
       <div className="task-card-header">
-        <span className="task-card-title"><Wrench size={14} /> PM / Service Due</span>
-        <span className="task-card-count">{forklifts.length} approaching</span>
+        <span className="task-card-title"><Wrench size={14} /> {t('dashboard.task.pmServiceDue')}</span>
+        <span className="task-card-count">{t('dashboard.task.approaching', { count: forklifts.length })}</span>
       </div>
       <div className="task-card-body">
         {forklifts.length === 0 ? (
-          <div className="task-empty">All forklifts within service range</div>
+          <div className="task-empty">{t('dashboard.task.allWithinServiceRange')}</div>
         ) : (
           forklifts.map((f) => {
             const pct = Math.min((f.current_hour_meter / threshold) * 100, 100)
@@ -367,7 +372,7 @@ export function PmDueCard({ forklifts, loading }: { forklifts: Forklift[]; loadi
                   <div className="pm-bar">
                     <div className="pm-bar-track"><div className="pm-bar-fill" style={{ width: `${pct}%`, background: color }} /></div>
                     <div className="pm-bar-label">
-                      <span>{f.current_hour_meter.toLocaleString()} hrs</span>
+                      <span>{t('dashboard.task.hoursMeter', { hours: f.current_hour_meter.toLocaleString() })}</span>
                       <span>{Math.round(pct)}%</span>
                     </div>
                   </div>
@@ -377,7 +382,7 @@ export function PmDueCard({ forklifts, loading }: { forklifts: Forklift[]; loadi
           })
         )}
       </div>
-      <div className="task-card-footer"><Link to="/equipment">View All Equipment →</Link></div>
+      <div className="task-card-footer"><Link to="/equipment">{t('dashboard.task.viewAllEquipment')}</Link></div>
     </div>
   )
 }

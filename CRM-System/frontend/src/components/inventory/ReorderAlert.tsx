@@ -1,14 +1,16 @@
 import { AlertTriangle } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import type { ReorderAlert as Alert } from '@/types/inventory'
 
 export default function ReorderAlert({ alerts }: { alerts: Alert[] }) {
+  const { t } = useTranslation()
   if (alerts.length === 0) return null
 
   return (
     <div style={{ marginTop: 16 }}>
       <h3 style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-text)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
         <AlertTriangle size={16} style={{ color: 'var(--color-warning-500)' }} />
-        Reorder Alerts ({alerts.length})
+        {t('inventory.reorderAlert.title', { count: alerts.length })}
       </h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 10 }}>
         {alerts.map((a) => (
@@ -18,7 +20,12 @@ export default function ReorderAlert({ alerts }: { alerts: Alert[] }) {
           }}>
             <div style={{ fontWeight: 600, color: 'var(--color-text)' }}>{a.part_number} — {a.name}</div>
             <div style={{ color: 'var(--color-text-muted)', fontSize: 12, marginTop: 4 }}>
-              {a.warehouse_code}: {a.quantity_available} available (min: {a.min_stock_level}) — reorder {a.reorder_quantity}
+              {t('inventory.reorderAlert.detail', {
+                warehouseCode: a.warehouse_code,
+                available: a.quantity_available,
+                minLevel: a.min_stock_level,
+                reorderQuantity: a.reorder_quantity,
+              })}
             </div>
           </div>
         ))}

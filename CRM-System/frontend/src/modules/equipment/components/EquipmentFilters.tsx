@@ -1,4 +1,5 @@
 import { X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import type { ForkliftStatus } from '@/types/forklift'
 
 interface BrandOption { id: number; name: string }
@@ -18,27 +19,28 @@ interface Props {
   hasFilters: boolean
 }
 
-const STATUS_LABELS: Record<string, string> = {
-  in_stock: 'In Stock', rented: 'Rented', in_service: 'Service',
-  reserved: 'Reserved', sold: 'Sold', decommissioned: 'Decom.',
-}
 const STATUS_COLORS: Record<string, string> = {
   in_stock: '#22c55e', rented: '#7c3aed', in_service: '#f59e0b',
   reserved: '#0891b2', sold: '#3b82f6', decommissioned: '#ef4444',
 }
-const FUEL_OPTS = [
-  { value: '', label: 'All Fuel Types' }, { value: 'electric', label: 'Electric' },
-  { value: 'diesel', label: 'Diesel' }, { value: 'lpg', label: 'LPG' }, { value: 'dual_fuel', label: 'Dual Fuel' },
-]
-const COND_OPTS = [
-  { value: '', label: 'All Conditions' }, { value: 'new', label: 'New' },
-  { value: 'used', label: 'Used' }, { value: 'refurbished', label: 'Refurbished' },
-]
 
 export default function EquipmentFilters({
   activeStatus, brandId, fuelType, condition, statusCounts, brands,
   onStatusChange, onBrandChange, onFuelChange, onConditionChange, onClear, hasFilters,
 }: Props) {
+  const { t } = useTranslation()
+  const STATUS_LABELS: Record<string, string> = {
+    in_stock: t('equipment.status.inStock'), rented: t('equipment.status.rented'), in_service: t('equipment.filters.statusShort.inService'),
+    reserved: t('equipment.status.reserved'), sold: t('equipment.status.sold'), decommissioned: t('equipment.filters.statusShort.decommissioned'),
+  }
+  const FUEL_OPTS = [
+    { value: '', label: t('equipment.filters.allFuelTypes') }, { value: 'electric', label: t('equipment.fuel.electric') },
+    { value: 'diesel', label: t('equipment.fuel.diesel') }, { value: 'lpg', label: t('equipment.fuel.lpg') }, { value: 'dual_fuel', label: t('equipment.fuel.dualFuel') },
+  ]
+  const COND_OPTS = [
+    { value: '', label: t('equipment.filters.allConditions') }, { value: 'new', label: t('equipment.condition.new') },
+    { value: 'used', label: t('equipment.condition.used') }, { value: 'refurbished', label: t('equipment.condition.refurbished') },
+  ]
   const allStatuses = ['in_stock', 'rented', 'in_service', 'reserved', 'sold', 'decommissioned'] as ForkliftStatus[]
 
   return (
@@ -55,7 +57,7 @@ export default function EquipmentFilters({
           }}
         >
           <span style={{ fontSize: 17, fontWeight: 700, fontVariantNumeric: 'tabular-nums', color: 'var(--color-text)' }}>{statusCounts.all || 0}</span>
-          <span style={{ fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5, color: 'var(--color-text-muted)' }}>All</span>
+          <span style={{ fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5, color: 'var(--color-text-muted)' }}>{t('common.all')}</span>
         </button>
         {allStatuses.map((s) => (
           <button
@@ -80,7 +82,7 @@ export default function EquipmentFilters({
       {/* Dropdown Filters */}
       <div className="toolbar" style={{ marginBottom: 0 }}>
         <select className="filter-select" value={brandId ?? ''} onChange={(e) => onBrandChange(e.target.value ? Number(e.target.value) : null)}>
-          <option value="">All Brands</option>
+          <option value="">{t('equipment.filters.allBrands')}</option>
           {brands.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
         </select>
         <select className="filter-select" value={fuelType} onChange={(e) => onFuelChange(e.target.value)}>
@@ -90,9 +92,9 @@ export default function EquipmentFilters({
           {COND_OPTS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
         {hasFilters && (
-          <button className="clear-btn" onClick={onClear}><X size={12} /> Clear</button>
+          <button className="clear-btn" onClick={onClear}><X size={12} /> {t('equipment.filters.clear')}</button>
         )}
-        <span className="toolbar-count">{statusCounts.all || 0} equipment</span>
+        <span className="toolbar-count">{t('equipment.filters.countLabel', { count: statusCounts.all || 0 })}</span>
       </div>
     </div>
   )

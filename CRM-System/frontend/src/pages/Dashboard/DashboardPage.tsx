@@ -41,7 +41,7 @@ function KpiSkeleton({ count }: { count: number }) {
 export default function DashboardPage() {
   const { t } = useTranslation()
   const { data, isLoading: summaryLoading, error: summaryError, refetch: refetchSummary } = useDashboardSummary()
-  const dd = useDashboardData()
+  const dd = useDashboardData(t)
   const [billing, setBilling] = useState<BillingDashboardSummary | null>(null)
   const [inventory, setInventory] = useState<InventorySummary | null>(null)
 
@@ -62,7 +62,7 @@ export default function DashboardPage() {
   }
   const isLoading = summaryLoading || dd.isLoading
 
-  const kpiCards = buildKpiCards(dd.kpis, billing, inventory ? { low_stock_count: inventory.low_stock_count } : null)
+  const kpiCards = buildKpiCards(dd.kpis, billing, inventory ? { low_stock_count: inventory.low_stock_count } : null, t)
 
   const revenueChartData = dd.revenueByMonth.map((d) => ({ month: d.month, amount: d.revenue }))
 
@@ -143,9 +143,9 @@ export default function DashboardPage() {
         <h2 className="dashboard-section-title">{t('dashboard.customerOverview')}</h2>
         {summaryLoading ? <KpiSkeleton count={3} /> : data ? (
           <div className="mp-kpi-strip">
-            <KpiWidget label="Total Customers" value={fmt(data.total_customers)} icon={<Users size={16} />} color="#2563eb" bg="#eff6ff" />
-            <KpiWidget label="Active" value={fmt(data.active_customers)} icon={<UserCheck size={16} />} color="#16a34a" bg="#f0fdf4" sub={`${rate(data.total_customers ? data.active_customers / data.total_customers * 100 : 0)} of total`} />
-            <KpiWidget label="Prospects" value={fmt(data.prospect_customers)} icon={<UserPlus size={16} />} color="#d97706" bg="#fffbeb" />
+            <KpiWidget label={t('dashboard.kpi.totalCustomers')} value={fmt(data.total_customers)} icon={<Users size={16} />} color="#2563eb" bg="#eff6ff" />
+            <KpiWidget label={t('dashboard.kpi.active')} value={fmt(data.active_customers)} icon={<UserCheck size={16} />} color="#16a34a" bg="#f0fdf4" sub={t('dashboard.kpi.percentOfTotal', { pct: rate(data.total_customers ? data.active_customers / data.total_customers * 100 : 0) })} />
+            <KpiWidget label={t('dashboard.kpi.prospects')} value={fmt(data.prospect_customers)} icon={<UserPlus size={16} />} color="#d97706" bg="#fffbeb" />
           </div>
         ) : null}
       </section>
@@ -155,11 +155,11 @@ export default function DashboardPage() {
         <h2 className="dashboard-section-title">{t('dashboard.leadPipeline')}</h2>
         {summaryLoading ? <KpiSkeleton count={5} /> : data ? (
           <div className="mp-kpi-strip">
-            <KpiWidget label="Total Leads" value={fmt(data.total_leads)} icon={<TrendingUp size={16} />} color="#2563eb" bg="#eff6ff" />
-            <KpiWidget label="New" value={fmt(data.new_leads)} icon={<Sparkles size={16} />} color="#7c3aed" bg="#f5f3ff" />
-            <KpiWidget label="Contacted" value={fmt(data.contacted_leads)} icon={<Phone size={16} />} color="#0891b2" bg="#ecfeff" />
-            <KpiWidget label="Qualified" value={fmt(data.qualified_leads)} icon={<ClipboardCheck size={16} />} color="#d97706" bg="#fffbeb" />
-            <KpiWidget label="Proposal" value={fmt(data.proposal_leads)} icon={<FileText size={16} />} color="#ea580c" bg="#fff7ed" />
+            <KpiWidget label={t('dashboard.kpi.totalLeads')} value={fmt(data.total_leads)} icon={<TrendingUp size={16} />} color="#2563eb" bg="#eff6ff" />
+            <KpiWidget label={t('dashboard.kpi.new')} value={fmt(data.new_leads)} icon={<Sparkles size={16} />} color="#7c3aed" bg="#f5f3ff" />
+            <KpiWidget label={t('dashboard.kpi.contacted')} value={fmt(data.contacted_leads)} icon={<Phone size={16} />} color="#0891b2" bg="#ecfeff" />
+            <KpiWidget label={t('dashboard.kpi.qualified')} value={fmt(data.qualified_leads)} icon={<ClipboardCheck size={16} />} color="#d97706" bg="#fffbeb" />
+            <KpiWidget label={t('dashboard.kpi.proposal')} value={fmt(data.proposal_leads)} icon={<FileText size={16} />} color="#ea580c" bg="#fff7ed" />
           </div>
         ) : null}
       </section>
@@ -169,11 +169,11 @@ export default function DashboardPage() {
         <h2 className="dashboard-section-title">{t('dashboard.resultsConversion')}</h2>
         {summaryLoading ? <KpiSkeleton count={5} /> : data ? (
           <div className="mp-kpi-strip">
-            <KpiWidget label="Won" value={fmt(data.won_leads)} icon={<Trophy size={16} />} color="#16a34a" bg="#f0fdf4" />
-            <KpiWidget label="Lost" value={fmt(data.lost_leads)} icon={<XCircle size={16} />} color="#dc2626" bg="#fef2f2" />
-            <KpiWidget label="Conversion" value={rate(data.conversion_rate)} icon={<Percent size={16} />} color="#2563eb" bg="#eff6ff" sub="Won / Total" />
-            <KpiWidget label="Win Rate" value={rate(data.win_rate)} icon={<Award size={16} />} color="#16a34a" bg="#f0fdf4" sub="Won / (Won+Lost)" />
-            <KpiWidget label="Lost Rate" value={rate(data.lost_rate)} icon={<TrendingDown size={16} />} color="#dc2626" bg="#fef2f2" sub="Lost / (Won+Lost)" />
+            <KpiWidget label={t('dashboard.kpi.won')} value={fmt(data.won_leads)} icon={<Trophy size={16} />} color="#16a34a" bg="#f0fdf4" />
+            <KpiWidget label={t('dashboard.kpi.lost')} value={fmt(data.lost_leads)} icon={<XCircle size={16} />} color="#dc2626" bg="#fef2f2" />
+            <KpiWidget label={t('dashboard.kpi.conversion')} value={rate(data.conversion_rate)} icon={<Percent size={16} />} color="#2563eb" bg="#eff6ff" sub={t('dashboard.kpi.wonOverTotal')} />
+            <KpiWidget label={t('dashboard.kpi.winRate')} value={rate(data.win_rate)} icon={<Award size={16} />} color="#16a34a" bg="#f0fdf4" sub={t('dashboard.kpi.wonOverWonLost')} />
+            <KpiWidget label={t('dashboard.kpi.lostRate')} value={rate(data.lost_rate)} icon={<TrendingDown size={16} />} color="#dc2626" bg="#fef2f2" sub={t('dashboard.kpi.lostOverWonLost')} />
           </div>
         ) : null}
       </section>

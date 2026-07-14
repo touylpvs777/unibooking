@@ -1,4 +1,5 @@
 import { useState, useEffect, type FormEvent, type ChangeEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import Modal from '@/components/ui/Modal'
 import type { Lead, LeadCreate, LeadSource, LeadStatus } from '@/types/lead'
 
@@ -12,19 +13,13 @@ const TRANSITIONS: Record<LeadStatus, LeadStatus[]> = {
   lost:      ['lost', 'new'],
 }
 
-const STATUS_LABELS: Record<LeadStatus, string> = {
-  new: 'New', contacted: 'Contacted', qualified: 'Qualified',
-  proposal: 'Proposal', won: 'Won', lost: 'Lost',
-}
+const SOURCE_VALUES: LeadSource[] = ['website', 'referral', 'cold_call', 'email', 'social_media', 'other']
 
-const SOURCE_OPTIONS: { value: LeadSource; label: string }[] = [
-  { value: 'website',      label: 'Website' },
-  { value: 'referral',     label: 'Referral' },
-  { value: 'cold_call',    label: 'Cold Call' },
-  { value: 'email',        label: 'Email' },
-  { value: 'social_media', label: 'Social Media' },
-  { value: 'other',        label: 'Other' },
-]
+// Maps LeadSource values to the camelCase key suffix used under leads.source.*
+const SOURCE_KEY: Record<LeadSource, string> = {
+  website: 'website', referral: 'referral', cold_call: 'coldCall',
+  email: 'email', social_media: 'socialMedia', other: 'other',
+}
 
 interface LeadFormProps {
   isOpen: boolean
@@ -42,6 +37,7 @@ const EMPTY = {
 }
 
 export default function LeadForm({ isOpen, onClose, onSubmit, lead }: LeadFormProps) {
+  const { t } = useTranslation()
   const isEdit = !!lead
   const [fields, setFields] = useState(EMPTY)
   const [isLoading, setLoading] = useState(false)
@@ -89,59 +85,59 @@ export default function LeadForm({ isOpen, onClose, onSubmit, lead }: LeadFormPr
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={isEdit ? 'Edit Lead' : 'New Lead'}
+      title={isEdit ? t('leads.form.editTitle') : t('leads.form.newTitle')}
       width={500}
       footer={
         <>
           <button type="button" className="btn btn-ghost" onClick={onClose} disabled={isLoading}>
-            Cancel
+            {t('common.cancel')}
           </button>
           <button type="submit" form="lead-form" className="btn btn-primary" disabled={isLoading}>
-            {isLoading ? 'Saving…' : isEdit ? 'Save Changes' : 'Create Lead'}
+            {isLoading ? t('common.saving') : isEdit ? t('leads.form.saveChanges') : t('leads.form.createLead')}
           </button>
         </>
       }
     >
       <form id="lead-form" onSubmit={handleSubmit} className="form-grid">
         <div className="form-group">
-          <label htmlFor="lf-title">Title <span className="required">*</span></label>
+          <label htmlFor="lf-title">{t('leads.form.titleLabel')} <span className="required">*</span></label>
           <input
             id="lf-title"
             value={fields.title}
             onChange={set('title')}
             required
-            placeholder="e.g. Enterprise Software Deal"
+            placeholder={t('leads.form.titlePlaceholder')}
           />
         </div>
 
         <div className="form-row-2">
           <div className="form-group">
-            <label htmlFor="lf-status">Status</label>
+            <label htmlFor="lf-status">{t('common.status')}</label>
             <select id="lf-status" value={fields.status} onChange={set('status')}>
               {allowedStatuses.map((s) => (
-                <option key={s} value={s}>{STATUS_LABELS[s]}</option>
+                <option key={s} value={s}>{t(`leads.status.${s}`)}</option>
               ))}
             </select>
             {isEdit && lead!.status === 'won' && (
               <small style={{ color: 'var(--color-text-muted)', fontSize: 11 }}>
-                Won leads cannot be moved to another status.
+                {t('leads.form.wonLeadsCannotChange')}
               </small>
             )}
           </div>
 
           <div className="form-group">
-            <label htmlFor="lf-source">Source</label>
+            <label htmlFor="lf-source">{t('leads.form.sourceLabel')}</label>
             <select id="lf-source" value={fields.source} onChange={set('source')}>
-              <option value="">— None —</option>
-              {SOURCE_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
+              <option value="">{t('leads.form.sourceNone')}</option>
+              {SOURCE_VALUES.map((v) => (
+                <option key={v} value={v}>{t(`leads.source.${SOURCE_KEY[v]}`)}</option>
               ))}
             </select>
           </div>
         </div>
 
         <div className="form-group">
-          <label htmlFor="lf-value">Value ($)</label>
+          <label htmlFor="lf-value">{t('leads.form.valueLabel')}</label>
           <div className="input-prefix-wrap">
             <span className="input-prefix">$</span>
             <input
@@ -157,12 +153,12 @@ export default function LeadForm({ isOpen, onClose, onSubmit, lead }: LeadFormPr
         </div>
 
         <div className="form-group">
-          <label htmlFor="lf-desc">Description</label>
+          <label htmlFor="lf-desc">{t('common.description')}</label>
           <textarea
             id="lf-desc"
             value={fields.description}
             onChange={set('description')}
-            placeholder="Brief notes about this lead…"
+            placeholder={t('leads.form.descriptionPlaceholder')}
             rows={3}
           />
         </div>

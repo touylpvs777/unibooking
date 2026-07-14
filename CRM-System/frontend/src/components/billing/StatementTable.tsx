@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import InvoiceStatusBadge from './InvoiceStatusBadge'
 import type { InvoiceOut } from '@/types/billing'
 
@@ -10,10 +11,12 @@ interface Props {
 }
 
 export default function StatementTable({ invoices, onRowClick }: Props) {
+  const { t } = useTranslation()
+
   if (invoices.length === 0) {
     return (
       <div className="detail-empty-state" style={{ padding: '40px 20px' }}>
-        No statement entries
+        {t('billing.statement.noEntries')}
       </div>
     )
   }
@@ -26,13 +29,13 @@ export default function StatementTable({ invoices, onRowClick }: Props) {
         <table className="data-table">
           <thead>
             <tr>
-              <th>Date</th>
-              <th>Invoice #</th>
-              <th>Description</th>
-              <th>Status</th>
-              <th style={{ textAlign: 'right' }}>Charges</th>
-              <th style={{ textAlign: 'right' }}>Payments</th>
-              <th style={{ textAlign: 'right' }}>Balance</th>
+              <th>{t('common.date')}</th>
+              <th>{t('billing.statement.columns.invoiceNumber')}</th>
+              <th>{t('common.description')}</th>
+              <th>{t('common.status')}</th>
+              <th style={{ textAlign: 'right' }}>{t('billing.statement.columns.charges')}</th>
+              <th style={{ textAlign: 'right' }}>{t('billing.statement.columns.payments')}</th>
+              <th style={{ textAlign: 'right' }}>{t('billing.statement.columns.balance')}</th>
             </tr>
           </thead>
           <tbody>

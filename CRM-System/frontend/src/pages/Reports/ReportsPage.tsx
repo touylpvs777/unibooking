@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   Trophy, Users, Percent, Award,
   Download, FileText, TrendingUp as TrendingUpIcon,
@@ -35,13 +36,21 @@ const SOURCE_COLORS: Record<string, string> = {
   social_media: '#7c3aed',
   other:        '#94a3b8',
 }
-const SOURCE_LABELS: Record<string, string> = {
-  website:      'Website',
-  referral:     'Referral',
-  cold_call:    'Cold Call',
-  email:        'Email',
-  social_media: 'Social Media',
-  other:        'Other',
+const SOURCE_LABEL_KEYS: Record<string, string> = {
+  website:      'reports.sourceLabels.website',
+  referral:     'reports.sourceLabels.referral',
+  cold_call:    'reports.sourceLabels.coldCall',
+  email:        'reports.sourceLabels.email',
+  social_media: 'reports.sourceLabels.socialMedia',
+  other:        'reports.sourceLabels.other',
+}
+const STATUS_LABEL_KEYS: Record<string, string> = {
+  new:       'dashboard.kpi.new',
+  contacted: 'dashboard.kpi.contacted',
+  qualified: 'dashboard.kpi.qualified',
+  proposal:  'dashboard.kpi.proposal',
+  won:       'dashboard.kpi.won',
+  lost:      'dashboard.kpi.lost',
 }
 const STATUS_ORDER = ['new', 'contacted', 'qualified', 'proposal', 'won', 'lost']
 
@@ -86,6 +95,7 @@ function MetricRow({ label, value, color, filled, detail, description }: MetricR
 
 // ── Main page ─────────────────────────────────────────────────
 export default function ReportsPage() {
+  const { t } = useTranslation()
   const summary   = useDashboardSummary()
   const leadTrend = useLeadTrend(12)
   const custTrend = useCustomerTrend(12)
@@ -97,6 +107,12 @@ export default function ReportsPage() {
   const [downloading, setDownloading]   = useState<string | null>(null)
 
   const s = summary.data
+
+  const EXPORT_TYPES = [
+    { type: 'customers' as const, labelKey: 'reports.customers', iconBg: '#eff6ff', iconColor: '#2563eb', Icon: Users },
+    { type: 'leads'     as const, labelKey: 'reports.leads',     iconBg: '#f0fdf4', iconColor: '#16a34a', Icon: TrendingUpIcon },
+    { type: 'sales'     as const, labelKey: 'reports.sales',     iconBg: '#fffbeb', iconColor: '#d97706', Icon: exportFormat === 'excel' ? FileSpreadsheet : FileText },
+  ]
 
   // Refresh all data sources
   const refetchAll = useCallback(() => {
@@ -115,9 +131,9 @@ export default function ReportsPage() {
         { format: exportFormat, from_date: fromDate || undefined, to_date: toDate || undefined },
         s,                    // pass summary for CSV fallback
       )
-      toast.success(`${type.charAt(0).toUpperCase() + type.slice(1)} report downloaded.`)
+      toast.success(t('reports.downloadSuccess', { type: t(`reports.${type}`) }))
     } catch (err) {
-      const msg = (err as Error).message ?? `Failed to download ${type} report.`
+      const msg = (err as Error).message ?? t('reports.downloadError', { type: t(`reports.${type}`) })
       toast.error(msg)
     } finally {
       setDownloading(null)
@@ -128,11 +144,18 @@ export default function ReportsPage() {
   const leadTrendData = leadTrend.data.map(p => ({ ...p, month: fmtMonth(p.month) }))
   const custTrendData = custTrend.data.map(p => ({ ...p, month: fmtMonth(p.month) }))
 
+  const statusLabels = Object.fromEntries(
+    Object.entries(STATUS_LABEL_KEYS).map(([key, labelKey]) => [key, t(labelKey)]),
+  )
+  const sourceLabels = Object.fromEntries(
+    Object.entries(SOURCE_LABEL_KEYS).map(([key, labelKey]) => [key, t(labelKey)]),
+  )
+
   const statusChartData = metrics.data
-    ? recordToBarData(metrics.data.by_status, {}, STATUS_ORDER)
+    ? recordToBarData(metrics.data.by_status, statusLabels, STATUS_ORDER)
     : []
   const sourceChartData = metrics.data
-    ? recordToBarData(metrics.data.by_source, SOURCE_LABELS)
+    ? recordToBarData(metrics.data.by_source, sourceLabels)
     : []
 
   const anyLoading = summary.isLoading || leadTrend.isLoading || custTrend.isLoading || metrics.isLoading
@@ -143,8 +166,8 @@ export default function ReportsPage() {
       {/* ── Header ────────────────────────────────────── */}
       <div className="page-header" style={{ marginBottom: 28 }}>
         <div>
-          <h1>Reports</h1>
-          <p className="page-header-sub">Analytics, conversion metrics, and data exports</p>
+          <h1>{t('reports.title')}</h1>
+          <p className="page-header-sub">{t('reports.subtitle')}</p>
         </div>
         <button
           className="btn btn-ghost"
@@ -153,7 +176,7 @@ export default function ReportsPage() {
           style={{ gap: 6 }}
         >
           <RefreshCw size={14} className={anyLoading ? 'spin' : ''} />
-          Refresh
+          {t('reports.refresh')}
         </button>
       </div>
 
@@ -162,44 +185,44 @@ export default function ReportsPage() {
         <div className="page-error" style={{ marginBottom: 24 }}>
           <AlertCircle size={16} />
           {summary.error}
-          <button className="clear-btn" onClick={summary.refetch} style={{ marginLeft: 'auto' }}>Retry</button>
+          <button className="clear-btn" onClick={summary.refetch} style={{ marginLeft: 'auto' }}>{t('reports.retry')}</button>
         </div>
       )}
 
       {/* ── 1. Key Metrics ─────────────────────────── */}
       <div className="rp-section">
-        <SectionHeading>Key Metrics</SectionHeading>
+        <SectionHeading>{t('reports.keyMetrics')}</SectionHeading>
         <div className="rp-stat-grid">
           {summary.isLoading ? (
             Array.from({ length: 4 }).map((_, i) => <StatCardSkeleton key={i} />)
           ) : (
             <>
               <StatCard
-                label="Won Leads"
+                label={t('reports.wonLeads')}
                 value={s?.won_leads ?? 0}
                 icon={Trophy}
                 accent="#16a34a" iconBg="#f0fdf4"
               />
               <StatCard
-                label="Total Customers"
+                label={t('reports.totalCustomers')}
                 value={s?.total_customers ?? 0}
                 icon={Users}
                 accent="#2563eb" iconBg="#eff6ff"
               />
               <StatCard
-                label="Conversion Rate"
+                label={t('reports.conversionRate')}
                 value={rate(s?.conversion_rate ?? 0)}
                 icon={Percent}
                 accent="#7c3aed" iconBg="#f5f3ff"
-                sublabel="Won ÷ Total Leads"
+                sublabel={t('reports.wonOverTotalLeads')}
                 isRate
               />
               <StatCard
-                label="Win Rate"
+                label={t('reports.winRate')}
                 value={rate(s?.win_rate ?? 0)}
                 icon={Award}
                 accent="#16a34a" iconBg="#f0fdf4"
-                sublabel="Won ÷ (Won + Lost)"
+                sublabel={t('reports.wonOverWonPlusLost')}
                 isRate
               />
             </>
@@ -209,13 +232,13 @@ export default function ReportsPage() {
 
       {/* ── 2. Export ──────────────────────────────── */}
       <div className="rp-section">
-        <SectionHeading>Export Data</SectionHeading>
+        <SectionHeading>{t('reports.exportData')}</SectionHeading>
         <div className="export-card">
-          <div className="export-card-title">Download Reports</div>
+          <div className="export-card-title">{t('reports.downloadReports')}</div>
 
           <div className="export-controls">
             <div className="export-field">
-              <label>Format</label>
+              <label>{t('reports.format')}</label>
               <select
                 className="filter-select"
                 value={exportFormat}
@@ -227,7 +250,7 @@ export default function ReportsPage() {
             </div>
 
             <div className="export-field">
-              <label>From Date</label>
+              <label>{t('reports.fromDate')}</label>
               <input
                 type="date" className="date-input"
                 value={fromDate} onChange={e => setFromDate(e.target.value)}
@@ -235,7 +258,7 @@ export default function ReportsPage() {
             </div>
 
             <div className="export-field">
-              <label>To Date</label>
+              <label>{t('reports.toDate')}</label>
               <input
                 type="date" className="date-input"
                 value={toDate} onChange={e => setToDate(e.target.value)}
@@ -244,17 +267,13 @@ export default function ReportsPage() {
 
             {(fromDate || toDate) && (
               <button className="clear-btn" onClick={() => { setFromDate(''); setToDate('') }}>
-                Clear dates
+                {t('reports.clearDates')}
               </button>
             )}
           </div>
 
           <div className="export-buttons">
-            {([
-              { type: 'customers', label: 'Customers', iconBg: '#eff6ff', iconColor: '#2563eb', Icon: Users },
-              { type: 'leads',     label: 'Leads',     iconBg: '#f0fdf4', iconColor: '#16a34a', Icon: TrendingUpIcon },
-              { type: 'sales',     label: 'Sales',     iconBg: '#fffbeb', iconColor: '#d97706', Icon: exportFormat === 'excel' ? FileSpreadsheet : FileText },
-            ] as const).map(({ type, label, iconBg, iconColor, Icon }) => (
+            {EXPORT_TYPES.map(({ type, labelKey, iconBg, iconColor, Icon }) => (
               <button
                 key={type}
                 className="export-btn"
@@ -263,14 +282,14 @@ export default function ReportsPage() {
                 style={{ '--btn-icon-bg': iconBg, '--btn-icon-color': iconColor } as React.CSSProperties}
               >
                 <span className="export-btn-icon"><Icon size={13} /></span>
-                {downloading === type ? 'Downloading…' : `${label} ${exportFormat.toUpperCase()}`}
+                {downloading === type ? t('reports.downloading') : `${t(labelKey)} ${exportFormat.toUpperCase()}`}
                 <Download size={12} />
               </button>
             ))}
           </div>
 
           <p className="export-note">
-            If a report endpoint is unavailable, a summary CSV is generated client-side.
+            {t('reports.exportNote')}
           </p>
         </div>
       </div>
@@ -278,39 +297,39 @@ export default function ReportsPage() {
       {/* ── 3. Trends ──────────────────────────────── */}
       <div className="rp-section">
         <SectionHeading>
-          Trends — Last 12 Months
+          {t('reports.trends')}
           {(leadTrend.isMock || custTrend.isMock) && (
-            <span className="rp-mock-badge">Synthetic preview data</span>
+            <span className="rp-mock-badge">{t('reports.syntheticPreview')}</span>
           )}
         </SectionHeading>
         <div className="rp-chart-grid">
           <ChartCard
-            title="Lead Volume"
-            sub="Monthly new leads created"
+            title={t('reports.leadVolume')}
+            sub={t('reports.leadVolumeSub')}
             loading={leadTrend.isLoading}
             isEmpty={!leadTrend.isLoading && leadTrendData.length === 0}
-            emptyMessage="No lead trend data"
-            emptySubMessage="Lead trend will appear once the endpoint is connected"
+            emptyMessage={t('reports.noLeadTrend')}
+            emptySubMessage={t('reports.leadTrendWillAppear')}
           >
             <TrendLineChart
               data={leadTrendData}
               color="#2563eb"
-              name="Leads"
+              name={t('reports.leads')}
             />
           </ChartCard>
 
           <ChartCard
-            title="Customer Growth"
-            sub="Monthly new customers added"
+            title={t('reports.customerGrowth')}
+            sub={t('reports.customerGrowthSub')}
             loading={custTrend.isLoading}
             isEmpty={!custTrend.isLoading && custTrendData.length === 0}
-            emptyMessage="No customer trend data"
-            emptySubMessage="Customer trend will appear once the endpoint is connected"
+            emptyMessage={t('reports.noCustomerTrend')}
+            emptySubMessage={t('reports.customerTrendWillAppear')}
           >
             <TrendLineChart
               data={custTrendData}
               color="#16a34a"
-              name="Customers"
+              name={t('reports.customers')}
             />
           </ChartCard>
         </div>
@@ -318,35 +337,35 @@ export default function ReportsPage() {
 
       {/* ── 4. Lead Analysis ───────────────────────── */}
       <div className="rp-section">
-        <SectionHeading>Lead Analysis</SectionHeading>
+        <SectionHeading>{t('reports.leadAnalysis')}</SectionHeading>
         <div className="rp-chart-grid">
           <ChartCard
-            title="Status Distribution"
-            sub="Leads by current pipeline stage"
+            title={t('reports.statusDistribution')}
+            sub={t('reports.statusDistributionSub')}
             loading={metrics.isLoading}
             isEmpty={!metrics.isLoading && statusChartData.length === 0}
-            emptyMessage="No lead status data"
-            emptySubMessage="Create leads to see the distribution"
+            emptyMessage={t('reports.noStatusData')}
+            emptySubMessage={t('reports.createLeadsToSeeDistribution')}
           >
             <DistributionBarChart
               data={statusChartData}
               colorMap={STATUS_COLORS}
-              label="Leads"
+              label={t('reports.leads')}
             />
           </ChartCard>
 
           <ChartCard
-            title="Source Breakdown"
-            sub="Where leads are coming from"
+            title={t('reports.sourceBreakdown')}
+            sub={t('reports.sourceBreakdownSub')}
             loading={metrics.isLoading}
             isEmpty={!metrics.isLoading && sourceChartData.length === 0}
-            emptyMessage="No source data"
-            emptySubMessage="Add a source when creating leads"
+            emptyMessage={t('reports.noSourceData')}
+            emptySubMessage={t('reports.addSourceWhenCreating')}
           >
             <HorizontalBarChart
               data={sourceChartData}
               colorMap={SOURCE_COLORS}
-              label="Leads"
+              label={t('reports.leads')}
               labelWidth={88}
             />
           </ChartCard>
@@ -355,15 +374,15 @@ export default function ReportsPage() {
 
       {/* ── 5. Conversion Metrics ──────────────────── */}
       <div className="rp-section">
-        <SectionHeading>Conversion Metrics</SectionHeading>
+        <SectionHeading>{t('reports.conversionMetrics')}</SectionHeading>
         <div className="rp-table-card">
           <table className="metrics-table">
             <thead>
               <tr>
-                <th>Metric</th>
-                <th>Rate</th>
-                <th>Breakdown</th>
-                <th className="rp-hide-sm">Formula</th>
+                <th>{t('reports.metric')}</th>
+                <th>{t('reports.rate')}</th>
+                <th>{t('reports.breakdown')}</th>
+                <th className="rp-hide-sm">{t('reports.formula')}</th>
               </tr>
             </thead>
             <tbody>
@@ -379,46 +398,46 @@ export default function ReportsPage() {
               ) : (
                 <>
                   <MetricRow
-                    label="Conversion Rate"
+                    label={t('reports.conversionRate')}
                     value={rate(s?.conversion_rate ?? 0)}
                     color="#7c3aed"
                     filled={s?.conversion_rate ?? 0}
                     detail={`${s?.won_leads ?? 0} / ${s?.total_leads ?? 0}`}
-                    description="Won ÷ Total Leads × 100"
+                    description={t('reports.wonOverTotalFormula')}
                   />
                   <MetricRow
-                    label="Win Rate"
+                    label={t('reports.winRate')}
                     value={rate(s?.win_rate ?? 0)}
                     color="#16a34a"
                     filled={s?.win_rate ?? 0}
                     detail={`${s?.won_leads ?? 0} / ${(s?.won_leads ?? 0) + (s?.lost_leads ?? 0)}`}
-                    description="Won ÷ (Won + Lost) × 100"
+                    description={t('reports.wonOverWonLostFormula')}
                   />
                   <MetricRow
-                    label="Lost Rate"
+                    label={t('reports.lostRate')}
                     value={rate(s?.lost_rate ?? 0)}
                     color="#dc2626"
                     filled={s?.lost_rate ?? 0}
                     detail={`${s?.lost_leads ?? 0} / ${(s?.won_leads ?? 0) + (s?.lost_leads ?? 0)}`}
-                    description="Lost ÷ (Won + Lost) × 100"
+                    description={t('reports.lostOverWonLostFormula')}
                   />
                   <MetricRow
-                    label="Active Customers"
+                    label={t('reports.activeCustomers')}
                     value={String(s?.active_customers ?? 0)}
                     color="#2563eb"
                     filled={s?.total_customers ? (s.active_customers / s.total_customers) * 100 : 0}
                     detail={`${s?.active_customers ?? 0} / ${s?.total_customers ?? 0}`}
-                    description="Active ÷ Total Customers × 100"
+                    description={t('reports.activeOverTotalFormula')}
                   />
                   <MetricRow
-                    label="Leads in Pipeline"
+                    label={t('reports.leadsInPipeline')}
                     value={String((s?.new_leads ?? 0) + (s?.contacted_leads ?? 0) + (s?.qualified_leads ?? 0) + (s?.proposal_leads ?? 0))}
                     color="#d97706"
                     filled={s?.total_leads
                       ? (((s.new_leads + s.contacted_leads + s.qualified_leads + s.proposal_leads) / s.total_leads) * 100)
                       : 0}
-                    detail={`of ${s?.total_leads ?? 0} total`}
-                    description="New + Contacted + Qualified + Proposal"
+                    detail={t('reports.ofTotal', { count: s?.total_leads ?? 0 })}
+                    description={t('reports.pipelineFormula')}
                   />
                 </>
               )}
@@ -429,7 +448,7 @@ export default function ReportsPage() {
 
       {/* ── 6. Roadmap ─────────────────────────────── */}
       <div className="rp-section">
-        <SectionHeading>Module Roadmap</SectionHeading>
+        <SectionHeading>{t('reports.moduleRoadmap')}</SectionHeading>
         <div className="rp-roadmap-grid">
           {PLANNED_MODULES.map(mod => (
             <div key={mod.id} className="rp-roadmap-card">
@@ -442,8 +461,8 @@ export default function ReportsPage() {
                 </div>
                 <span className="rp-roadmap-version">{mod.plannedVersion}</span>
               </div>
-              <div className="rp-roadmap-label">{mod.label}</div>
-              <div className="rp-roadmap-desc">{mod.description}</div>
+              <div className="rp-roadmap-label">{t(`reports.modules.${mod.id}.label`, mod.label)}</div>
+              <div className="rp-roadmap-desc">{t(`reports.modules.${mod.id}.description`, mod.description)}</div>
             </div>
           ))}
         </div>

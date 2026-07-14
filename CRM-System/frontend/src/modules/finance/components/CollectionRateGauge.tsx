@@ -1,7 +1,9 @@
+import { useTranslation } from 'react-i18next'
 import { fmtAmt } from '../utils'
 import type { BillingDashboardSummary } from '@/types/billing'
 
 export default function CollectionRateGauge({ data }: { data: BillingDashboardSummary }) {
+  const { t } = useTranslation()
   const rate = data.total_invoiced > 0 ? (data.total_paid / data.total_invoiced) * 100 : 0
   const rateColor = rate >= 80 ? 'var(--color-success-500)' : rate >= 50 ? 'var(--color-warning-500)' : 'var(--color-danger-500)'
 
@@ -10,7 +12,7 @@ export default function CollectionRateGauge({ data }: { data: BillingDashboardSu
 
   return (
     <div className="mp-chart-panel" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <span className="mp-chart-title" style={{ alignSelf: 'flex-start' }}>Collection Rate</span>
+      <span className="mp-chart-title" style={{ alignSelf: 'flex-start' }}>{t('finance.collectionRate.title')}</span>
 
       <div style={{ position: 'relative', width: 140, height: 140, margin: '8px 0' }}>
         <svg width="140" height="140" viewBox="0 0 120 120">
@@ -26,18 +28,18 @@ export default function CollectionRateGauge({ data }: { data: BillingDashboardSu
         </svg>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
           <div style={{ fontSize: 26, fontWeight: 700, fontVariantNumeric: 'tabular-nums', color: rateColor }}>{Math.round(rate)}%</div>
-          <div style={{ fontSize: 10, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: 0.4 }}>Collected</div>
+          <div style={{ fontSize: 10, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: 0.4 }}>{t('finance.collectionRate.collected')}</div>
         </div>
       </div>
 
       <div style={{ display: 'flex', gap: 20, marginTop: 8, fontSize: 12 }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontWeight: 700, fontVariantNumeric: 'tabular-nums', color: 'var(--color-text)' }}>{fmtAmt(data.total_paid)}</div>
-          <div style={{ color: 'var(--color-text-muted)', fontSize: 10 }}>Collected</div>
+          <div style={{ color: 'var(--color-text-muted)', fontSize: 10 }}>{t('finance.collectionRate.collected')}</div>
         </div>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontWeight: 700, fontVariantNumeric: 'tabular-nums', color: 'var(--color-text)' }}>{fmtAmt(data.total_invoiced)}</div>
-          <div style={{ color: 'var(--color-text-muted)', fontSize: 10 }}>Invoiced</div>
+          <div style={{ color: 'var(--color-text-muted)', fontSize: 10 }}>{t('finance.collectionRate.invoiced')}</div>
         </div>
       </div>
     </div>

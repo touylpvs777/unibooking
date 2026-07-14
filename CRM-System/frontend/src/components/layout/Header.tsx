@@ -30,7 +30,7 @@ export default function Header() {
         <SearchBar />
       </div>
 
-      <nav className="header-right" aria-label="User actions">
+      <nav className="header-right" aria-label={t('header.userActions')}>
         <LanguageToggle />
         <NotificationCenter />
         <UserProfileDropdown />

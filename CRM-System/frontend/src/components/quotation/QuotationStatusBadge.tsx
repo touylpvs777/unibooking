@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Badge } from '@/components/ui/Badge'
 
 type BadgeVariant = 'green' | 'amber' | 'gray' | 'blue' | 'red' | 'purple' | 'cyan'
@@ -15,17 +16,17 @@ const STATUS_MAP: Record<string, BadgeVariant> = {
   cancelled:    'gray',
 }
 
-const STATUS_LABELS: Record<string, string> = {
-  draft:        'Draft',
-  under_review: 'Under Review',
-  approved:     'Approved',
-  revision:     'Revision',
-  sent:         'Sent',
-  accepted:     'Accepted',
-  rejected:     'Rejected',
-  expired:      'Expired',
-  converted:    'Converted',
-  cancelled:    'Cancelled',
+const STATUS_KEYS: Record<string, string> = {
+  draft:        'quotations.status.draft',
+  under_review: 'quotations.status.underReview',
+  approved:     'quotations.status.approved',
+  revision:     'quotations.status.revision',
+  sent:         'quotations.status.sent',
+  accepted:     'quotations.status.accepted',
+  rejected:     'quotations.status.rejected',
+  expired:      'quotations.status.expired',
+  converted:    'quotations.status.converted',
+  cancelled:    'quotations.status.cancelled',
 }
 
 const TYPE_MAP: Record<string, BadgeVariant> = {
@@ -35,17 +36,19 @@ const TYPE_MAP: Record<string, BadgeVariant> = {
   spare_parts: 'purple',
 }
 
-const TYPE_LABELS: Record<string, string> = {
-  rental:      'Rental',
-  sales:       'Sales',
-  service:     'Service',
-  spare_parts: 'Spare Parts',
+const TYPE_KEYS: Record<string, string> = {
+  rental:      'quotations.type.rental',
+  sales:       'quotations.type.sales',
+  service:     'quotations.type.service',
+  spare_parts: 'quotations.type.spareParts',
 }
 
 export function QuotationStatusBadge({ status }: { status: string }) {
-  return <Badge variant={STATUS_MAP[status] ?? 'gray'}>{STATUS_LABELS[status] ?? status}</Badge>
+  const { t } = useTranslation()
+  return <Badge variant={STATUS_MAP[status] ?? 'gray'}>{STATUS_KEYS[status] ? t(STATUS_KEYS[status]) : status}</Badge>
 }
 
 export function QuotationTypeBadge({ type }: { type: string }) {
-  return <Badge variant={TYPE_MAP[type] ?? 'gray'}>{TYPE_LABELS[type] ?? type}</Badge>
+  const { t } = useTranslation()
+  return <Badge variant={TYPE_MAP[type] ?? 'gray'}>{TYPE_KEYS[type] ? t(TYPE_KEYS[type]) : type}</Badge>
 }

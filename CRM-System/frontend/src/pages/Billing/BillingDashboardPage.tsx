@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { AlertCircle, AlertTriangle, RefreshCw } from 'lucide-react'
 import { getBillingSummary, markOverdueInvoices } from '@/api/billing'
 import { FinanceKpiStrip, FinanceKpiStripSkeleton, FinanceQuickNav } from '@/modules/finance'
@@ -7,6 +8,7 @@ import type { BillingDashboardSummary } from '@/types/billing'
 import '@/styles/shared.css'
 
 export default function BillingDashboardPage() {
+  const { t } = useTranslation()
   const [data, setData] = useState<BillingDashboardSummary | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -14,7 +16,7 @@ export default function BillingDashboardPage() {
   const load = async () => {
     setIsLoading(true); setError(null)
     try { setData((await getBillingSummary()).data) }
-    catch { setError('Failed to load billing summary.') }
+    catch { setError(t('billing.dashboard.loadError')) }
     finally { setIsLoading(false) }
   }
 
@@ -23,9 +25,9 @@ export default function BillingDashboardPage() {
   const handleMarkOverdue = async () => {
     try {
       const { data: res } = await markOverdueInvoices()
-      toast.success(`Marked ${res.marked_overdue} invoice(s) as overdue`)
+      toast.success(t('billing.common.markOverdueSuccess', { count: res.marked_overdue }))
       await load()
-    } catch { toast.error('Failed to mark overdue invoices') }
+    } catch { toast.error(t('billing.common.markOverdueError')) }
   }
 
   if (error) return <div className="page-error"><AlertCircle size={16} /> {error}</div>
@@ -36,15 +38,15 @@ export default function BillingDashboardPage() {
       <div className="mp-hero">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16 }}>
           <div>
-            <div className="mp-hero-title">Billing & Payments</div>
-            <div className="mp-hero-sub">Financial overview and quick actions</div>
+            <div className="mp-hero-title">{t('billing.dashboard.title')}</div>
+            <div className="mp-hero-sub">{t('billing.dashboard.subtitle')}</div>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
             <button className="btn btn-ghost" style={{ background: 'var(--color-hero-btn-bg)', borderColor: 'var(--color-hero-btn-border)', color: 'var(--color-on-hero)' }} onClick={handleMarkOverdue}>
-              <AlertTriangle size={14} /> Mark Overdue
+              <AlertTriangle size={14} /> {t('billing.common.markOverdue')}
             </button>
             <button className="btn btn-ghost" style={{ background: 'var(--color-hero-btn-bg)', borderColor: 'var(--color-hero-btn-border)', color: 'var(--color-on-hero)' }} onClick={load} disabled={isLoading}>
-              <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> Refresh
+              <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('billing.common.refresh')}
             </button>
           </div>
         </div>
@@ -56,7 +58,7 @@ export default function BillingDashboardPage() {
       {/* Quick Navigation */}
       <div className="mp-section">
         <div className="mp-section-header">
-          <span className="mp-section-title">Quick Access</span>
+          <span className="mp-section-title">{t('billing.dashboard.quickAccess')}</span>
         </div>
         <FinanceQuickNav />
       </div>

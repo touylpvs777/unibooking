@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   UserPlus, Search, Pencil, Trash2, Users,
   ChevronUp, ChevronDown, ChevronLeft, ChevronRight,
@@ -54,6 +55,7 @@ function SkeletonRows() {
 }
 
 export default function CustomersPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { customers, isLoading, error, create, update, remove } = useCustomers()
 
@@ -136,11 +138,11 @@ export default function CustomersPage() {
       {/* Header */}
       <div className="page-header">
         <div>
-          <h1>Customers</h1>
-          <p className="page-header-sub">{customers.length} total customers</p>
+          <h1>{t('customers.list.title')}</h1>
+          <p className="page-header-sub">{t('customers.list.totalCount', { count: customers.length })}</p>
         </div>
         <button className="btn btn-primary" onClick={openCreate}>
-          <UserPlus size={15} /> New Customer
+          <UserPlus size={15} /> {t('customers.list.newCustomer')}
         </button>
       </div>
 
@@ -157,7 +159,7 @@ export default function CustomersPage() {
           <Search size={14} />
           <input
             className="search-input"
-            placeholder="Search name, email, phone…"
+            placeholder={t('customers.list.searchPlaceholder')}
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1) }}
           />
@@ -167,13 +169,13 @@ export default function CustomersPage() {
           value={statusFilter}
           onChange={(e) => { setStatusFilter(e.target.value as CustomerStatus | 'all'); setPage(1) }}
         >
-          <option value="all">All Statuses</option>
-          <option value="prospect">Prospect</option>
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-          <option value="churned">Churned</option>
+          <option value="all">{t('customers.list.allStatuses')}</option>
+          <option value="prospect">{t('customers.status.prospect')}</option>
+          <option value="active">{t('customers.status.active')}</option>
+          <option value="inactive">{t('customers.status.inactive')}</option>
+          <option value="churned">{t('customers.status.churned')}</option>
         </select>
-        <span className="toolbar-count">{filtered.length} result{filtered.length !== 1 ? 's' : ''}</span>
+        <span className="toolbar-count">{t('customers.list.resultsCount', { count: filtered.length })}</span>
       </div>
 
       {/* Table */}
@@ -183,13 +185,13 @@ export default function CustomersPage() {
             <thead>
               <tr>
                 <th className="sortable" onClick={() => toggleSort('name')}>
-                  Customer <SortIndicator field="name" active={sortField} dir={sortDir} />
+                  {t('customers.list.colCustomer')} <SortIndicator field="name" active={sortField} dir={sortDir} />
                 </th>
-                <th>Email</th>
-                <th className="col-hide-sm">Phone</th>
-                <th>Status</th>
+                <th>{t('common.email')}</th>
+                <th className="col-hide-sm">{t('common.phone')}</th>
+                <th>{t('common.status')}</th>
                 <th className="sortable col-hide-sm" onClick={() => toggleSort('created_at')}>
-                  Created <SortIndicator field="created_at" active={sortField} dir={sortDir} />
+                  {t('common.createdAt')} <SortIndicator field="created_at" active={sortField} dir={sortDir} />
                 </th>
                 <th style={{ width: 80 }}></th>
               </tr>
@@ -202,8 +204,8 @@ export default function CustomersPage() {
                   <td colSpan={6}>
                     <div className="table-empty">
                       <Users size={36} />
-                      <p>No customers found</p>
-                      <small>{search || statusFilter !== 'all' ? 'Try adjusting your filters.' : 'Create your first customer to get started.'}</small>
+                      <p>{t('customers.list.noCustomersFound')}</p>
+                      <small>{search || statusFilter !== 'all' ? t('common.tryAdjustingFilters') : t('customers.list.createFirstCustomer')}</small>
                     </div>
                   </td>
                 </tr>
@@ -232,10 +234,10 @@ export default function CustomersPage() {
                     <td className="cell-muted col-hide-sm">{fmtDate(c.created_at)}</td>
                     <td>
                       <div className="row-actions">
-                        <button className="action-btn" title="Edit" onClick={() => openEdit(c)}>
+                        <button className="action-btn" title={t('common.edit')} onClick={() => openEdit(c)}>
                           <Pencil size={14} />
                         </button>
-                        <button className="action-btn danger" title="Delete" onClick={() => setDeleteTarget(c)}>
+                        <button className="action-btn danger" title={t('common.delete')} onClick={() => setDeleteTarget(c)}>
                           <Trash2 size={14} />
                         </button>
                       </div>
@@ -251,7 +253,7 @@ export default function CustomersPage() {
         {!isLoading && filtered.length > PAGE_SIZE && (
           <div className="pagination">
             <span className="pagination-info">
-              Showing {startRow}–{endRow} of {filtered.length}
+              {t('customers.list.showingRange', { start: startRow, end: endRow, total: filtered.length })}
             </span>
             <div className="pagination-controls">
               <button className="page-btn" disabled={safePage === 1} onClick={() => setPage(safePage - 1)}>
@@ -288,10 +290,10 @@ export default function CustomersPage() {
         onClose={() => setDeleteTarget(null)}
         onConfirm={handleDelete}
         isLoading={isDeleting}
-        title="Delete Customer"
+        title={t('customers.list.deleteTitle')}
         message={
           deleteTarget
-            ? `Are you sure you want to delete "${deleteTarget.first_name} ${deleteTarget.last_name}"? This cannot be undone.`
+            ? t('customers.list.deleteMessage', { name: `${deleteTarget.first_name} ${deleteTarget.last_name}` })
             : ''
         }
       />

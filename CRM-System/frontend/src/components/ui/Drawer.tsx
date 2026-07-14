@@ -1,5 +1,6 @@
 import { useEffect, useRef, useCallback, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
+import { useTranslation } from 'react-i18next'
 import { X } from 'lucide-react'
 import './Drawer.css'
 
@@ -12,6 +13,7 @@ interface DrawerProps {
 }
 
 export default function Drawer({ isOpen, onClose, title, children, width = 440 }: DrawerProps) {
+  const { t } = useTranslation()
   const drawerRef = useRef<HTMLDivElement>(null)
   const previousFocus = useRef<HTMLElement | null>(null)
 
@@ -58,7 +60,7 @@ export default function Drawer({ isOpen, onClose, title, children, width = 440 }
       >
         <div className="drawer-header">
           <span className="drawer-title" id={titleId}>{title}</span>
-          <button className="modal-close" onClick={onClose} aria-label="Close panel">
+          <button className="modal-close" onClick={onClose} aria-label={t('common.closePanel')}>
             <X size={16} />
           </button>
         </div>

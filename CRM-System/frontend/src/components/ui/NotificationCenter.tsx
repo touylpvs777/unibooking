@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Bell, Users, TrendingUp, FileText, ClipboardList, Truck, Activity as ActivityIcon } from 'lucide-react'
 import { getActivity } from '@/api/activity'
 import type { ActivityLog } from '@/types/activity'
@@ -10,14 +11,17 @@ const ENTITY_ICONS: Record<string, React.ElementType> = {
   rental_contract: ClipboardList, forklift: Truck,
 }
 
-function relativeTime(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime()
-  const mins = Math.floor(diff / 60000)
-  if (mins < 1) return 'just now'
-  if (mins < 60) return `${mins}m ago`
-  const hrs = Math.floor(mins / 60)
-  if (hrs < 24) return `${hrs}h ago`
-  return `${Math.floor(hrs / 24)}d ago`
+function useRelativeTime() {
+  const { t } = useTranslation()
+  return (iso: string): string => {
+    const diff = Date.now() - new Date(iso).getTime()
+    const mins = Math.floor(diff / 60000)
+    if (mins < 1) return t('header.justNow')
+    if (mins < 60) return t('header.minutesAgo', { count: mins })
+    const hrs = Math.floor(mins / 60)
+    if (hrs < 24) return t('header.hoursAgo', { count: hrs })
+    return t('header.daysAgo', { count: Math.floor(hrs / 24) })
+  }
 }
 
 function actionLabel(action: string): string {
@@ -25,6 +29,8 @@ function actionLabel(action: string): string {
 }
 
 export default function NotificationCenter() {
+  const { t } = useTranslation()
+  const relativeTime = useRelativeTime()
   const [isOpen, setIsOpen] = useState(false)
   const [activities, setActivities] = useState<ActivityLog[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
@@ -71,7 +77,7 @@ export default function NotificationCenter() {
       <button
         className="notification-trigger"
         onClick={handleOpen}
-        aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ''}`}
+        aria-label={unreadCount > 0 ? t('header.notificationsUnread', { count: unreadCount }) : t('header.notifications')}
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
@@ -80,13 +86,13 @@ export default function NotificationCenter() {
       </button>
 
       {isOpen && (
-        <div className="notification-dropdown" role="menu" aria-label="Notifications">
+        <div className="notification-dropdown" role="menu" aria-label={t('header.notifications')}>
           <div className="notification-header">
-            <span className="notification-header-title">Notifications</span>
+            <span className="notification-header-title">{t('header.notifications')}</span>
           </div>
           <div className="notification-list" role="group">
             {activities.length === 0 ? (
-              <div className="notification-empty" role="status">No recent activity</div>
+              <div className="notification-empty" role="status">{t('header.noRecentActivity')}</div>
             ) : (
               activities.map((a) => {
                 const Icon = ENTITY_ICONS[a.entity_type ?? ''] ?? ActivityIcon
@@ -101,7 +107,7 @@ export default function NotificationCenter() {
                     <div className="notification-item-content">
                       <div className="notification-item-text">{actionLabel(a.action)}</div>
                       <div className="notification-item-meta">
-                        {a.user?.full_name ?? a.user?.username ?? 'System'} · {relativeTime(a.created_at)}
+                        {a.user?.full_name ?? a.user?.username ?? t('header.systemUser')} · {relativeTime(a.created_at)}
                       </div>
                     </div>
                   </button>
@@ -110,7 +116,7 @@ export default function NotificationCenter() {
             )}
           </div>
           <button className="notification-footer" role="menuitem" onClick={() => { setIsOpen(false); navigate('/activity') }}>
-            View all activity →
+            {t('header.viewAllActivity')}
           </button>
         </div>
       )}

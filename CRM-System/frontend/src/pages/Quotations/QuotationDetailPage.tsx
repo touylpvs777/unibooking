@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   ChevronLeft, AlertCircle, Plus, Trash2, Send, Check,
   X, RotateCcw, FileText, Clock,
@@ -35,17 +36,8 @@ function fmtAmount(n: number) {
   return n.toLocaleString(undefined, { maximumFractionDigits: 0 })
 }
 
-const ITEM_TYPE_OPTIONS = [
-  { value: 'forklift_rental', label: 'Forklift Rental' },
-  { value: 'forklift_sale', label: 'Forklift Sale' },
-  { value: 'service', label: 'Service' },
-  { value: 'spare_part', label: 'Spare Part' },
-  { value: 'delivery', label: 'Delivery' },
-  { value: 'insurance', label: 'Insurance' },
-  { value: 'custom', label: 'Custom' },
-]
-
 export default function QuotationDetailPage() {
+  const { t } = useTranslation()
   const { id }   = useParams<{ id: string }>()
   const navigate = useNavigate()
 
@@ -63,11 +55,11 @@ export default function QuotationDetailPage() {
       const { data } = await getQuotation(Number(id))
       setQt(data)
     } catch {
-      setError('Quotation not found or failed to load.')
+      setError(t('quotations.detail.notFoundError'))
     } finally {
       setIsLoading(false)
     }
-  }, [id])
+  }, [id, t])
 
   useEffect(() => { load() }, [load])
 
@@ -79,7 +71,7 @@ export default function QuotationDetailPage() {
       await load()
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail
-      toast.error(msg ?? `Failed: ${label}`)
+      toast.error(msg ?? t('quotations.detail.actionFailed', { action: label }))
     } finally {
       setAL(false)
     }
@@ -87,7 +79,7 @@ export default function QuotationDetailPage() {
 
   const handleDeleteItem = async (itemId: number) => {
     if (!qt) return
-    await doAction('Item removed', () => deleteItem(qt.id, itemId))
+    await doAction(t('quotations.detail.toasts.itemRemoved'), () => deleteItem(qt.id, itemId))
   }
 
   if (isLoading) {
@@ -111,10 +103,10 @@ export default function QuotationDetailPage() {
     return (
       <div className="product-detail">
         <button className="detail-back" onClick={() => navigate('/quotations')}>
-          <ChevronLeft size={16} /> Back to Quotations
+          <ChevronLeft size={16} /> {t('quotations.detail.backToQuotations')}
         </button>
         <div className="page-error" style={{ marginTop: 24 }}>
-          <AlertCircle size={16} /> {error ?? 'Quotation not found.'}
+          <AlertCircle size={16} /> {error ?? t('quotations.detail.notFoundError')}
         </div>
       </div>
     )
@@ -126,7 +118,7 @@ export default function QuotationDetailPage() {
   return (
     <div className="product-detail">
       <button className="detail-back" onClick={() => navigate('/quotations')}>
-        <ChevronLeft size={16} /> Back to Quotations
+        <ChevronLeft size={16} /> {t('quotations.detail.backToQuotations')}
       </button>
 
       {/* Header */}
@@ -134,7 +126,7 @@ export default function QuotationDetailPage() {
         <div>
           <div className="detail-title-row">
             <h1 className="detail-name">{qt.quotation_number}</h1>
-            <span className="detail-rev">Rev {qt.revision_number}</span>
+            <span className="detail-rev">{t('quotations.detail.rev', { number: qt.revision_number })}</span>
           </div>
           <div className="detail-subtitle">{qt.title}</div>
           <div className="detail-badges">
@@ -146,56 +138,56 @@ export default function QuotationDetailPage() {
         <div className="detail-actions">
           {actions.includes('submit') && (
             <button className="btn btn-primary" disabled={actionLoading}
-              onClick={() => doAction('Submitted for review', () => submitQuotation(qt.id))}>
-              <Send size={14} /> Submit
+              onClick={() => doAction(t('quotations.detail.toasts.submitted'), () => submitQuotation(qt.id))}>
+              <Send size={14} /> {t('quotations.detail.submit')}
             </button>
           )}
           {actions.includes('approve') && (
             <button className="btn btn-primary" disabled={actionLoading}
-              onClick={() => doAction('Approved', () => approveQuotation(qt.id))}>
-              <Check size={14} /> Approve
+              onClick={() => doAction(t('common.approved'), () => approveQuotation(qt.id))}>
+              <Check size={14} /> {t('quotations.detail.approve')}
             </button>
           )}
           {actions.includes('reject') && (
             <button className="btn btn-secondary" disabled={actionLoading}
-              onClick={() => doAction('Revision requested', () => rejectQuotation(qt.id, 'Revision needed'))}>
-              <RotateCcw size={14} /> Request Revision
+              onClick={() => doAction(t('quotations.detail.toasts.revisionRequested'), () => rejectQuotation(qt.id, 'Revision needed'))}>
+              <RotateCcw size={14} /> {t('quotations.detail.requestRevision')}
             </button>
           )}
           {actions.includes('send') && (
             <button className="btn btn-primary" disabled={actionLoading}
-              onClick={() => doAction('Sent to customer', () => sendQuotation(qt.id))}>
-              <Send size={14} /> Send to Customer
+              onClick={() => doAction(t('quotations.detail.toasts.sent'), () => sendQuotation(qt.id))}>
+              <Send size={14} /> {t('quotations.detail.sendToCustomer')}
             </button>
           )}
           {actions.includes('accept') && (
             <button className="btn btn-primary" disabled={actionLoading}
-              onClick={() => doAction('Marked as accepted', () => acceptQuotation(qt.id))}>
-              <Check size={14} /> Mark Accepted
+              onClick={() => doAction(t('quotations.detail.toasts.markedAccepted'), () => acceptQuotation(qt.id))}>
+              <Check size={14} /> {t('quotations.detail.markAccepted')}
             </button>
           )}
           {actions.includes('decline') && (
             <button className="btn btn-secondary" disabled={actionLoading}
-              onClick={() => doAction('Marked as rejected', () => declineQuotation(qt.id))}>
-              <X size={14} /> Mark Rejected
+              onClick={() => doAction(t('quotations.detail.toasts.markedRejected'), () => declineQuotation(qt.id))}>
+              <X size={14} /> {t('quotations.detail.markRejected')}
             </button>
           )}
           {actions.includes('convert') && (
             <button className="btn btn-primary" disabled={actionLoading}
-              onClick={() => doAction('Converted', () => convertQuotation(qt.id, qt.quotation_type === 'rental' ? 'rental_contract' : 'sales_order'))}>
-              <FileText size={14} /> Convert
+              onClick={() => doAction(t('quotations.detail.toasts.converted'), () => convertQuotation(qt.id, qt.quotation_type === 'rental' ? 'rental_contract' : 'sales_order'))}>
+              <FileText size={14} /> {t('quotations.detail.convert')}
             </button>
           )}
           {actions.includes('cancel') && (
             <button className="btn btn-secondary" disabled={actionLoading}
-              onClick={() => doAction('Cancelled', () => cancelQuotation(qt.id))}>
-              <X size={14} /> Cancel
+              onClick={() => doAction(t('common.cancelled'), () => cancelQuotation(qt.id))}>
+              <X size={14} /> {t('common.cancel')}
             </button>
           )}
           {actions.includes('reactivate') && (
             <button className="btn btn-secondary" disabled={actionLoading}
-              onClick={() => doAction('Reactivated', () => reactivateQuotation(qt.id))}>
-              <RotateCcw size={14} /> Reactivate
+              onClick={() => doAction(t('quotations.detail.toasts.reactivated'), () => reactivateQuotation(qt.id))}>
+              <RotateCcw size={14} /> {t('quotations.detail.reactivate')}
             </button>
           )}
         </div>
@@ -204,10 +196,10 @@ export default function QuotationDetailPage() {
       {/* Summary Cards */}
       <div className="detail-summary-grid">
         {[
-          { label: 'Subtotal', value: fmtAmount(qt.subtotal) },
-          { label: `Tax (${qt.tax_rate}%)`, value: fmtAmount(qt.tax_amount) },
-          { label: 'Discount', value: fmtAmount(qt.discount_amount) },
-          { label: 'Total', value: `${fmtAmount(qt.total_amount)} ${qt.currency}` },
+          { label: t('common.subtotal'), value: fmtAmount(qt.subtotal) },
+          { label: t('quotations.detail.taxWithRate', { rate: qt.tax_rate }), value: fmtAmount(qt.tax_amount) },
+          { label: t('quotations.detail.discount'), value: fmtAmount(qt.discount_amount) },
+          { label: t('common.total'), value: `${fmtAmount(qt.total_amount)} ${qt.currency}` },
         ].map((c) => (
           <div key={c.label} className="detail-summary-card">
             <div className="detail-summary-label">{c.label}</div>
@@ -221,34 +213,34 @@ export default function QuotationDetailPage() {
         <div>
           <dl className="detail-meta">
             {qt.customer && (
-              <><dt>Customer</dt><dd>{qt.customer.first_name} {qt.customer.last_name}{qt.customer.company ? ` (${qt.customer.company})` : ''}</dd></>
+              <><dt>{t('quotations.detail.customer')}</dt><dd>{qt.customer.first_name} {qt.customer.last_name}{qt.customer.company ? ` (${qt.customer.company})` : ''}</dd></>
             )}
-            {qt.contact_name && (<><dt>Contact</dt><dd>{qt.contact_name}</dd></>)}
-            {qt.contact_email && (<><dt>Email</dt><dd>{qt.contact_email}</dd></>)}
-            {qt.contact_phone && (<><dt>Phone</dt><dd>{qt.contact_phone}</dd></>)}
-            {qt.assigned_user && (<><dt>Assigned To</dt><dd>{qt.assigned_user.full_name ?? qt.assigned_user.username}</dd></>)}
+            {qt.contact_name && (<><dt>{t('quotations.detail.contact')}</dt><dd>{qt.contact_name}</dd></>)}
+            {qt.contact_email && (<><dt>{t('common.email')}</dt><dd>{qt.contact_email}</dd></>)}
+            {qt.contact_phone && (<><dt>{t('common.phone')}</dt><dd>{qt.contact_phone}</dd></>)}
+            {qt.assigned_user && (<><dt>{t('quotations.detail.assignedTo')}</dt><dd>{qt.assigned_user.full_name ?? qt.assigned_user.username}</dd></>)}
           </dl>
         </div>
         <div>
           <dl className="detail-meta">
-            <dt>Valid From</dt><dd>{fmtDate(qt.valid_from)}</dd>
-            <dt>Valid Until</dt><dd>{fmtDate(qt.valid_until)}</dd>
-            <dt>Created</dt><dd>{fmtDate(qt.created_at)}</dd>
-            {qt.converted_to_type && (<><dt>Converted To</dt><dd className="cell-type">{qt.converted_to_type.replace(/_/g, ' ')}</dd></>)}
+            <dt>{t('quotations.detail.validFrom')}</dt><dd>{fmtDate(qt.valid_from)}</dd>
+            <dt>{t('quotations.detail.validUntil')}</dt><dd>{fmtDate(qt.valid_until)}</dd>
+            <dt>{t('common.createdAt')}</dt><dd>{fmtDate(qt.created_at)}</dd>
+            {qt.converted_to_type && (<><dt>{t('quotations.detail.convertedTo')}</dt><dd className="cell-type">{qt.converted_to_type.replace(/_/g, ' ')}</dd></>)}
           </dl>
         </div>
       </div>
 
       {qt.notes && (
         <div className="detail-description" style={{ marginTop: 16 }}>
-          <div className="detail-section-title">Notes</div>
+          <div className="detail-section-title">{t('common.notes')}</div>
           <p>{qt.notes}</p>
         </div>
       )}
 
       {qt.internal_notes && (
         <div className="detail-internal-note">
-          <strong>Internal Note</strong>
+          <strong>{t('quotations.detail.internalNote')}</strong>
           <p>{qt.internal_notes}</p>
         </div>
       )}
@@ -256,10 +248,10 @@ export default function QuotationDetailPage() {
       {/* Line Items */}
       <div className="detail-specs-section" style={{ marginTop: 24 }}>
         <div className="detail-section-bar">
-          <h2 className="detail-section-title">Line Items ({qt.items.length})</h2>
+          <h2 className="detail-section-title">{t('quotations.detail.lineItems', { count: qt.items.length })}</h2>
           {isDraft && (
             <button className="btn btn-primary btn-sm" onClick={() => setIFO(true)}>
-              <Plus size={13} /> Add Item
+              <Plus size={13} /> {t('quotations.detail.addItem')}
             </button>
           )}
         </div>
@@ -269,13 +261,13 @@ export default function QuotationDetailPage() {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Description</th>
-                  <th>Type</th>
-                  <th className="col-hide-sm">Qty</th>
-                  <th className="col-hide-sm">Unit Price</th>
-                  <th className="col-hide-sm">Disc %</th>
-                  <th>Total</th>
+                  <th>{t('quotations.detail.colNumber')}</th>
+                  <th>{t('common.description')}</th>
+                  <th>{t('common.type')}</th>
+                  <th className="col-hide-sm">{t('common.quantity')}</th>
+                  <th className="col-hide-sm">{t('quotations.detail.colUnitPrice')}</th>
+                  <th className="col-hide-sm">{t('quotations.detail.colDiscount')}</th>
+                  <th>{t('common.total')}</th>
                   {isDraft && <th style={{ width: 40 }}></th>}
                 </tr>
               </thead>
@@ -285,9 +277,9 @@ export default function QuotationDetailPage() {
                     <td className="cell-muted">{item.line_number}</td>
                     <td>
                       <div className="cell-desc">{item.description}</div>
-                      {item.forklift && <div className="cell-muted cell-sub">S/N: {item.forklift.serial_number}</div>}
-                      {item.product && <div className="cell-muted cell-sub">SKU: {item.product.sku}</div>}
-                      {item.rental_duration_days && <div className="cell-muted cell-sub">{item.rental_duration_days} days ({item.rental_rate_period})</div>}
+                      {item.forklift && <div className="cell-muted cell-sub">{t('quotations.detail.serialNumber', { serial: item.forklift.serial_number })}</div>}
+                      {item.product && <div className="cell-muted cell-sub">{t('quotations.detail.sku', { sku: item.product.sku })}</div>}
+                      {item.rental_duration_days && <div className="cell-muted cell-sub">{t('quotations.detail.durationDays', { count: item.rental_duration_days, period: item.rental_rate_period })}</div>}
                     </td>
                     <td className="cell-muted cell-type">{item.item_type.replace(/_/g, ' ')}</td>
                     <td className="cell-muted col-hide-sm cell-mono">{item.quantity}</td>
@@ -306,7 +298,7 @@ export default function QuotationDetailPage() {
           </div>
         ) : (
           <div className="detail-empty-state">
-            No line items yet. {isDraft && 'Add items to build the quotation.'}
+            {t('quotations.detail.noLineItems')} {isDraft && t('quotations.detail.addItemsHint')}
           </div>
         )}
       </div>
@@ -315,17 +307,17 @@ export default function QuotationDetailPage() {
       {qt.recent_status_history.length > 0 && (
         <div className="detail-specs-section">
           <h2 className="detail-section-title detail-section-title-row">
-            <Clock size={16} /> Status History
+            <Clock size={16} /> {t('quotations.detail.statusHistory')}
           </h2>
           <div className="table-card" style={{ marginTop: 10 }}>
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Date</th>
-                  <th>From</th>
-                  <th>To</th>
-                  <th className="col-hide-sm">Reason</th>
-                  <th className="col-hide-sm">By</th>
+                  <th>{t('common.date')}</th>
+                  <th>{t('quotations.detail.colFrom')}</th>
+                  <th>{t('quotations.detail.colTo')}</th>
+                  <th className="col-hide-sm">{t('quotations.detail.colReason')}</th>
+                  <th className="col-hide-sm">{t('quotations.detail.colBy')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -347,17 +339,17 @@ export default function QuotationDetailPage() {
       {/* Approvals */}
       {qt.recent_approvals.length > 0 && (
         <div className="detail-specs-section">
-          <h2 className="detail-section-title">Approval History</h2>
+          <h2 className="detail-section-title">{t('quotations.detail.approvalHistory')}</h2>
           <div className="table-card" style={{ marginTop: 10 }}>
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Date</th>
-                  <th>Rev</th>
-                  <th>Decision</th>
-                  <th className="col-hide-sm">Reason</th>
-                  <th className="col-hide-sm">Conditions</th>
-                  <th className="col-hide-sm">By</th>
+                  <th>{t('common.date')}</th>
+                  <th>{t('quotations.detail.colRev')}</th>
+                  <th>{t('quotations.detail.colDecision')}</th>
+                  <th className="col-hide-sm">{t('quotations.detail.colReason')}</th>
+                  <th className="col-hide-sm">{t('quotations.detail.colConditions')}</th>
+                  <th className="col-hide-sm">{t('quotations.detail.colBy')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -367,7 +359,7 @@ export default function QuotationDetailPage() {
                     <td className="cell-muted">R{a.revision_number}</td>
                     <td>
                       <span className={a.decision === 'approved' ? 'decision-approved' : 'decision-rejected'}>
-                        {a.decision === 'approved' ? 'Approved' : 'Rejected'}
+                        {a.decision === 'approved' ? t('common.approved') : t('common.rejected')}
                       </span>
                     </td>
                     <td className="cell-muted col-hide-sm">{a.reason ?? '—'}</td>
@@ -403,6 +395,18 @@ function AddItemModal({
   quotationId: number
   onSuccess: () => void
 }) {
+  const { t } = useTranslation()
+
+  const ITEM_TYPE_OPTIONS = [
+    { value: 'forklift_rental', label: t('quotations.itemType.forkliftRental') },
+    { value: 'forklift_sale', label: t('quotations.itemType.forkliftSale') },
+    { value: 'service', label: t('quotations.itemType.service') },
+    { value: 'spare_part', label: t('quotations.itemType.sparePart') },
+    { value: 'delivery', label: t('quotations.itemType.delivery') },
+    { value: 'insurance', label: t('quotations.itemType.insurance') },
+    { value: 'custom', label: t('quotations.itemType.custom') },
+  ]
+
   const [form, setForm] = useState({
     item_type: 'custom' as string,
     description: '',
@@ -428,8 +432,8 @@ function AddItemModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.description.trim()) { setErr('Description is required.'); return }
-    if (!form.unit_price) { setErr('Unit price is required.'); return }
+    if (!form.description.trim()) { setErr(t('quotations.detail.addItemModal.descriptionRequired')); return }
+    if (!form.unit_price) { setErr(t('quotations.detail.addItemModal.unitPriceRequired')); return }
     setSaving(true)
     setErr(null)
     try {
@@ -444,12 +448,12 @@ function AddItemModal({
         rental_rate_period: form.rental_rate_period || undefined,
         notes: form.notes.trim() || undefined,
       })
-      toast.success('Item added.')
+      toast.success(t('quotations.detail.addItemModal.itemAdded'))
       onClose()
       onSuccess()
     } catch (error: unknown) {
       const msg = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail
-      setErr(msg ?? 'Failed to add item.')
+      setErr(msg ?? t('quotations.detail.addItemModal.addFailed'))
     } finally {
       setSaving(false)
     }
@@ -458,70 +462,70 @@ function AddItemModal({
   const isRental = form.item_type === 'forklift_rental'
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Add Line Item" width={560}>
+    <Modal isOpen={isOpen} onClose={onClose} title={t('quotations.detail.addItemModal.title')} width={560}>
       <form onSubmit={handleSubmit} className="form-grid">
         {err && <div className="page-error" style={{ margin: 0 }}>{err}</div>}
 
         <div className="form-row-2">
           <div className="form-group">
-            <label>Item Type <span className="required">*</span></label>
+            <label>{t('quotations.detail.addItemModal.itemType')} <span className="required">*</span></label>
             <select value={form.item_type} onChange={(e) => set('item_type', e.target.value)}>
               {ITEM_TYPE_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
           </div>
           <div className="form-group">
-            <label>Unit</label>
+            <label>{t('quotations.detail.addItemModal.unit')}</label>
             <input value={form.unit} onChange={(e) => set('unit', e.target.value)} />
           </div>
         </div>
 
         <div className="form-group">
-          <label>Description <span className="required">*</span></label>
-          <input value={form.description} onChange={(e) => set('description', e.target.value)} placeholder="Item description" required />
+          <label>{t('common.description')} <span className="required">*</span></label>
+          <input value={form.description} onChange={(e) => set('description', e.target.value)} placeholder={t('quotations.detail.addItemModal.descriptionPlaceholder')} required />
         </div>
 
         <div className="form-row-2">
           <div className="form-group">
-            <label>Quantity</label>
+            <label>{t('common.quantity')}</label>
             <input type="number" value={form.quantity} onChange={(e) => set('quantity', e.target.value)} min="0.01" step="any" />
           </div>
           <div className="form-group">
-            <label>Unit Price <span className="required">*</span></label>
+            <label>{t('quotations.detail.addItemModal.unitPrice')} <span className="required">*</span></label>
             <input type="number" value={form.unit_price} onChange={(e) => set('unit_price', e.target.value)} min="0" step="any" required />
           </div>
         </div>
 
         <div className="form-group">
-          <label>Discount (%)</label>
+          <label>{t('quotations.detail.addItemModal.discountPercent')}</label>
           <input type="number" value={form.discount_percent} onChange={(e) => set('discount_percent', e.target.value)} min="0" max="100" step="0.1" />
         </div>
 
         {isRental && (
           <div className="form-row-2">
             <div className="form-group">
-              <label>Rental Duration (days)</label>
+              <label>{t('quotations.detail.addItemModal.rentalDuration')}</label>
               <input type="number" value={form.rental_duration_days} onChange={(e) => set('rental_duration_days', e.target.value)} min="1" />
             </div>
             <div className="form-group">
-              <label>Rate Period</label>
+              <label>{t('quotations.detail.addItemModal.ratePeriod')}</label>
               <select value={form.rental_rate_period} onChange={(e) => set('rental_rate_period', e.target.value)}>
-                <option value="">— Select —</option>
-                <option value="daily">Daily</option>
-                <option value="weekly">Weekly</option>
-                <option value="monthly">Monthly</option>
+                <option value="">{t('quotations.detail.addItemModal.selectRatePeriod')}</option>
+                <option value="daily">{t('quotations.detail.addItemModal.daily')}</option>
+                <option value="weekly">{t('quotations.detail.addItemModal.weekly')}</option>
+                <option value="monthly">{t('quotations.detail.addItemModal.monthly')}</option>
               </select>
             </div>
           </div>
         )}
 
         <div className="form-group">
-          <label>Notes</label>
-          <input value={form.notes} onChange={(e) => set('notes', e.target.value)} placeholder="Optional" />
+          <label>{t('common.notes')}</label>
+          <input value={form.notes} onChange={(e) => set('notes', e.target.value)} placeholder={t('common.optional')} />
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 4 }}>
-          <button type="button" className="btn btn-secondary" onClick={onClose} disabled={saving}>Cancel</button>
-          <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? 'Adding...' : 'Add Item'}</button>
+          <button type="button" className="btn btn-secondary" onClick={onClose} disabled={saving}>{t('common.cancel')}</button>
+          <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? t('quotations.detail.addItemModal.adding') : t('quotations.detail.addItem')}</button>
         </div>
       </form>
     </Modal>

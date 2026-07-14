@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { ForkliftStatusBadge } from './ForkliftStatusBadge'
 import { ArrowRight } from 'lucide-react'
 import type { ForkliftStatusHistoryEntry } from '@/types/forklift'
@@ -11,10 +12,11 @@ function fmtDateTime(iso: string) {
 }
 
 export default function StatusTimeline({ history }: { history: ForkliftStatusHistoryEntry[] }) {
+  const { t } = useTranslation()
   if (!history.length) {
     return (
       <div className="timeline-empty">
-        No status changes recorded yet.
+        {t('equipment.timeline.noHistory')}
       </div>
     )
   }
@@ -37,7 +39,7 @@ export default function StatusTimeline({ history }: { history: ForkliftStatusHis
               </div>
               {h.reason && <div className="timeline-reason">{h.reason}</div>}
               <div className="timeline-user">
-                {h.user?.full_name ?? h.user?.username ?? 'System'}
+                {h.user?.full_name ?? h.user?.username ?? t('equipment.timeline.system')}
               </div>
             </div>
           </div>

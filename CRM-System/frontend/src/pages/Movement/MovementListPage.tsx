@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   Search, Plus, AlertCircle, RefreshCw, Grid3X3, List,
   ChevronLeft, ChevronRight, ArrowRightLeft,
@@ -14,25 +15,11 @@ function fmtDate(iso: string) {
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
-const STATUS_OPTIONS = [
-  { value: '', label: 'All Statuses' },
-  { value: 'draft', label: 'Draft' },
-  { value: 'preparing', label: 'Preparing' },
-  { value: 'in_transit', label: 'In Transit' },
-  { value: 'delivered', label: 'Delivered' },
-  { value: 'completed', label: 'Completed' },
-  { value: 'cancelled', label: 'Cancelled' },
-]
-
-const TYPE_OPTIONS = [
-  { value: '', label: 'All Types' },
-  { value: 'warehouse_transfer', label: 'Transfer' },
-  { value: 'customer_deployment', label: 'Deployment' },
-  { value: 'customer_return', label: 'Return' },
-  { value: 'internal_relocation', label: 'Relocation' },
-]
+const STATUS_VALUES: MovementStatus[] = ['draft', 'preparing', 'in_transit', 'delivered', 'completed', 'cancelled']
+const TYPE_VALUES: MType[] = ['warehouse_transfer', 'customer_deployment', 'customer_return', 'internal_relocation']
 
 export default function MovementListPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [movements, setMovements] = useState<Movement[]>([])
   const [total, setTotal] = useState(0)
@@ -51,11 +38,11 @@ export default function MovementListPage() {
       setTotal(data.total)
       setPages(data.pages)
     } catch {
-      setError('Failed to load movements.')
+      setError(t('movement.list.loadFailed'))
     } finally {
       setIsLoading(false)
     }
-  }, [params])
+  }, [params, t])
 
   useEffect(() => { load() }, [load])
 
@@ -69,15 +56,15 @@ export default function MovementListPage() {
     <div>
       <div className="page-header">
         <div>
-          <h1>Movement Control</h1>
-          <p className="page-header-sub">{total.toLocaleString()} movements</p>
+          <h1>{t('movement.list.title')}</h1>
+          <p className="page-header-sub">{t('movement.list.totalCount', { count: total })}</p>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="btn btn-ghost" onClick={load} disabled={isLoading} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> Refresh
+            <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('movement.list.refresh')}
           </button>
           <button className="btn btn-primary" onClick={() => navigate('/movements/new')}>
-            <Plus size={15} /> New Movement
+            <Plus size={15} /> {t('movement.list.newMovement')}
           </button>
         </div>
       </div>
@@ -89,24 +76,26 @@ export default function MovementListPage() {
           <Search size={14} />
           <input
             className="search-input"
-            placeholder="Search number, location, code..."
+            placeholder={t('movement.list.searchPlaceholder')}
             value={params.q ?? ''}
             onChange={(e) => apply({ q: e.target.value || undefined, page: 1 })}
           />
         </div>
         <select className="filter-select" value={params.status ?? ''} onChange={(e) => apply({ status: (e.target.value || undefined) as MovementStatus, page: 1 })}>
-          {STATUS_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+          <option value="">{t('movement.list.allStatuses')}</option>
+          {STATUS_VALUES.map((v) => <option key={v} value={v}>{t(`movement.status.${v}`)}</option>)}
         </select>
         <select className="filter-select" value={params.movement_type ?? ''} onChange={(e) => apply({ movement_type: (e.target.value || undefined) as MType, page: 1 })}>
-          {TYPE_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+          <option value="">{t('movement.list.allTypes')}</option>
+          {TYPE_VALUES.map((v) => <option key={v} value={v}>{t(`movement.type.${v}`)}</option>)}
         </select>
         {hasFilters && (
-          <button className="clear-btn" onClick={() => apply({ q: undefined, status: undefined, movement_type: undefined, page: 1 })}>Clear</button>
+          <button className="clear-btn" onClick={() => apply({ q: undefined, status: undefined, movement_type: undefined, page: 1 })}>{t('common.clearFilters')}</button>
         )}
-        <span className="toolbar-count">{total} result{total !== 1 ? 's' : ''}</span>
+        <span className="toolbar-count">{t('movement.list.resultsCount', { count: total })}</span>
         <div className="view-toggle">
-          <button className={`view-btn${view === 'list' ? ' active' : ''}`} onClick={() => setView('list')}><List size={14} /></button>
-          <button className={`view-btn${view === 'grid' ? ' active' : ''}`} onClick={() => setView('grid')}><Grid3X3 size={14} /></button>
+          <button className={`view-btn${view === 'list' ? ' active' : ''}`} onClick={() => setView('list')} aria-label={t('common.listView')}><List size={14} /></button>
+          <button className={`view-btn${view === 'grid' ? ' active' : ''}`} onClick={() => setView('grid')} aria-label={t('common.gridView')}><Grid3X3 size={14} /></button>
         </div>
       </div>
 
@@ -124,13 +113,13 @@ export default function MovementListPage() {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Movement</th>
-                  <th>Type</th>
-                  <th>Status</th>
-                  <th className="col-hide-sm">Equipment</th>
-                  <th className="col-hide-sm">From → To</th>
-                  <th className="col-hide-sm">Scheduled</th>
-                  <th className="col-hide-sm">Priority</th>
+                  <th>{t('movement.list.colMovement')}</th>
+                  <th>{t('common.type')}</th>
+                  <th>{t('common.status')}</th>
+                  <th className="col-hide-sm">{t('movement.list.colEquipment')}</th>
+                  <th className="col-hide-sm">{t('movement.list.colFromTo')}</th>
+                  <th className="col-hide-sm">{t('movement.list.colScheduled')}</th>
+                  <th className="col-hide-sm">{t('movement.list.colPriority')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -146,7 +135,7 @@ export default function MovementListPage() {
                   </tr>
                 )) : movements.length === 0 ? (
                   <tr><td colSpan={7}>
-                    <div className="table-empty"><ArrowRightLeft size={36} /><p>No movements found</p></div>
+                    <div className="table-empty"><ArrowRightLeft size={36} /><p>{t('movement.list.noMovementsFound')}</p></div>
                   </td></tr>
                 ) : movements.map((m) => (
                   <tr key={m.id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/movements/${m.id}`)}>
@@ -168,7 +157,7 @@ export default function MovementListPage() {
 
           {!isLoading && pages > 1 && (
             <div className="pagination">
-              <span className="pagination-info">Page {currentPage} of {pages} ({total} total)</span>
+              <span className="pagination-info">{t('movement.list.pageOf', { page: currentPage, pages, total })}</span>
               <div className="pagination-controls">
                 <button className="page-btn" disabled={currentPage === 1} onClick={() => apply({ page: currentPage - 1 })}><ChevronLeft size={14} /></button>
                 <button className="page-btn" disabled={currentPage === pages} onClick={() => apply({ page: currentPage + 1 })}><ChevronRight size={14} /></button>

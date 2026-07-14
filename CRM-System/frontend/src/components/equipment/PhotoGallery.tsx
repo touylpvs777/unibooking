@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ChevronLeft, ChevronRight, X, Camera, Maximize2 } from 'lucide-react'
 import { createPortal } from 'react-dom'
 import type { ForkliftPhotoEntry } from '@/types/forklift'
@@ -12,6 +13,7 @@ interface PhotoGalleryProps {
 const PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 24 24" fill="none" stroke="%23cbd5e1" stroke-width="1"%3E%3Crect x="2" y="2" width="20" height="20" rx="2"/%3E%3Ccircle cx="8.5" cy="8.5" r="1.5"/%3E%3Cpath d="M21 15l-5-5L5 21"/%3E%3C/svg%3E'
 
 export default function PhotoGallery({ photos, assetName }: PhotoGalleryProps) {
+  const { t } = useTranslation()
   const sorted = [...photos].sort((a, b) => {
     if (a.is_primary !== b.is_primary) return a.is_primary ? -1 : 1
     return a.sort_order - b.sort_order
@@ -42,8 +44,8 @@ export default function PhotoGallery({ photos, assetName }: PhotoGalleryProps) {
     return (
       <div className="gallery-empty">
         <Camera size={40} />
-        <p>No photos uploaded</p>
-        <small>Photos help identify and document this equipment</small>
+        <p>{t('equipment.gallery.noPhotos')}</p>
+        <small>{t('equipment.gallery.noPhotosHint')}</small>
       </div>
     )
   }
@@ -56,12 +58,12 @@ export default function PhotoGallery({ photos, assetName }: PhotoGalleryProps) {
             onError={(e) => { (e.currentTarget as HTMLImageElement).src = PLACEHOLDER }} />
           {total > 1 && (
             <>
-              <button className="gallery-arrow left" onClick={(e) => { e.stopPropagation(); prev() }} disabled={idx === 0}><ChevronLeft size={18} /></button>
-              <button className="gallery-arrow right" onClick={(e) => { e.stopPropagation(); next() }} disabled={idx === total - 1}><ChevronRight size={18} /></button>
+              <button className="gallery-arrow left" aria-label={t('equipment.gallery.previousPhoto')} onClick={(e) => { e.stopPropagation(); prev() }} disabled={idx === 0}><ChevronLeft size={18} /></button>
+              <button className="gallery-arrow right" aria-label={t('equipment.gallery.nextPhoto')} onClick={(e) => { e.stopPropagation(); next() }} disabled={idx === total - 1}><ChevronRight size={18} /></button>
             </>
           )}
           <div className="gallery-counter">{idx + 1} / {total}</div>
-          <button className="gallery-fullscreen" onClick={(e) => { e.stopPropagation(); setLightbox(true) }}><Maximize2 size={14} /></button>
+          <button className="gallery-fullscreen" aria-label={t('equipment.gallery.viewFullscreen')} onClick={(e) => { e.stopPropagation(); setLightbox(true) }}><Maximize2 size={14} /></button>
         </div>
 
         {total > 1 && (
@@ -79,14 +81,14 @@ export default function PhotoGallery({ photos, assetName }: PhotoGalleryProps) {
 
       {lightbox && createPortal(
         <div className="gallery-lightbox" onClick={() => setLightbox(false)}>
-          <button className="gallery-lb-close" onClick={() => setLightbox(false)}><X size={20} /></button>
+          <button className="gallery-lb-close" aria-label={t('common.close')} onClick={() => setLightbox(false)}><X size={20} /></button>
           <div className="gallery-lb-counter">{idx + 1} / {total}</div>
           <img src={src} alt={active?.alt_text ?? assetName} className="gallery-lb-img" onClick={(e) => e.stopPropagation()}
             onError={(e) => { (e.currentTarget as HTMLImageElement).src = PLACEHOLDER }} />
           {total > 1 && (
             <>
-              <button className="gallery-lb-arrow left" onClick={(e) => { e.stopPropagation(); prev() }} disabled={idx === 0}><ChevronLeft size={28} /></button>
-              <button className="gallery-lb-arrow right" onClick={(e) => { e.stopPropagation(); next() }} disabled={idx === total - 1}><ChevronRight size={28} /></button>
+              <button className="gallery-lb-arrow left" aria-label={t('equipment.gallery.previousPhoto')} onClick={(e) => { e.stopPropagation(); prev() }} disabled={idx === 0}><ChevronLeft size={28} /></button>
+              <button className="gallery-lb-arrow right" aria-label={t('equipment.gallery.nextPhoto')} onClick={(e) => { e.stopPropagation(); next() }} disabled={idx === total - 1}><ChevronRight size={28} /></button>
             </>
           )}
           <div className="gallery-lb-thumbs" onClick={(e) => e.stopPropagation()}>

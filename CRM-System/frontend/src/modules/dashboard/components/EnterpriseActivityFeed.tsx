@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   Users, TrendingUp, FileText, ClipboardList, Truck, Wrench,
   CreditCard, Box, Receipt, ArrowRight,
@@ -31,15 +32,15 @@ function formatAction(action: string): string {
   return action.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
-function relativeTime(iso: string): string {
+function relativeTime(iso: string, t: (key: string, opts?: Record<string, unknown>) => string): string {
   const diff = Date.now() - new Date(iso).getTime()
   const m = Math.floor(diff / 60_000)
-  if (m < 1) return 'just now'
-  if (m < 60) return `${m}m ago`
+  if (m < 1) return t('header.justNow')
+  if (m < 60) return t('header.minutesAgo', { count: m })
   const h = Math.floor(m / 60)
-  if (h < 24) return `${h}h ago`
+  if (h < 24) return t('header.hoursAgo', { count: h })
   const d = Math.floor(h / 24)
-  return `${d}d ago`
+  return t('header.daysAgo', { count: d })
 }
 
 export function EnterpriseActivityFeedSkeleton() {
@@ -69,21 +70,22 @@ export default function EnterpriseActivityFeed({
   activities: Activity[]
   maxItems?: number
 }) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const items = activities.slice(0, maxItems)
 
   return (
     <div className="mp-chart-panel">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-        <span className="mp-chart-title" style={{ marginBottom: 0 }}>Recent Activity</span>
+        <span className="mp-chart-title" style={{ marginBottom: 0 }}>{t('dashboard.recentActivity')}</span>
         <a className="mp-section-link" onClick={() => navigate('/activity')}>
-          View All <ArrowRight size={12} />
+          {t('dashboard.viewAll')} <ArrowRight size={12} />
         </a>
       </div>
 
       {items.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '24px 0', color: 'var(--color-text-muted)', fontSize: 13 }}>
-          No recent activity
+          {t('dashboard.noRecentActivity')}
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -112,7 +114,7 @@ export default function EnterpriseActivityFeed({
                     {formatAction(act.action)}
                   </div>
                   <div style={{ fontSize: 11.5, color: 'var(--color-text-muted)', marginTop: 1 }}>
-                    {act.user?.full_name || act.user?.username || 'System'} · {relativeTime(act.created_at)}
+                    {act.user?.full_name || act.user?.username || t('header.systemUser')} · {relativeTime(act.created_at, t)}
                   </div>
                 </div>
               </div>

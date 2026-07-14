@@ -5,6 +5,7 @@ import './LanguageToggle.css'
 const LABELS: Record<SupportedLanguage, string> = {
   en: 'EN',
   lo: 'ລາວ',
+  th: 'ไทย',
 }
 
 export default function LanguageToggle() {

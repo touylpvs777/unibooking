@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   ChevronLeft, AlertCircle, Truck, MapPin,
   X, Check, Play,
@@ -28,6 +29,7 @@ function fmtDateTime(iso: string | null) {
 }
 
 export default function MovementDetailPage() {
+  const { t } = useTranslation()
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
 
@@ -42,9 +44,9 @@ export default function MovementDetailPage() {
     if (!id) return
     setIsLoading(true); setError(null)
     try { setMv((await getMovement(Number(id))).data) }
-    catch { setError('Movement not found.') }
+    catch { setError(t('movement.detail.notFound')) }
     finally { setIsLoading(false) }
-  }, [id])
+  }, [id, t])
 
   useEffect(() => { load() }, [load])
 
@@ -53,7 +55,7 @@ export default function MovementDetailPage() {
     try { await fn(); toast.success(label); await load() }
     catch (err: unknown) {
       const msg = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail
-      toast.error(msg ?? `Failed: ${label}`)
+      toast.error(msg ?? t('movement.detail.actionFailed', { action: label }))
     }
     finally { setAL(false) }
   }
@@ -75,8 +77,8 @@ export default function MovementDetailPage() {
   if (error || !mv) {
     return (
       <div className="product-detail">
-        <button className="detail-back" onClick={() => navigate('/movements')}><ChevronLeft size={16} /> Back</button>
-        <div className="page-error" style={{ marginTop: 24 }}><AlertCircle size={16} /> {error ?? 'Not found.'}</div>
+        <button className="detail-back" onClick={() => navigate('/movements')}><ChevronLeft size={16} /> {t('common.back')}</button>
+        <div className="page-error" style={{ marginTop: 24 }}><AlertCircle size={16} /> {error ?? t('movement.detail.notFound')}</div>
       </div>
     )
   }
@@ -90,7 +92,7 @@ export default function MovementDetailPage() {
 
   return (
     <div className="product-detail">
-      <button className="detail-back" onClick={() => navigate('/movements')}><ChevronLeft size={16} /> Back to Movements</button>
+      <button className="detail-back" onClick={() => navigate('/movements')}><ChevronLeft size={16} /> {t('movement.form.backToMovements')}</button>
 
       <div className="detail-header">
         <div>
@@ -111,30 +113,30 @@ export default function MovementDetailPage() {
         <div className="detail-actions">
           {canPrepare && (
             <button className="btn btn-primary" disabled={actionLoading}
-              onClick={() => doAction('Preparation started', () => prepareMovement(mv.id))}>
-              <Play size={14} /> Start Preparing
+              onClick={() => doAction(t('movement.detail.toasts.preparationStarted'), () => prepareMovement(mv.id))}>
+              <Play size={14} /> {t('movement.detail.actions.startPreparing')}
             </button>
           )}
           {canDepart && (
             <button className="btn btn-primary" disabled={actionLoading} onClick={() => setDepartModal(true)}>
-              <Truck size={14} /> Record Departure
+              <Truck size={14} /> {t('movement.detail.actions.recordDeparture')}
             </button>
           )}
           {canArrive && (
             <button className="btn btn-primary" disabled={actionLoading} onClick={() => setArriveModal(true)}>
-              <MapPin size={14} /> Record Arrival
+              <MapPin size={14} /> {t('movement.detail.actions.recordArrival')}
             </button>
           )}
           {canComplete && (
             <button className="btn btn-primary" disabled={actionLoading}
-              onClick={() => doAction('Movement completed', () => completeMovement(mv.id))}>
-              <Check size={14} /> Mark Complete
+              onClick={() => doAction(t('movement.detail.toasts.movementCompleted'), () => completeMovement(mv.id))}>
+              <Check size={14} /> {t('movement.detail.actions.markComplete')}
             </button>
           )}
           {canCancel && (
             <button className="btn btn-secondary" disabled={actionLoading}
-              onClick={() => doAction('Cancelled', () => cancelMovement(mv.id, 'Cancelled by user'))}>
-              <X size={14} /> Cancel
+              onClick={() => doAction(t('movement.detail.toasts.cancelled'), () => cancelMovement(mv.id, t('movement.detail.cancelledByUser')))}>
+              <X size={14} /> {t('common.cancel')}
             </button>
           )}
         </div>
@@ -143,22 +145,22 @@ export default function MovementDetailPage() {
       {/* Route */}
       <div className="detail-summary-grid">
         <div className="detail-summary-card">
-          <div className="detail-summary-label">From</div>
+          <div className="detail-summary-label">{t('movement.detail.from')}</div>
           <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--color-text)', marginTop: 4 }}>{mv.from_location}</div>
           {mv.from_address && <div className="cell-muted cell-sub">{mv.from_address}</div>}
         </div>
         <div className="detail-summary-card">
-          <div className="detail-summary-label">To</div>
+          <div className="detail-summary-label">{t('movement.detail.to')}</div>
           <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--color-text)', marginTop: 4 }}>{mv.to_location}</div>
           {mv.to_address && <div className="cell-muted cell-sub">{mv.to_address}</div>}
         </div>
         <div className="detail-summary-card">
-          <div className="detail-summary-label">Scheduled</div>
+          <div className="detail-summary-label">{t('movement.detail.scheduled')}</div>
           <div className="detail-summary-value">{fmtDate(mv.scheduled_date)}</div>
         </div>
         {mv.tracking_code && (
           <div className="detail-summary-card">
-            <div className="detail-summary-label">Tracking Code</div>
+            <div className="detail-summary-label">{t('movement.detail.trackingCode')}</div>
             <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--color-text)', marginTop: 4, fontFamily: 'monospace' }}>{mv.tracking_code}</div>
           </div>
         )}
@@ -168,35 +170,35 @@ export default function MovementDetailPage() {
       <div className="detail-info-grid">
         <div>
           <dl className="detail-meta">
-            <dt>Equipment</dt><dd>{mv.forklift.serial_number} — {mv.forklift.name_en}</dd>
-            {mv.customer && (<><dt>Customer</dt><dd>{mv.customer.first_name} {mv.customer.last_name}{mv.customer.company ? ` (${mv.customer.company})` : ''}</dd></>)}
-            {mv.rental_contract && (<><dt>Contract</dt><dd>{mv.rental_contract.contract_number}</dd></>)}
-            {mv.assigned_driver && (<><dt>Driver</dt><dd>{mv.assigned_driver.full_name ?? mv.assigned_driver.username}</dd></>)}
+            <dt>{t('movement.detail.equipment')}</dt><dd>{mv.forklift.serial_number} — {mv.forklift.name_en}</dd>
+            {mv.customer && (<><dt>{t('movement.detail.customer')}</dt><dd>{mv.customer.first_name} {mv.customer.last_name}{mv.customer.company ? ` (${mv.customer.company})` : ''}</dd></>)}
+            {mv.rental_contract && (<><dt>{t('movement.detail.contract')}</dt><dd>{mv.rental_contract.contract_number}</dd></>)}
+            {mv.assigned_driver && (<><dt>{t('movement.detail.driver')}</dt><dd>{mv.assigned_driver.full_name ?? mv.assigned_driver.username}</dd></>)}
           </dl>
         </div>
         <div>
           <dl className="detail-meta">
-            <dt>Departed</dt><dd>{fmtDateTime(mv.actual_departure)}</dd>
-            <dt>Arrived</dt><dd>{fmtDateTime(mv.actual_arrival)}</dd>
-            {mv.departure_hour_meter != null && (<><dt>Departure Hours</dt><dd>{mv.departure_hour_meter}</dd></>)}
-            {mv.arrival_hour_meter != null && (<><dt>Arrival Hours</dt><dd>{mv.arrival_hour_meter}</dd></>)}
-            <dt>Created</dt><dd>{fmtDate(mv.created_at)}</dd>
+            <dt>{t('movement.detail.departed')}</dt><dd>{fmtDateTime(mv.actual_departure)}</dd>
+            <dt>{t('movement.detail.arrived')}</dt><dd>{fmtDateTime(mv.actual_arrival)}</dd>
+            {mv.departure_hour_meter != null && (<><dt>{t('movement.detail.departureHours')}</dt><dd>{mv.departure_hour_meter}</dd></>)}
+            {mv.arrival_hour_meter != null && (<><dt>{t('movement.detail.arrivalHours')}</dt><dd>{mv.arrival_hour_meter}</dd></>)}
+            <dt>{t('common.createdAt')}</dt><dd>{fmtDate(mv.created_at)}</dd>
           </dl>
         </div>
       </div>
 
       {mv.notes && (
         <div className="detail-description" style={{ marginTop: 16 }}>
-          <div className="detail-section-title">Notes</div>
+          <div className="detail-section-title">{t('common.notes')}</div>
           <p>{mv.notes}</p>
         </div>
       )}
       {mv.internal_notes && (
-        <div className="detail-internal-note"><strong>Internal Note</strong><p>{mv.internal_notes}</p></div>
+        <div className="detail-internal-note"><strong>{t('movement.detail.internalNote')}</strong><p>{mv.internal_notes}</p></div>
       )}
       {mv.cancellation_reason && (
         <div className="detail-internal-note" style={{ borderColor: 'var(--color-danger-300)', background: 'var(--color-danger-50)' }}>
-          <strong style={{ color: 'var(--color-danger-700)' }}>Cancellation Reason</strong>
+          <strong style={{ color: 'var(--color-danger-700)' }}>{t('movement.detail.cancellationReason')}</strong>
           <p style={{ color: 'var(--color-danger-900)' }}>{mv.cancellation_reason}</p>
         </div>
       )}
@@ -207,15 +209,15 @@ export default function MovementDetailPage() {
       {/* Departure Modal */}
       <HourMeterModal
         isOpen={departModal} onClose={() => setDepartModal(false)}
-        title="Record Departure" label="Departure Hour Meter"
-        onSubmit={(reading, notes) => doAction('Departed', () => departMovement(mv.id, reading, notes)).then(() => setDepartModal(false))}
+        title={t('movement.detail.actions.recordDeparture')} label={t('movement.detail.departureHourMeter')}
+        onSubmit={(reading, notes) => doAction(t('movement.detail.toasts.departed'), () => departMovement(mv.id, reading, notes)).then(() => setDepartModal(false))}
       />
       {/* Arrival Modal */}
       <HourMeterModal
         isOpen={arriveModal} onClose={() => setArriveModal(false)}
-        title="Record Arrival" label="Arrival Hour Meter"
+        title={t('movement.detail.actions.recordArrival')} label={t('movement.detail.arrivalHourMeter')}
         minReading={mv.departure_hour_meter ?? undefined}
-        onSubmit={(reading, notes) => doAction('Arrived', () => arriveMovement(mv.id, reading, notes)).then(() => setArriveModal(false))}
+        onSubmit={(reading, notes) => doAction(t('movement.detail.toasts.arrived'), () => arriveMovement(mv.id, reading, notes)).then(() => setArriveModal(false))}
       />
     </div>
   )
@@ -226,6 +228,7 @@ function HourMeterModal({ isOpen, onClose, title, label, minReading, onSubmit }:
   isOpen: boolean; onClose: () => void; title: string; label: string
   minReading?: number; onSubmit: (reading: number, notes?: string) => Promise<void>
 }) {
+  const { t } = useTranslation()
   const [reading, setReading] = useState('')
   const [notes, setNotes] = useState('')
   const [saving, setSaving] = useState(false)
@@ -249,12 +252,12 @@ function HourMeterModal({ isOpen, onClose, title, label, minReading, onSubmit }:
             min={minReading ?? 0} step="0.1" required />
         </div>
         <div className="form-group">
-          <label>Notes</label>
-          <input value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Optional" />
+          <label>{t('common.notes')}</label>
+          <input value={notes} onChange={(e) => setNotes(e.target.value)} placeholder={t('common.optional')} />
         </div>
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 4 }}>
-          <button type="button" className="btn btn-secondary" onClick={onClose} disabled={saving}>Cancel</button>
-          <button type="submit" className="btn btn-primary" disabled={saving || !reading}>{saving ? 'Saving...' : 'Confirm'}</button>
+          <button type="button" className="btn btn-secondary" onClick={onClose} disabled={saving}>{t('common.cancel')}</button>
+          <button type="submit" className="btn btn-primary" disabled={saving || !reading}>{saving ? t('common.saving') : t('common.confirm')}</button>
         </div>
       </form>
     </Modal>

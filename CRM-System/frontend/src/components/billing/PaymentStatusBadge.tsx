@@ -1,13 +1,15 @@
+import { useTranslation } from 'react-i18next'
 import { Badge, type BadgeVariant } from '@/components/ui/Badge'
 
-const STATUS_MAP: Record<string, { variant: BadgeVariant; label: string }> = {
-  pending:   { variant: 'amber', label: 'Pending' },
-  confirmed: { variant: 'green', label: 'Confirmed' },
-  rejected:  { variant: 'red',   label: 'Rejected' },
-  refunded:  { variant: 'gray',  label: 'Refunded' },
+const STATUS_VARIANTS: Record<string, BadgeVariant> = {
+  pending:   'amber',
+  confirmed: 'green',
+  rejected:  'red',
+  refunded:  'gray',
 }
 
 export default function PaymentStatusBadge({ status }: { status: string }) {
-  const cfg = STATUS_MAP[status] ?? { variant: 'gray' as BadgeVariant, label: status }
-  return <Badge variant={cfg.variant}>{cfg.label}</Badge>
+  const { t } = useTranslation()
+  const variant = STATUS_VARIANTS[status] ?? 'gray'
+  return <Badge variant={variant}>{t(`billing.payment.status.${status}`, status)}</Badge>
 }

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import Modal from '@/components/ui/Modal'
 import type { Product, Brand, ProductCategory } from '@/types/catalog'
 import '@/styles/shared.css'
@@ -36,6 +37,7 @@ export default function ProductForm({
   brands,
   categories,
 }: ProductFormProps) {
+  const { t } = useTranslation()
   const [form, setForm]         = useState({ ...EMPTY })
   const [isSaving, setIsSaving] = useState(false)
   const [err, setErr]           = useState<string | null>(null)
@@ -69,7 +71,7 @@ export default function ProductForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.name_en.trim()) { setErr('Product name is required.'); return }
+    if (!form.name_en.trim()) { setErr(t('catalog.products.form.nameRequired')); return }
     setIsSaving(true)
     setErr(null)
     const payload: Record<string, unknown> = {
@@ -90,14 +92,23 @@ export default function ProductForm({
     const ok = await onSubmit(payload)
     setIsSaving(false)
     if (ok) onClose()
-    else setErr('Save failed. Please try again.')
+    else setErr(t('catalog.products.form.saveFailed'))
   }
+
+  const FLAGS: [string, string][] = [
+    ['is_active',         t('common.active')],
+    ['is_sale',           t('catalog.products.forSale')],
+    ['is_rental',         t('catalog.products.forRental')],
+    ['is_featured',       t('catalog.products.featured')],
+    ['is_used_available', t('catalog.products.form.usedAvailable')],
+    ['is_service_item',   t('catalog.products.form.serviceItem')],
+  ]
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={product ? 'Edit Product' : 'New Product'}
+      title={product ? t('catalog.products.editTitle') : t('catalog.products.newTitle')}
       width={620}
     >
       <form onSubmit={handleSubmit} className="form-grid">
@@ -105,16 +116,16 @@ export default function ProductForm({
 
         <div className="form-row-2">
           <div className="form-group">
-            <label>Name (English) <span className="required">*</span></label>
+            <label>{t('catalog.products.form.nameEnLabel')} <span className="required">*</span></label>
             <input
               value={form.name_en}
               onChange={(e) => set('name_en', e.target.value)}
-              placeholder="Product name in English"
+              placeholder={t('catalog.products.form.nameEnPlaceholder')}
               required
             />
           </div>
           <div className="form-group">
-            <label>Name (Lao)</label>
+            <label>{t('catalog.products.form.nameLoLabel')}</label>
             <input
               value={form.name_lo}
               onChange={(e) => set('name_lo', e.target.value)}
@@ -126,36 +137,36 @@ export default function ProductForm({
         <div className="form-row-2">
           {!product && (
             <div className="form-group">
-              <label>SKU</label>
+              <label>{t('catalog.products.table.sku')}</label>
               <input
                 value={form.sku}
                 onChange={(e) => set('sku', e.target.value)}
-                placeholder="Auto-generated if blank"
+                placeholder={t('catalog.products.form.skuPlaceholder')}
               />
             </div>
           )}
           <div className="form-group">
-            <label>Model Number</label>
+            <label>{t('catalog.products.form.modelNumberLabel')}</label>
             <input
               value={form.model_number}
               onChange={(e) => set('model_number', e.target.value)}
-              placeholder="e.g. EFG115"
+              placeholder={t('catalog.products.form.modelNumberPlaceholder')}
             />
           </div>
         </div>
 
         <div className="form-row-2">
           <div className="form-group">
-            <label>Brand</label>
+            <label>{t('catalog.products.form.brandLabel')}</label>
             <select value={form.brand_id} onChange={(e) => set('brand_id', e.target.value)}>
-              <option value="">— No brand —</option>
+              <option value="">{t('catalog.products.form.noBrandOption')}</option>
               {brands.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
             </select>
           </div>
           <div className="form-group">
-            <label>Category</label>
+            <label>{t('common.category')}</label>
             <select value={form.category_id} onChange={(e) => set('category_id', e.target.value)}>
-              <option value="">— No category —</option>
+              <option value="">{t('catalog.products.form.noCategoryOption')}</option>
               {categories.map((c) => {
                 const d = (c as never as { _depth: number })._depth ?? 0
                 return <option key={c.id} value={c.id}>{'  '.repeat(d)}{c.name_en}</option>
@@ -165,29 +176,22 @@ export default function ProductForm({
         </div>
 
         <div className="form-group">
-          <label>Description</label>
+          <label>{t('common.description')}</label>
           <textarea
             value={form.description_en}
             onChange={(e) => set('description_en', e.target.value)}
             rows={3}
-            placeholder="Product description…"
+            placeholder={t('catalog.products.form.descriptionPlaceholder')}
           />
         </div>
 
         {/* Flags */}
         <div>
           <label style={{ fontSize: 12.5, fontWeight: 500, color: 'var(--color-text)', display: 'block', marginBottom: 8 }}>
-            Attributes
+            {t('catalog.products.form.attributesLabel')}
           </label>
           <div className="product-flags">
-            {([
-              ['is_active',         'Active'],
-              ['is_sale',           'For Sale'],
-              ['is_rental',         'For Rental'],
-              ['is_featured',       'Featured'],
-              ['is_used_available', 'Used Available'],
-              ['is_service_item',   'Service Item'],
-            ] as [string, string][]).map(([key, label]) => (
+            {FLAGS.map(([key, label]) => (
               <label key={key} className="flag-check">
                 <input
                   type="checkbox"
@@ -202,10 +206,10 @@ export default function ProductForm({
 
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 4 }}>
           <button type="button" className="btn btn-secondary" onClick={onClose} disabled={isSaving}>
-            Cancel
+            {t('common.cancel')}
           </button>
           <button type="submit" className="btn btn-primary" disabled={isSaving}>
-            {isSaving ? 'Saving…' : product ? 'Save Changes' : 'Create Product'}
+            {isSaving ? t('common.saving') : product ? t('catalog.saveChanges') : t('catalog.products.form.createProduct')}
           </button>
         </div>
       </form>

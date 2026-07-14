@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { MapPin, Clock } from 'lucide-react'
 import { MovementStatusBadge } from './MovementStatusBadge'
 import type { MovementCheckpoint } from '@/types/movement'
@@ -10,12 +11,13 @@ function fmtTime(iso: string) {
 }
 
 export default function MovementTimeline({ checkpoints }: { checkpoints: MovementCheckpoint[] }) {
+  const { t } = useTranslation()
   if (checkpoints.length === 0) return null
 
   return (
     <div className="detail-specs-section">
       <h2 className="detail-section-title detail-section-title-row">
-        <Clock size={16} /> Movement Timeline
+        <Clock size={16} /> {t('movement.timeline.title')}
       </h2>
       <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 0 }}>
         {checkpoints.map((cp, i) => (
@@ -35,7 +37,7 @@ export default function MovementTimeline({ checkpoints }: { checkpoints: Movemen
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                 <MovementStatusBadge status={cp.to_status} />
                 <span className="cell-muted" style={{ fontSize: 12 }}>{fmtTime(cp.recorded_at)}</span>
-                {cp.user && <span className="cell-muted" style={{ fontSize: 12 }}>by {cp.user.full_name ?? cp.user.username}</span>}
+                {cp.user && <span className="cell-muted" style={{ fontSize: 12 }}>{t('movement.timeline.by', { name: cp.user.full_name ?? cp.user.username })}</span>}
               </div>
               {cp.notes && <div style={{ fontSize: 13, color: 'var(--color-text-secondary)', marginTop: 4 }}>{cp.notes}</div>}
               {cp.location && (

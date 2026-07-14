@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { ChartCard } from '@/components/charts'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import type { InvoiceOut } from '@/types/billing'
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export default function RevenueAreaChart({ invoices, loading, currency }: Props) {
+  const { t } = useTranslation()
   const monthlyData: Record<string, { invoiced: number; paid: number }> = {}
 
   invoices.forEach((inv) => {
@@ -26,7 +28,7 @@ export default function RevenueAreaChart({ invoices, loading, currency }: Props)
   }))
 
   return (
-    <ChartCard title="Revenue Trend" sub={`Last 6 months (${currency})`} loading={loading} isEmpty={data.length === 0} emptyMessage="No revenue data yet">
+    <ChartCard title={t('finance.revenueChart.title')} sub={t('finance.revenueChart.subtitle', { currency })} loading={loading} isEmpty={data.length === 0} emptyMessage={t('finance.revenueChart.empty')}>
       <ResponsiveContainer width="100%" height={240}>
         <AreaChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
           <defs>
@@ -43,8 +45,8 @@ export default function RevenueAreaChart({ invoices, loading, currency }: Props)
           <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'var(--color-text-muted)' }} axisLine={false} tickLine={false} />
           <YAxis tick={{ fontSize: 11, fill: 'var(--color-text-muted)' }} axisLine={false} tickLine={false} width={50} tickFormatter={(v: number) => v >= 1_000_000 ? `${(v / 1_000_000).toFixed(1)}M` : v >= 1000 ? `${(v / 1000).toFixed(0)}K` : `${v}`} />
           <Tooltip contentStyle={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 8, fontSize: 12 }} />
-          <Area type="monotone" dataKey="invoiced" name="Invoiced" stroke="#3b82f6" strokeWidth={2} fill="url(#finRevInv)" dot={{ r: 3, fill: '#3b82f6' }} />
-          <Area type="monotone" dataKey="paid" name="Paid" stroke="#22c55e" strokeWidth={2} fill="url(#finRevPaid)" dot={{ r: 3, fill: '#22c55e' }} />
+          <Area type="monotone" dataKey="invoiced" name={t('billing.revenueChart.invoiced')} stroke="#3b82f6" strokeWidth={2} fill="url(#finRevInv)" dot={{ r: 3, fill: '#3b82f6' }} />
+          <Area type="monotone" dataKey="paid" name={t('billing.revenueChart.paid')} stroke="#22c55e" strokeWidth={2} fill="url(#finRevPaid)" dot={{ r: 3, fill: '#22c55e' }} />
         </AreaChart>
       </ResponsiveContainer>
     </ChartCard>

@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import InvoiceStatusBadge from '@/components/billing/InvoiceStatusBadge'
 import PaymentStatusBadge from '@/components/billing/PaymentStatusBadge'
 import { fmtAmt, fmtDateShort } from '../utils'
@@ -7,15 +8,16 @@ import type { InvoiceOut, PaymentOut } from '@/types/billing'
 
 export function RecentInvoices({ invoices }: { invoices: InvoiceOut[] }) {
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   return (
     <div className="mp-chart-panel">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-        <span className="mp-chart-title" style={{ marginBottom: 0 }}>Recent Invoices</span>
-        <a className="mp-section-link" onClick={() => navigate('/billing/invoices')}>View All <ArrowRight size={12} /></a>
+        <span className="mp-chart-title" style={{ marginBottom: 0 }}>{t('finance.recentTransactions.recentInvoices')}</span>
+        <a className="mp-section-link" onClick={() => navigate('/billing/invoices')}>{t('finance.recentTransactions.viewAll')} <ArrowRight size={12} /></a>
       </div>
       {invoices.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '20px 0', fontSize: 13, color: 'var(--color-text-muted)' }}>No invoices yet</div>
+        <div style={{ textAlign: 'center', padding: '20px 0', fontSize: 13, color: 'var(--color-text-muted)' }}>{t('finance.recentTransactions.noInvoicesYet')}</div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {invoices.map((inv) => (
@@ -44,15 +46,16 @@ export function RecentInvoices({ invoices }: { invoices: InvoiceOut[] }) {
 
 export function RecentPayments({ payments }: { payments: PaymentOut[] }) {
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   return (
     <div className="mp-chart-panel">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-        <span className="mp-chart-title" style={{ marginBottom: 0 }}>Recent Payments</span>
-        <a className="mp-section-link" onClick={() => navigate('/billing/payments')}>View All <ArrowRight size={12} /></a>
+        <span className="mp-chart-title" style={{ marginBottom: 0 }}>{t('finance.recentTransactions.recentPayments')}</span>
+        <a className="mp-section-link" onClick={() => navigate('/billing/payments')}>{t('finance.recentTransactions.viewAll')} <ArrowRight size={12} /></a>
       </div>
       {payments.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '20px 0', fontSize: 13, color: 'var(--color-text-muted)' }}>No payments yet</div>
+        <div style={{ textAlign: 'center', padding: '20px 0', fontSize: 13, color: 'var(--color-text-muted)' }}>{t('finance.recentTransactions.noPaymentsYet')}</div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {payments.map((p) => (

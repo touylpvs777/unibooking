@@ -1,24 +1,14 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { ChevronLeft, AlertCircle } from 'lucide-react'
 import { createMovement } from '@/api/movement'
 import { toast } from '@/store/toastStore'
 import type { MovementType, MovementPriority } from '@/types/movement'
 import '@/styles/shared.css'
 
-const TYPE_OPTIONS = [
-  { value: 'customer_deployment', label: 'Customer Deployment' },
-  { value: 'customer_return', label: 'Customer Return' },
-  { value: 'warehouse_transfer', label: 'Warehouse Transfer' },
-  { value: 'internal_relocation', label: 'Internal Relocation' },
-]
-
-const PRIORITY_OPTIONS = [
-  { value: 'low', label: 'Low' },
-  { value: 'normal', label: 'Normal' },
-  { value: 'high', label: 'High' },
-  { value: 'urgent', label: 'Urgent' },
-]
+const TYPE_VALUES: MovementType[] = ['customer_deployment', 'customer_return', 'warehouse_transfer', 'internal_relocation']
+const PRIORITY_VALUES: MovementPriority[] = ['low', 'normal', 'high', 'urgent']
 
 const EMPTY = {
   movement_type: 'customer_deployment',
@@ -36,6 +26,7 @@ const EMPTY = {
 }
 
 export default function MovementForm() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [form, setForm] = useState({ ...EMPTY })
   const [isSaving, setIsSaving] = useState(false)
@@ -45,10 +36,10 @@ export default function MovementForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.forklift_id) { setErr('Forklift ID is required.'); return }
-    if (!form.from_location.trim()) { setErr('From location is required.'); return }
-    if (!form.to_location.trim()) { setErr('To location is required.'); return }
-    if (!form.scheduled_date) { setErr('Scheduled date is required.'); return }
+    if (!form.forklift_id) { setErr(t('movement.form.errors.forkliftRequired')); return }
+    if (!form.from_location.trim()) { setErr(t('movement.form.errors.fromLocationRequired')); return }
+    if (!form.to_location.trim()) { setErr(t('movement.form.errors.toLocationRequired')); return }
+    if (!form.scheduled_date) { setErr(t('movement.form.errors.scheduledDateRequired')); return }
 
     setIsSaving(true); setErr(null)
     try {
@@ -66,11 +57,11 @@ export default function MovementForm() {
         notes: form.notes.trim() || undefined,
         internal_notes: form.internal_notes.trim() || undefined,
       })
-      toast.success(`Movement ${data.movement_number} created.`)
+      toast.success(t('movement.form.created', { number: data.movement_number }))
       navigate(`/movements/${data.id}`)
     } catch (error: unknown) {
       const msg = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail
-      setErr(msg ?? 'Failed to create movement.')
+      setErr(msg ?? t('movement.form.createFailed'))
     } finally {
       setIsSaving(false)
     }
@@ -83,10 +74,10 @@ export default function MovementForm() {
         onClick={() => navigate('/movements')}
         style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', fontSize: 13.5, marginBottom: 20 }}
       >
-        <ChevronLeft size={16} /> Back to Movements
+        <ChevronLeft size={16} /> {t('movement.form.backToMovements')}
       </button>
 
-      <div className="page-header" style={{ marginBottom: 24 }}><h1>New Movement</h1></div>
+      <div className="page-header" style={{ marginBottom: 24 }}><h1>{t('movement.form.title')}</h1></div>
 
       <div style={{ maxWidth: 700, background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 10, padding: 24 }}>
         <form onSubmit={handleSubmit} className="form-grid">
@@ -94,76 +85,76 @@ export default function MovementForm() {
 
           <div className="form-row-2">
             <div className="form-group">
-              <label>Movement Type <span className="required">*</span></label>
+              <label>{t('movement.form.movementType')} <span className="required">*</span></label>
               <select value={form.movement_type} onChange={(e) => set('movement_type', e.target.value)}>
-                {TYPE_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+                {TYPE_VALUES.map((v) => <option key={v} value={v}>{t(`movement.type.${v}`)}</option>)}
               </select>
             </div>
             <div className="form-group">
-              <label>Priority</label>
+              <label>{t('movement.form.priority')}</label>
               <select value={form.priority} onChange={(e) => set('priority', e.target.value)}>
-                {PRIORITY_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+                {PRIORITY_VALUES.map((v) => <option key={v} value={v}>{t(`movement.priority.${v}`)}</option>)}
               </select>
             </div>
           </div>
 
           <div className="form-row-2">
             <div className="form-group">
-              <label>Forklift ID <span className="required">*</span></label>
-              <input type="number" value={form.forklift_id} onChange={(e) => set('forklift_id', e.target.value)} placeholder="Enter forklift ID" required />
+              <label>{t('movement.form.forkliftId')} <span className="required">*</span></label>
+              <input type="number" value={form.forklift_id} onChange={(e) => set('forklift_id', e.target.value)} placeholder={t('movement.form.forkliftIdPlaceholder')} required />
             </div>
             <div className="form-group">
-              <label>Customer ID</label>
-              <input type="number" value={form.customer_id} onChange={(e) => set('customer_id', e.target.value)} placeholder="Optional" />
-            </div>
-          </div>
-
-          <div className="form-row-2">
-            <div className="form-group">
-              <label>From Location <span className="required">*</span></label>
-              <input value={form.from_location} onChange={(e) => set('from_location', e.target.value)} placeholder="DK Warehouse A" required />
-            </div>
-            <div className="form-group">
-              <label>To Location <span className="required">*</span></label>
-              <input value={form.to_location} onChange={(e) => set('to_location', e.target.value)} placeholder="Customer Site X" required />
+              <label>{t('movement.form.customerId')}</label>
+              <input type="number" value={form.customer_id} onChange={(e) => set('customer_id', e.target.value)} placeholder={t('common.optional')} />
             </div>
           </div>
 
           <div className="form-row-2">
             <div className="form-group">
-              <label>From Address</label>
-              <input value={form.from_address} onChange={(e) => set('from_address', e.target.value)} placeholder="Full address (optional)" />
+              <label>{t('movement.form.fromLocation')} <span className="required">*</span></label>
+              <input value={form.from_location} onChange={(e) => set('from_location', e.target.value)} placeholder={t('movement.form.fromLocationPlaceholder')} required />
             </div>
             <div className="form-group">
-              <label>To Address</label>
-              <input value={form.to_address} onChange={(e) => set('to_address', e.target.value)} placeholder="Full address (optional)" />
+              <label>{t('movement.form.toLocation')} <span className="required">*</span></label>
+              <input value={form.to_location} onChange={(e) => set('to_location', e.target.value)} placeholder={t('movement.form.toLocationPlaceholder')} required />
             </div>
           </div>
 
           <div className="form-row-2">
             <div className="form-group">
-              <label>Scheduled Date <span className="required">*</span></label>
+              <label>{t('movement.form.fromAddress')}</label>
+              <input value={form.from_address} onChange={(e) => set('from_address', e.target.value)} placeholder={t('movement.form.addressPlaceholder')} />
+            </div>
+            <div className="form-group">
+              <label>{t('movement.form.toAddress')}</label>
+              <input value={form.to_address} onChange={(e) => set('to_address', e.target.value)} placeholder={t('movement.form.addressPlaceholder')} />
+            </div>
+          </div>
+
+          <div className="form-row-2">
+            <div className="form-group">
+              <label>{t('movement.form.scheduledDate')} <span className="required">*</span></label>
               <input type="date" value={form.scheduled_date} onChange={(e) => set('scheduled_date', e.target.value)} required />
             </div>
             <div className="form-group">
-              <label>Tracking / QR Code</label>
-              <input value={form.tracking_code} onChange={(e) => set('tracking_code', e.target.value)} placeholder="QR or barcode reference" />
+              <label>{t('movement.form.trackingCode')}</label>
+              <input value={form.tracking_code} onChange={(e) => set('tracking_code', e.target.value)} placeholder={t('movement.form.trackingCodePlaceholder')} />
             </div>
           </div>
 
           <div className="form-group">
-            <label>Notes</label>
-            <textarea value={form.notes} onChange={(e) => set('notes', e.target.value)} rows={2} placeholder="Visible notes..." />
+            <label>{t('common.notes')}</label>
+            <textarea value={form.notes} onChange={(e) => set('notes', e.target.value)} rows={2} placeholder={t('movement.form.notesPlaceholder')} />
           </div>
 
           <div className="form-group">
-            <label>Internal Notes</label>
-            <textarea value={form.internal_notes} onChange={(e) => set('internal_notes', e.target.value)} rows={2} placeholder="Internal only..." />
+            <label>{t('movement.form.internalNotes')}</label>
+            <textarea value={form.internal_notes} onChange={(e) => set('internal_notes', e.target.value)} rows={2} placeholder={t('movement.form.internalNotesPlaceholder')} />
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 8 }}>
-            <button type="button" className="btn btn-secondary" onClick={() => navigate('/movements')} disabled={isSaving}>Cancel</button>
-            <button type="submit" className="btn btn-primary" disabled={isSaving}>{isSaving ? 'Creating...' : 'Create Movement'}</button>
+            <button type="button" className="btn btn-secondary" onClick={() => navigate('/movements')} disabled={isSaving}>{t('common.cancel')}</button>
+            <button type="submit" className="btn btn-primary" disabled={isSaving}>{isSaving ? t('movement.form.creating') : t('movement.form.createMovement')}</button>
           </div>
         </form>
       </div>

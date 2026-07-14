@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { DollarSign, CreditCard, Clock, AlertTriangle, FileText, Receipt } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { fmtCurrency } from '../utils'
 import type { BillingDashboardSummary } from '@/types/billing'
 
@@ -22,15 +23,16 @@ export function FinanceKpiStripSkeleton() {
 
 export default function FinanceKpiStrip({ data }: { data: BillingDashboardSummary }) {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const c = data.currency
 
   const kpis = [
-    { label: 'Total Revenue', value: fmtCurrency(data.total_invoiced, c), icon: DollarSign, color: 'var(--color-success-600)', bg: 'var(--color-success-50)', href: '/billing/invoices' },
-    { label: 'Collected', value: fmtCurrency(data.total_paid, c), icon: CreditCard, color: 'var(--color-primary-600)', bg: 'var(--color-primary-50)', href: '/billing/payments' },
-    { label: 'Outstanding', value: fmtCurrency(data.total_outstanding, c), icon: Clock, color: 'var(--color-warning-600)', bg: 'var(--color-warning-50)' },
-    { label: 'Overdue', value: fmtCurrency(data.total_overdue, c), icon: AlertTriangle, color: data.total_overdue > 0 ? 'var(--color-danger-600)' : 'var(--color-success-600)', bg: data.total_overdue > 0 ? 'var(--color-danger-50)' : 'var(--color-success-50)', alert: data.total_overdue > 0 ? `${fmtCurrency(data.total_overdue, c)} past due` : undefined },
-    { label: 'Invoices', value: data.invoice_count.toString(), sub: 'Total issued', icon: FileText, color: 'var(--color-info-600)', bg: 'var(--color-info-50)', href: '/billing/invoices' },
-    { label: 'Payments', value: data.payment_count.toString(), sub: 'Received', icon: Receipt, color: 'var(--color-purple-600)', bg: 'var(--color-purple-50)', href: '/billing/payments' },
+    { label: t('finance.kpi.totalRevenue'), value: fmtCurrency(data.total_invoiced, c), icon: DollarSign, color: 'var(--color-success-600)', bg: 'var(--color-success-50)', href: '/billing/invoices' },
+    { label: t('finance.kpi.collected'), value: fmtCurrency(data.total_paid, c), icon: CreditCard, color: 'var(--color-primary-600)', bg: 'var(--color-primary-50)', href: '/billing/payments' },
+    { label: t('finance.kpi.outstanding'), value: fmtCurrency(data.total_outstanding, c), icon: Clock, color: 'var(--color-warning-600)', bg: 'var(--color-warning-50)' },
+    { label: t('finance.kpi.overdue'), value: fmtCurrency(data.total_overdue, c), icon: AlertTriangle, color: data.total_overdue > 0 ? 'var(--color-danger-600)' : 'var(--color-success-600)', bg: data.total_overdue > 0 ? 'var(--color-danger-50)' : 'var(--color-success-50)', alert: data.total_overdue > 0 ? t('finance.kpi.pastDue', { amount: fmtCurrency(data.total_overdue, c) }) : undefined },
+    { label: t('finance.kpi.invoices'), value: data.invoice_count.toString(), sub: t('finance.kpi.totalIssued'), icon: FileText, color: 'var(--color-info-600)', bg: 'var(--color-info-50)', href: '/billing/invoices' },
+    { label: t('finance.kpi.payments'), value: data.payment_count.toString(), sub: t('finance.kpi.received'), icon: Receipt, color: 'var(--color-purple-600)', bg: 'var(--color-purple-50)', href: '/billing/payments' },
   ]
 
   return (

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Plus, ChevronRight, ChevronDown, Pencil, Trash2, Layers, AlertCircle } from 'lucide-react'
 import { useCategories } from '@/hooks/useCategories'
 import Modal from '@/components/ui/Modal'
@@ -16,6 +17,7 @@ function CategoryForm({
   category?: ProductCategory | null
   flat: ProductCategory[]
 }) {
+  const { t } = useTranslation()
   const [form, setForm]         = useState({ name_en: '', name_lo: '', parent_id: '', description: '' })
   const [isSaving, setIsSaving] = useState(false)
   const [err, setErr]           = useState<string | null>(null)
@@ -31,7 +33,7 @@ function CategoryForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.name_en.trim()) { setErr('English name is required.'); return }
+    if (!form.name_en.trim()) { setErr(t('catalog.categories.form.nameRequired')); return }
     setIsSaving(true)
     setErr(null)
     const ok = await onSubmit({
@@ -41,29 +43,29 @@ function CategoryForm({
       description: form.description.trim() || undefined,
     })
     setIsSaving(false)
-    if (ok) onClose(); else setErr('Save failed.')
+    if (ok) onClose(); else setErr(t('catalog.saveFailed'))
   }
 
   const eligible = flat.filter((c) => c.level < 3 && (!category || c.id !== category.id))
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={category ? 'Edit Category' : 'New Category'} width={500}>
+    <Modal isOpen={isOpen} onClose={onClose} title={category ? t('catalog.categories.editTitle') : t('catalog.categories.newTitle')} width={500}>
       <form onSubmit={handleSubmit} className="form-grid">
         {err && <div className="page-error" style={{ margin: 0 }}>{err}</div>}
         <div className="form-row-2">
           <div className="form-group">
-            <label>Name (English) <span className="required">*</span></label>
-            <input value={form.name_en} onChange={(e) => set('name_en', e.target.value)} placeholder="Category name" required />
+            <label>{t('catalog.categories.form.nameEnLabel')} <span className="required">*</span></label>
+            <input value={form.name_en} onChange={(e) => set('name_en', e.target.value)} placeholder={t('catalog.categories.form.namePlaceholder')} required />
           </div>
           <div className="form-group">
-            <label>Name (Lao)</label>
+            <label>{t('catalog.categories.form.nameLoLabel')}</label>
             <input value={form.name_lo} onChange={(e) => set('name_lo', e.target.value)} placeholder="ຊື່ໝວດ" />
           </div>
         </div>
         <div className="form-group">
-          <label>Parent Category</label>
+          <label>{t('catalog.categories.form.parentLabel')}</label>
           <select value={form.parent_id} onChange={(e) => set('parent_id', e.target.value)}>
-            <option value="">— Top-level (Division) —</option>
+            <option value="">{t('catalog.categories.form.topLevelOption')}</option>
             {eligible.map((c) => {
               const pad = '  '.repeat(c.level - 1)
               return <option key={c.id} value={c.id}>{pad}{c.name_en}</option>
@@ -71,12 +73,12 @@ function CategoryForm({
           </select>
         </div>
         <div className="form-group">
-          <label>Description</label>
+          <label>{t('common.description')}</label>
           <textarea value={form.description} onChange={(e) => set('description', e.target.value)} rows={2} />
         </div>
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
-          <button type="button" className="btn btn-secondary" onClick={onClose} disabled={isSaving}>Cancel</button>
-          <button type="submit" className="btn btn-primary" disabled={isSaving}>{isSaving ? 'Saving…' : category ? 'Save Changes' : 'Create Category'}</button>
+          <button type="button" className="btn btn-secondary" onClick={onClose} disabled={isSaving}>{t('common.cancel')}</button>
+          <button type="submit" className="btn btn-primary" disabled={isSaving}>{isSaving ? t('common.saving') : category ? t('catalog.saveChanges') : t('catalog.categories.form.createCategory')}</button>
         </div>
       </form>
     </Modal>
@@ -91,8 +93,13 @@ interface TreeNodeProps {
 }
 
 function TreeNode({ node, depth, onEdit, onDelete }: TreeNodeProps) {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(true)
   const hasChildren = node.children?.length > 0
+
+  const typeLabel = node.level === 1 ? t('catalog.categories.types.division')
+    : node.level === 2 ? t('catalog.categories.types.category')
+    : t('catalog.categories.types.subCategory')
 
   return (
     <>
@@ -114,18 +121,18 @@ function TreeNode({ node, depth, onEdit, onDelete }: TreeNodeProps) {
           </div>
         </td>
         <td className="cell-muted">
-          L{node.level} — {node.level === 1 ? 'Division' : node.level === 2 ? 'Category' : 'Sub-category'}
+          {t('catalog.categories.levelLine', { level: node.level, type: typeLabel })}
         </td>
         <td>
           <span className={`status-dot ${node.is_active ? 'active' : 'inactive'}`}>
-            {node.is_active ? 'Active' : 'Inactive'}
+            {node.is_active ? t('common.active') : t('common.inactive')}
           </span>
         </td>
         <td className="cell-muted">{node.children?.length ?? 0}</td>
         <td>
           <div className="row-actions">
-            <button className="action-btn" title="Edit" onClick={() => onEdit(node)}><Pencil size={14} /></button>
-            <button className="action-btn danger" title="Delete" onClick={() => onDelete(node)}><Trash2 size={14} /></button>
+            <button className="action-btn" title={t('common.edit')} onClick={() => onEdit(node)}><Pencil size={14} /></button>
+            <button className="action-btn danger" title={t('common.delete')} onClick={() => onDelete(node)}><Trash2 size={14} /></button>
           </div>
         </td>
       </tr>
@@ -137,6 +144,7 @@ function TreeNode({ node, depth, onEdit, onDelete }: TreeNodeProps) {
 }
 
 export default function CategoriesPage() {
+  const { t } = useTranslation()
   const { tree, flat, isLoading, error, create, update, remove } = useCategories()
 
   const [formOpen, setFormOpen]         = useState(false)
@@ -161,11 +169,11 @@ export default function CategoriesPage() {
     <div>
       <div className="page-header">
         <div>
-          <h1>Categories</h1>
-          <p className="page-header-sub">{flat.length} categories (3-level tree)</p>
+          <h1>{t('catalog.categories.title')}</h1>
+          <p className="page-header-sub">{t('catalog.categories.subtitle', { count: flat.length })}</p>
         </div>
         <button className="btn btn-primary" onClick={() => { setEditTarget(null); setFormOpen(true) }}>
-          <Plus size={15} /> New Category
+          <Plus size={15} /> {t('catalog.categories.newCategory')}
         </button>
       </div>
 
@@ -176,10 +184,10 @@ export default function CategoriesPage() {
           <table className="data-table">
             <thead>
               <tr>
-                <th>Category</th>
-                <th>Level</th>
-                <th>Status</th>
-                <th>Children</th>
+                <th>{t('catalog.categories.table.category')}</th>
+                <th>{t('catalog.categories.table.level')}</th>
+                <th>{t('common.status')}</th>
+                <th>{t('catalog.categories.table.children')}</th>
                 <th style={{ width: 80 }}></th>
               </tr>
             </thead>
@@ -199,8 +207,8 @@ export default function CategoriesPage() {
                   <td colSpan={5}>
                     <div className="table-empty">
                       <Layers size={36} />
-                      <p>No categories found</p>
-                      <small>Create your first category to get started.</small>
+                      <p>{t('catalog.categories.empty.title')}</p>
+                      <small>{t('catalog.categories.empty.createHint')}</small>
                     </div>
                   </td>
                 </tr>
@@ -233,8 +241,8 @@ export default function CategoriesPage() {
         onClose={() => setDeleteTarget(null)}
         onConfirm={handleDelete}
         isLoading={isDeleting}
-        title="Delete Category"
-        message={deleteTarget ? `Delete "${deleteTarget.name_en}"? This will fail if the category has children or products assigned to it.` : ''}
+        title={t('catalog.categories.deleteDialog.title')}
+        message={deleteTarget ? t('catalog.categories.deleteDialog.message', { name: deleteTarget.name_en }) : ''}
       />
     </div>
   )

@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   Upload, FileSpreadsheet, CheckCircle2, XCircle,
   ChevronDown, ChevronRight, AlertCircle, RefreshCw, Loader2,
@@ -12,6 +13,7 @@ import '@/styles/shared.css'
 type Step = 'upload' | 'preview' | 'result'
 
 function SheetPreviewCard({ sheet }: { sheet: SheetPreview }) {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(true)
 
   return (
@@ -20,12 +22,12 @@ function SheetPreviewCard({ sheet }: { sheet: SheetPreview }) {
         <div className="sheet-card-title">
           <FileSpreadsheet size={15} />
           <strong>{sheet.sheet_name}</strong>
-          <span className="sheet-handler">handler: {sheet.handler}</span>
+          <span className="sheet-handler">{t('catalog.import.handlerLabel', { handler: sheet.handler })}</span>
         </div>
         <div className="sheet-card-counts">
-          <span className="count-valid"><CheckCircle2 size={13} /> {sheet.total_valid} valid</span>
+          <span className="count-valid"><CheckCircle2 size={13} /> {t('catalog.import.validCount', { count: sheet.total_valid })}</span>
           {sheet.total_errors > 0 && (
-            <span className="count-error"><XCircle size={13} /> {sheet.total_errors} errors</span>
+            <span className="count-error"><XCircle size={13} /> {t('catalog.import.errorsCount', { count: sheet.total_errors })}</span>
           )}
           {open ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
         </div>
@@ -36,17 +38,17 @@ function SheetPreviewCard({ sheet }: { sheet: SheetPreview }) {
           {/* Valid rows preview */}
           {sheet.valid_rows.length > 0 && (
             <div className="sheet-table-wrap">
-              <div className="sheet-sub-title">Products to import ({sheet.valid_rows.length})</div>
+              <div className="sheet-sub-title">{t('catalog.import.productsToImport', { count: sheet.valid_rows.length })}</div>
               <table className="data-table">
                 <thead>
                   <tr>
-                    <th>#</th>
-                    <th>Action</th>
-                    <th>Name</th>
-                    <th>Model</th>
-                    <th>Brand</th>
-                    <th>Category</th>
-                    <th>Specs</th>
+                    <th>{t('catalog.import.table.rowNum')}</th>
+                    <th>{t('catalog.import.table.action')}</th>
+                    <th>{t('common.name')}</th>
+                    <th>{t('catalog.import.table.model')}</th>
+                    <th>{t('catalog.import.table.brand')}</th>
+                    <th>{t('common.category')}</th>
+                    <th>{t('catalog.import.table.specs')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -73,12 +75,12 @@ function SheetPreviewCard({ sheet }: { sheet: SheetPreview }) {
           {/* Error rows */}
           {sheet.error_rows.length > 0 && (
             <div className="sheet-table-wrap" style={{ marginTop: 12 }}>
-              <div className="sheet-sub-title error">Rows with errors ({sheet.error_rows.length})</div>
+              <div className="sheet-sub-title error">{t('catalog.import.rowsWithErrors', { count: sheet.error_rows.length })}</div>
               <table className="data-table">
                 <thead>
                   <tr>
-                    <th>#</th>
-                    <th>Error</th>
+                    <th>{t('catalog.import.table.rowNum')}</th>
+                    <th>{t('catalog.import.table.error')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -99,6 +101,7 @@ function SheetPreviewCard({ sheet }: { sheet: SheetPreview }) {
 }
 
 export default function ImportPage() {
+  const { t } = useTranslation()
   const fileInputRef              = useRef<HTMLInputElement>(null)
   const [step, setStep]           = useState<Step>('upload')
   const [isDragging, setIsDragging] = useState(false)
@@ -110,7 +113,7 @@ export default function ImportPage() {
 
   const handleFileSelect = (f: File) => {
     if (!f.name.match(/\.(xlsx|xls)$/i)) {
-      toast.error('Please select an Excel file (.xlsx or .xls)')
+      toast.error(t('catalog.import.invalidFileType'))
       return
     }
     setFile(f)
@@ -134,7 +137,7 @@ export default function ImportPage() {
       setPreview(data)
       setStep('preview')
     } catch {
-      toast.error('Failed to parse Excel file. Please check the file format.')
+      toast.error(t('catalog.import.parseFailed'))
     } finally {
       setIsPreviewing(false)
     }
@@ -147,10 +150,10 @@ export default function ImportPage() {
       const { data } = await executeImport(preview.job_id)
       setResult(data)
       setStep('result')
-      if (data.error_rows === 0) toast.success(`Import complete: ${data.success_rows} products imported.`)
-      else toast.error(`Import finished with ${data.error_rows} errors.`)
+      if (data.error_rows === 0) toast.success(t('catalog.import.successToast', { count: data.success_rows }))
+      else toast.error(t('catalog.import.errorToast', { count: data.error_rows }))
     } catch {
-      toast.error('Import failed. Please try again.')
+      toast.error(t('catalog.import.executeFailed'))
     } finally {
       setIsExecuting(false)
     }
@@ -169,12 +172,12 @@ export default function ImportPage() {
       {/* Header */}
       <div className="page-header">
         <div>
-          <h1>Import Products</h1>
-          <p className="page-header-sub">Upload an Excel file to bulk-import products, brands, and categories.</p>
+          <h1>{t('catalog.import.title')}</h1>
+          <p className="page-header-sub">{t('catalog.import.subtitle')}</p>
         </div>
         {step !== 'upload' && (
           <button className="btn btn-ghost" onClick={reset} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <RefreshCw size={14} /> Start Over
+            <RefreshCw size={14} /> {t('catalog.import.startOver')}
           </button>
         )}
       </div>
@@ -184,7 +187,7 @@ export default function ImportPage() {
         {(['upload', 'preview', 'result'] as Step[]).map((s, i) => (
           <div key={s} className={`import-step${step === s ? ' active' : ''}${['preview', 'result'].indexOf(step) > ['preview', 'result'].indexOf(s) ? ' done' : ''}`}>
             <div className="import-step-num">{i + 1}</div>
-            <div className="import-step-label">{s === 'upload' ? 'Upload' : s === 'preview' ? 'Preview' : 'Result'}</div>
+            <div className="import-step-label">{s === 'upload' ? t('catalog.import.steps.upload') : s === 'preview' ? t('catalog.import.steps.preview') : t('catalog.import.steps.result')}</div>
             {i < 2 && <div className="import-step-connector" />}
           </div>
         ))}
@@ -215,20 +218,20 @@ export default function ImportPage() {
               </>
             ) : (
               <>
-                <div className="dropzone-text">Drop your Excel file here, or click to browse</div>
-                <div className="dropzone-hint">Supports .xlsx and .xls files from DK LAO product catalog</div>
+                <div className="dropzone-text">{t('catalog.import.dropzoneText')}</div>
+                <div className="dropzone-hint">{t('catalog.import.dropzoneHint')}</div>
               </>
             )}
           </div>
 
           {file && (
             <div className="import-actions">
-              <button className="btn btn-secondary" onClick={reset}>Clear</button>
+              <button className="btn btn-secondary" onClick={reset}>{t('catalog.import.clear')}</button>
               <button className="btn btn-primary" onClick={handlePreview} disabled={isPreviewing}>
                 {isPreviewing ? (
-                  <><Loader2 size={15} className="spin" /> Analysing…</>
+                  <><Loader2 size={15} className="spin" /> {t('catalog.import.analysing')}</>
                 ) : (
-                  <><Upload size={15} /> Preview Import</>
+                  <><Upload size={15} /> {t('catalog.import.previewImport')}</>
                 )}
               </button>
             </div>
@@ -237,9 +240,8 @@ export default function ImportPage() {
           <div className="import-info">
             <AlertCircle size={14} />
             <div>
-              <strong>Supported sheets:</strong> Jungheinrich Forklift, Mitsubishi Forklift, Accessories (ອຸປະກອນ),
-              Warehouse (ສາງ), Vacuum (ດູດຝຸ່ນ), Floor Cleaner (ເຊັດຄັດ), Brands (ບໍລິການ).
-              The importer auto-detects sheets by name in both English and Lao.
+              <strong>{t('catalog.import.supportedSheetsLabel')}</strong> {t('catalog.import.supportedSheetsList')}
+              {' '}{t('catalog.import.autoDetectHint')}
             </div>
           </div>
         </div>
@@ -251,15 +253,15 @@ export default function ImportPage() {
           {/* Summary */}
           <div className="preview-summary">
             <div className="summary-card">
-              <div className="summary-label">Sheets detected</div>
+              <div className="summary-label">{t('catalog.import.sheetsDetected')}</div>
               <div className="summary-value">{preview.sheets_detected.length}</div>
             </div>
             <div className="summary-card valid">
-              <div className="summary-label">Valid rows</div>
+              <div className="summary-label">{t('catalog.import.validRows')}</div>
               <div className="summary-value">{preview.total_valid}</div>
             </div>
             <div className={`summary-card${preview.total_errors > 0 ? ' error' : ''}`}>
-              <div className="summary-label">Error rows</div>
+              <div className="summary-label">{t('catalog.import.errorRows')}</div>
               <div className="summary-value">{preview.total_errors}</div>
             </div>
           </div>
@@ -276,22 +278,22 @@ export default function ImportPage() {
           </div>
 
           <div className="import-actions">
-            <button className="btn btn-secondary" onClick={reset}>Cancel</button>
+            <button className="btn btn-secondary" onClick={reset}>{t('common.cancel')}</button>
             <button
               className="btn btn-primary"
               onClick={handleExecute}
               disabled={isExecuting || preview.total_valid === 0}
             >
               {isExecuting ? (
-                <><Loader2 size={15} className="spin" /> Importing…</>
+                <><Loader2 size={15} className="spin" /> {t('catalog.import.importing')}</>
               ) : (
-                <>Import {preview.total_valid} Products</>
+                <>{t('catalog.import.importCount', { count: preview.total_valid })}</>
               )}
             </button>
           </div>
           {preview.total_valid === 0 && (
             <p style={{ fontSize: 13, color: 'var(--color-danger-600)', textAlign: 'center' }}>
-              No valid rows to import. Please fix the errors and re-upload.
+              {t('catalog.import.noValidRows')}
             </p>
           )}
         </div>
@@ -302,33 +304,33 @@ export default function ImportPage() {
         <div className="import-section">
           <div className={`result-banner ${result.error_rows === 0 ? 'success' : 'partial'}`}>
             {result.error_rows === 0 ? (
-              <><CheckCircle2 size={24} /> Import completed successfully</>
+              <><CheckCircle2 size={24} /> {t('catalog.import.successBanner')}</>
             ) : (
-              <><AlertCircle size={24} /> Import finished with errors</>
+              <><AlertCircle size={24} /> {t('catalog.import.partialBanner')}</>
             )}
           </div>
 
           <div className="preview-summary">
             <div className="summary-card valid">
-              <div className="summary-label">Imported</div>
+              <div className="summary-label">{t('catalog.import.imported')}</div>
               <div className="summary-value">{result.success_rows}</div>
             </div>
             <div className={`summary-card${result.error_rows > 0 ? ' error' : ''}`}>
-              <div className="summary-label">Errors</div>
+              <div className="summary-label">{t('catalog.import.errors')}</div>
               <div className="summary-value">{result.error_rows}</div>
             </div>
           </div>
 
           {result.errors.length > 0 && (
             <div className="table-card" style={{ marginTop: 16 }}>
-              <div style={{ padding: '12px 16px', fontWeight: 600, fontSize: 13.5 }}>Failed Rows</div>
+              <div style={{ padding: '12px 16px', fontWeight: 600, fontSize: 13.5 }}>{t('catalog.import.failedRows')}</div>
               <div className="table-wrap">
                 <table className="data-table">
                   <thead>
                     <tr>
-                      <th>Sheet</th>
-                      <th>#</th>
-                      <th>Error</th>
+                      <th>{t('catalog.import.table.sheet')}</th>
+                      <th>{t('catalog.import.table.rowNum')}</th>
+                      <th>{t('catalog.import.table.error')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -346,9 +348,9 @@ export default function ImportPage() {
           )}
 
           <div className="import-actions">
-            <button className="btn btn-secondary" onClick={reset}>Import Another File</button>
+            <button className="btn btn-secondary" onClick={reset}>{t('catalog.import.importAnother')}</button>
             <a href="/catalog" className="btn btn-primary" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-              View Catalog
+              {t('catalog.import.viewCatalog')}
             </a>
           </div>
         </div>

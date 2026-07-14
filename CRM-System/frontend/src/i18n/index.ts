@@ -2,8 +2,9 @@ import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import en from './en.json'
 import lo from './lo.json'
+import th from './th.json'
 
-export const SUPPORTED_LANGUAGES = ['en', 'lo'] as const
+export const SUPPORTED_LANGUAGES = ['en', 'lo', 'th'] as const
 export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number]
 
 const STORAGE_KEY = 'dk-lang'
@@ -17,6 +18,7 @@ i18n.use(initReactI18next).init({
   resources: {
     en: { translation: en },
     lo: { translation: lo },
+    th: { translation: th },
   },
   lng: getInitialLanguage(),
   fallbackLng: 'en',

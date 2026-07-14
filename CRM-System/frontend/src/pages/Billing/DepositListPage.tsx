@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { AlertCircle, RefreshCw, ChevronLeft, ChevronRight, Landmark } from 'lucide-react'
 import { getDeposits } from '@/api/billing'
 import { Badge, type BadgeVariant } from '@/components/ui/Badge'
@@ -9,24 +10,20 @@ import '@/styles/shared.css'
 function fmtDate(iso: string | null) { return iso ? new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—' }
 function fmtAmt(n: number) { return n.toLocaleString(undefined, { maximumFractionDigits: 0 }) }
 
-const DEP_STATUS: Record<string, { variant: BadgeVariant; label: string }> = {
-  pending: { variant: 'amber', label: 'Pending' }, received: { variant: 'blue', label: 'Received' },
-  partially_refunded: { variant: 'purple', label: 'Partial Refund' }, refunded: { variant: 'green', label: 'Refunded' },
-  forfeited: { variant: 'red', label: 'Forfeited' }, applied: { variant: 'cyan', label: 'Applied' },
+const DEP_STATUS_VARIANT: Record<string, BadgeVariant> = {
+  pending: 'amber', received: 'blue', partially_refunded: 'purple',
+  refunded: 'green', forfeited: 'red', applied: 'cyan',
 }
-
-const STATUS_OPTS = [
-  { value: '', label: 'All Statuses' }, { value: 'pending', label: 'Pending' },
-  { value: 'received', label: 'Received' }, { value: 'partially_refunded', label: 'Partial Refund' },
-  { value: 'refunded', label: 'Refunded' }, { value: 'forfeited', label: 'Forfeited' },
-  { value: 'applied', label: 'Applied' },
-]
-const TYPE_OPTS = [
-  { value: '', label: 'All Types' }, { value: 'security', label: 'Security' },
-  { value: 'advance', label: 'Advance' }, { value: 'guarantee', label: 'Guarantee' },
-]
+const DEP_STATUS_LABEL_KEYS: Record<string, string> = {
+  pending: 'billing.deposit.status.pending', received: 'billing.deposit.status.received',
+  partially_refunded: 'billing.deposit.status.partiallyRefunded', refunded: 'billing.deposit.status.refunded',
+  forfeited: 'billing.deposit.status.forfeited', applied: 'billing.deposit.status.applied',
+}
+const STATUS_FILTER_VALUES = ['', 'pending', 'received', 'partially_refunded', 'refunded', 'forfeited', 'applied']
+const TYPE_FILTER_VALUES = ['', 'security', 'advance', 'guarantee']
 
 export default function DepositListPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [items, setItems] = useState<DepositOut[]>([])
   const [total, setTotal] = useState(0)
@@ -42,9 +39,9 @@ export default function DepositListPage() {
     try {
       const { data } = await getDeposits({ deposit_status: statusFilter || undefined, deposit_type: typeFilter || undefined, page, page_size: 20 })
       setItems(data.items); setTotal(data.total); setPages(data.pages)
-    } catch { setError('Failed to load deposits.') }
+    } catch { setError(t('billing.deposit.list.loadError')) }
     finally { setIsLoading(false) }
-  }, [statusFilter, typeFilter, page])
+  }, [statusFilter, typeFilter, page, t])
 
   useEffect(() => { load() }, [load])
 
@@ -52,11 +49,11 @@ export default function DepositListPage() {
     <div>
       <div className="page-header">
         <div>
-          <h1>Deposits</h1>
-          <p className="page-header-sub">{total.toLocaleString()} deposits</p>
+          <h1>{t('billing.deposit.list.title')}</h1>
+          <p className="page-header-sub">{t('billing.deposit.list.subtitle', { count: total })}</p>
         </div>
         <button className="btn btn-ghost" onClick={load} disabled={isLoading}>
-          <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> Refresh
+          <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('billing.common.refresh')}
         </button>
       </div>
 
@@ -64,12 +61,16 @@ export default function DepositListPage() {
 
       <div className="toolbar">
         <select className="filter-select" value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1) }}>
-          {STATUS_OPTS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+          {STATUS_FILTER_VALUES.map((v) => (
+            <option key={v} value={v}>{v === '' ? t('billing.deposit.status.all') : t(DEP_STATUS_LABEL_KEYS[v])}</option>
+          ))}
         </select>
         <select className="filter-select" value={typeFilter} onChange={(e) => { setTypeFilter(e.target.value); setPage(1) }}>
-          {TYPE_OPTS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+          {TYPE_FILTER_VALUES.map((v) => (
+            <option key={v} value={v}>{t(v === '' ? 'billing.deposit.type.all' : `billing.deposit.type.${v}`)}</option>
+          ))}
         </select>
-        <span className="toolbar-count">{total} result{total !== 1 ? 's' : ''}</span>
+        <span className="toolbar-count">{t('billing.deposit.list.resultsCount', { count: total })}</span>
       </div>
 
       <div className="table-card">
@@ -77,13 +78,13 @@ export default function DepositListPage() {
           <table className="data-table">
             <thead>
               <tr>
-                <th>Deposit #</th>
-                <th>Customer</th>
-                <th className="col-hide-sm">Contract</th>
-                <th>Type</th>
-                <th>Status</th>
-                <th>Amount</th>
-                <th className="col-hide-sm">Received</th>
+                <th>{t('billing.deposit.table.number')}</th>
+                <th>{t('billing.deposit.table.customer')}</th>
+                <th className="col-hide-sm">{t('billing.deposit.table.contract')}</th>
+                <th>{t('common.type')}</th>
+                <th>{t('common.status')}</th>
+                <th>{t('common.amount')}</th>
+                <th className="col-hide-sm">{t('billing.deposit.table.received')}</th>
               </tr>
             </thead>
             <tbody>
@@ -99,10 +100,11 @@ export default function DepositListPage() {
                 </tr>
               )) : items.length === 0 ? (
                 <tr><td colSpan={7}>
-                  <div className="table-empty"><Landmark size={40} /><p>No deposits found</p></div>
+                  <div className="table-empty"><Landmark size={40} /><p>{t('billing.deposit.list.empty')}</p></div>
                 </td></tr>
               ) : items.map((d) => {
-                const cfg = DEP_STATUS[d.deposit_status] ?? { variant: 'gray' as BadgeVariant, label: d.deposit_status }
+                const variant = DEP_STATUS_VARIANT[d.deposit_status] ?? ('gray' as BadgeVariant)
+                const label = DEP_STATUS_LABEL_KEYS[d.deposit_status] ? t(DEP_STATUS_LABEL_KEYS[d.deposit_status]) : d.deposit_status
                 return (
                   <tr key={d.id} onClick={() => navigate(`/billing/deposits/${d.id}`)} style={{ cursor: 'pointer' }}>
                     <td className="cell-desc">{d.deposit_number}</td>
@@ -112,7 +114,7 @@ export default function DepositListPage() {
                     </td>
                     <td className="cell-muted col-hide-sm">{d.contract.contract_number}</td>
                     <td className="cell-muted cell-type">{d.deposit_type}</td>
-                    <td><Badge variant={cfg.variant}>{cfg.label}</Badge></td>
+                    <td><Badge variant={variant}>{label}</Badge></td>
                     <td className="cell-mono cell-total">{fmtAmt(d.amount)} {d.currency}</td>
                     <td className="cell-muted col-hide-sm">{fmtDate(d.received_date)}</td>
                   </tr>
@@ -124,7 +126,7 @@ export default function DepositListPage() {
 
         {!isLoading && pages > 1 && (
           <div className="pagination">
-            <span className="pagination-info">Page {page} of {pages} ({total} total)</span>
+            <span className="pagination-info">{t('billing.deposit.pagination.info', { page, pages, total })}</span>
             <div className="pagination-controls">
               <button className="page-btn" disabled={page === 1} onClick={() => setPage(page - 1)}><ChevronLeft size={14} /></button>
               <button className="page-btn" disabled={page === pages} onClick={() => setPage(page + 1)}><ChevronRight size={14} /></button>

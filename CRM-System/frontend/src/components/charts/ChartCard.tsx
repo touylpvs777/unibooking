@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { BarChart2, AlertCircle } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import './ChartCard.css'
@@ -28,12 +29,15 @@ export default function ChartCard({
   error,
   isEmpty = false,
   emptyIcon: EmptyIcon = BarChart2,
-  emptyMessage = 'No data yet',
-  emptySubMessage = 'Data will appear here once records exist',
+  emptyMessage,
+  emptySubMessage,
   height = 220,
   action,
   children,
 }: ChartCardProps) {
+  const { t } = useTranslation()
+  const resolvedEmptyMessage = emptyMessage ?? t('common.noDataYet')
+  const resolvedEmptySubMessage = emptySubMessage ?? t('common.dataWillAppear')
   const showSkeleton  = loading
   const showError     = !loading && !!error
   const showEmpty     = !loading && !error && isEmpty
@@ -63,8 +67,8 @@ export default function ChartCard({
       {showEmpty && (
         <div className="chart-empty-state" style={{ height }}>
           <EmptyIcon size={36} />
-          <p>{emptyMessage}</p>
-          <small>{emptySubMessage}</small>
+          <p>{resolvedEmptyMessage}</p>
+          <small>{resolvedEmptySubMessage}</small>
         </div>
       )}
 

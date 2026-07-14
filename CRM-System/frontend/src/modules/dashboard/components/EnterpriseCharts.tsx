@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { ChartCard } from '@/components/charts'
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -15,8 +16,9 @@ export function RevenueAreaChart({
   data: RevenueData[]
   loading: boolean
 }) {
+  const { t } = useTranslation()
   return (
-    <ChartCard title="Revenue Trend" sub="Monthly invoiced revenue" loading={loading} isEmpty={data.length === 0} emptyMessage="No revenue data yet">
+    <ChartCard title={t('dashboard.chart.revenueTrend')} sub={t('dashboard.chart.revenueTrendSub')} loading={loading} isEmpty={data.length === 0} emptyMessage={t('dashboard.chart.noRevenueData')}>
       <ResponsiveContainer width="100%" height={220}>
         <AreaChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
           <defs>
@@ -42,8 +44,9 @@ export function RentalTrendChart({
   data: { month: string; count: number }[]
   loading: boolean
 }) {
+  const { t } = useTranslation()
   return (
-    <ChartCard title="Rental Trend" sub="Active contracts per month" loading={loading} isEmpty={data.length === 0} emptyMessage="No rental data yet">
+    <ChartCard title={t('dashboard.chart.rentalTrend')} sub={t('dashboard.chart.rentalTrendSub')} loading={loading} isEmpty={data.length === 0} emptyMessage={t('dashboard.chart.noRentalData')}>
       <ResponsiveContainer width="100%" height={220}>
         <AreaChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
           <defs>
@@ -69,10 +72,11 @@ export function FleetUtilizationDonut({
   data: StatusData[]
   loading: boolean
 }) {
+  const { t } = useTranslation()
   const total = data.reduce((s, d) => s + d.value, 0)
 
   return (
-    <ChartCard title="Fleet Utilization" sub="Equipment by status" loading={loading} isEmpty={data.length === 0} emptyMessage="No fleet data">
+    <ChartCard title={t('dashboard.chart.fleetUtilization')} sub={t('dashboard.chart.fleetUtilizationSub')} loading={loading} isEmpty={data.length === 0} emptyMessage={t('dashboard.chart.noFleetData')}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         <div style={{ position: 'relative', width: 160, height: 160, flexShrink: 0 }}>
           <ResponsiveContainer width="100%" height="100%">
@@ -84,7 +88,7 @@ export function FleetUtilizationDonut({
           </ResponsiveContainer>
           <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
             <div style={{ fontSize: 22, fontWeight: 700, fontVariantNumeric: 'tabular-nums', color: 'var(--color-text)' }}>{total}</div>
-            <div style={{ fontSize: 10, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: 0.4 }}>Total</div>
+            <div style={{ fontSize: 10, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: 0.4 }}>{t('dashboard.chart.total')}</div>
           </div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1, minWidth: 0 }}>
@@ -107,8 +111,9 @@ export function MaintenanceCostChart({
   data: { month: string; cost: number }[]
   loading: boolean
 }) {
+  const { t } = useTranslation()
   return (
-    <ChartCard title="Maintenance Cost" sub="Monthly service expenditure" loading={loading} isEmpty={data.length === 0} emptyMessage="No maintenance cost data">
+    <ChartCard title={t('dashboard.chart.maintenanceCost')} sub={t('dashboard.chart.maintenanceCostSub')} loading={loading} isEmpty={data.length === 0} emptyMessage={t('dashboard.chart.noMaintenanceCostData')}>
       <ResponsiveContainer width="100%" height={220}>
         <AreaChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
           <defs>

@@ -20,7 +20,7 @@ export default function Breadcrumb() {
   }
 
   return (
-    <nav className="breadcrumb" aria-label="Breadcrumb">
+    <nav className="breadcrumb" aria-label={t('header.breadcrumb')}>
       {crumbs.map((crumb, i) => {
         const isLast = i === crumbs.length - 1
         return (

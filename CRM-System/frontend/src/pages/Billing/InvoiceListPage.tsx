@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { AlertCircle, RefreshCw, ChevronLeft, ChevronRight, FileText, Search } from 'lucide-react'
 import { getInvoices } from '@/api/billing'
 import { Badge } from '@/components/ui/Badge'
@@ -10,31 +11,20 @@ import '@/styles/shared.css'
 function fmtDate(iso: string | null) { return iso ? new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—' }
 function fmtAmt(n: number) { return n.toLocaleString(undefined, { maximumFractionDigits: 0 }) }
 
-const INVOICE_STATUS_MAP: Record<string, { variant: BadgeVariant; label: string }> = {
-  draft:          { variant: 'gray',   label: 'Draft' },
-  issued:         { variant: 'blue',   label: 'Issued' },
-  sent:           { variant: 'purple', label: 'Sent' },
-  partially_paid: { variant: 'amber',  label: 'Partial' },
-  paid:           { variant: 'green',  label: 'Paid' },
-  overdue:        { variant: 'red',    label: 'Overdue' },
-  cancelled:      { variant: 'gray',   label: 'Cancelled' },
-  voided:         { variant: 'gray',   label: 'Voided' },
+const STATUS_VARIANT: Record<string, BadgeVariant> = {
+  draft: 'gray', issued: 'blue', sent: 'purple', partially_paid: 'amber',
+  paid: 'green', overdue: 'red', cancelled: 'gray', voided: 'gray',
 }
-
-function InvoiceStatusBadge({ status }: { status: string }) {
-  const cfg = INVOICE_STATUS_MAP[status] ?? { variant: 'gray' as BadgeVariant, label: status }
-  return <Badge variant={cfg.variant}>{cfg.label}</Badge>
+const STATUS_LABEL_KEYS: Record<string, string> = {
+  draft: 'billing.invoice.status.draft', issued: 'billing.invoice.status.issued',
+  sent: 'billing.invoice.status.sent', partially_paid: 'billing.invoice.status.partially_paid',
+  paid: 'billing.invoice.status.paid', overdue: 'billing.invoice.status.overdue',
+  cancelled: 'billing.invoice.status.cancelled', voided: 'billing.invoice.status.voided',
 }
-
-const STATUS_OPTS = [
-  { value: '', label: 'All Statuses' },
-  { value: 'draft', label: 'Draft' }, { value: 'issued', label: 'Issued' },
-  { value: 'sent', label: 'Sent' }, { value: 'partially_paid', label: 'Partially Paid' },
-  { value: 'paid', label: 'Paid' }, { value: 'overdue', label: 'Overdue' },
-  { value: 'cancelled', label: 'Cancelled' }, { value: 'voided', label: 'Voided' },
-]
+const STATUS_FILTER_VALUES = ['', 'draft', 'issued', 'sent', 'partially_paid', 'paid', 'overdue', 'cancelled', 'voided']
 
 export default function InvoiceListPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [items, setItems] = useState<InvoiceOut[]>([])
   const [total, setTotal] = useState(0)
@@ -45,14 +35,20 @@ export default function InvoiceListPage() {
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
 
+  function InvoiceStatusBadge({ status }: { status: string }) {
+    const variant = STATUS_VARIANT[status] ?? ('gray' as BadgeVariant)
+    const label = STATUS_LABEL_KEYS[status] ? t(STATUS_LABEL_KEYS[status]) : status
+    return <Badge variant={variant}>{label}</Badge>
+  }
+
   const load = useCallback(async () => {
     setIsLoading(true); setError(null)
     try {
       const { data } = await getInvoices({ status: statusFilter || undefined, q: search || undefined, page, page_size: 20 })
       setItems(data.items); setTotal(data.total); setPages(data.pages)
-    } catch { setError('Failed to load invoices.') }
+    } catch { setError(t('billing.invoice.list.loadError')) }
     finally { setIsLoading(false) }
-  }, [statusFilter, search, page])
+  }, [statusFilter, search, page, t])
 
   useEffect(() => { load() }, [load])
 
@@ -60,11 +56,11 @@ export default function InvoiceListPage() {
     <div>
       <div className="page-header">
         <div>
-          <h1>Invoices</h1>
-          <p className="page-header-sub">{total.toLocaleString()} invoices</p>
+          <h1>{t('billing.invoice.list.title')}</h1>
+          <p className="page-header-sub">{t('billing.invoice.list.subtitle', { count: total })}</p>
         </div>
         <button className="btn btn-ghost" onClick={load} disabled={isLoading}>
-          <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> Refresh
+          <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('billing.common.refresh')}
         </button>
       </div>
 
@@ -73,12 +69,16 @@ export default function InvoiceListPage() {
       <div className="toolbar">
         <div className="search-wrap">
           <Search size={15} className="search-icon" />
-          <input className="search-input" placeholder="Search invoice #..." value={search} onChange={(e) => { setSearch(e.target.value); setPage(1) }} />
+          <input className="search-input" placeholder={t('billing.invoice.list.searchPlaceholder')} value={search} onChange={(e) => { setSearch(e.target.value); setPage(1) }} />
         </div>
         <select className="filter-select" value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1) }}>
-          {STATUS_OPTS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+          {STATUS_FILTER_VALUES.map((v) => (
+            <option key={v} value={v}>
+              {v === '' ? t('billing.invoice.filter.all') : v === 'partially_paid' ? t('billing.invoice.filter.partially_paid') : t(STATUS_LABEL_KEYS[v])}
+            </option>
+          ))}
         </select>
-        <span className="toolbar-count">{total} result{total !== 1 ? 's' : ''}</span>
+        <span className="toolbar-count">{t('billing.invoice.list.resultsCount', { count: total })}</span>
       </div>
 
       <div className="table-card">
@@ -86,13 +86,13 @@ export default function InvoiceListPage() {
           <table className="data-table">
             <thead>
               <tr>
-                <th>Invoice #</th>
-                <th>Customer</th>
-                <th>Status</th>
-                <th className="col-hide-sm">Issue Date</th>
-                <th className="col-hide-sm">Due Date</th>
-                <th>Total</th>
-                <th className="col-hide-sm">Balance</th>
+                <th>{t('billing.invoice.table.number')}</th>
+                <th>{t('billing.invoice.table.customer')}</th>
+                <th>{t('common.status')}</th>
+                <th className="col-hide-sm">{t('billing.invoice.meta.issueDate')}</th>
+                <th className="col-hide-sm">{t('billing.invoice.meta.dueDate')}</th>
+                <th>{t('common.total')}</th>
+                <th className="col-hide-sm">{t('billing.invoice.table.balance')}</th>
               </tr>
             </thead>
             <tbody>
@@ -108,7 +108,7 @@ export default function InvoiceListPage() {
                 </tr>
               )) : items.length === 0 ? (
                 <tr><td colSpan={7}>
-                  <div className="table-empty"><FileText size={40} /><p>No invoices found</p></div>
+                  <div className="table-empty"><FileText size={40} /><p>{t('billing.invoice.list.empty')}</p></div>
                 </td></tr>
               ) : items.map((inv) => (
                 <tr key={inv.id} onClick={() => navigate(`/billing/invoices/${inv.id}`)} style={{ cursor: 'pointer' }}>
@@ -132,7 +132,7 @@ export default function InvoiceListPage() {
 
         {!isLoading && pages > 1 && (
           <div className="pagination">
-            <span className="pagination-info">Page {page} of {pages} ({total} total)</span>
+            <span className="pagination-info">{t('billing.invoice.pagination.info', { page, pages, total })}</span>
             <div className="pagination-controls">
               <button className="page-btn" disabled={page === 1} onClick={() => setPage(page - 1)}><ChevronLeft size={14} /></button>
               {Array.from({ length: Math.min(pages, 5) }, (_, i) => {

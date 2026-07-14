@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   Search, Package, Tag, Layers, Wrench, Truck, ShoppingCart, Star,
   Menu, ChevronDown,
@@ -38,16 +39,17 @@ interface HeroBannerProps {
 }
 
 export function HeroBanner({ total, searchValue, onSearch, onCategoryFilter, categories }: HeroBannerProps) {
+  const { t } = useTranslation()
   const topCats = categories.filter((c) => c.parent_id === null).slice(0, 3)
 
   return (
     <div className="catalog-hero">
       <div className="catalog-hero-top">
         <div>
-          <div className="catalog-hero-brand">DK Service</div>
-          <h1>Product Catalog</h1>
+          <div className="catalog-hero-brand">{t('common.brandName')}</div>
+          <h1>{t('catalog.hero.title')}</h1>
           <p className="catalog-hero-sub">
-            Forklifts · Warehouse Equipment · Spare Parts · Attachments
+            {t('catalog.hero.subtitle')}
           </p>
         </div>
         <div className="catalog-hero-actions">
@@ -61,7 +63,7 @@ export function HeroBanner({ total, searchValue, onSearch, onCategoryFilter, cat
       <div className="catalog-hero-search">
         <Search size={18} />
         <input
-          placeholder={`Search ${total.toLocaleString()} products by name, SKU, model...`}
+          placeholder={t('catalog.hero.searchPlaceholder', { count: total.toLocaleString() })}
           value={searchValue}
           onChange={(e) => onSearch(e.target.value)}
         />
@@ -81,12 +83,13 @@ interface CategorySliderProps {
 }
 
 export function CategorySlider({ categories, activeCategoryId, onSelect }: CategorySliderProps) {
+  const { t } = useTranslation()
   const topLevel = categories.filter((c) => c.parent_id === null)
   if (!topLevel.length) return null
 
   return (
     <div className="cat-slider">
-      <div className="cat-slider-title">Browse by Category</div>
+      <div className="cat-slider-title">{t('catalog.categorySlider.title')}</div>
       <div className="cat-slider-track">
         {topLevel.map((cat) => {
           const Icon = getCategoryIcon(cat.name_en)
@@ -122,13 +125,14 @@ interface BrandShowcaseProps {
 }
 
 export function BrandShowcase({ brands, activeBrandId, onSelect }: BrandShowcaseProps) {
+  const { t } = useTranslation()
   if (!brands.length) return null
 
   return (
     <div className="brand-showcase">
       <div className="brand-showcase-header">
-        <span className="brand-showcase-title">Shop by Brand</span>
-        <Link to="/catalog/brands" className="brand-showcase-link">View All →</Link>
+        <span className="brand-showcase-title">{t('catalog.brandShowcase.title')}</span>
+        <Link to="/catalog/brands" className="brand-showcase-link">{t('catalog.viewAll')}</Link>
       </div>
       <div className="brand-showcase-track">
         {brands.map((b) => {
@@ -169,6 +173,7 @@ interface MegaMenuBarProps {
 }
 
 export function MegaMenuBar({ categories, activeCategoryId, onCategorySelect }: MegaMenuBarProps) {
+  const { t } = useTranslation()
   const [panelOpen, setPanelOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const topLevel = categories.filter((c) => c.parent_id === null)
@@ -190,7 +195,7 @@ export function MegaMenuBar({ categories, activeCategoryId, onCategorySelect }: 
       <div className="mega-bar">
         <button className="mega-bar-trigger" onClick={() => setPanelOpen((v) => !v)}>
           <Menu size={16} />
-          All Categories
+          {t('catalog.megaMenu.allCategories')}
           <ChevronDown size={14} style={{ transform: panelOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
         </button>
         {topLevel.map((cat) => (
@@ -220,14 +225,14 @@ export function MegaMenuBar({ categories, activeCategoryId, onCategorySelect }: 
                   ))}
                   <button className="mega-col-link" style={{ color: 'var(--color-primary)', fontWeight: 500, marginTop: 4 }}
                     onClick={() => selectAndClose(cat.id)}>
-                    View All →
+                    {t('catalog.viewAll')}
                   </button>
                 </div>
               )
             })}
             <div className="mega-footer">
               <button className="mega-footer-link" onClick={() => selectAndClose(null)}>
-                Browse All Products →
+                {t('catalog.browseAllProducts')}
               </button>
             </div>
           </div>
@@ -248,6 +253,7 @@ interface CatalogProductCardProps {
 }
 
 export function CatalogProductCard({ product, onClick, onEdit }: CatalogProductCardProps) {
+  const { t } = useTranslation()
   const imgSrc = product.primary_image_url ?? PLACEHOLDER
 
   return (
@@ -262,9 +268,9 @@ export function CatalogProductCard({ product, onClick, onEdit }: CatalogProductC
         <img src={imgSrc} alt={product.name_en} className="cpc-img" loading="lazy"
           onError={(e) => { (e.currentTarget as HTMLImageElement).src = PLACEHOLDER }} />
         <div className="cpc-badges">
-          {product.is_sale && <span className="cpc-badge sale"><ShoppingCart size={10} /> Sale</span>}
-          {product.is_rental && <span className="cpc-badge rental"><Wrench size={10} /> Rental</span>}
-          {!product.is_active && <span className="cpc-badge inactive">Inactive</span>}
+          {product.is_sale && <span className="cpc-badge sale"><ShoppingCart size={10} /> {t('catalog.products.badges.sale')}</span>}
+          {product.is_rental && <span className="cpc-badge rental"><Wrench size={10} /> {t('catalog.products.badges.rental')}</span>}
+          {!product.is_active && <span className="cpc-badge inactive">{t('common.inactive')}</span>}
         </div>
         {product.is_featured && (
           <div className="cpc-star"><Star size={14} /></div>
@@ -277,7 +283,7 @@ export function CatalogProductCard({ product, onClick, onEdit }: CatalogProductC
         {product.model_number && (
           <div className="cpc-model"><Tag size={11} /> {product.model_number}</div>
         )}
-        <div className="cpc-sku">SKU: {product.sku}</div>
+        <div className="cpc-sku">{t('catalog.products.skuPrefix', { sku: product.sku })}</div>
         {product.category && (
           <div className="cpc-category"><Package size={10} /> {product.category.name_en}</div>
         )}
@@ -285,8 +291,8 @@ export function CatalogProductCard({ product, onClick, onEdit }: CatalogProductC
 
       {onEdit && (
         <div className="cpc-actions">
-          <button className="cpc-action-btn" onClick={(e) => { e.stopPropagation(); onClick?.() }}>View</button>
-          <button className="cpc-action-btn" onClick={(e) => { e.stopPropagation(); onEdit() }}>Edit</button>
+          <button className="cpc-action-btn" onClick={(e) => { e.stopPropagation(); onClick?.() }}>{t('common.view')}</button>
+          <button className="cpc-action-btn" onClick={(e) => { e.stopPropagation(); onEdit() }}>{t('common.edit')}</button>
         </div>
       )}
     </div>

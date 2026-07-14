@@ -1,17 +1,19 @@
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   ClipboardList, Truck, Receipt, ShoppingCart, Wrench, ArrowRight,
 } from 'lucide-react'
 
 const ACTIONS = [
-  { id: 'rental', label: 'Create Rental', desc: 'New rental contract', icon: ClipboardList, color: 'var(--color-primary-600)', href: '/rental-contracts/new' },
-  { id: 'equipment', label: 'Add Equipment', desc: 'Register forklift', icon: Truck, color: 'var(--color-info-600)', href: '/equipment' },
-  { id: 'invoice', label: 'Create Invoice', desc: 'Generate billing', icon: Receipt, color: 'var(--color-success-600)', href: '/billing/invoices' },
-  { id: 'po', label: 'Purchase Order', desc: 'Order spare parts', icon: ShoppingCart, color: 'var(--color-warning-600)', href: '/inventory/purchase-orders' },
-  { id: 'maintenance', label: 'Maintenance', desc: 'Schedule service', icon: Wrench, color: 'var(--color-purple-600)', href: '/maintenance' },
+  { id: 'rental', labelKey: 'dashboard.quickAction.createRental', descKey: 'dashboard.quickAction.createRentalDesc', icon: ClipboardList, color: 'var(--color-primary-600)', href: '/rental-contracts/new' },
+  { id: 'equipment', labelKey: 'dashboard.quickAction.addEquipment', descKey: 'dashboard.quickAction.addEquipmentDesc', icon: Truck, color: 'var(--color-info-600)', href: '/equipment' },
+  { id: 'invoice', labelKey: 'dashboard.quickAction.createInvoice', descKey: 'dashboard.quickAction.createInvoiceDesc', icon: Receipt, color: 'var(--color-success-600)', href: '/billing/invoices' },
+  { id: 'po', labelKey: 'dashboard.quickAction.purchaseOrder', descKey: 'dashboard.quickAction.purchaseOrderDesc', icon: ShoppingCart, color: 'var(--color-warning-600)', href: '/inventory/purchase-orders' },
+  { id: 'maintenance', labelKey: 'dashboard.quickAction.maintenance', descKey: 'dashboard.quickAction.maintenanceDesc', icon: Wrench, color: 'var(--color-purple-600)', href: '/maintenance' },
 ]
 
 export default function QuickActions() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
 
   return (
@@ -33,8 +35,8 @@ export default function QuickActions() {
                 <a.icon size={18} style={{ color: a.color }} />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--color-text)' }}>{a.label}</div>
-                <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 1 }}>{a.desc}</div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--color-text)' }}>{t(a.labelKey)}</div>
+                <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 1 }}>{t(a.descKey)}</div>
               </div>
               <ArrowRight size={12} style={{ color: 'var(--color-text-muted)', flexShrink: 0 }} />
             </div>

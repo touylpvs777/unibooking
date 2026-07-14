@@ -1,4 +1,5 @@
 import { Truck } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import EquipmentCard, { EquipmentCardSkeleton } from './EquipmentCard'
 import type { Forklift } from '@/types/forklift'
 
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export default function EquipmentGrid({ forklifts, isLoading, onView, onEdit }: Props) {
+  const { t } = useTranslation()
   if (isLoading) {
     return (
       <div className="mp-grid">
@@ -22,8 +24,8 @@ export default function EquipmentGrid({ forklifts, isLoading, onView, onEdit }: 
     return (
       <div className="mp-empty">
         <div className="mp-empty-icon"><Truck size={28} /></div>
-        <div className="mp-empty-title">No equipment found</div>
-        <div className="mp-empty-sub">Try adjusting your filters or add new equipment</div>
+        <div className="mp-empty-title">{t('equipment.filters.noneFound')}</div>
+        <div className="mp-empty-sub">{t('equipment.filters.noneFoundHint')}</div>
       </div>
     )
   }

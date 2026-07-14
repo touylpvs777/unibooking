@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { fmtAmt } from '../utils'
 import type { InvoiceOut } from '@/types/billing'
 
@@ -9,13 +10,14 @@ interface Props {
 interface Bucket { label: string; amount: number; count: number; color: string }
 
 export default function AgingReceivablesChart({ invoices, currency }: Props) {
+  const { t } = useTranslation()
   const today = new Date()
   const buckets: Bucket[] = [
-    { label: 'Current', amount: 0, count: 0, color: 'var(--color-success-500)' },
-    { label: '1–30 days', amount: 0, count: 0, color: 'var(--color-info-500)' },
-    { label: '31–60 days', amount: 0, count: 0, color: 'var(--color-warning-500)' },
-    { label: '61–90 days', amount: 0, count: 0, color: 'var(--color-warning-600)' },
-    { label: '90+ days', amount: 0, count: 0, color: 'var(--color-danger-500)' },
+    { label: t('billing.aging.buckets.current'), amount: 0, count: 0, color: 'var(--color-success-500)' },
+    { label: t('billing.aging.buckets.days1to30'), amount: 0, count: 0, color: 'var(--color-info-500)' },
+    { label: t('billing.aging.buckets.days31to60'), amount: 0, count: 0, color: 'var(--color-warning-500)' },
+    { label: t('billing.aging.buckets.days61to90'), amount: 0, count: 0, color: 'var(--color-warning-600)' },
+    { label: t('billing.aging.buckets.days90plus'), amount: 0, count: 0, color: 'var(--color-danger-500)' },
   ]
 
   invoices
@@ -34,7 +36,7 @@ export default function AgingReceivablesChart({ invoices, currency }: Props) {
   return (
     <div className="mp-chart-panel">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-        <span className="mp-chart-title" style={{ marginBottom: 0 }}>Aging Receivables</span>
+        <span className="mp-chart-title" style={{ marginBottom: 0 }}>{t('billing.aging.title')}</span>
         <span style={{ fontSize: 13, fontWeight: 700, color: totalOutstanding > 0 ? 'var(--color-danger-600)' : 'var(--color-success-600)' }}>
           {fmtAmt(totalOutstanding)} {currency}
         </span>

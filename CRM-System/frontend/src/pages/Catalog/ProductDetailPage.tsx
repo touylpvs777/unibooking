@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { ChevronLeft, Tag, Package, Wrench, ShoppingCart, Star, AlertCircle } from 'lucide-react'
 import { getProduct } from '@/api/catalog'
 import ProductImageGallery from '@/components/catalog/ProductImageGallery'
@@ -16,6 +17,7 @@ function Badge({ label, color, icon: Icon }: { label: string; color: string; ico
 }
 
 export default function ProductDetailPage() {
+  const { t } = useTranslation()
   const { id }    = useParams<{ id: string }>()
   const navigate  = useNavigate()
 
@@ -30,10 +32,10 @@ export default function ProductDetailPage() {
     setError(null)
     getProduct(Number(id))
       .then(({ data }) => { if (!cancelled) setProduct(data) })
-      .catch(() => { if (!cancelled) setError('Product not found or failed to load.') })
+      .catch(() => { if (!cancelled) setError(t('catalog.productDetail.loadError')) })
       .finally(() => { if (!cancelled) setIsLoading(false) })
     return () => { cancelled = true }
-  }, [id])
+  }, [id, t])
 
   if (isLoading) {
     return (
@@ -59,10 +61,10 @@ export default function ProductDetailPage() {
     return (
       <div className="product-detail">
         <button className="detail-back" onClick={() => navigate('/catalog')}>
-          <ChevronLeft size={16} /> Back to Catalog
+          <ChevronLeft size={16} /> {t('catalog.productDetail.backToCatalog')}
         </button>
         <div className="page-error" style={{ marginTop: 24 }}>
-          <AlertCircle size={16} /> {error ?? 'Product not found.'}
+          <AlertCircle size={16} /> {error ?? t('catalog.productDetail.notFound')}
         </div>
       </div>
     )
@@ -72,7 +74,7 @@ export default function ProductDetailPage() {
     <div className="product-detail">
       {/* Back */}
       <button className="detail-back" onClick={() => navigate('/catalog')}>
-        <ChevronLeft size={16} /> Back to Catalog
+        <ChevronLeft size={16} /> {t('catalog.productDetail.backToCatalog')}
       </button>
 
       {/* Main content */}
@@ -95,29 +97,29 @@ export default function ProductDetailPage() {
 
           {/* Badges */}
           <div className="detail-badges">
-            {product.is_sale      && <Badge label="For Sale"      color="#15803d" icon={ShoppingCart} />}
-            {product.is_rental    && <Badge label="For Rental"    color="#1d4ed8" icon={Wrench} />}
-            {product.is_featured  && <Badge label="Featured"      color="#b45309" icon={Star} />}
-            {!product.is_active   && <Badge label="Inactive"      color="#64748b" />}
+            {product.is_sale      && <Badge label={t('catalog.products.forSale')}   color="#15803d" icon={ShoppingCart} />}
+            {product.is_rental    && <Badge label={t('catalog.products.forRental')} color="#1d4ed8" icon={Wrench} />}
+            {product.is_featured  && <Badge label={t('catalog.products.featured')}  color="#b45309" icon={Star} />}
+            {!product.is_active   && <Badge label={t('common.inactive')}            color="#64748b" />}
           </div>
 
           {/* Key fields */}
           <dl className="detail-meta">
             {product.sku && (
               <>
-                <dt><Tag size={13} /> SKU</dt>
+                <dt><Tag size={13} /> {t('catalog.products.table.sku')}</dt>
                 <dd className="cell-mono">{product.sku}</dd>
               </>
             )}
             {product.model_number && (
               <>
-                <dt><Package size={13} /> Model</dt>
+                <dt><Package size={13} /> {t('catalog.productDetail.model')}</dt>
                 <dd>{product.model_number}</dd>
               </>
             )}
             {product.category && (
               <>
-                <dt>Category</dt>
+                <dt>{t('common.category')}</dt>
                 <dd>{product.category.name_en}</dd>
               </>
             )}
@@ -126,7 +128,7 @@ export default function ProductDetailPage() {
           {/* Description */}
           {product.description_en && (
             <div className="detail-description">
-              <div className="detail-section-title">Description</div>
+              <div className="detail-section-title">{t('common.description')}</div>
               <p>{product.description_en}</p>
             </div>
           )}
@@ -134,7 +136,7 @@ export default function ProductDetailPage() {
           {/* Compat brands */}
           {product.compat_brands.length > 0 && (
             <div className="detail-compat">
-              <div className="detail-section-title">Compatible with</div>
+              <div className="detail-section-title">{t('catalog.productDetail.compatibleWith')}</div>
               <div className="compat-list">
                 {product.compat_brands.map((cb) => (
                   <span key={cb.id} className="compat-chip">
@@ -151,7 +153,7 @@ export default function ProductDetailPage() {
       {/* Specs */}
       {Object.keys(product.specs_grouped).length > 0 && (
         <div className="detail-specs-section">
-          <h2 className="detail-section-title">Specifications</h2>
+          <h2 className="detail-section-title">{t('catalog.productDetail.specifications')}</h2>
           <SpecTable specsGrouped={product.specs_grouped} />
         </div>
       )}

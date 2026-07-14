@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { AlertCircle, Wrench, ClipboardList, AlertTriangle, CheckCircle, DollarSign, Clock } from 'lucide-react'
 import { getDashboard } from '@/api/maintenance'
 import type { DashboardSummary } from '@/types/maintenance'
@@ -9,6 +10,7 @@ function fmtAmount(n: number) { return n.toLocaleString(undefined, { maximumFrac
 
 export default function MaintenanceDashboardPage() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [data, setData] = useState<DashboardSummary | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -17,34 +19,34 @@ export default function MaintenanceDashboardPage() {
     (async () => {
       try {
         setData((await getDashboard()).data)
-      } catch { setError('Failed to load dashboard.') }
+      } catch { setError(t('maintenance.dashboard.loadError')) }
       finally { setIsLoading(false) }
     })()
-  }, [])
+  }, [t])
 
-  if (isLoading) return <div style={{ padding: 40, textAlign: 'center', color: 'var(--color-text-muted)' }}>Loading...</div>
+  if (isLoading) return <div style={{ padding: 40, textAlign: 'center', color: 'var(--color-text-muted)' }}>{t('common.loading')}</div>
   if (error) return <div className="page-error"><AlertCircle size={16} /> {error}</div>
   if (!data) return null
 
   const cards = [
-    { label: 'PM Plans', value: data.total_plans, icon: ClipboardList, color: 'var(--color-primary-500)', onClick: () => navigate('/maintenance/schedules') },
-    { label: 'Active Schedules', value: data.active_schedules, icon: Clock, color: 'var(--color-info-500)', onClick: () => navigate('/maintenance/schedules') },
-    { label: 'Overdue', value: data.overdue_count, icon: AlertTriangle, color: 'var(--color-danger-500)', onClick: () => navigate('/maintenance/work-orders?status=due') },
-    { label: 'In Progress', value: data.in_progress_count, icon: Wrench, color: 'var(--color-warning-500)', onClick: () => navigate('/maintenance/work-orders?status=in_progress') },
-    { label: 'Completed (Month)', value: data.completed_this_month, icon: CheckCircle, color: 'var(--color-success-500)', onClick: () => navigate('/maintenance/work-orders?status=completed') },
-    { label: 'Cost (Month)', value: `${fmtAmount(data.total_cost_this_month)} ${data.currency}`, icon: DollarSign, color: 'var(--color-purple-500)', onClick: undefined },
+    { label: t('maintenance.dashboard.cards.pmPlans'), value: data.total_plans, icon: ClipboardList, color: 'var(--color-primary-500)', onClick: () => navigate('/maintenance/schedules') },
+    { label: t('maintenance.dashboard.cards.activeSchedules'), value: data.active_schedules, icon: Clock, color: 'var(--color-info-500)', onClick: () => navigate('/maintenance/schedules') },
+    { label: t('maintenance.overdue'), value: data.overdue_count, icon: AlertTriangle, color: 'var(--color-danger-500)', onClick: () => navigate('/maintenance/work-orders?status=due') },
+    { label: t('maintenance.status.inProgress'), value: data.in_progress_count, icon: Wrench, color: 'var(--color-warning-500)', onClick: () => navigate('/maintenance/work-orders?status=in_progress') },
+    { label: t('maintenance.dashboard.cards.completedThisMonth'), value: data.completed_this_month, icon: CheckCircle, color: 'var(--color-success-500)', onClick: () => navigate('/maintenance/work-orders?status=completed') },
+    { label: t('maintenance.dashboard.cards.costThisMonth'), value: `${fmtAmount(data.total_cost_this_month)} ${data.currency}`, icon: DollarSign, color: 'var(--color-purple-500)', onClick: undefined },
   ]
 
   return (
     <div>
       <div className="page-header">
         <div>
-          <h1>Maintenance & PM</h1>
-          <p className="page-header-sub">Preventive maintenance dashboard</p>
+          <h1>{t('maintenance.dashboard.title')}</h1>
+          <p className="page-header-sub">{t('maintenance.dashboard.subtitle')}</p>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button className="btn btn-secondary" onClick={() => navigate('/maintenance/schedules')}>PM Schedules</button>
-          <button className="btn btn-primary" onClick={() => navigate('/maintenance/work-orders')}>Work Orders</button>
+          <button className="btn btn-secondary" onClick={() => navigate('/maintenance/schedules')}>{t('maintenance.dashboard.pmSchedulesButton')}</button>
+          <button className="btn btn-primary" onClick={() => navigate('/maintenance/work-orders')}>{t('maintenance.dashboard.workOrdersButton')}</button>
         </div>
       </div>
 

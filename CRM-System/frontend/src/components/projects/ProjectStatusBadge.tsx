@@ -1,17 +1,19 @@
-const STATUS: Record<string, { label: string; color: string; bg: string }> = {
-  draft:        { label: 'Draft',        color: 'var(--color-gray-700)',    bg: 'var(--color-gray-100)' },
-  survey:       { label: 'Survey',       color: 'var(--color-info-700)',    bg: 'var(--color-info-50)' },
-  design:       { label: 'Design',       color: 'var(--color-info-700)',    bg: 'var(--color-info-50)' },
-  boq_approved: { label: 'BOQ Approved', color: 'var(--color-primary-700)', bg: 'var(--color-primary-50)' },
-  installation: { label: 'Installation', color: 'var(--color-warning-700)', bg: 'var(--color-warning-50)' },
-  handover:     { label: 'Handover',     color: 'var(--color-warning-700)', bg: 'var(--color-warning-50)' },
-  completed:    { label: 'Completed',    color: 'var(--color-success-700)', bg: 'var(--color-success-50)' },
+import { useTranslation } from 'react-i18next'
+
+const STATUS_COLOR: Record<string, { color: string; bg: string }> = {
+  draft:        { color: 'var(--color-gray-700)',    bg: 'var(--color-gray-100)' },
+  survey:       { color: 'var(--color-info-700)',    bg: 'var(--color-info-50)' },
+  design:       { color: 'var(--color-info-700)',    bg: 'var(--color-info-50)' },
+  boq_approved: { color: 'var(--color-primary-700)', bg: 'var(--color-primary-50)' },
+  installation: { color: 'var(--color-warning-700)', bg: 'var(--color-warning-50)' },
+  handover:     { color: 'var(--color-warning-700)', bg: 'var(--color-warning-50)' },
+  completed:    { color: 'var(--color-success-700)', bg: 'var(--color-success-50)' },
 }
 
-const MILESTONE: Record<string, { label: string; color: string; bg: string }> = {
-  pending:     { label: 'Pending',     color: 'var(--color-gray-700)',    bg: 'var(--color-gray-100)' },
-  in_progress: { label: 'In Progress', color: 'var(--color-info-700)',    bg: 'var(--color-info-50)' },
-  completed:   { label: 'Completed',   color: 'var(--color-success-700)', bg: 'var(--color-success-50)' },
+const MILESTONE_COLOR: Record<string, { color: string; bg: string }> = {
+  pending:     { color: 'var(--color-gray-700)',    bg: 'var(--color-gray-100)' },
+  in_progress: { color: 'var(--color-info-700)',    bg: 'var(--color-info-50)' },
+  completed:   { color: 'var(--color-success-700)', bg: 'var(--color-success-50)' },
 }
 
 const badge = (c: { color: string; bg: string }): React.CSSProperties => ({
@@ -20,14 +22,18 @@ const badge = (c: { color: string; bg: string }): React.CSSProperties => ({
   color: c.color, background: c.bg, whiteSpace: 'nowrap',
 })
 
-const fallback = { label: '—', color: 'var(--color-gray-700)', bg: 'var(--color-gray-100)' }
+const fallbackColor = { color: 'var(--color-gray-700)', bg: 'var(--color-gray-100)' }
 
 export function ProjectStatusBadge({ status }: { status: string }) {
-  const s = STATUS[status] ?? { ...fallback, label: status }
-  return <span style={badge(s)}>{s.label}</span>
+  const { t } = useTranslation()
+  const c = STATUS_COLOR[status] ?? fallbackColor
+  const label = STATUS_COLOR[status] ? t(`projects.status.${status}`) : status
+  return <span style={badge(c)}>{label}</span>
 }
 
 export function MilestoneStatusBadge({ status }: { status: string }) {
-  const s = MILESTONE[status] ?? { ...fallback, label: status }
-  return <span style={badge(s)}>{s.label}</span>
+  const { t } = useTranslation()
+  const c = MILESTONE_COLOR[status] ?? fallbackColor
+  const label = MILESTONE_COLOR[status] ? t(`projects.milestoneStatus.${status}`) : status
+  return <span style={badge(c)}>{label}</span>
 }

@@ -1,4 +1,5 @@
 import { useState, useEffect, type FormEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import Modal from '@/components/ui/Modal'
 import { getCustomers } from '@/api/customers'
 import type { Customer } from '@/types/customer'
@@ -25,6 +26,7 @@ const EMPTY = {
 }
 
 export default function ProjectForm({ isOpen, onClose, onSubmit, project }: ProjectFormProps) {
+  const { t } = useTranslation()
   const isEdit = !!project
   const [fields, setFields] = useState(EMPTY)
   const [customers, setCustomers] = useState<Customer[]>([])
@@ -84,29 +86,29 @@ export default function ProjectForm({ isOpen, onClose, onSubmit, project }: Proj
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={isEdit ? 'Edit Project' : 'New Project'}
+      title={isEdit ? t('projects.form.editProject') : t('projects.form.newProject')}
       footer={
         <>
           <button type="button" className="btn btn-ghost" onClick={onClose} disabled={isLoading}>
-            Cancel
+            {t('projects.form.cancel')}
           </button>
           <button type="submit" form="project-form" className="btn btn-primary" disabled={isLoading}>
-            {isLoading ? 'Saving…' : isEdit ? 'Save Changes' : 'Create Project'}
+            {isLoading ? t('projects.form.saving') : isEdit ? t('projects.form.saveChanges') : t('projects.form.createProject')}
           </button>
         </>
       }
     >
       <form id="project-form" onSubmit={handleSubmit} className="form-grid">
         <div className="form-group">
-          <label htmlFor="pf-name">Project Name <span className="required">*</span></label>
-          <input id="pf-name" value={fields.name} onChange={set('name')} required placeholder="Vientiane Warehouse Racking" />
+          <label htmlFor="pf-name">{t('projects.form.projectName')} <span className="required">*</span></label>
+          <input id="pf-name" value={fields.name} onChange={set('name')} required placeholder={t('projects.form.projectNamePlaceholder')} />
         </div>
 
         {!isEdit && (
           <div className="form-group">
-            <label htmlFor="pf-customer">Customer <span className="required">*</span></label>
+            <label htmlFor="pf-customer">{t('projects.form.customer')} <span className="required">*</span></label>
             <select id="pf-customer" value={fields.customer_id} onChange={set('customer_id')} required>
-              <option value="" disabled>Select a customer…</option>
+              <option value="" disabled>{t('projects.form.selectCustomer')}</option>
               {customers.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.first_name} {c.last_name}{c.company ? ` — ${c.company}` : ''}
@@ -118,27 +120,27 @@ export default function ProjectForm({ isOpen, onClose, onSubmit, project }: Proj
 
         {isEdit && (
           <div className="form-group">
-            <label htmlFor="pf-status">Status</label>
+            <label htmlFor="pf-status">{t('projects.form.status')}</label>
             <select id="pf-status" value={fields.status} onChange={set('status')}>
-              {STATUS_OPTIONS.map((s) => <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>)}
+              {STATUS_OPTIONS.map((s) => <option key={s} value={s}>{t(`projects.status.${s}`)}</option>)}
             </select>
           </div>
         )}
 
         <div className="form-row-2">
           <div className="form-group">
-            <label htmlFor="pf-start">Start Date</label>
+            <label htmlFor="pf-start">{t('projects.form.startDate')}</label>
             <input id="pf-start" type="date" value={fields.start_date} onChange={set('start_date')} />
           </div>
           <div className="form-group">
-            <label htmlFor="pf-end">End Date</label>
+            <label htmlFor="pf-end">{t('projects.form.endDate')}</label>
             <input id="pf-end" type="date" value={fields.end_date} onChange={set('end_date')} />
           </div>
         </div>
 
         <div className="form-group">
-          <label htmlFor="pf-notes">Notes</label>
-          <textarea id="pf-notes" value={fields.notes} onChange={set('notes')} placeholder="Any additional notes…" rows={3} />
+          <label htmlFor="pf-notes">{t('projects.form.notes')}</label>
+          <textarea id="pf-notes" value={fields.notes} onChange={set('notes')} placeholder={t('projects.form.notesPlaceholder')} rows={3} />
         </div>
       </form>
     </Modal>

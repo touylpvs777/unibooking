@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import InvoiceStatusBadge from './InvoiceStatusBadge'
 import type { InvoiceOut } from '@/types/billing'
 
@@ -6,6 +7,7 @@ function fmtAmt(n: number) { return n.toLocaleString(undefined, { maximumFractio
 function fmtDate(iso: string | null) { return iso ? new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—' }
 
 export default function InvoiceCard({ invoice }: { invoice: InvoiceOut }) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
 
   return (
@@ -33,12 +35,12 @@ export default function InvoiceCard({ invoice }: { invoice: InvoiceOut }) {
           {fmtAmt(invoice.total_amount)} {invoice.currency}
         </div>
         <div style={{ fontSize: 11.5, color: 'var(--color-text-muted)' }}>
-          Due {fmtDate(invoice.due_date)}
+          {t('billing.invoice.card.due', { date: fmtDate(invoice.due_date) })}
         </div>
       </div>
       {invoice.balance_due > 0 && (
         <div style={{ fontSize: 11.5, color: 'var(--color-danger-600)', marginTop: 4, fontWeight: 500 }}>
-          Balance: {fmtAmt(invoice.balance_due)} {invoice.currency}
+          {t('billing.invoice.card.balance', { amount: fmtAmt(invoice.balance_due), currency: invoice.currency })}
         </div>
       )}
     </div>

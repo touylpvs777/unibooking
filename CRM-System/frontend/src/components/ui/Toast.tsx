@@ -1,4 +1,5 @@
 import { CheckCircle, XCircle, Info, X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useToastStore } from '@/store/toastStore'
 import './Toast.css'
 
@@ -9,15 +10,16 @@ const ICONS = {
 }
 
 export default function ToastContainer() {
+  const { t } = useTranslation()
   const { toasts, remove } = useToastStore()
 
   return (
     <div className="toast-container" role="status" aria-live="polite" aria-atomic="false">
-      {toasts.map((t) => (
-        <div key={t.id} className={`toast ${t.type}`} role={t.type === 'error' ? 'alert' : 'status'}>
-          <span className="toast-icon">{ICONS[t.type]}</span>
-          <span className="toast-msg">{t.message}</span>
-          <button className="toast-close" onClick={() => remove(t.id)} aria-label="Dismiss notification">
+      {toasts.map((toast) => (
+        <div key={toast.id} className={`toast ${toast.type}`} role={toast.type === 'error' ? 'alert' : 'status'}>
+          <span className="toast-icon">{ICONS[toast.type]}</span>
+          <span className="toast-msg">{toast.message}</span>
+          <button className="toast-close" onClick={() => remove(toast.id)} aria-label={t('common.dismissNotification')}>
             <X size={14} />
           </button>
         </div>

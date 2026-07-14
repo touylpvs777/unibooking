@@ -1,5 +1,6 @@
 import { AlertTriangle, ArrowRight, Package } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import type { ReorderAlert } from '@/types/inventory'
 
 export function LowStockAlertsSkeleton() {
@@ -22,13 +23,14 @@ export function LowStockAlertsSkeleton() {
 
 export default function LowStockAlerts({ alerts }: { alerts: ReorderAlert[] }) {
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   if (alerts.length === 0) {
     return (
       <div className="mp-chart-panel">
-        <div className="mp-chart-title">Low Stock Alerts</div>
+        <div className="mp-chart-title">{t('inventory.lowStock.title')}</div>
         <div style={{ textAlign: 'center', padding: '24px 0', color: 'var(--color-text-muted)', fontSize: 13 }}>
-          All stock levels healthy
+          {t('inventory.lowStock.allHealthy')}
         </div>
       </div>
     )
@@ -39,12 +41,12 @@ export default function LowStockAlerts({ alerts }: { alerts: ReorderAlert[] }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <AlertTriangle size={14} style={{ color: 'var(--color-warning-500)' }} />
-          <span className="mp-chart-title" style={{ marginBottom: 0 }}>Low Stock Alerts</span>
+          <span className="mp-chart-title" style={{ marginBottom: 0 }}>{t('inventory.lowStock.title')}</span>
           <span style={{ fontSize: 11, fontWeight: 600, padding: '1px 7px', borderRadius: 'var(--radius-full)', background: 'var(--color-danger-50)', color: 'var(--color-danger-600)', border: '1px solid var(--color-danger-200)' }}>
             {alerts.length}
           </span>
         </div>
-        <a className="mp-section-link" onClick={() => navigate('/inventory/parts')}>View All <ArrowRight size={12} /></a>
+        <a className="mp-section-link" onClick={() => navigate('/inventory/parts')}>{t('inventory.lowStock.viewAll')} <ArrowRight size={12} /></a>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -73,7 +75,7 @@ export default function LowStockAlerts({ alerts }: { alerts: ReorderAlert[] }) {
                   {a.part_number} — {a.name}
                 </div>
                 <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 1 }}>
-                  {a.warehouse_code} · Min: {a.min_stock_level} · Reorder: {a.reorder_quantity}
+                  {a.warehouse_code} · {t('inventory.lowStock.min')}: {a.min_stock_level} · {t('inventory.lowStock.reorder')}: {a.reorder_quantity}
                 </div>
                 <div style={{ height: 3, background: 'var(--color-bg)', borderRadius: 2, overflow: 'hidden', marginTop: 4 }}>
                   <div style={{ height: '100%', width: `${Math.min(ratio * 100, 100)}%`, background: barColor, borderRadius: 2 }} />

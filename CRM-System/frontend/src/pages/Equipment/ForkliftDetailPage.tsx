@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   ChevronLeft, Fuel, Gauge, Calendar, Clock, MapPin,
   AlertCircle, FileText, Wrench, User, Shield,
@@ -12,7 +13,7 @@ import type { ForkliftDetail } from '@/types/forklift'
 import './ForkliftDetailPage.css'
 import '@/styles/shared.css'
 
-const FUEL_LABELS: Record<string, string> = { electric: 'Electric', diesel: 'Diesel', lpg: 'LPG', dual_fuel: 'Dual Fuel' }
+const FUEL_LABEL_KEYS: Record<string, string> = { electric: 'equipment.fuel.electric', diesel: 'equipment.fuel.diesel', lpg: 'equipment.fuel.lpg', dual_fuel: 'equipment.fuel.dualFuel' }
 
 function fmtDate(iso: string | null) {
   if (!iso) return '—'
@@ -22,6 +23,7 @@ function fmtDate(iso: string | null) {
 type TabId = 'overview' | 'photos' | 'timeline' | 'documents' | 'contracts'
 
 export default function ForkliftDetailPage() {
+  const { t } = useTranslation()
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
 
@@ -41,11 +43,11 @@ export default function ForkliftDetailPage() {
       const { data } = await getForklift(Number(id))
       setForklift(data)
     } catch {
-      setError('Forklift not found or failed to load.')
+      setError(t('equipment.detail.notFoundOrFailed'))
     } finally {
       setIsLoading(false)
     }
-  }, [id])
+  }, [id, t])
 
   useEffect(() => { load() }, [load])
 
@@ -77,8 +79,8 @@ export default function ForkliftDetailPage() {
   if (error || !forklift) {
     return (
       <div className="forklift-detail">
-        <button className="fd-back" onClick={() => navigate('/equipment')}><ChevronLeft size={16} /> Back to Equipment</button>
-        <div className="page-error" style={{ marginTop: 24 }}><AlertCircle size={16} /> {error ?? 'Forklift not found.'}</div>
+        <button className="fd-back" onClick={() => navigate('/equipment')}><ChevronLeft size={16} /> {t('equipment.detail.backToEquipment')}</button>
+        <div className="page-error" style={{ marginTop: 24 }}><AlertCircle size={16} /> {error ?? t('equipment.detail.notFound')}</div>
       </div>
     )
   }
@@ -94,16 +96,16 @@ export default function ForkliftDetailPage() {
   const warrantyExpired = forklift.warranty_expiry ? new Date(forklift.warranty_expiry) < new Date() : null
 
   const tabs: { id: TabId; label: string; count?: number }[] = [
-    { id: 'overview', label: 'Overview' },
-    { id: 'photos', label: 'Photos', count: forklift.photos.length },
-    { id: 'timeline', label: 'Timeline', count: forklift.recent_status_history.length },
-    { id: 'documents', label: 'Documents', count: forklift.documents.length },
-    { id: 'contracts', label: 'Contracts' },
+    { id: 'overview', label: t('equipment.detail.tabs.overview') },
+    { id: 'photos', label: t('equipment.detail.tabs.photos'), count: forklift.photos.length },
+    { id: 'timeline', label: t('equipment.detail.tabs.timeline'), count: forklift.recent_status_history.length },
+    { id: 'documents', label: t('equipment.detail.tabs.documents'), count: forklift.documents.length },
+    { id: 'contracts', label: t('equipment.detail.tabs.contracts') },
   ]
 
   return (
     <div className="forklift-detail">
-      <button className="fd-back" onClick={() => navigate('/equipment')}><ChevronLeft size={16} /> Back to Equipment</button>
+      <button className="fd-back" onClick={() => navigate('/equipment')}><ChevronLeft size={16} /> {t('equipment.detail.backToEquipment')}</button>
 
       {/* Asset Header */}
       <div className="fd-header">
@@ -119,31 +121,31 @@ export default function ForkliftDetailPage() {
             {forklift.brand && <div className="fd-header-brand">{forklift.brand.name}</div>}
             <div className="fd-header-name">{forklift.name_en}</div>
             <div className="fd-header-meta">
-              <span>S/N: {forklift.serial_number}</span>
+              <span>{t('equipment.detail.serialAbbrev')}: {forklift.serial_number}</span>
               {forklift.year_manufactured && <span>· {forklift.year_manufactured}</span>}
-              {forklift.fuel_type && <span>· {FUEL_LABELS[forklift.fuel_type] ?? forklift.fuel_type}</span>}
+              {forklift.fuel_type && <span>· {FUEL_LABEL_KEYS[forklift.fuel_type] ? t(FUEL_LABEL_KEYS[forklift.fuel_type]) : forklift.fuel_type}</span>}
             </div>
             <div className="fd-header-badges">
               <ForkliftStatusBadge status={forklift.status} />
               <ForkliftConditionBadge condition={forklift.condition} />
               {!forklift.is_active && (
-                <span style={{ display: 'inline-flex', alignItems: 'center', padding: '2px 9px', borderRadius: 20, fontSize: 11.5, fontWeight: 600, background: 'var(--color-gray-100)', color: 'var(--color-gray-500)', border: '1px solid var(--color-gray-200)' }}>Inactive</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', padding: '2px 9px', borderRadius: 20, fontSize: 11.5, fontWeight: 600, background: 'var(--color-gray-100)', color: 'var(--color-gray-500)', border: '1px solid var(--color-gray-200)' }}>{t('common.inactive')}</span>
               )}
             </div>
           </div>
         </div>
         <div className="fd-header-actions">
-          <button className="btn btn-ghost" onClick={() => navigate(`/quotations/new`)}><FileText size={14} /> New Quote</button>
-          <button className="btn btn-primary" onClick={() => navigate(`/rental-contracts/new`)}><FileText size={14} /> New Contract</button>
+          <button className="btn btn-ghost" onClick={() => navigate(`/quotations/new`)}><FileText size={14} /> {t('equipment.detail.newQuote')}</button>
+          <button className="btn btn-primary" onClick={() => navigate(`/rental-contracts/new`)}><FileText size={14} /> {t('equipment.detail.newContract')}</button>
         </div>
       </div>
 
       {/* Tab Bar */}
       <div className="fd-tabs">
-        {tabs.map((t) => (
-          <button key={t.id} className={`fd-tab${activeTab === t.id ? ' active' : ''}`} onClick={() => switchTab(t.id)}>
-            {t.label}
-            {t.count != null && <span className="fd-tab-count">({t.count})</span>}
+        {tabs.map((tab) => (
+          <button key={tab.id} className={`fd-tab${activeTab === tab.id ? ' active' : ''}`} onClick={() => switchTab(tab.id)}>
+            {tab.label}
+            {tab.count != null && <span className="fd-tab-count">({tab.count})</span>}
           </button>
         ))}
       </div>
@@ -154,52 +156,52 @@ export default function ForkliftDetailPage() {
           <div className="fd-main">
             {/* Specifications */}
             <div className="fd-card">
-              <div className="fd-card-header"><Wrench size={16} /> Specifications</div>
+              <div className="fd-card-header"><Wrench size={16} /> {t('equipment.detail.specifications')}</div>
               <div className="fd-card-body">
                 <div className="fd-spec-chips">
                   {forklift.fuel_type && (
                     <div className="fd-spec-chip">
-                      <span className="fd-spec-chip-value"><Fuel size={13} /> {FUEL_LABELS[forklift.fuel_type] ?? forklift.fuel_type}</span>
-                      <span className="fd-spec-chip-label">Fuel Type</span>
+                      <span className="fd-spec-chip-value"><Fuel size={13} /> {FUEL_LABEL_KEYS[forklift.fuel_type] ? t(FUEL_LABEL_KEYS[forklift.fuel_type]) : forklift.fuel_type}</span>
+                      <span className="fd-spec-chip-label">{t('equipment.form.fuelType')}</span>
                     </div>
                   )}
                   {forklift.capacity_kg != null && (
                     <div className="fd-spec-chip">
                       <span className="fd-spec-chip-value"><Gauge size={13} /> {forklift.capacity_kg.toLocaleString()} kg</span>
-                      <span className="fd-spec-chip-label">Capacity</span>
+                      <span className="fd-spec-chip-label">{t('equipment.detail.capacity')}</span>
                     </div>
                   )}
                   {forklift.year_manufactured && (
                     <div className="fd-spec-chip">
                       <span className="fd-spec-chip-value"><Calendar size={13} /> {forklift.year_manufactured}</span>
-                      <span className="fd-spec-chip-label">Year</span>
+                      <span className="fd-spec-chip-label">{t('equipment.detail.year')}</span>
                     </div>
                   )}
                 </div>
                 <div className="fd-kv-grid">
-                  <span className="fd-kv-key">Serial Number</span><span className="fd-kv-value" style={{ fontVariantNumeric: 'tabular-nums' }}>{forklift.serial_number}</span>
-                  {forklift.internal_code && <><span className="fd-kv-key">Internal Code</span><span className="fd-kv-value">{forklift.internal_code}</span></>}
-                  {forklift.model_number && <><span className="fd-kv-key">Model</span><span className="fd-kv-value">{forklift.model_number}</span></>}
-                  {forklift.mast_type && <><span className="fd-kv-key">Mast Type</span><span className="fd-kv-value">{forklift.mast_type}</span></>}
-                  {forklift.max_lift_height_mm != null && <><span className="fd-kv-key">Max Lift Height</span><span className="fd-kv-value">{forklift.max_lift_height_mm.toLocaleString()} mm</span></>}
+                  <span className="fd-kv-key">{t('equipment.form.serialNumber')}</span><span className="fd-kv-value" style={{ fontVariantNumeric: 'tabular-nums' }}>{forklift.serial_number}</span>
+                  {forklift.internal_code && <><span className="fd-kv-key">{t('equipment.form.internalCode')}</span><span className="fd-kv-value">{forklift.internal_code}</span></>}
+                  {forklift.model_number && <><span className="fd-kv-key">{t('equipment.detail.model')}</span><span className="fd-kv-value">{forklift.model_number}</span></>}
+                  {forklift.mast_type && <><span className="fd-kv-key">{t('equipment.detail.mastType')}</span><span className="fd-kv-value">{forklift.mast_type}</span></>}
+                  {forklift.max_lift_height_mm != null && <><span className="fd-kv-key">{t('equipment.detail.maxLiftHeight')}</span><span className="fd-kv-value">{forklift.max_lift_height_mm.toLocaleString()} mm</span></>}
                 </div>
               </div>
             </div>
 
             {/* Location */}
             <div className="fd-card">
-              <div className="fd-card-header"><MapPin size={16} /> Current Location</div>
+              <div className="fd-card-header"><MapPin size={16} /> {t('equipment.detail.currentLocation')}</div>
               <div className="fd-card-body">
                 {forklift.current_location ? (
                   <div className="fd-location-box">
                     <div className="fd-location-name">{forklift.current_location.location_name}</div>
-                    {forklift.current_location.warehouse_zone && <div className="fd-location-zone">Zone: {forklift.current_location.warehouse_zone}</div>}
+                    {forklift.current_location.warehouse_zone && <div className="fd-location-zone">{t('equipment.detail.zone')}: {forklift.current_location.warehouse_zone}</div>}
                     {forklift.current_location.address && <div className="fd-location-address"><MapPin size={11} /> {forklift.current_location.address}</div>}
-                    <div className="fd-location-date"><Calendar size={11} /> Since: {fmtDate(forklift.current_location.effective_date)}</div>
+                    <div className="fd-location-date"><Calendar size={11} /> {t('equipment.detail.since')}: {fmtDate(forklift.current_location.effective_date)}</div>
                     {forklift.current_location.notes && <div className="fd-location-notes">{forklift.current_location.notes}</div>}
                   </div>
                 ) : (
-                  <div className="fd-location-empty"><MapPin size={16} /> No location recorded</div>
+                  <div className="fd-location-empty"><MapPin size={16} /> {t('equipment.detail.noLocationRecorded')}</div>
                 )}
               </div>
             </div>
@@ -207,7 +209,7 @@ export default function ForkliftDetailPage() {
             {/* Notes */}
             {forklift.notes && (
               <div className="fd-card">
-                <div className="fd-card-header"><FileText size={16} /> Notes</div>
+                <div className="fd-card-header"><FileText size={16} /> {t('common.notes')}</div>
                 <div className="fd-card-body"><p className="fd-notes">{forklift.notes}</p></div>
               </div>
             )}
@@ -216,25 +218,25 @@ export default function ForkliftDetailPage() {
           <div className="fd-sidebar">
             {/* Hour Meter */}
             <div className="fd-card">
-              <div className="fd-card-header"><Clock size={16} /> Hour Meter</div>
+              <div className="fd-card-header"><Clock size={16} /> {t('equipment.detail.hourMeter')}</div>
               <div className="fd-card-body">
                 <div className="fd-hours-big">
                   {forklift.current_hour_meter.toLocaleString(undefined, { maximumFractionDigits: 1 })}
-                  <span className="fd-hours-unit"> hours</span>
+                  <span className="fd-hours-unit"> {t('equipment.detail.hoursUnit')}</span>
                 </div>
                 <div className="fd-hours-bar">
                   <div className="fd-hours-bar-track"><div className="fd-hours-bar-fill" style={{ width: `${pct}%`, background: barColor }} /></div>
                   <div className="fd-hours-bar-label">
-                    <span>{Math.round(pct)}% of {threshold.toLocaleString()} hrs</span>
-                    <span>service interval</span>
+                    <span>{t('equipment.detail.pctOfThreshold', { pct: Math.round(pct), threshold: threshold.toLocaleString() })}</span>
+                    <span>{t('equipment.detail.serviceInterval')}</span>
                   </div>
                 </div>
                 <div className="fd-kv-grid fd-hours-stats">
-                  <span className="fd-kv-key">Initial</span><span className="fd-kv-value">{forklift.initial_hour_meter.toLocaleString()} hrs</span>
-                  <span className="fd-kv-key">Hours Used</span><span className="fd-kv-value">{hoursUsed.toLocaleString(undefined, { maximumFractionDigits: 1 })} hrs</span>
-                  <span className="fd-kv-key">Daily Avg</span><span className="fd-kv-value">{dailyAvg.toFixed(1)} hrs</span>
+                  <span className="fd-kv-key">{t('equipment.detail.initial')}</span><span className="fd-kv-value">{forklift.initial_hour_meter.toLocaleString()} {t('equipment.detail.hoursUnit')}</span>
+                  <span className="fd-kv-key">{t('equipment.detail.hoursUsed')}</span><span className="fd-kv-value">{hoursUsed.toLocaleString(undefined, { maximumFractionDigits: 1 })} {t('equipment.detail.hoursUnit')}</span>
+                  <span className="fd-kv-key">{t('equipment.detail.dailyAvg')}</span><span className="fd-kv-value">{dailyAvg.toFixed(1)} {t('equipment.detail.hoursUnit')}</span>
                   {dailyAvg > 0 && forklift.current_hour_meter < threshold && (
-                    <><span className="fd-kv-key">Est. Service</span><span className="fd-kv-value">~{Math.ceil((threshold - forklift.current_hour_meter) / dailyAvg)} days</span></>
+                    <><span className="fd-kv-key">{t('equipment.detail.estService')}</span><span className="fd-kv-value">{t('equipment.detail.estServiceDays', { count: Math.ceil((threshold - forklift.current_hour_meter) / dailyAvg) })}</span></>
                   )}
                 </div>
               </div>
@@ -242,25 +244,25 @@ export default function ForkliftDetailPage() {
 
             {/* Asset Summary */}
             <div className="fd-card">
-              <div className="fd-card-header"><Shield size={16} /> Asset Summary</div>
+              <div className="fd-card-header"><Shield size={16} /> {t('equipment.detail.assetSummary')}</div>
               <div className="fd-card-body">
                 <div className="fd-kv-grid">
-                  <span className="fd-kv-key">Purchase Date</span><span className="fd-kv-value">{fmtDate(forklift.purchase_date)}</span>
+                  <span className="fd-kv-key">{t('equipment.form.purchaseDate')}</span><span className="fd-kv-value">{fmtDate(forklift.purchase_date)}</span>
                   {forklift.purchase_date && (
-                    <><span className="fd-kv-key">Asset Age</span><span className="fd-kv-value">{((Date.now() - new Date(forklift.purchase_date).getTime()) / 31557600000).toFixed(1)} years</span></>
+                    <><span className="fd-kv-key">{t('equipment.detail.assetAge')}</span><span className="fd-kv-value">{t('equipment.detail.years', { count: ((Date.now() - new Date(forklift.purchase_date).getTime()) / 31557600000).toFixed(1) })}</span></>
                   )}
-                  <span className="fd-kv-key">Warranty</span>
+                  <span className="fd-kv-key">{t('equipment.detail.warranty')}</span>
                   <span className="fd-kv-value">
                     {forklift.warranty_expiry ? (
                       <span style={{ color: warrantyExpired ? 'var(--color-danger-600)' : 'var(--color-success-600)' }}>
-                        {warrantyExpired ? 'Expired' : 'Valid'} · {fmtDate(forklift.warranty_expiry)}
+                        {warrantyExpired ? t('equipment.detail.expired') : t('equipment.detail.valid')} · {fmtDate(forklift.warranty_expiry)}
                       </span>
                     ) : '—'}
                   </span>
-                  <span className="fd-kv-key">Condition</span><span className="fd-kv-value" style={{ textTransform: 'capitalize' }}>{forklift.condition}</span>
-                  <span className="fd-kv-key">Status Changes</span><span className="fd-kv-value">{forklift.recent_status_history.length}</span>
-                  <span className="fd-kv-key">Documents</span><span className="fd-kv-value">{forklift.documents.length} files</span>
-                  <span className="fd-kv-key">Photos</span><span className="fd-kv-value">{forklift.photos.length} images</span>
+                  <span className="fd-kv-key">{t('equipment.form.condition')}</span><span className="fd-kv-value" style={{ textTransform: 'capitalize' }}>{forklift.condition}</span>
+                  <span className="fd-kv-key">{t('equipment.detail.statusChanges')}</span><span className="fd-kv-value">{forklift.recent_status_history.length}</span>
+                  <span className="fd-kv-key">{t('equipment.detail.documents')}</span><span className="fd-kv-value">{t('equipment.detail.filesCount', { count: forklift.documents.length })}</span>
+                  <span className="fd-kv-key">{t('equipment.detail.photos')}</span><span className="fd-kv-value">{t('equipment.detail.imagesCount', { count: forklift.photos.length })}</span>
                 </div>
               </div>
             </div>
@@ -268,7 +270,7 @@ export default function ForkliftDetailPage() {
             {/* Customer Link */}
             {forklift.customer && (
               <div className="fd-card">
-                <div className="fd-card-header"><User size={16} /> Assigned Customer</div>
+                <div className="fd-card-header"><User size={16} /> {t('equipment.detail.assignedCustomer')}</div>
                 <div className="fd-card-body">
                   <div className="fd-customer-link">
                     <User size={14} />
@@ -299,10 +301,10 @@ export default function ForkliftDetailPage() {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Title</th>
-                  <th>Type</th>
-                  <th className="col-hide-sm">Expiry</th>
-                  <th className="col-hide-sm">Uploaded</th>
+                  <th>{t('equipment.detail.documentTitle')}</th>
+                  <th>{t('common.type')}</th>
+                  <th className="col-hide-sm">{t('equipment.detail.expiry')}</th>
+                  <th className="col-hide-sm">{t('equipment.detail.uploaded')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -319,7 +321,7 @@ export default function ForkliftDetailPage() {
           </div>
         ) : (
           <div className="fd-location-empty" style={{ margin: '20px 0' }}>
-            <FileText size={16} /> No documents uploaded
+            <FileText size={16} /> {t('equipment.detail.noDocumentsUploaded')}
           </div>
         )
       )}
@@ -329,10 +331,10 @@ export default function ForkliftDetailPage() {
         <div className="fd-card" style={{ maxWidth: 500 }}>
           <div className="fd-card-body" style={{ textAlign: 'center' }}>
             <p style={{ color: 'var(--color-text-muted)', fontSize: 13, marginBottom: 12 }}>
-              View rental contracts linked to this equipment
+              {t('equipment.detail.viewContractsHint')}
             </p>
             <Link to={`/rental-contracts`} className="btn btn-primary" style={{ display: 'inline-flex' }}>
-              View Rental Contracts →
+              {t('equipment.detail.viewRentalContracts')} →
             </Link>
           </div>
         </div>

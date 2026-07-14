@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { AlertTriangle, CheckCircle, Clock, Wrench } from 'lucide-react'
 import type { MaintenanceSchedule } from '@/types/maintenance'
 
@@ -12,10 +13,11 @@ function isOverdue(dueDateStr: string | null) {
 }
 
 export default function PMCalendar({ schedules }: { schedules: MaintenanceSchedule[] }) {
+  const { t } = useTranslation()
   if (schedules.length === 0) {
     return (
       <div style={{ padding: '40px 20px', textAlign: 'center', color: 'var(--color-text-muted)', fontSize: 13 }}>
-        No active PM schedules. Create a maintenance plan and assign it to equipment.
+        {t('maintenance.schedule.emptyState')}
       </div>
     )
   }
@@ -39,7 +41,7 @@ export default function PMCalendar({ schedules }: { schedules: MaintenanceSchedu
               </div>
               {overdue ? (
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 3, padding: '2px 8px', borderRadius: 'var(--radius-full)', fontSize: 11, fontWeight: 600, color: 'var(--color-danger-700)', background: 'var(--color-danger-50)' }}>
-                  <AlertTriangle size={11} /> Overdue
+                  <AlertTriangle size={11} /> {t('maintenance.overdue')}
                 </span>
               ) : s.times_serviced > 0 ? (
                 <CheckCircle size={14} style={{ color: 'var(--color-success-500)' }} />
@@ -49,17 +51,17 @@ export default function PMCalendar({ schedules }: { schedules: MaintenanceSchedu
             </div>
             <div style={{ display: 'flex', gap: 16, marginTop: 10, fontSize: 12, color: 'var(--color-text-muted)' }}>
               <div>
-                <div style={{ fontWeight: 600, fontSize: 10, textTransform: 'uppercase', letterSpacing: 0.5 }}>Next Due</div>
+                <div style={{ fontWeight: 600, fontSize: 10, textTransform: 'uppercase', letterSpacing: 0.5 }}>{t('maintenance.schedule.nextDue')}</div>
                 <div style={{ marginTop: 2, fontWeight: 500, color: overdue ? 'var(--color-danger-600)' : 'var(--color-text)' }}>
                   {s.next_due_date ? fmtDate(s.next_due_date) : s.next_due_hours ? `${s.next_due_hours}h` : '—'}
                 </div>
               </div>
               <div>
-                <div style={{ fontWeight: 600, fontSize: 10, textTransform: 'uppercase', letterSpacing: 0.5 }}>Interval</div>
+                <div style={{ fontWeight: 600, fontSize: 10, textTransform: 'uppercase', letterSpacing: 0.5 }}>{t('maintenance.schedule.interval')}</div>
                 <div style={{ marginTop: 2 }}>{s.plan.interval_value} {s.plan.interval_type}</div>
               </div>
               <div>
-                <div style={{ fontWeight: 600, fontSize: 10, textTransform: 'uppercase', letterSpacing: 0.5 }}>Serviced</div>
+                <div style={{ fontWeight: 600, fontSize: 10, textTransform: 'uppercase', letterSpacing: 0.5 }}>{t('maintenance.schedule.serviced')}</div>
                 <div style={{ marginTop: 2 }}>{s.times_serviced}x</div>
               </div>
             </div>

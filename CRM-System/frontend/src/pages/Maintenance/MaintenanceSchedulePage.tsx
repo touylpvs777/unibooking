@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { AlertCircle, RefreshCw } from 'lucide-react'
 import { getSchedules } from '@/api/maintenance'
 import PMCalendar from '@/components/maintenance/PMCalendar'
@@ -6,6 +7,7 @@ import type { MaintenanceSchedule } from '@/types/maintenance'
 import '@/styles/shared.css'
 
 export default function MaintenanceSchedulePage() {
+  const { t } = useTranslation()
   const [schedules, setSchedules] = useState<MaintenanceSchedule[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -13,7 +15,7 @@ export default function MaintenanceSchedulePage() {
   const load = async () => {
     setIsLoading(true); setError(null)
     try { setSchedules((await getSchedules()).data) }
-    catch { setError('Failed to load schedules.') }
+    catch { setError(t('maintenance.schedule.loadError')) }
     finally { setIsLoading(false) }
   }
 
@@ -23,11 +25,11 @@ export default function MaintenanceSchedulePage() {
     <div>
       <div className="page-header">
         <div>
-          <h1>PM Schedules</h1>
-          <p className="page-header-sub">{schedules.length} active schedules</p>
+          <h1>{t('maintenance.schedule.title')}</h1>
+          <p className="page-header-sub">{t('maintenance.schedule.activeSchedules', { count: schedules.length })}</p>
         </div>
         <button className="btn btn-ghost" onClick={load} disabled={isLoading} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> Refresh
+          <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('maintenance.actions.refresh')}
         </button>
       </div>
 

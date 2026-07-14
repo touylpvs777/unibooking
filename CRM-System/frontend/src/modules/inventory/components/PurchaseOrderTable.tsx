@@ -1,4 +1,5 @@
 import { ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { POStatusBadge } from '@/components/inventory/StockBadge'
 import type { POListItem } from '@/types/inventory'
 
@@ -15,18 +16,19 @@ interface Props {
 }
 
 export default function PurchaseOrderTable({ items, total, page, pages, isLoading, onPageChange }: Props) {
+  const { t } = useTranslation()
   return (
     <div className="table-card">
       <div className="table-wrap">
         <table className="data-table">
           <thead>
             <tr>
-              <th>PO Number</th>
-              <th>Vendor</th>
-              <th>Status</th>
-              <th className="col-hide-sm">Warehouse</th>
-              <th className="col-hide-sm">Order Date</th>
-              <th>Total</th>
+              <th>{t('inventory.purchaseOrderTable.poNumber')}</th>
+              <th>{t('inventory.purchaseOrderTable.vendor')}</th>
+              <th>{t('common.status')}</th>
+              <th className="col-hide-sm">{t('inventory.purchaseOrderTable.warehouse')}</th>
+              <th className="col-hide-sm">{t('inventory.purchaseOrderTable.orderDate')}</th>
+              <th>{t('common.total')}</th>
             </tr>
           </thead>
           <tbody>
@@ -41,7 +43,7 @@ export default function PurchaseOrderTable({ items, total, page, pages, isLoadin
               </tr>
             )) : items.length === 0 ? (
               <tr><td colSpan={6}>
-                <div className="table-empty"><ShoppingCart size={36} /><p>No purchase orders found</p></div>
+                <div className="table-empty"><ShoppingCart size={36} /><p>{t('inventory.purchaseOrderTable.empty')}</p></div>
               </td></tr>
             ) : items.map((po) => (
               <tr key={po.id}>
@@ -59,7 +61,7 @@ export default function PurchaseOrderTable({ items, total, page, pages, isLoadin
 
       {!isLoading && pages > 1 && (
         <div className="pagination">
-          <span className="pagination-info">Page {page} of {pages} ({total} total)</span>
+          <span className="pagination-info">{t('inventory.purchaseOrderTable.paginationInfo', { page, pages, total })}</span>
           <div className="pagination-controls">
             <button className="page-btn" disabled={page === 1} onClick={() => onPageChange(page - 1)}><ChevronLeft size={14} /></button>
             <button className="page-btn" disabled={page === pages} onClick={() => onPageChange(page + 1)}><ChevronRight size={14} /></button>

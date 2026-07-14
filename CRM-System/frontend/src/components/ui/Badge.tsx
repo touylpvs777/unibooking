@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export type BadgeVariant = 'green' | 'amber' | 'gray' | 'blue' | 'red' | 'purple' | 'cyan'
 
@@ -34,20 +35,19 @@ export function Badge({ variant, children }: BadgeProps) {
 
 // Convenience: customer status → badge
 export function CustomerStatusBadge({ status }: { status: string }) {
+  const { t } = useTranslation()
   const map: Record<string, BadgeVariant> = {
     active:   'green',
     prospect: 'amber',
     inactive: 'gray',
     churned:  'red',
   }
-  const labels: Record<string, string> = {
-    active: 'Active', prospect: 'Prospect', inactive: 'Inactive', churned: 'Churned',
-  }
-  return <Badge variant={map[status] ?? 'gray'}>{labels[status] ?? status}</Badge>
+  return <Badge variant={map[status] ?? 'gray'}>{t(`customers.status.${status}`, status)}</Badge>
 }
 
 // Convenience: lead status → badge
 export function LeadStatusBadge({ status }: { status: string }) {
+  const { t } = useTranslation()
   const map: Record<string, BadgeVariant> = {
     new:       'purple',
     contacted: 'cyan',
@@ -56,9 +56,5 @@ export function LeadStatusBadge({ status }: { status: string }) {
     won:       'green',
     lost:      'red',
   }
-  const labels: Record<string, string> = {
-    new: 'New', contacted: 'Contacted', qualified: 'Qualified',
-    proposal: 'Proposal', won: 'Won', lost: 'Lost',
-  }
-  return <Badge variant={map[status] ?? 'gray'}>{labels[status] ?? status}</Badge>
+  return <Badge variant={map[status] ?? 'gray'}>{t(`leads.status.${status}`, status)}</Badge>
 }

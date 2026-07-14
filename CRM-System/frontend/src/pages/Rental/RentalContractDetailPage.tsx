@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   ChevronLeft, AlertCircle, Plus, Trash2, Send, Check,
   X, RotateCcw, Clock, DollarSign, CalendarPlus,
@@ -37,6 +38,7 @@ function fmtAmount(n: number) {
 }
 
 export default function RentalContractDetailPage() {
+  const { t } = useTranslation()
   const { id }   = useParams<{ id: string }>()
   const navigate = useNavigate()
 
@@ -56,11 +58,11 @@ export default function RentalContractDetailPage() {
       const { data } = await getRentalContract(Number(id))
       setCt(data)
     } catch {
-      setError('Rental contract not found or failed to load.')
+      setError(t('rental.detail.notFoundError'))
     } finally {
       setIsLoading(false)
     }
-  }, [id])
+  }, [id, t])
 
   useEffect(() => { load() }, [load])
 
@@ -72,7 +74,7 @@ export default function RentalContractDetailPage() {
       await load()
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail
-      toast.error(msg ?? `Failed: ${label}`)
+      toast.error(msg ?? t('rental.detail.actionFailed', { action: label }))
     } finally {
       setAL(false)
     }
@@ -80,7 +82,7 @@ export default function RentalContractDetailPage() {
 
   const handleDeleteItem = async (itemId: number) => {
     if (!ct) return
-    await doAction('Item removed', () => deleteContractItem(ct.id, itemId))
+    await doAction(t('rental.detail.toasts.itemRemoved'), () => deleteContractItem(ct.id, itemId))
   }
 
   if (isLoading) {
@@ -104,10 +106,10 @@ export default function RentalContractDetailPage() {
     return (
       <div className="product-detail">
         <button className="detail-back" onClick={() => navigate('/rental-contracts')}>
-          <ChevronLeft size={16} /> Back to Rental Contracts
+          <ChevronLeft size={16} /> {t('rental.detail.backToContracts')}
         </button>
         <div className="page-error" style={{ marginTop: 24 }}>
-          <AlertCircle size={16} /> {error ?? 'Rental contract not found.'}
+          <AlertCircle size={16} /> {error ?? t('rental.detail.notFoundError')}
         </div>
       </div>
     )
@@ -120,7 +122,7 @@ export default function RentalContractDetailPage() {
   return (
     <div className="product-detail">
       <button className="detail-back" onClick={() => navigate('/rental-contracts')}>
-        <ChevronLeft size={16} /> Back to Rental Contracts
+        <ChevronLeft size={16} /> {t('rental.detail.backToContracts')}
       </button>
 
       {/* Header */}
@@ -128,7 +130,7 @@ export default function RentalContractDetailPage() {
         <div>
           <div className="detail-title-row">
             <h1 className="detail-name">{ct.contract_number}</h1>
-            <span className="detail-rev">Rev {ct.revision_number}</span>
+            <span className="detail-rev">{t('rental.detail.rev', { number: ct.revision_number })}</span>
           </div>
           <div className="detail-subtitle">
             {ct.customer.first_name} {ct.customer.last_name}
@@ -143,62 +145,62 @@ export default function RentalContractDetailPage() {
         <div className="detail-actions">
           {actions.includes('submit') && (
             <button className="btn btn-primary" disabled={actionLoading}
-              onClick={() => doAction('Submitted for approval', () => submitContract(ct.id))}>
-              <Send size={14} /> Submit
+              onClick={() => doAction(t('rental.detail.toasts.submitted'), () => submitContract(ct.id))}>
+              <Send size={14} /> {t('rental.detail.submit')}
             </button>
           )}
           {actions.includes('approve') && (
             <button className="btn btn-primary" disabled={actionLoading}
-              onClick={() => doAction('Approved', () => approveContract(ct.id))}>
-              <Check size={14} /> Approve
+              onClick={() => doAction(t('common.approved'), () => approveContract(ct.id))}>
+              <Check size={14} /> {t('rental.detail.approve')}
             </button>
           )}
           {actions.includes('reject') && (
             <button className="btn btn-secondary" disabled={actionLoading}
-              onClick={() => doAction('Revision requested', () => rejectContract(ct.id, 'Revision needed'))}>
-              <RotateCcw size={14} /> Request Revision
+              onClick={() => doAction(t('rental.detail.toasts.revisionRequested'), () => rejectContract(ct.id, 'Revision needed'))}>
+              <RotateCcw size={14} /> {t('rental.detail.requestRevision')}
             </button>
           )}
           {actions.includes('activate') && (
             <button className="btn btn-primary" disabled={actionLoading}
-              onClick={() => doAction('Activated', () => activateContract(ct.id))}>
-              <Check size={14} /> Activate
+              onClick={() => doAction(t('rental.detail.toasts.activated'), () => activateContract(ct.id))}>
+              <Check size={14} /> {t('rental.detail.activate')}
             </button>
           )}
           {actions.includes('request_return') && (
             <button className="btn btn-secondary" disabled={actionLoading}
               onClick={() => setRFO(true)}>
-              <Truck size={14} /> Request Return
+              <Truck size={14} /> {t('rental.detail.requestReturn')}
             </button>
           )}
           {actions.includes('request_extension') && (
             <button className="btn btn-secondary" disabled={actionLoading}
               onClick={() => setEFO(true)}>
-              <CalendarPlus size={14} /> Request Extension
+              <CalendarPlus size={14} /> {t('rental.detail.requestExtension')}
             </button>
           )}
           {actions.includes('complete_inspection') && (
             <button className="btn btn-primary" disabled={actionLoading}
-              onClick={() => toast.info('Inspection completion — use Return panel below.')}>
-              <ShieldAlert size={14} /> Complete Inspection
+              onClick={() => toast.info(t('rental.detail.inspectionInfo'))}>
+              <ShieldAlert size={14} /> {t('rental.detail.completeInspection')}
             </button>
           )}
           {actions.includes('generate_billing') && (
             <button className="btn btn-secondary" disabled={actionLoading}
-              onClick={() => toast.info('Billing generation — coming in Phase 4.')}>
-              <DollarSign size={14} /> Generate Billing
+              onClick={() => toast.info(t('rental.detail.billingInfo'))}>
+              <DollarSign size={14} /> {t('rental.detail.generateBilling')}
             </button>
           )}
           {actions.includes('cancel') && (
             <button className="btn btn-secondary" disabled={actionLoading}
-              onClick={() => doAction('Cancelled', () => cancelContract(ct.id, 'Cancelled by user'))}>
-              <X size={14} /> Cancel
+              onClick={() => doAction(t('common.cancelled'), () => cancelContract(ct.id, 'Cancelled by user'))}>
+              <X size={14} /> {t('common.cancel')}
             </button>
           )}
           {actions.includes('close') && (
             <button className="btn btn-primary" disabled={actionLoading}
-              onClick={() => doAction('Contract closed', () => closeContract(ct.id))}>
-              <Check size={14} /> Close Contract
+              onClick={() => doAction(t('rental.detail.toasts.contractClosed'), () => closeContract(ct.id))}>
+              <Check size={14} /> {t('rental.detail.closeContract')}
             </button>
           )}
         </div>
@@ -207,10 +209,10 @@ export default function RentalContractDetailPage() {
       {/* Summary Cards */}
       <div className="detail-summary-grid">
         {[
-          { label: 'Subtotal', value: fmtAmount(ct.subtotal) },
-          { label: `Tax (${ct.tax_rate}%)`, value: fmtAmount(ct.tax_amount) },
-          { label: 'Discount', value: fmtAmount(ct.discount_amount) },
-          { label: 'Total', value: `${fmtAmount(ct.total_value)} ${ct.currency}` },
+          { label: t('common.subtotal'), value: fmtAmount(ct.subtotal) },
+          { label: t('rental.detail.taxWithRate', { rate: ct.tax_rate }), value: fmtAmount(ct.tax_amount) },
+          { label: t('rental.detail.discount'), value: fmtAmount(ct.discount_amount) },
+          { label: t('common.total'), value: `${fmtAmount(ct.total_value)} ${ct.currency}` },
         ].map((c) => (
           <div key={c.label} className="detail-summary-card">
             <div className="detail-summary-label">{c.label}</div>
@@ -223,10 +225,10 @@ export default function RentalContractDetailPage() {
       {bs && bs.event_count > 0 && (
         <div className="detail-summary-grid" style={{ marginTop: 8 }}>
           {[
-            { label: 'Total Billed', value: fmtAmount(bs.total_billed) },
-            { label: 'Total Paid', value: fmtAmount(bs.total_paid) },
-            { label: 'Outstanding', value: fmtAmount(bs.total_outstanding) },
-            { label: 'Overdue', value: fmtAmount(bs.total_overdue) },
+            { label: t('rental.detail.totalBilled'), value: fmtAmount(bs.total_billed) },
+            { label: t('rental.detail.totalPaid'), value: fmtAmount(bs.total_paid) },
+            { label: t('rental.detail.outstanding'), value: fmtAmount(bs.total_outstanding) },
+            { label: t('rental.status.overdue'), value: fmtAmount(bs.total_overdue) },
           ].map((c) => (
             <div key={c.label} className="detail-summary-card">
               <div className="detail-summary-label">{c.label}</div>
@@ -240,42 +242,42 @@ export default function RentalContractDetailPage() {
       <div className="detail-info-grid">
         <div>
           <dl className="detail-meta">
-            <dt>Customer</dt>
+            <dt>{t('rental.detail.customer')}</dt>
             <dd>
               {ct.customer.first_name} {ct.customer.last_name}
               {ct.customer.company ? ` (${ct.customer.company})` : ''}
             </dd>
-            {ct.delivery_contact_name && (<><dt>Delivery Contact</dt><dd>{ct.delivery_contact_name}</dd></>)}
-            {ct.delivery_contact_phone && (<><dt>Delivery Phone</dt><dd>{ct.delivery_contact_phone}</dd></>)}
-            {ct.assigned_user && (<><dt>Assigned To</dt><dd>{ct.assigned_user.full_name ?? ct.assigned_user.username}</dd></>)}
-            {ct.delivery_address && (<><dt>Delivery Address</dt><dd>{ct.delivery_address}</dd></>)}
-            {ct.approved_by_user && (<><dt>Approved By</dt><dd>{ct.approved_by_user.full_name ?? ct.approved_by_user.username}</dd></>)}
+            {ct.delivery_contact_name && (<><dt>{t('rental.detail.deliveryContact')}</dt><dd>{ct.delivery_contact_name}</dd></>)}
+            {ct.delivery_contact_phone && (<><dt>{t('rental.detail.deliveryPhone')}</dt><dd>{ct.delivery_contact_phone}</dd></>)}
+            {ct.assigned_user && (<><dt>{t('rental.detail.assignedTo')}</dt><dd>{ct.assigned_user.full_name ?? ct.assigned_user.username}</dd></>)}
+            {ct.delivery_address && (<><dt>{t('rental.form.deliveryAddress')}</dt><dd>{ct.delivery_address}</dd></>)}
+            {ct.approved_by_user && (<><dt>{t('rental.detail.approvedBy')}</dt><dd>{ct.approved_by_user.full_name ?? ct.approved_by_user.username}</dd></>)}
           </dl>
         </div>
         <div>
           <dl className="detail-meta">
-            <dt>Start Date</dt><dd>{fmtDate(ct.start_date)}</dd>
-            <dt>End Date</dt><dd>{fmtDate(ct.end_date)}</dd>
-            {ct.actual_start_date && (<><dt>Actual Start</dt><dd>{fmtDate(ct.actual_start_date)}</dd></>)}
-            {ct.actual_end_date && (<><dt>Actual End</dt><dd>{fmtDate(ct.actual_end_date)}</dd></>)}
-            <dt>Deposit</dt>
+            <dt>{t('rental.form.startDate')}</dt><dd>{fmtDate(ct.start_date)}</dd>
+            <dt>{t('rental.form.endDate')}</dt><dd>{fmtDate(ct.end_date)}</dd>
+            {ct.actual_start_date && (<><dt>{t('rental.detail.actualStart')}</dt><dd>{fmtDate(ct.actual_start_date)}</dd></>)}
+            {ct.actual_end_date && (<><dt>{t('rental.detail.actualEnd')}</dt><dd>{fmtDate(ct.actual_end_date)}</dd></>)}
+            <dt>{t('rental.detail.deposit')}</dt>
             <dd>{fmtAmount(ct.deposit_amount)} {ct.currency} ({ct.deposit_status})</dd>
-            <dt>Payment Terms</dt><dd>{ct.payment_terms_days} days</dd>
-            <dt>Created</dt><dd>{fmtDate(ct.created_at)}</dd>
+            <dt>{t('rental.detail.paymentTerms')}</dt><dd>{t('rental.detail.daysCount', { count: ct.payment_terms_days })}</dd>
+            <dt>{t('common.createdAt')}</dt><dd>{fmtDate(ct.created_at)}</dd>
           </dl>
         </div>
       </div>
 
       {ct.notes && (
         <div className="detail-description" style={{ marginTop: 16 }}>
-          <div className="detail-section-title">Notes</div>
+          <div className="detail-section-title">{t('common.notes')}</div>
           <p>{ct.notes}</p>
         </div>
       )}
 
       {ct.internal_notes && (
         <div className="detail-internal-note">
-          <strong>Internal Note</strong>
+          <strong>{t('rental.detail.internalNote')}</strong>
           <p>{ct.internal_notes}</p>
         </div>
       )}
@@ -283,10 +285,10 @@ export default function RentalContractDetailPage() {
       {/* Line Items */}
       <div className="detail-specs-section" style={{ marginTop: 24 }}>
         <div className="detail-section-bar">
-          <h2 className="detail-section-title">Line Items ({ct.items.length})</h2>
+          <h2 className="detail-section-title">{t('rental.detail.lineItems', { count: ct.items.length })}</h2>
           {isEditable && (
             <button className="btn btn-primary btn-sm" onClick={() => setIFO(true)}>
-              <Plus size={13} /> Add Item
+              <Plus size={13} /> {t('rental.detail.addItem')}
             </button>
           )}
         </div>
@@ -296,12 +298,12 @@ export default function RentalContractDetailPage() {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Description</th>
-                  <th>Status</th>
-                  <th className="col-hide-sm">Monthly Rate</th>
-                  <th className="col-hide-sm">Daily Rate</th>
-                  <th>Line Total</th>
+                  <th>{t('rental.detail.colNumber')}</th>
+                  <th>{t('common.description')}</th>
+                  <th>{t('common.status')}</th>
+                  <th className="col-hide-sm">{t('rental.detail.colMonthlyRate')}</th>
+                  <th className="col-hide-sm">{t('rental.detail.colDailyRate')}</th>
+                  <th>{t('rental.detail.colLineTotal')}</th>
                   {isEditable && <th style={{ width: 40 }}></th>}
                 </tr>
               </thead>
@@ -311,8 +313,8 @@ export default function RentalContractDetailPage() {
                     <td className="cell-muted">{item.line_number}</td>
                     <td>
                       <div className="cell-desc">{item.description}</div>
-                      {item.forklift && <div className="cell-muted cell-sub">S/N: {item.forklift.serial_number}</div>}
-                      {item.hours_used != null && <div className="cell-muted cell-sub">Hours: {item.hours_used}</div>}
+                      {item.forklift && <div className="cell-muted cell-sub">{t('rental.detail.serialNumber', { serial: item.forklift.serial_number })}</div>}
+                      {item.hours_used != null && <div className="cell-muted cell-sub">{t('rental.detail.hoursUsed', { count: item.hours_used })}</div>}
                     </td>
                     <td className="cell-muted cell-type">{item.line_status.replace(/_/g, ' ')}</td>
                     <td className="cell-muted col-hide-sm cell-mono">{fmtAmount(item.monthly_rate)}</td>
@@ -330,7 +332,7 @@ export default function RentalContractDetailPage() {
           </div>
         ) : (
           <div className="detail-empty-state">
-            No line items yet. {isEditable && 'Add items to build the contract.'}
+            {t('rental.detail.noLineItems')} {isEditable && t('rental.detail.addItemsHint')}
           </div>
         )}
       </div>
@@ -339,18 +341,18 @@ export default function RentalContractDetailPage() {
       {ct.recent_extensions.length > 0 && (
         <div className="detail-specs-section">
           <div className="detail-section-bar">
-            <h2 className="detail-section-title">Extensions ({ct.recent_extensions.length})</h2>
+            <h2 className="detail-section-title">{t('rental.detail.extensions', { count: ct.recent_extensions.length })}</h2>
           </div>
           <div className="table-card" style={{ marginTop: 10 }}>
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Original End</th>
-                  <th>New End</th>
-                  <th>Status</th>
-                  <th className="col-hide-sm">Reason</th>
-                  <th className="col-hide-sm">Actions</th>
+                  <th>{t('rental.detail.colNumber')}</th>
+                  <th>{t('rental.detail.colOriginalEnd')}</th>
+                  <th>{t('rental.detail.colNewEnd')}</th>
+                  <th>{t('common.status')}</th>
+                  <th className="col-hide-sm">{t('rental.detail.colReason')}</th>
+                  <th className="col-hide-sm">{t('common.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -369,12 +371,12 @@ export default function RentalContractDetailPage() {
                       {ext.status === 'pending' && actions.includes('approve') && (
                         <div style={{ display: 'flex', gap: 4 }}>
                           <button className="btn btn-primary btn-sm" disabled={actionLoading}
-                            onClick={() => doAction('Extension approved', () => approveExtension(ct.id, ext.id))}>
-                            Approve
+                            onClick={() => doAction(t('rental.detail.toasts.extensionApproved'), () => approveExtension(ct.id, ext.id))}>
+                            {t('rental.detail.approve')}
                           </button>
                           <button className="btn btn-secondary btn-sm" disabled={actionLoading}
-                            onClick={() => doAction('Extension rejected', () => rejectExtension(ct.id, ext.id, 'Rejected'))}>
-                            Reject
+                            onClick={() => doAction(t('rental.detail.toasts.extensionRejected'), () => rejectExtension(ct.id, ext.id, 'Rejected'))}>
+                            {t('common.rejected')}
                           </button>
                         </div>
                       )}
@@ -391,17 +393,17 @@ export default function RentalContractDetailPage() {
       {/* Active Returns */}
       {ct.active_returns.length > 0 && (
         <div className="detail-specs-section">
-          <h2 className="detail-section-title">Active Returns ({ct.active_returns.length})</h2>
+          <h2 className="detail-section-title">{t('rental.detail.activeReturns', { count: ct.active_returns.length })}</h2>
           <div className="table-card" style={{ marginTop: 10 }}>
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Return #</th>
-                  <th>Type</th>
-                  <th>Status</th>
-                  <th className="col-hide-sm">Requested</th>
-                  <th className="col-hide-sm">Scheduled Pickup</th>
-                  <th className="col-hide-sm">Forklift</th>
+                  <th>{t('rental.detail.colReturnNumber')}</th>
+                  <th>{t('common.type')}</th>
+                  <th>{t('common.status')}</th>
+                  <th className="col-hide-sm">{t('rental.detail.colRequested')}</th>
+                  <th className="col-hide-sm">{t('rental.detail.colScheduledPickup')}</th>
+                  <th className="col-hide-sm">{t('rental.detail.colForklift')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -425,17 +427,17 @@ export default function RentalContractDetailPage() {
       {ct.recent_status_history.length > 0 && (
         <div className="detail-specs-section">
           <h2 className="detail-section-title detail-section-title-row">
-            <Clock size={16} /> Status History
+            <Clock size={16} /> {t('rental.detail.statusHistory')}
           </h2>
           <div className="table-card" style={{ marginTop: 10 }}>
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Date</th>
-                  <th>From</th>
-                  <th>To</th>
-                  <th className="col-hide-sm">Reason</th>
-                  <th className="col-hide-sm">By</th>
+                  <th>{t('common.date')}</th>
+                  <th>{t('rental.detail.colFrom')}</th>
+                  <th>{t('rental.detail.colTo')}</th>
+                  <th className="col-hide-sm">{t('rental.detail.colReason')}</th>
+                  <th className="col-hide-sm">{t('rental.detail.colBy')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -468,6 +470,7 @@ export default function RentalContractDetailPage() {
 function AddItemModal({ isOpen, onClose, contractId, onSuccess }: {
   isOpen: boolean; onClose: () => void; contractId: number; onSuccess: () => void
 }) {
+  const { t } = useTranslation()
   const [form, setForm] = useState({ forklift_id: '', description: '', monthly_rate: '', daily_rate: '', hourly_rate: '', notes: '' })
   const [saving, setSaving] = useState(false)
   const [err, setErr] = useState<string | null>(null)
@@ -478,10 +481,10 @@ function AddItemModal({ isOpen, onClose, contractId, onSuccess }: {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.forklift_id) { setErr('Forklift ID is required.'); return }
-    if (!form.description.trim()) { setErr('Description is required.'); return }
-    if (!form.monthly_rate) { setErr('Monthly rate is required.'); return }
-    if (!form.daily_rate) { setErr('Daily rate is required.'); return }
+    if (!form.forklift_id) { setErr(t('rental.detail.addItemModal.forkliftIdRequired')); return }
+    if (!form.description.trim()) { setErr(t('rental.detail.addItemModal.descriptionRequired')); return }
+    if (!form.monthly_rate) { setErr(t('rental.detail.addItemModal.monthlyRateRequired')); return }
+    if (!form.daily_rate) { setErr(t('rental.detail.addItemModal.dailyRateRequired')); return }
     setSaving(true); setErr(null)
     try {
       await addContractItem(contractId, {
@@ -492,49 +495,49 @@ function AddItemModal({ isOpen, onClose, contractId, onSuccess }: {
         hourly_rate: form.hourly_rate ? Number(form.hourly_rate) : undefined,
         notes: form.notes.trim() || undefined,
       })
-      toast.success('Item added.')
+      toast.success(t('rental.detail.addItemModal.itemAdded'))
       onClose(); onSuccess()
     } catch (error: unknown) {
       const msg = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail
-      setErr(msg ?? 'Failed to add item.')
+      setErr(msg ?? t('rental.detail.addItemModal.addFailed'))
     } finally { setSaving(false) }
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Add Contract Item" width={560}>
+    <Modal isOpen={isOpen} onClose={onClose} title={t('rental.detail.addItemModal.title')} width={560}>
       <form onSubmit={handleSubmit} className="form-grid">
         {err && <div className="page-error" style={{ margin: 0 }}>{err}</div>}
         <div className="form-row-2">
           <div className="form-group">
-            <label>Forklift ID <span className="required">*</span></label>
+            <label>{t('rental.detail.addItemModal.forkliftId')} <span className="required">*</span></label>
             <input type="number" value={form.forklift_id} onChange={(e) => set('forklift_id', e.target.value)} required />
           </div>
           <div className="form-group">
-            <label>Hourly Rate</label>
-            <input type="number" value={form.hourly_rate} onChange={(e) => set('hourly_rate', e.target.value)} min="0" step="any" placeholder="Optional" />
+            <label>{t('rental.detail.addItemModal.hourlyRate')}</label>
+            <input type="number" value={form.hourly_rate} onChange={(e) => set('hourly_rate', e.target.value)} min="0" step="any" placeholder={t('common.optional')} />
           </div>
         </div>
         <div className="form-group">
-          <label>Description <span className="required">*</span></label>
+          <label>{t('common.description')} <span className="required">*</span></label>
           <input value={form.description} onChange={(e) => set('description', e.target.value)} required />
         </div>
         <div className="form-row-2">
           <div className="form-group">
-            <label>Monthly Rate <span className="required">*</span></label>
+            <label>{t('rental.detail.addItemModal.monthlyRate')} <span className="required">*</span></label>
             <input type="number" value={form.monthly_rate} onChange={(e) => set('monthly_rate', e.target.value)} min="0" step="any" required />
           </div>
           <div className="form-group">
-            <label>Daily Rate <span className="required">*</span></label>
+            <label>{t('rental.detail.addItemModal.dailyRate')} <span className="required">*</span></label>
             <input type="number" value={form.daily_rate} onChange={(e) => set('daily_rate', e.target.value)} min="0" step="any" required />
           </div>
         </div>
         <div className="form-group">
-          <label>Notes</label>
-          <input value={form.notes} onChange={(e) => set('notes', e.target.value)} placeholder="Optional" />
+          <label>{t('common.notes')}</label>
+          <input value={form.notes} onChange={(e) => set('notes', e.target.value)} placeholder={t('common.optional')} />
         </div>
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 4 }}>
-          <button type="button" className="btn btn-secondary" onClick={onClose} disabled={saving}>Cancel</button>
-          <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? 'Adding...' : 'Add Item'}</button>
+          <button type="button" className="btn btn-secondary" onClick={onClose} disabled={saving}>{t('common.cancel')}</button>
+          <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? t('rental.detail.addItemModal.adding') : t('rental.detail.addItem')}</button>
         </div>
       </form>
     </Modal>
@@ -547,6 +550,7 @@ function AddItemModal({ isOpen, onClose, contractId, onSuccess }: {
 function ExtensionModal({ isOpen, onClose, contractId, currentEndDate, onSuccess }: {
   isOpen: boolean; onClose: () => void; contractId: number; currentEndDate: string; onSuccess: () => void
 }) {
+  const { t } = useTranslation()
   const [form, setForm] = useState({ new_end_date: '', rate_adjustment_pct: '0', reason: '' })
   const [saving, setSaving] = useState(false)
   const [err, setErr] = useState<string | null>(null)
@@ -557,8 +561,8 @@ function ExtensionModal({ isOpen, onClose, contractId, currentEndDate, onSuccess
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.new_end_date) { setErr('New end date is required.'); return }
-    if (form.new_end_date <= currentEndDate) { setErr('New end date must be after current end date.'); return }
+    if (!form.new_end_date) { setErr(t('rental.detail.extensionModal.newEndDateRequired')); return }
+    if (form.new_end_date <= currentEndDate) { setErr(t('rental.detail.extensionModal.newEndDateAfterCurrent')); return }
     setSaving(true); setErr(null)
     try {
       await createExtension(contractId, {
@@ -566,39 +570,39 @@ function ExtensionModal({ isOpen, onClose, contractId, currentEndDate, onSuccess
         rate_adjustment_pct: Number(form.rate_adjustment_pct) || 0,
         reason: form.reason.trim() || undefined,
       })
-      toast.success('Extension requested.')
+      toast.success(t('rental.detail.extensionModal.extensionRequested'))
       onClose(); onSuccess()
     } catch (error: unknown) {
       const msg = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail
-      setErr(msg ?? 'Failed to request extension.')
+      setErr(msg ?? t('rental.detail.extensionModal.requestFailed'))
     } finally { setSaving(false) }
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Request Contract Extension" width={480}>
+    <Modal isOpen={isOpen} onClose={onClose} title={t('rental.detail.extensionModal.title')} width={480}>
       <form onSubmit={handleSubmit} className="form-grid">
         {err && <div className="page-error" style={{ margin: 0 }}>{err}</div>}
         <div className="form-group">
-          <label>Current End Date</label>
+          <label>{t('rental.detail.extensionModal.currentEndDate')}</label>
           <input value={fmtDate(currentEndDate)} disabled />
         </div>
         <div className="form-row-2">
           <div className="form-group">
-            <label>New End Date <span className="required">*</span></label>
+            <label>{t('rental.detail.extensionModal.newEndDate')} <span className="required">*</span></label>
             <input type="date" value={form.new_end_date} onChange={(e) => set('new_end_date', e.target.value)} min={currentEndDate} required />
           </div>
           <div className="form-group">
-            <label>Rate Adjustment (%)</label>
+            <label>{t('rental.detail.extensionModal.rateAdjustment')}</label>
             <input type="number" value={form.rate_adjustment_pct} onChange={(e) => set('rate_adjustment_pct', e.target.value)} step="0.1" />
           </div>
         </div>
         <div className="form-group">
-          <label>Reason</label>
-          <textarea value={form.reason} onChange={(e) => set('reason', e.target.value)} rows={2} placeholder="Reason for extension request..." />
+          <label>{t('rental.detail.extensionModal.reason')}</label>
+          <textarea value={form.reason} onChange={(e) => set('reason', e.target.value)} rows={2} placeholder={t('rental.detail.extensionModal.reasonPlaceholder')} />
         </div>
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 4 }}>
-          <button type="button" className="btn btn-secondary" onClick={onClose} disabled={saving}>Cancel</button>
-          <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? 'Requesting...' : 'Request Extension'}</button>
+          <button type="button" className="btn btn-secondary" onClick={onClose} disabled={saving}>{t('common.cancel')}</button>
+          <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? t('rental.detail.extensionModal.requesting') : t('rental.detail.extensionModal.requestExtension')}</button>
         </div>
       </form>
     </Modal>
@@ -613,6 +617,7 @@ function ReturnModal({ isOpen, onClose, contractId, items, onSuccess }: {
   items: { id: number; forklift: { id: number; serial_number: string } | null; description: string }[]
   onSuccess: () => void
 }) {
+  const { t } = useTranslation()
   const [form, setForm] = useState({ return_type: 'scheduled' as string, requested_date: '', contract_item_id: '', forklift_id: '', pickup_address: '', scheduled_pickup_date: '', is_early_termination: false, notes: '' })
   const [saving, setSaving] = useState(false)
   const [err, setErr] = useState<string | null>(null)
@@ -637,7 +642,7 @@ function ReturnModal({ isOpen, onClose, contractId, items, onSuccess }: {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.requested_date) { setErr('Requested date is required.'); return }
+    if (!form.requested_date) { setErr(t('rental.detail.returnModal.requestedDateRequired')); return }
     setSaving(true); setErr(null)
     try {
       await createReturn(contractId, {
@@ -650,37 +655,37 @@ function ReturnModal({ isOpen, onClose, contractId, items, onSuccess }: {
         is_early_termination: form.is_early_termination,
         notes: form.notes.trim() || undefined,
       })
-      toast.success('Return requested.')
+      toast.success(t('rental.detail.returnModal.returnRequested'))
       onClose(); onSuccess()
     } catch (error: unknown) {
       const msg = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail
-      setErr(msg ?? 'Failed to create return request.')
+      setErr(msg ?? t('rental.detail.returnModal.requestFailed'))
     } finally { setSaving(false) }
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Request Equipment Return" width={560}>
+    <Modal isOpen={isOpen} onClose={onClose} title={t('rental.detail.returnModal.title')} width={560}>
       <form onSubmit={handleSubmit} className="form-grid">
         {err && <div className="page-error" style={{ margin: 0 }}>{err}</div>}
         <div className="form-row-2">
           <div className="form-group">
-            <label>Return Type <span className="required">*</span></label>
+            <label>{t('rental.detail.returnModal.returnType')} <span className="required">*</span></label>
             <select value={form.return_type} onChange={(e) => set('return_type', e.target.value)}>
-              <option value="scheduled">Scheduled</option>
-              <option value="early">Early</option>
-              <option value="overdue">Overdue</option>
+              <option value="scheduled">{t('rental.detail.returnModal.scheduled')}</option>
+              <option value="early">{t('rental.detail.returnModal.early')}</option>
+              <option value="overdue">{t('rental.status.overdue')}</option>
             </select>
           </div>
           <div className="form-group">
-            <label>Requested Date <span className="required">*</span></label>
+            <label>{t('rental.detail.returnModal.requestedDate')} <span className="required">*</span></label>
             <input type="date" value={form.requested_date} onChange={(e) => set('requested_date', e.target.value)} required />
           </div>
         </div>
         {activeItems.length > 0 && (
           <div className="form-group">
-            <label>Equipment to Return</label>
+            <label>{t('rental.detail.returnModal.equipmentToReturn')}</label>
             <select value={form.contract_item_id} onChange={(e) => handleItemChange(e.target.value)}>
-              <option value="">— All equipment —</option>
+              <option value="">{t('rental.detail.returnModal.allEquipment')}</option>
               {activeItems.map((item) => (
                 <option key={item.id} value={item.id}>
                   {item.forklift ? `${item.forklift.serial_number} — ` : ''}{item.description}
@@ -691,27 +696,27 @@ function ReturnModal({ isOpen, onClose, contractId, items, onSuccess }: {
         )}
         <div className="form-row-2">
           <div className="form-group">
-            <label>Scheduled Pickup Date</label>
+            <label>{t('rental.detail.returnModal.scheduledPickupDate')}</label>
             <input type="date" value={form.scheduled_pickup_date} onChange={(e) => set('scheduled_pickup_date', e.target.value)} />
           </div>
           <div className="form-group">
-            <label>Pickup Address</label>
-            <input value={form.pickup_address} onChange={(e) => set('pickup_address', e.target.value)} placeholder="Customer site address" />
+            <label>{t('rental.detail.returnModal.pickupAddress')}</label>
+            <input value={form.pickup_address} onChange={(e) => set('pickup_address', e.target.value)} placeholder={t('rental.detail.returnModal.pickupAddressPlaceholder')} />
           </div>
         </div>
         <div className="form-group">
           <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <input type="checkbox" checked={form.is_early_termination} onChange={(e) => set('is_early_termination', e.target.checked)} />
-            Early termination (penalty may apply)
+            {t('rental.detail.returnModal.earlyTermination')}
           </label>
         </div>
         <div className="form-group">
-          <label>Notes</label>
-          <textarea value={form.notes} onChange={(e) => set('notes', e.target.value)} rows={2} placeholder="Additional instructions..." />
+          <label>{t('common.notes')}</label>
+          <textarea value={form.notes} onChange={(e) => set('notes', e.target.value)} rows={2} placeholder={t('rental.detail.returnModal.notesPlaceholder')} />
         </div>
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 4 }}>
-          <button type="button" className="btn btn-secondary" onClick={onClose} disabled={saving}>Cancel</button>
-          <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? 'Requesting...' : 'Request Return'}</button>
+          <button type="button" className="btn btn-secondary" onClick={onClose} disabled={saving}>{t('common.cancel')}</button>
+          <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? t('rental.detail.returnModal.requesting') : t('rental.detail.returnModal.requestReturn')}</button>
         </div>
       </form>
     </Modal>

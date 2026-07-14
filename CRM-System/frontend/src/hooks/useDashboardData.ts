@@ -52,16 +52,22 @@ const STATUS_COLORS: Record<string, string> = {
   in_stock: '#22c55e', rented: '#7c3aed', in_service: '#f59e0b',
   reserved: '#0891b2', sold: '#3b82f6', decommissioned: '#ef4444',
 }
-const STATUS_LABELS: Record<string, string> = {
-  in_stock: 'In Stock', rented: 'Rented', in_service: 'In Service',
-  reserved: 'Reserved', sold: 'Sold', decommissioned: 'Decommissioned',
+const STATUS_LABEL_KEYS: Record<string, string> = {
+  in_stock: 'dashboard.fleetStatus.inStock', rented: 'dashboard.fleetStatus.rented', in_service: 'dashboard.fleetStatus.inService',
+  reserved: 'dashboard.fleetStatus.reserved', sold: 'dashboard.fleetStatus.sold', decommissioned: 'dashboard.fleetStatus.decommissioned',
+}
+const FUEL_LABEL_KEYS: Record<string, string> = {
+  diesel: 'dashboard.fuelType.diesel', electric: 'dashboard.fuelType.electric',
+  lpg: 'dashboard.fuelType.lpg', dual_fuel: 'dashboard.fuelType.dualFuel', unknown: 'dashboard.fuelType.unknown',
 }
 
 function daysUntil(dateStr: string): number {
   return Math.ceil((new Date(dateStr).getTime() - Date.now()) / 86400000)
 }
 
-export function useDashboardData(): DashboardData {
+type TFunction = (key: string) => string
+
+export function useDashboardData(t: TFunction): DashboardData {
   const [summary, setSummary] = useState<DashboardSummary | null>(null)
   const [forklifts, setForklifts] = useState<Forklift[]>([])
   const [contracts, setContracts] = useState<RentalContract[]>([])
@@ -87,11 +93,11 @@ export function useDashboardData(): DashboardData {
       setQuotations(qtRes.data.items)
       setActivities(actRes.data)
     } catch {
-      setError('Failed to load dashboard data.')
+      setError(t('dashboard.loadError'))
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [t])
 
   useEffect(() => { load() }, [load])
 
@@ -123,7 +129,7 @@ export function useDashboardData(): DashboardData {
     const counts: Record<string, number> = {}
     for (const f of forklifts) counts[f.status] = (counts[f.status] || 0) + 1
     return Object.entries(counts).map(([key, value]) => ({
-      name: STATUS_LABELS[key] ?? key,
+      name: STATUS_LABEL_KEYS[key] ? t(STATUS_LABEL_KEYS[key]) : key,
       value,
       color: STATUS_COLORS[key] ?? '#94a3b8',
     }))
@@ -137,7 +143,7 @@ export function useDashboardData(): DashboardData {
     }
     return Object.entries(counts).map(([key, value]) => ({
       key,
-      name: key === 'unknown' ? 'Unknown' : key.charAt(0).toUpperCase() + key.slice(1).replace('_', ' '),
+      name: FUEL_LABEL_KEYS[key] ? t(FUEL_LABEL_KEYS[key]) : key,
       value,
     }))
   })()

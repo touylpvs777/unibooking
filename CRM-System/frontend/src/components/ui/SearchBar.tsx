@@ -127,7 +127,7 @@ export default function SearchBar() {
               )}
             </div>
 
-            <div className="search-palette-results" id={listboxId} role="listbox" aria-label="Search results">
+            <div className="search-palette-results" id={listboxId} role="listbox" aria-label={t('header.searchResults')}>
               {Object.entries(grouped).map(([groupKey, items]) => (
                 <div key={groupKey} className="search-group" role="group" aria-label={t(groupKey)}>
                   <div className="search-group-label" aria-hidden="true">{t(groupKey)}</div>

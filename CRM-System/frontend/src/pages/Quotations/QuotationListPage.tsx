@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   Search, Plus, AlertCircle, ChevronLeft, ChevronRight,
   FileText, RefreshCw, Trash2,
@@ -19,28 +20,8 @@ function fmtAmount(n: number, currency: string) {
   return `${n.toLocaleString(undefined, { maximumFractionDigits: 0 })} ${currency}`
 }
 
-const STATUS_OPTIONS = [
-  { value: '', label: 'All Statuses' },
-  { value: 'draft', label: 'Draft' },
-  { value: 'under_review', label: 'Under Review' },
-  { value: 'approved', label: 'Approved' },
-  { value: 'sent', label: 'Sent' },
-  { value: 'accepted', label: 'Accepted' },
-  { value: 'rejected', label: 'Rejected' },
-  { value: 'expired', label: 'Expired' },
-  { value: 'converted', label: 'Converted' },
-  { value: 'cancelled', label: 'Cancelled' },
-]
-
-const TYPE_OPTIONS = [
-  { value: '', label: 'All Types' },
-  { value: 'rental', label: 'Rental' },
-  { value: 'sales', label: 'Sales' },
-  { value: 'service', label: 'Service' },
-  { value: 'spare_parts', label: 'Spare Parts' },
-]
-
 export default function QuotationListPage() {
+  const { t } = useTranslation()
   const {
     quotations, total, pages, page: currentPage,
     params, isLoading, error,
@@ -51,6 +32,27 @@ export default function QuotationListPage() {
 
   const [deleteTarget, setDeleteTarget] = useState<Quotation | null>(null)
   const [isDeleting, setIsDeleting]     = useState(false)
+
+  const STATUS_OPTIONS = [
+    { value: '', label: t('quotations.list.allStatuses') },
+    { value: 'draft', label: t('quotations.status.draft') },
+    { value: 'under_review', label: t('quotations.status.underReview') },
+    { value: 'approved', label: t('quotations.status.approved') },
+    { value: 'sent', label: t('quotations.status.sent') },
+    { value: 'accepted', label: t('quotations.status.accepted') },
+    { value: 'rejected', label: t('quotations.status.rejected') },
+    { value: 'expired', label: t('quotations.status.expired') },
+    { value: 'converted', label: t('quotations.status.converted') },
+    { value: 'cancelled', label: t('quotations.status.cancelled') },
+  ]
+
+  const TYPE_OPTIONS = [
+    { value: '', label: t('quotations.list.allTypes') },
+    { value: 'rental', label: t('quotations.type.rental') },
+    { value: 'sales', label: t('quotations.type.sales') },
+    { value: 'service', label: t('quotations.type.service') },
+    { value: 'spare_parts', label: t('quotations.type.spareParts') },
+  ]
 
   const handleDelete = async () => {
     if (!deleteTarget) return
@@ -73,15 +75,15 @@ export default function QuotationListPage() {
     <div>
       <div className="page-header">
         <div>
-          <h1>Quotations</h1>
-          <p className="page-header-sub">{total.toLocaleString()} quotations</p>
+          <h1>{t('quotations.list.title')}</h1>
+          <p className="page-header-sub">{t('quotations.list.totalCount', { count: total })}</p>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="btn btn-ghost" onClick={refetch} disabled={isLoading} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> Refresh
+            <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('quotations.list.refresh')}
           </button>
           <button className="btn btn-primary" onClick={() => navigate('/quotations/new')}>
-            <Plus size={15} /> New Quotation
+            <Plus size={15} /> {t('quotations.list.newQuotation')}
           </button>
         </div>
       </div>
@@ -97,7 +99,7 @@ export default function QuotationListPage() {
           <Search size={14} />
           <input
             className="search-input"
-            placeholder="Search number, title..."
+            placeholder={t('quotations.list.searchPlaceholder')}
             value={params.q ?? ''}
             onChange={(e) => applyParams({ q: e.target.value || undefined, page: 1 })}
           />
@@ -124,11 +126,11 @@ export default function QuotationListPage() {
             className="clear-btn"
             onClick={() => applyParams({ q: undefined, status: undefined, quotation_type: undefined, page: 1 })}
           >
-            Clear
+            {t('common.clearFilters')}
           </button>
         )}
 
-        <span className="toolbar-count">{total} result{total !== 1 ? 's' : ''}</span>
+        <span className="toolbar-count">{t('quotations.list.resultsCount', { count: total })}</span>
       </div>
 
       <div className="table-card">
@@ -136,13 +138,13 @@ export default function QuotationListPage() {
           <table className="data-table">
             <thead>
               <tr>
-                <th>Quotation</th>
-                <th>Type</th>
-                <th>Status</th>
-                <th className="col-hide-sm">Customer</th>
-                <th className="col-hide-sm">Amount</th>
-                <th className="col-hide-sm">Valid Until</th>
-                <th className="col-hide-sm">Created</th>
+                <th>{t('quotations.list.colQuotation')}</th>
+                <th>{t('common.type')}</th>
+                <th>{t('common.status')}</th>
+                <th className="col-hide-sm">{t('quotations.list.colCustomer')}</th>
+                <th className="col-hide-sm">{t('common.amount')}</th>
+                <th className="col-hide-sm">{t('quotations.list.colValidUntil')}</th>
+                <th className="col-hide-sm">{t('common.createdAt')}</th>
                 <th style={{ width: 50 }}></th>
               </tr>
             </thead>
@@ -165,8 +167,8 @@ export default function QuotationListPage() {
                   <td colSpan={8}>
                     <div className="table-empty">
                       <FileText size={36} />
-                      <p>No quotations found</p>
-                      <small>Create a new quotation or adjust your filters.</small>
+                      <p>{t('quotations.list.noQuotationsFound')}</p>
+                      <small>{t('quotations.list.createOrAdjust')}</small>
                     </div>
                   </td>
                 </tr>
@@ -200,7 +202,7 @@ export default function QuotationListPage() {
                         <div className="row-actions" onClick={(e) => e.stopPropagation()}>
                           <button
                             className="action-btn danger"
-                            title="Delete"
+                            title={t('common.delete')}
                             onClick={() => setDeleteTarget(qt)}
                           >
                             <Trash2 size={14} />
@@ -218,7 +220,7 @@ export default function QuotationListPage() {
         {!isLoading && pages > 1 && (
           <div className="pagination">
             <span className="pagination-info">
-              Page {currentPage} of {pages} ({total} total)
+              {t('quotations.list.pageOf', { page: currentPage, pages, total })}
             </span>
             <div className="pagination-controls">
               <button className="page-btn" disabled={currentPage === 1} onClick={() => applyParams({ page: currentPage - 1 })}>
@@ -246,8 +248,8 @@ export default function QuotationListPage() {
         onClose={() => setDeleteTarget(null)}
         onConfirm={handleDelete}
         isLoading={isDeleting}
-        title="Delete Quotation"
-        message={deleteTarget ? `Delete "${deleteTarget.quotation_number}"? This cannot be undone.` : ''}
+        title={t('quotations.list.deleteConfirmTitle')}
+        message={deleteTarget ? t('quotations.list.deleteConfirmMessage', { number: deleteTarget.quotation_number }) : ''}
       />
     </div>
   )

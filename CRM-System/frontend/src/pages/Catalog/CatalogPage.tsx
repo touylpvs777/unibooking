@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   Plus, LayoutGrid, List, AlertCircle,
   ChevronLeft, ChevronRight, Package, RefreshCw,
@@ -25,6 +26,7 @@ function fmtDate(iso: string) {
 }
 
 export default function CatalogPage() {
+  const { t } = useTranslation()
   const {
     products, total, pages, page: currentPage,
     params, isLoading, error,
@@ -132,10 +134,10 @@ export default function CatalogPage() {
             })
           }}
         >
-          <option value="">All Types</option>
-          <option value="sale">For Sale</option>
-          <option value="rental">For Rental</option>
-          <option value="featured">Featured</option>
+          <option value="">{t('catalog.products.filterAllTypes')}</option>
+          <option value="sale">{t('catalog.products.forSale')}</option>
+          <option value="rental">{t('catalog.products.forRental')}</option>
+          <option value="featured">{t('catalog.products.featured')}</option>
         </select>
 
         {hasFilters && (
@@ -143,22 +145,22 @@ export default function CatalogPage() {
             className="clear-btn"
             onClick={() => applyParams({ q: undefined, brand_id: undefined, category_id: undefined, is_rental: undefined, is_sale: undefined, is_featured: undefined, page: 1 })}
           >
-            Clear All
+            {t('common.clearFilters')}
           </button>
         )}
 
         <button className="btn btn-ghost" onClick={refetch} disabled={isLoading} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> Refresh
+          <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('catalog.products.refresh')}
         </button>
         <button className="btn btn-primary" onClick={openCreate}>
-          <Plus size={15} /> New Product
+          <Plus size={15} /> {t('catalog.products.newProduct')}
         </button>
 
-        <span className="catalog-toolbar-count">{total} product{total !== 1 ? 's' : ''}</span>
+        <span className="catalog-toolbar-count">{t('catalog.products.productCount', { count: total })}</span>
 
         <div className="catalog-view-toggle">
-          <button className={`catalog-view-btn${viewMode === 'grid' ? ' active' : ''}`} onClick={() => setViewMode('grid')} title="Grid"><LayoutGrid size={15} /></button>
-          <button className={`catalog-view-btn${viewMode === 'list' ? ' active' : ''}`} onClick={() => setViewMode('list')} title="List"><List size={15} /></button>
+          <button className={`catalog-view-btn${viewMode === 'grid' ? ' active' : ''}`} onClick={() => setViewMode('grid')} title={t('common.gridView')}><LayoutGrid size={15} /></button>
+          <button className={`catalog-view-btn${viewMode === 'list' ? ' active' : ''}`} onClick={() => setViewMode('list')} title={t('common.listView')}><List size={15} /></button>
         </div>
       </div>
 
@@ -167,25 +169,25 @@ export default function CatalogPage() {
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 14 }}>
           {params.q && (
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '3px 10px', background: 'var(--color-primary-50)', border: '1px solid var(--color-primary-100)', borderRadius: 'var(--radius-full)', fontSize: 12, color: 'var(--color-primary-700)' }}>
-              Search: {params.q}
+              {t('catalog.products.pillSearch', { query: params.q })}
               <button onClick={() => applyParams({ q: undefined, page: 1 })} style={{ border: 'none', background: 'none', cursor: 'pointer', color: 'inherit', padding: 0, lineHeight: 1 }}>×</button>
             </span>
           )}
           {params.brand_id && (
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '3px 10px', background: 'var(--color-primary-50)', border: '1px solid var(--color-primary-100)', borderRadius: 'var(--radius-full)', fontSize: 12, color: 'var(--color-primary-700)' }}>
-              Brand: {brands.find((b) => b.id === params.brand_id)?.name ?? params.brand_id}
+              {t('catalog.products.pillBrand', { name: brands.find((b) => b.id === params.brand_id)?.name ?? params.brand_id })}
               <button onClick={() => applyParams({ brand_id: undefined, page: 1 })} style={{ border: 'none', background: 'none', cursor: 'pointer', color: 'inherit', padding: 0, lineHeight: 1 }}>×</button>
             </span>
           )}
           {params.category_id && (
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '3px 10px', background: 'var(--color-primary-50)', border: '1px solid var(--color-primary-100)', borderRadius: 'var(--radius-full)', fontSize: 12, color: 'var(--color-primary-700)' }}>
-              Category: {treeFlattened.find((c) => c.id === params.category_id)?.name_en ?? params.category_id}
+              {t('catalog.products.pillCategory', { name: treeFlattened.find((c) => c.id === params.category_id)?.name_en ?? params.category_id })}
               <button onClick={() => applyParams({ category_id: undefined, page: 1 })} style={{ border: 'none', background: 'none', cursor: 'pointer', color: 'inherit', padding: 0, lineHeight: 1 }}>×</button>
             </span>
           )}
           {(params.is_sale || params.is_rental || params.is_featured) && (
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '3px 10px', background: 'var(--color-primary-50)', border: '1px solid var(--color-primary-100)', borderRadius: 'var(--radius-full)', fontSize: 12, color: 'var(--color-primary-700)' }}>
-              {params.is_sale ? 'For Sale' : params.is_rental ? 'For Rental' : 'Featured'}
+              {params.is_sale ? t('catalog.products.forSale') : params.is_rental ? t('catalog.products.forRental') : t('catalog.products.featured')}
               <button onClick={() => applyParams({ is_sale: undefined, is_rental: undefined, is_featured: undefined, page: 1 })} style={{ border: 'none', background: 'none', cursor: 'pointer', color: 'inherit', padding: 0, lineHeight: 1 }}>×</button>
             </span>
           )}
@@ -209,8 +211,8 @@ export default function CatalogPage() {
           ) : products.length === 0 ? (
             <div className="catalog-product-empty">
               <Package size={40} />
-              <p>No products found</p>
-              <small>Try adjusting your filters or create a new product.</small>
+              <p>{t('catalog.products.empty.title')}</p>
+              <small>{t('catalog.products.empty.hint')}</small>
             </div>
           ) : (
             products.map((p) => (
@@ -232,12 +234,12 @@ export default function CatalogPage() {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Product</th>
-                  <th>SKU</th>
-                  <th className="col-hide-sm">Brand</th>
-                  <th className="col-hide-sm">Category</th>
-                  <th>Type</th>
-                  <th className="col-hide-sm">Created</th>
+                  <th>{t('catalog.products.table.product')}</th>
+                  <th>{t('catalog.products.table.sku')}</th>
+                  <th className="col-hide-sm">{t('catalog.products.table.brand')}</th>
+                  <th className="col-hide-sm">{t('common.category')}</th>
+                  <th>{t('common.type')}</th>
+                  <th className="col-hide-sm">{t('common.createdAt')}</th>
                   <th style={{ width: 80 }}></th>
                 </tr>
               </thead>
@@ -255,7 +257,7 @@ export default function CatalogPage() {
                     </tr>
                   ))
                 ) : products.length === 0 ? (
-                  <tr><td colSpan={7}><div className="table-empty"><Package size={36} /><p>No products found</p></div></td></tr>
+                  <tr><td colSpan={7}><div className="table-empty"><Package size={36} /><p>{t('catalog.products.empty.title')}</p></div></td></tr>
                 ) : (
                   products.map((p) => (
                     <tr key={p.id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/catalog/products/${p.id}`)}>
@@ -275,17 +277,17 @@ export default function CatalogPage() {
                       <td className="cell-muted col-hide-sm">{p.category?.name_en ?? '—'}</td>
                       <td>
                         <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-                          {p.is_sale && <span className="cpc-badge sale">Sale</span>}
-                          {p.is_rental && <span className="cpc-badge rental">Rental</span>}
-                          {p.is_featured && <span className="cpc-badge featured">Featured</span>}
-                          {!p.is_active && <span className="cpc-badge inactive">Inactive</span>}
+                          {p.is_sale && <span className="cpc-badge sale">{t('catalog.products.badges.sale')}</span>}
+                          {p.is_rental && <span className="cpc-badge rental">{t('catalog.products.badges.rental')}</span>}
+                          {p.is_featured && <span className="cpc-badge featured">{t('catalog.products.badges.featured')}</span>}
+                          {!p.is_active && <span className="cpc-badge inactive">{t('common.inactive')}</span>}
                         </div>
                       </td>
                       <td className="cell-muted col-hide-sm">{fmtDate(p.created_at)}</td>
                       <td>
                         <div className="row-actions" onClick={(e) => e.stopPropagation()}>
-                          <button className="action-btn" title="Edit" onClick={() => openEdit(p)}><Pencil size={14} /></button>
-                          <button className="action-btn danger" title="Delete" onClick={() => setDeleteTarget(p)}><Trash2 size={14} /></button>
+                          <button className="action-btn" title={t('common.edit')} onClick={() => openEdit(p)}><Pencil size={14} /></button>
+                          <button className="action-btn danger" title={t('common.delete')} onClick={() => setDeleteTarget(p)}><Trash2 size={14} /></button>
                         </div>
                       </td>
                     </tr>
@@ -296,7 +298,7 @@ export default function CatalogPage() {
           </div>
           {!isLoading && pages > 1 && (
             <div className="pagination">
-              <span className="pagination-info">Page {currentPage} of {pages} ({total} total)</span>
+              <span className="pagination-info">{t('catalog.pageOf', { page: currentPage, pages, total })}</span>
               <div className="pagination-controls">
                 <button className="page-btn" disabled={currentPage === 1} onClick={() => applyParams({ page: currentPage - 1 })}><ChevronLeft size={14} /></button>
                 {pageNumbers.map((p, i) =>
@@ -313,7 +315,7 @@ export default function CatalogPage() {
       {/* Grid Pagination */}
       {viewMode === 'grid' && !isLoading && pages > 1 && (
         <div className="pagination" style={{ marginTop: 16, background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '12px 16px' }}>
-          <span className="pagination-info">Page {currentPage} of {pages} ({total} total)</span>
+          <span className="pagination-info">{t('catalog.pageOf', { page: currentPage, pages, total })}</span>
           <div className="pagination-controls">
             <button className="page-btn" disabled={currentPage === 1} onClick={() => applyParams({ page: currentPage - 1 })}><ChevronLeft size={14} /></button>
             {pageNumbers.map((p, i) =>
@@ -326,7 +328,7 @@ export default function CatalogPage() {
       )}
 
       <ProductForm isOpen={formOpen} onClose={() => setFormOpen(false)} onSubmit={handleFormSubmit} product={editTarget} brands={brands} categories={treeFlattened} />
-      <ConfirmDialog isOpen={!!deleteTarget} onClose={() => setDeleteTarget(null)} onConfirm={handleDelete} isLoading={isDeleting} title="Delete Product" message={deleteTarget ? `Delete "${deleteTarget.name_en}"? This cannot be undone.` : ''} />
+      <ConfirmDialog isOpen={!!deleteTarget} onClose={() => setDeleteTarget(null)} onConfirm={handleDelete} isLoading={isDeleting} title={t('catalog.products.deleteDialog.title')} message={deleteTarget ? t('catalog.products.deleteDialog.message', { name: deleteTarget.name_en }) : ''} />
     </div>
   )
 }
