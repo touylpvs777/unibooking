@@ -6,6 +6,7 @@ import {
   FileSpreadsheet, RefreshCw, Clock, AlertCircle,
 } from 'lucide-react'
 import { StatCard, StatCardSkeleton } from '@/components/ui/StatCard'
+import PrintButton from '@/components/ui/PrintButton'
 import {
   ChartCard,
   TrendLineChart,
@@ -169,15 +170,18 @@ export default function ReportsPage() {
           <h1>{t('reports.title')}</h1>
           <p className="page-header-sub">{t('reports.subtitle')}</p>
         </div>
-        <button
-          className="btn btn-ghost"
-          onClick={refetchAll}
-          disabled={anyLoading}
-          style={{ gap: 6 }}
-        >
-          <RefreshCw size={14} className={anyLoading ? 'spin' : ''} />
-          {t('reports.refresh')}
-        </button>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <PrintButton />
+          <button
+            className="btn btn-ghost"
+            onClick={refetchAll}
+            disabled={anyLoading}
+            style={{ gap: 6 }}
+          >
+            <RefreshCw size={14} className={anyLoading ? 'spin' : ''} />
+            {t('reports.refresh')}
+          </button>
+        </div>
       </div>
 
       {/* Global error */}

@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom'
 import { useSidebarStore } from '@/store/sidebarStore'
 import Sidebar from './Sidebar'
 import Header from './Header'
+import PrintHeader from '@/components/print/PrintHeader'
 import './AppLayout.css'
 
 export default function AppLayout() {
@@ -43,6 +44,7 @@ export default function AppLayout() {
       style={{ '--sidebar-width': sidebarWidth } as React.CSSProperties}
     >
       <a href="#main-content" className="skip-to-content">Skip to content</a>
+      <PrintHeader />
       <Sidebar />
       <div className="app-main">
         <Header />

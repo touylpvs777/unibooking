@@ -97,7 +97,12 @@
       "companyName": "ຊື່ບໍລິສັດ",
       "address": "ທີ່ຢູ່",
       "phone": "ເບີໂທ",
-      "logoUrl": "URL ໂລໂກ"
+      "logoUrl": "URL ໂລໂກ",
+      "logoInvalidType": "ກະລຸນາເລືອກໄຟລ໌ຮູບພາບ.",
+      "logoUploadError": "ບໍ່ສາມາດອັບໂຫຼດໂລໂກໄດ້ໃນຕອນນີ້.",
+      "logoUploading": "ກຳລັງອັບໂຫຼດໂລໂກ…",
+      "logoDropzoneText": "ກົດ ຫຼື ລາກ ແລະ ວາງເພື່ອອັບໂຫຼດໂລໂກ",
+      "logoDropzoneHint": "PNG, JPG, ຫຼື WebP"
     },
     "financial": {
       "description": "ຄ່າເລີ່ມຕົ້ນດ້ານການເງິນ",
@@ -301,7 +306,9 @@
     "searchResults": "ຜົນການຄົ້ນຫາ",
     "breadcrumb": "ເສັ້ນທາງນຳທາງ",
     "userActions": "ຄຳສັ່ງຜູ້ໃຊ້",
-    "markAllRead": "ໝາຍວ່າອ່ານທັງໝົດແລ້ວ"
+    "markAllRead": "ໝາຍວ່າອ່ານທັງໝົດແລ້ວ",
+    "myProfile": "ໂປຣໄຟລ໌ຂອງຂ້ອຍ",
+    "changePassword": "ປ່ຽນລະຫັດຜ່ານ"
   },
   "login": {
     "subtitle": "ເຂົ້າສູ່ລະບົບເພື່ອດຳເນີນການຕໍ່",
@@ -875,6 +882,25 @@
     "warehouseGrid": {
       "noneFound": "ບໍ່ມີສາງ",
       "noneFoundHint": "ສ້າງສາງທຳອິດຂອງທ່ານເພື່ອເລີ່ມຕິດຕາມຄັງສິນຄ້າ"
+    },
+    "import": {
+      "button": "ນຳເຂົ້າຂໍ້ມູນ",
+      "title": "ນຳເຂົ້າຂໍ້ມູນສາງ",
+      "subtitle": "ອັບໂຫຼດໄຟລ໌ CSV ຫຼື Excel (.xlsx) ເພື່ອສ້າງ ຫຼື ອັບເດດອາໄຫຼ່ຈຳນວນຫຼາຍພ້ອມກັນ. ລະຫັດອາໄຫຼ່ທີ່ມີຢູ່ແລ້ວຈະຖືກອັບເດດ, ລະຫັດໃໝ່ຈະຖືກສ້າງຂຶ້ນ.",
+      "dropzoneText": "ລາກ ແລະ ວາງໄຟລ໌ຂອງທ່ານທີ່ນີ້, ຫຼືກົດເພື່ອເລືອກໄຟລ໌",
+      "dropzoneHint": "ຮອງຮັບໄຟລ໌ .csv ແລະ .xlsx, ຂະໜາດບໍ່ເກີນ 10 MB",
+      "clearFile": "ລຶບ",
+      "invalidFileType": "ກະລຸນາເລືອກໄຟລ໌ .csv ຫຼື .xlsx.",
+      "uploadButton": "ອັບໂຫຼດ ແລະ ນຳເຂົ້າ",
+      "uploading": "ກຳລັງອັບໂຫຼດ ແລະ ປະມວນຜົນຂໍ້ມູນ…",
+      "uploadingHint": "ອາດໃຊ້ເວລາຫຼາຍວິນາທີສຳລັບໄຟລ໌ຂະໜາດໃຫຍ່.",
+      "uploadFailed": "ການນຳເຂົ້າລົ້ມເຫຼວ. ກະລຸນາລອງໃໝ່ອີກຄັ້ງ.",
+      "successBanner": "ນຳເຂົ້າຂໍ້ມູນສຳເລັດແລ້ວ",
+      "partialBanner": "ນຳເຂົ້າສຳເລັດແຕ່ມີບາງລາຍການຜິດພາດ",
+      "resultSummary": "ນຳເຂົ້າ {{imported}} ລາຍການ, ອັບເດດ {{updated}} ລາຍການ",
+      "rowErrorsTitle": "{{count}} ແຖວບໍ່ສາມາດນຳເຂົ້າໄດ້",
+      "rowLabel": "ແຖວ {{row}}:",
+      "closeAndRefresh": "ປິດ ແລະ ໂຫຼດຄືນໃໝ່"
     }
   },
   "billing": {

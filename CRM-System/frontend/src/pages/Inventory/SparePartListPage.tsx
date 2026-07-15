@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Search, Plus, AlertCircle, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Search, Plus, Upload, AlertCircle, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react'
 import { getParts } from '@/api/inventory'
 import { PartCategoryBadge } from '@/components/inventory/StockBadge'
+import InventoryImportModal from '@/components/inventory/InventoryImportModal'
 import type { SparePart, PartListParams } from '@/types/inventory'
 import '@/styles/shared.css'
 import '@/styles/detail.css'
@@ -25,6 +26,7 @@ export default function SparePartListPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [params, setParams] = useState<PartListParams>({ page: 1, page_size: 20 })
+  const [isImportOpen, setImportOpen] = useState(false)
 
   const load = useCallback(async () => {
     setIsLoading(true); setError(null)
@@ -42,10 +44,16 @@ export default function SparePartListPage() {
         <div><h1>{t('inventory.spareParts.list.title')}</h1><p className="page-header-sub">{t('inventory.spareParts.list.subtitle', { count: total })}</p></div>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="btn btn-ghost" onClick={load} disabled={isLoading} style={{ display: 'flex', alignItems: 'center', gap: 6 }}><RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('inventory.common.refresh')}</button>
+          <button className="btn btn-ghost" onClick={() => setImportOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Upload size={14} /> {t('inventory.import.button')}</button>
           <button className="btn btn-primary" onClick={() => navigate('/inventory/parts/new')}><Plus size={15} /> {t('inventory.spareParts.list.addPart')}</button>
         </div>
       </div>
       {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}
+      <InventoryImportModal
+        isOpen={isImportOpen}
+        onClose={() => setImportOpen(false)}
+        onImported={load}
+      />
       <div className="toolbar">
         <div className="search-wrap"><Search size={14} /><input className="search-input" placeholder={t('inventory.spareParts.list.searchPlaceholder')} value={params.q ?? ''} onChange={(e) => apply({ q: e.target.value || undefined, page: 1 })} /></div>
         <select className="filter-select" value={params.part_category ?? ''} onChange={(e) => apply({ part_category: e.target.value || undefined, page: 1 })}>{CAT_OPTS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</select>

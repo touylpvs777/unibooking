@@ -6,6 +6,7 @@ import i18n from '@/i18n'
 import './index.css'
 import './styles/shared.css'
 import './styles/marketplace.css'
+import './styles/print.css'
 import App from './App'
 
 createRoot(document.getElementById('root')!).render(

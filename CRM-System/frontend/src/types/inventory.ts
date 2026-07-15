@@ -69,3 +69,11 @@ export interface DashboardSummary {
 
 export interface SparePartCreate { part_number: string; name: string; part_category?: PartCategory; unit_price?: number; description?: string; brand_id?: number; unit?: string; min_stock_level?: number; reorder_quantity?: number; lead_time_days?: number }
 export interface PartListParams { q?: string; part_category?: string; brand_id?: number; is_active?: boolean; page?: number; page_size?: number; sort?: string; order?: 'asc' | 'desc' }
+
+export interface InventoryImportRowError { row_number: number; error_message: string }
+export interface InventoryImportResult {
+  success: boolean
+  rows_imported: number
+  rows_updated: number
+  errors: InventoryImportRowError[]
+}

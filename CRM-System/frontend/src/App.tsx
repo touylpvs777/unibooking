@@ -84,6 +84,8 @@ export default function App() {
             <Route path="/activities" element={<Suspense fallback={<PageLoader />}><ActivityPage /></Suspense>} />
             <Route path="/reports"  element={<Suspense fallback={<PageLoader />}><ReportsPage /></Suspense>} />
             <Route path="/settings" element={<Suspense fallback={<PageLoader />}><SettingsPage /></Suspense>} />
+            <Route path="/profile" element={<Placeholder name="My Profile" />} />
+            <Route path="/change-password" element={<Placeholder name="Change Password" />} />
 
             <Route path="/catalog"                element={<Suspense fallback={<PageLoader />}><CatalogPage /></Suspense>} />
             <Route path="/catalog/products/:id"   element={<Suspense fallback={<PageLoader />}><ProductDetailPage /></Suspense>} />

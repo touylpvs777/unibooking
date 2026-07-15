@@ -7,6 +7,7 @@ import {
   Package, Truck, FileText, ClipboardList,
   Building2, ChevronDown, PanelLeftClose, PanelLeftOpen, ArrowRightLeft, Wrench,
   Box, Receipt, CreditCard, Landmark, FileSpreadsheet, PieChart, Warehouse, LogOut,
+  UserCircle, KeyRound,
 } from 'lucide-react'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import { useAuthStore } from '@/store/authStore'
@@ -289,6 +290,25 @@ export default function Sidebar() {
                 onClick={() => { setUserMenuOpen(false); closeMobile(); navigate('/settings') }}
               >
                 <Settings size={14} /> {t('header.settings')}
+              </button>
+
+              <div className="sidebar-user-menu-divider" />
+
+              <button
+                type="button"
+                className="sidebar-user-menu-item"
+                role="menuitem"
+                onClick={() => { setUserMenuOpen(false); closeMobile(); navigate('/profile') }}
+              >
+                <UserCircle size={14} /> {t('header.myProfile')}
+              </button>
+              <button
+                type="button"
+                className="sidebar-user-menu-item"
+                role="menuitem"
+                onClick={() => { setUserMenuOpen(false); closeMobile(); navigate('/change-password') }}
+              >
+                <KeyRound size={14} /> {t('header.changePassword')}
               </button>
 
               <div className="sidebar-user-menu-divider" />

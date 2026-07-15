@@ -8,6 +8,7 @@ from sqlalchemy.orm import selectinload
 
 from app.models.spare_part import SparePart
 from app.models.warehouse import Warehouse
+from app.models.brand import Brand
 from app.models.inventory_balance import InventoryBalance
 from app.models.inventory_transaction import InventoryTransaction
 from app.models.purchase_order import PurchaseOrder
@@ -92,10 +93,35 @@ class InventoryRepository:
     async def get_warehouse_by_id(self, wh_id: int) -> Warehouse | None:
         return await self.db.get(Warehouse, wh_id)
 
+    async def get_default_warehouse(self) -> Warehouse | None:
+        """First active warehouse by id — used as the implicit target when a
+        bulk import supplies a Quantity column without specifying a warehouse."""
+        result = await self.db.execute(
+            select(Warehouse).where(Warehouse.is_active == True).order_by(Warehouse.id.asc()).limit(1)  # noqa: E712
+        )
+        return result.scalar_one_or_none()
+
     async def create_warehouse(self, wh: Warehouse) -> Warehouse:
         self.db.add(wh)
         try:
             await self.db.flush(); await self.db.refresh(wh); return wh
+        except IntegrityError:
+            await self.db.rollback(); raise
+
+    # ── Brands ───────────────────────────────────────────────────────────────
+
+    async def get_brand_by_name(self, name: str) -> Brand | None:
+        result = await self.db.execute(select(Brand).where(func.lower(Brand.name) == name.strip().lower()))
+        return result.scalar_one_or_none()
+
+    async def get_brand_by_slug(self, slug: str) -> Brand | None:
+        result = await self.db.execute(select(Brand).where(Brand.slug == slug))
+        return result.scalar_one_or_none()
+
+    async def create_brand(self, brand: Brand) -> Brand:
+        self.db.add(brand)
+        try:
+            await self.db.flush(); await self.db.refresh(brand); return brand
         except IntegrityError:
             await self.db.rollback(); raise
 

@@ -1,6 +1,6 @@
 import logging
 
-from fastapi import APIRouter, Depends, File, Query, UploadFile, status
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.permissions import PermissionName, require_permission
@@ -60,29 +60,42 @@ async def update_part(part_id: int, data: SparePartUpdate, db: AsyncSession = De
 
 @router.post("/import", response_model=InventoryImportResult, status_code=status.HTTP_200_OK)
 async def import_inventory(
-    file: UploadFile = File(..., description="CSV or Excel (.csv, .xlsx, .xls) spare-part list"),
+    file: UploadFile = File(..., description="CSV or Excel (.csv, .xlsx) spare-part list"),
     db: AsyncSession = Depends(get_db),
     current_user: User = require_permission(PermissionName.MANAGE_CATALOG),
 ):
     """
-    Bulk insert/update spare parts from a CSV or Excel file.
+    Bulk insert/update spare parts from a CSV or Excel file (read with pandas).
 
-    Expected columns (case-insensitive; common aliases accepted): part_number
-    (or SKU), name, description, part_category, brand_id, unit, unit_price,
+    Expected columns (case-insensitive; common aliases accepted): SKU/part_number,
+    Name, Category, Quantity, Unit Price — plus description, brand_id, unit,
     currency, min_stock_level, reorder_quantity, lead_time_days. Rows are
-    upserted by part_number — an existing part is updated, a new one created.
+    upserted by part_number/SKU — an existing part is updated, a new one created.
+    Quantity, if present, adjusts the default warehouse's on-hand stock via an
+    auditable inventory transaction rather than overwriting it blindly.
     """
     content = await file.read()
-    result = await InventoryImportService(db).import_file(content, file.filename or "upload")
+    # Captured before the import runs: a row-level rollback inside import_file()
+    # expires every ORM object tracked by this session, including current_user —
+    # reading .id off it afterward could try to lazily reload it mid-sync-context.
+    actor_id = current_user.id
+    try:
+        result = await InventoryImportService(db).import_file(content, file.filename or "upload", user_id=actor_id)
+    except HTTPException:
+        raise
+    except Exception as exc:  # final safety net — the endpoint must never 500
+        logger.exception("Unhandled failure during inventory import")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Import failed: {exc}")
     await ActivityLogService(db).log(
-        user_id=current_user.id,
+        user_id=actor_id,
         action=ActionType.INVENTORY_IMPORT_EXECUTED,
         entity_type=EntityType.INVENTORY_IMPORT,
         details={
             "filename": file.filename,
-            "created_count": result.created_count,
-            "updated_count": result.updated_count,
-            "error_count": result.error_count,
+            "rows_imported": result.rows_imported,
+            "rows_updated": result.rows_updated,
+            "error_count": len(result.errors),
+            "message": f"Imported {result.rows_imported}, updated {result.rows_updated} items via {file.filename}",
         },
     )
     return result

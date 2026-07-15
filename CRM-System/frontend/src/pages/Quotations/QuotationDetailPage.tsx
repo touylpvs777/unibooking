@@ -14,6 +14,7 @@ import {
 } from '@/api/quotation'
 import { QuotationStatusBadge, QuotationTypeBadge } from '@/components/quotation/QuotationStatusBadge'
 import Modal from '@/components/ui/Modal'
+import PrintButton from '@/components/ui/PrintButton'
 import { toast } from '@/store/toastStore'
 import type { QuotationDetail, ItemType } from '@/types/quotation'
 import '@/pages/Catalog/ProductDetailPage.css'
@@ -136,6 +137,7 @@ export default function QuotationDetailPage() {
         </div>
 
         <div className="detail-actions">
+          <PrintButton />
           {actions.includes('submit') && (
             <button className="btn btn-primary" disabled={actionLoading}
               onClick={() => doAction(t('quotations.detail.toasts.submitted'), () => submitQuotation(qt.id))}>

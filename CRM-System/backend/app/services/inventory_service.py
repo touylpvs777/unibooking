@@ -108,6 +108,37 @@ class InventoryService:
         loaded = await self._repo.get_transactions(part_id=data.spare_part_id, limit=1)
         return loaded[0] if loaded else txn
 
+    async def adjust_stock_absolute(
+        self,
+        part_id: int,
+        warehouse_id: int,
+        quantity: float,
+        user_id: int | None,
+        reference_type: str | None = None,
+        reference_id: int | None = None,
+        notes: str | None = None,
+    ) -> InventoryTransaction:
+        """
+        Sets on-hand stock to an absolute value (ADJUST) — used by the bulk
+        inventory importer. Deliberately bypasses TransactionCreate's `gt=0`
+        constraint, since a legitimate absolute adjustment (e.g. an import row
+        that reports zero stock) may set quantity to exactly 0. Does not
+        commit — the caller controls the transaction boundary.
+        """
+        if quantity < 0:
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Quantity cannot be negative")
+        number = await self._gen_number("IT")
+        txn = InventoryTransaction(
+            transaction_number=number, transaction_type=TransactionType.ADJUST.value,
+            spare_part_id=part_id, warehouse_id=warehouse_id,
+            quantity=quantity, unit_cost=0.0, total_cost=0.0,
+            reference_type=reference_type, reference_id=reference_id,
+            notes=notes, created_by=user_id,
+        )
+        txn = await self._repo.create_transaction(txn)
+        await self._apply_balance(part_id, warehouse_id, TransactionType.ADJUST.value, quantity)
+        return txn
+
     async def _apply_balance(self, part_id: int, wh_id: int, txn_type: str, qty: float) -> None:
         bal = await self._repo.get_or_create_balance(part_id, wh_id)
         on_hand = bal.quantity_on_hand

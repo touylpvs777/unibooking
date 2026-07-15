@@ -2,6 +2,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@300;400;500;600;700&display=swap');
 @import './styles/tokens.css';
 @import './styles/breakpoints.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 body * {
     font-family: 'Noto Sans Lao', sans-serif !important;

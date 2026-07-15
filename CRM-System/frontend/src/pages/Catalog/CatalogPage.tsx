@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
-  Plus, LayoutGrid, List, AlertCircle,
+  Plus, Upload, LayoutGrid, List, AlertCircle,
   ChevronLeft, ChevronRight, Package, RefreshCw,
   Pencil, Trash2,
 } from 'lucide-react'
@@ -151,6 +151,9 @@ export default function CatalogPage() {
 
         <button className="btn btn-ghost" onClick={refetch} disabled={isLoading} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('catalog.products.refresh')}
+        </button>
+        <button className="btn btn-ghost" onClick={() => navigate('/catalog/import')} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <Upload size={14} /> {t('inventory.import.button')}
         </button>
         <button className="btn btn-primary" onClick={openCreate}>
           <Plus size={15} /> {t('catalog.products.newProduct')}

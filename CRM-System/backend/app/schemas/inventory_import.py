@@ -7,8 +7,7 @@ class InventoryImportRowError(BaseModel):
 
 
 class InventoryImportResult(BaseModel):
-    total_rows: int
-    created_count: int
-    updated_count: int
-    error_count: int
+    success: bool
+    rows_imported: int
+    rows_updated: int
     errors: list[InventoryImportRowError] = []

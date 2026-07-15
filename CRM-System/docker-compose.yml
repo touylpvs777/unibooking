@@ -8,7 +8,7 @@ services:
     container_name: dk-backend
     env_file: ./backend/.env
     environment:
-      - DATABASE_URL=postgresql+asyncpg://dk_user:dk_pass@db:5432/dk_crm
+      - DATABASE_URL=postgresql+asyncpg://dk_user:dk_pass_2025@db:5432/dk_crm
       - DEBUG=false
     ports:
       - "8000:8000"
@@ -38,7 +38,7 @@ services:
     container_name: dk-db
     environment:
       POSTGRES_USER: dk_user
-      POSTGRES_PASSWORD: dk_pass
+      POSTGRES_PASSWORD: dk_pass_2025
       POSTGRES_DB: dk_crm
     volumes:
       - pgdata:/var/lib/postgresql/data

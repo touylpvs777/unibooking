@@ -9,8 +9,9 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
-from sqlalchemy import text
+from sqlalchemy import select, text
 from sqlalchemy.exc import OperationalError
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.core.middleware import ClientIPMiddleware, RequestIdMiddleware, SecurityHeadersMiddleware
@@ -27,6 +28,10 @@ from app.database.session import AsyncSessionLocal, engine
 # Import all models so Base.metadata knows about every table before create_all runs.
 import app.models as _models  # noqa: F401, E402
 
+from app.core.security import hash_password
+from app.models.role import Role, RoleName
+from app.models.user import User
+from app.models.warehouse import Warehouse
 from app.routes import activity, auth, billing, customers, dashboard, forklifts, inventory, leads, maintenance, movements, notifications, projects, quotations, rentals, reports, roles, users, uploads
 from app.routes.catalog import router as catalog_router
 from app.routes.settings import router as settings_router
@@ -129,14 +134,88 @@ async def _apply_sqlite_migrations(conn) -> None:
             )
 
 
+_DEFAULT_ADMIN_EMAIL = "admin@dkservice.com"
+_DEFAULT_ADMIN_USERNAME = "admin"
+_DEFAULT_ADMIN_PASSWORD = "Admin@123"
+
+
+async def _seed_defaults(db: AsyncSession) -> None:
+    """
+    Startup safety net: guarantees a working admin login and a default
+    warehouse exist even after a database reset (e.g. a wiped Docker
+    volume). Idempotent and safe to run on every startup — a no-op once
+    the admin account and a warehouse both already exist.
+
+    This restores *access*, not lost data: if the database was actually
+    wiped, everything else (customers, quotations, inventory, ...) is gone
+    and must come from a backup — this only re-establishes the bootstrap
+    records needed to log back in and use the app again. Never raises —
+    a seeding conflict must not prevent the app from starting.
+    """
+    try:
+        admin = (
+            await db.execute(select(User).where(User.email == _DEFAULT_ADMIN_EMAIL))
+        ).scalar_one_or_none()
+        if admin is None:
+            role = (
+                await db.execute(select(Role).where(Role.name == RoleName.SUPER_ADMIN.value))
+            ).scalar_one_or_none()
+            db.add(User(
+                email=_DEFAULT_ADMIN_EMAIL,
+                username=_DEFAULT_ADMIN_USERNAME,
+                full_name="System Administrator",
+                hashed_password=hash_password(_DEFAULT_ADMIN_PASSWORD),
+                is_active=True,
+                is_superuser=True,
+                role_id=role.id if role else None,
+            ))
+            logger.warning(
+                "No admin account found on startup - auto-created %s with the default "
+                "password. Log in and change it.", _DEFAULT_ADMIN_EMAIL,
+            )
+
+        warehouse = (await db.execute(select(Warehouse).limit(1))).scalar_one_or_none()
+        if warehouse is None:
+            db.add(Warehouse(code="WH-MAIN", name="Main Warehouse", is_active=True))
+            logger.info("No warehouse found on startup - auto-created default warehouse WH-MAIN.")
+
+        await db.commit()
+    except Exception:
+        await db.rollback()
+        logger.exception("Startup default-seeding failed - continuing without it.")
+
+
+async def _apply_postgres_migrations(conn) -> None:
+    """
+    Non-destructive schema migrations for PostgreSQL, mirroring
+    `_apply_sqlite_migrations`. `Base.metadata.create_all` only creates
+    tables that don't exist yet — it never adds columns to a table that
+    already exists, so any column added to a model after its table was
+    first created in a live Postgres database must be patched in here.
+    Each statement is idempotent (`ADD COLUMN IF NOT EXISTS`) and safe to
+    run on every startup.
+    """
+    for statement in (
+        "ALTER TABLE leads ADD COLUMN IF NOT EXISTS source VARCHAR(50)",
+        "ALTER TABLE activity_logs ADD COLUMN IF NOT EXISTS ip_address VARCHAR(45)",
+        "ALTER TABLE activity_logs ADD COLUMN IF NOT EXISTS details JSON",
+        "ALTER TABLE notifications ADD COLUMN IF NOT EXISTS recipient_user_id INTEGER",
+        "ALTER TABLE notifications ADD COLUMN IF NOT EXISTS is_read BOOLEAN NOT NULL DEFAULT false",
+    ):
+        await conn.execute(text(statement))
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
         if settings.DATABASE_URL.startswith("sqlite"):
             await _apply_sqlite_migrations(conn)
+        elif settings.DATABASE_URL.startswith("postgresql"):
+            await _apply_postgres_migrations(conn)
     async with AsyncSessionLocal() as db:
         await RBACService(db).seed_roles()
+        await _seed_defaults(db)
     start_scheduler()
     yield
     shutdown_scheduler()

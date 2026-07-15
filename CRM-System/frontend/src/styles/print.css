@@ -1,0 +1,70 @@
+/* ── Global print layout ─────────────────────────────────────────────────
+   Hides the app chrome (sidebar, topbar, every interactive control) and
+   lets the page content flow as a plain document, with a company
+   logo/name header (see PrintHeader.tsx) fixed to the top-right of every
+   printed page. */
+
+@media print {
+  @page {
+    margin: 16mm 14mm;
+  }
+
+  html, body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* App chrome */
+  .sidebar,
+  .sidebar-overlay,
+  .header,
+  .modal-overlay,
+  .notification-dropdown,
+  .user-dropdown-menu,
+  .sidebar-user-menu,
+  .toast-container,
+  .skip-to-content {
+    display: none !important;
+  }
+
+  /* Every interactive control — filters, pagination, action buttons */
+  button,
+  .btn,
+  [role="button"],
+  .pagination,
+  .filter-bar,
+  .toolbar,
+  .catalog-toolbar {
+    display: none !important;
+  }
+
+  .app-shell {
+    display: block !important;
+  }
+
+  .app-main {
+    margin-left: 0 !important;
+    padding-top: 0 !important;
+    background: #fff !important;
+  }
+
+  .app-content {
+    padding: 0 !important;
+    max-width: none !important;
+    /* room for the fixed top-right company header */
+    padding-top: 14mm !important;
+  }
+
+  a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+
+  /* Avoid ugly mid-element page breaks on cards/tables */
+  .table-card,
+  .detail-header,
+  .stat-card,
+  tr {
+    break-inside: avoid;
+  }
+}

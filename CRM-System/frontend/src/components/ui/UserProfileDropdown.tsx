@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { ChevronDown, Settings, LogOut } from 'lucide-react'
+import { ChevronDown, Settings, LogOut, UserCircle, KeyRound } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import ThemeToggle from './ThemeToggle'
 import './UserProfileDropdown.css'
@@ -65,6 +65,15 @@ export default function UserProfileDropdown() {
 
           <button className="user-dropdown-item" onClick={() => { setIsOpen(false); navigate('/settings') }}>
             <Settings size={14} /> {t('header.settings')}
+          </button>
+
+          <div className="user-dropdown-divider" />
+
+          <button className="user-dropdown-item" onClick={() => { setIsOpen(false); navigate('/profile') }}>
+            <UserCircle size={14} /> {t('header.myProfile')}
+          </button>
+          <button className="user-dropdown-item" onClick={() => { setIsOpen(false); navigate('/change-password') }}>
+            <KeyRound size={14} /> {t('header.changePassword')}
           </button>
 
           <div className="user-dropdown-divider" />

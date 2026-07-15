@@ -15,6 +15,7 @@ import {
 } from '@/api/rental'
 import { RentalStatusBadge, RentalContractTypeBadge } from '@/components/rental/RentalStatusBadge'
 import Modal from '@/components/ui/Modal'
+import PrintButton from '@/components/ui/PrintButton'
 import { toast } from '@/store/toastStore'
 import type { RentalContractDetail, ReturnType } from '@/types/rental'
 import '@/pages/Catalog/ProductDetailPage.css'
@@ -143,6 +144,7 @@ export default function RentalContractDetailPage() {
         </div>
 
         <div className="detail-actions">
+          <PrintButton />
           {actions.includes('submit') && (
             <button className="btn btn-primary" disabled={actionLoading}
               onClick={() => doAction(t('rental.detail.toasts.submitted'), () => submitContract(ct.id))}>

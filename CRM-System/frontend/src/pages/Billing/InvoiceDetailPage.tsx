@@ -5,6 +5,7 @@ import { AlertCircle, ChevronLeft, Send, XCircle, CheckCircle, Ban } from 'lucid
 import { getInvoice, issueInvoice, sendInvoice, cancelInvoice, voidInvoice } from '@/api/billing'
 import { Badge, type BadgeVariant } from '@/components/ui/Badge'
 import Modal from '@/components/ui/Modal'
+import PrintButton from '@/components/ui/PrintButton'
 import { toast } from '@/store/toastStore'
 import type { InvoiceDetail } from '@/types/billing'
 import '@/styles/shared.css'
@@ -81,6 +82,7 @@ export default function InvoiceDetailPage() {
           </div>
         </div>
         <div className="detail-actions">
+          <PrintButton />
           {s === 'draft' && <button className="btn btn-primary" disabled={busy} onClick={() => run(t('billing.invoice.toast.issued'), () => issueInvoice(inv.id))}><CheckCircle size={14} /> {t('billing.invoice.actions.issue')}</button>}
           {s === 'issued' && <button className="btn btn-primary" disabled={busy} onClick={() => run(t('billing.invoice.toast.sent'), () => sendInvoice(inv.id))}><Send size={14} /> {t('billing.invoice.actions.send')}</button>}
           {(s === 'issued' || s === 'sent') && <button className="btn btn-ghost" disabled={busy} onClick={() => run(t('billing.invoice.toast.voided'), () => voidInvoice(inv.id))}><Ban size={14} /> {t('billing.invoice.actions.void')}</button>}

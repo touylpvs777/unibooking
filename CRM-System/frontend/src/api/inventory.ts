@@ -1,11 +1,19 @@
 import client from './client'
-import type { SparePart, SparePartListResponse, SparePartCreate, PartListParams, Warehouse, InventoryBalance, InventoryTransaction, PurchaseOrder, POListResponse, DashboardSummary } from '@/types/inventory'
+import type { SparePart, SparePartListResponse, SparePartCreate, PartListParams, Warehouse, InventoryBalance, InventoryTransaction, PurchaseOrder, POListResponse, DashboardSummary, InventoryImportResult } from '@/types/inventory'
 
 const B = '/inventory'
 
 export const getDashboard = () => client.get<DashboardSummary>(`${B}/dashboard`)
 
 export const getParts = (params?: PartListParams) => client.get<SparePartListResponse>(`${B}/parts`, { params })
+
+export const importInventory = (file: File) => {
+  const fd = new FormData()
+  fd.append('file', file)
+  return client.post<InventoryImportResult>(`${B}/import`, fd, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+}
 export const getPart = (id: number) => client.get<SparePart>(`${B}/parts/${id}`)
 export const createPart = (data: SparePartCreate) => client.post<SparePart>(`${B}/parts`, data)
 export const updatePart = (id: number, data: Record<string, unknown>) => client.put<SparePart>(`${B}/parts/${id}`, data)

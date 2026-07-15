@@ -97,7 +97,12 @@
       "companyName": "Company Name",
       "address": "Address",
       "phone": "Phone",
-      "logoUrl": "Logo URL"
+      "logoUrl": "Logo URL",
+      "logoInvalidType": "Please select an image file.",
+      "logoUploadError": "Unable to upload the logo right now.",
+      "logoUploading": "Uploading logo…",
+      "logoDropzoneText": "Click or drag & drop to upload a logo",
+      "logoDropzoneHint": "PNG, JPG, or WebP"
     },
     "financial": {
       "description": "Financial defaults",
@@ -384,6 +389,25 @@
     "warehouseGrid": {
       "noneFound": "No warehouses",
       "noneFoundHint": "Create your first warehouse to start tracking inventory"
+    },
+    "import": {
+      "button": "Import Data",
+      "title": "Import Inventory Data",
+      "subtitle": "Upload a CSV or Excel (.xlsx) file to bulk create or update spare parts. Existing part numbers are updated; new ones are created.",
+      "dropzoneText": "Drag & drop your file here, or click to browse",
+      "dropzoneHint": "Supports .csv and .xlsx files, up to 10 MB",
+      "clearFile": "Clear",
+      "invalidFileType": "Please select a .csv or .xlsx file.",
+      "uploadButton": "Upload & Import",
+      "uploading": "Uploading and processing data…",
+      "uploadingHint": "This can take a few seconds for larger files.",
+      "uploadFailed": "Import failed. Please try again.",
+      "successBanner": "Import completed successfully",
+      "partialBanner": "Import completed with some errors",
+      "resultSummary": "{{imported}} imported, {{updated}} updated",
+      "rowErrorsTitle": "{{count}} rows could not be imported",
+      "rowLabel": "Row {{row}}:",
+      "closeAndRefresh": "Close & Refresh"
     }
   },
   "finance": {
@@ -1930,7 +1954,9 @@
     "searchResults": "Search results",
     "breadcrumb": "Breadcrumb",
     "userActions": "User actions",
-    "markAllRead": "Mark all as read"
+    "markAllRead": "Mark all as read",
+    "myProfile": "My Profile",
+    "changePassword": "Change Password"
   },
   "login": {
     "subtitle": "Sign in to continue",

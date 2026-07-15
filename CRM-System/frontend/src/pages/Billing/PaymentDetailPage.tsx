@@ -5,6 +5,7 @@ import { AlertCircle, ChevronLeft, CheckCircle, XCircle, ArrowRightLeft } from '
 import { getPayment, confirmPayment, rejectPayment, allocatePayment, getInvoices } from '@/api/billing'
 import { Badge, type BadgeVariant } from '@/components/ui/Badge'
 import Modal from '@/components/ui/Modal'
+import PrintButton from '@/components/ui/PrintButton'
 import { toast } from '@/store/toastStore'
 import type { PaymentOut, InvoiceOut } from '@/types/billing'
 import '@/styles/shared.css'
@@ -91,6 +92,7 @@ export default function PaymentDetailPage() {
           </div>
         </div>
         <div className="detail-actions">
+          <PrintButton />
           {pay.payment_status === 'pending' && (
             <>
               <button className="btn btn-primary" disabled={busy} onClick={() => run(t('billing.payment.toast.confirmed'), () => confirmPayment(pay.id))}>

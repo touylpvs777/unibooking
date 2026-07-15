@@ -1,11 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Building2, CircleDollarSign, DatabaseZap, Loader2, Save, Bell } from 'lucide-react'
+import { Building2, CircleDollarSign, DatabaseZap, Loader2, Save, Bell, ImageUp, X } from 'lucide-react'
 import client from '@/api/client'
+import { uploadImage } from '@/api/upload'
 import { getPreferences, subscribeToEvent, updatePreference } from '@/api/notifications'
 import type { NotificationPreference } from '@/types/notification'
 import { useAuthStore } from '@/store/authStore'
+import { useCompanyStore } from '@/store/companyStore'
+import { resolveMediaUrl } from '@/utils/media'
 import { toast } from '@/store/toastStore'
 
 interface SettingRecord {
@@ -191,6 +194,11 @@ export default function SettingsPage() {
   const [preferencesLoading, setPreferencesLoading] = useState(true)
   const [togglingEvent, setTogglingEvent] = useState<string | null>(null)
 
+  const [isUploadingLogo, setUploadingLogo] = useState(false)
+  const [isDraggingLogo, setDraggingLogo] = useState(false)
+  const logoInputRef = useRef<HTMLInputElement>(null)
+  const setCompanyStoreProfile = useCompanyStore((s) => s.setProfile)
+
   useEffect(() => {
     const loadSettings = async () => {
       setLoading(true)
@@ -267,7 +275,9 @@ export default function SettingsPage() {
         description: t(`settings.${tab}.description`),
       })
       if (tab === 'company') {
-        setCompanyProfile(mergeWithDefaults(response.data.value, companyProfile))
+        const merged = mergeWithDefaults(response.data.value, companyProfile)
+        setCompanyProfile(merged)
+        setCompanyStoreProfile(merged)
       } else if (tab === 'financial') {
         setFinancialDefaults(mergeWithDefaults(response.data.value, financialDefaults))
       } else {
@@ -279,6 +289,29 @@ export default function SettingsPage() {
     } finally {
       setSaving((current) => ({ ...current, [tab]: false }))
     }
+  }
+
+  const handleLogoFile = async (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      toast.error(t('settings.company.logoInvalidType'))
+      return
+    }
+    setUploadingLogo(true)
+    try {
+      const result = await uploadImage(file)
+      setCompanyProfile((current) => ({ ...current, logo_url: result.url }))
+    } catch {
+      toast.error(t('settings.company.logoUploadError'))
+    } finally {
+      setUploadingLogo(false)
+    }
+  }
+
+  const handleLogoDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setDraggingLogo(false)
+    const f = e.dataTransfer.files[0]
+    if (f) handleLogoFile(f)
   }
 
   const tabs: Array<{ key: TabKey; label: string; icon: typeof Building2 }> = [
@@ -343,10 +376,57 @@ export default function SettingsPage() {
                   <span className="leading-relaxed">{t('settings.company.phone')}</span>
                   <input className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pb-2 text-sm text-slate-800 shadow-sm outline-none transition focus:border-slate-400 dark:border-slate-600 dark:bg-slate-900 dark:text-white" value={companyProfile.phone} onChange={(event) => setCompanyProfile({ ...companyProfile, phone: event.target.value })} style={inputStyle} />
                 </label>
-                <label className="grid gap-2 text-slate-700 dark:text-slate-300" style={{ display: 'grid', gap: 6 }}>
+                <div className="grid gap-2 text-slate-700 dark:text-slate-300" style={{ display: 'grid', gap: 6 }}>
                   <span className="leading-relaxed">{t('settings.company.logoUrl')}</span>
-                  <input className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pb-2 text-sm text-slate-800 shadow-sm outline-none transition focus:border-slate-400 dark:border-slate-600 dark:bg-slate-900 dark:text-white" value={companyProfile.logo_url} onChange={(event) => setCompanyProfile({ ...companyProfile, logo_url: event.target.value })} style={inputStyle} />
-                </label>
+                  <input
+                    ref={logoInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => { const f = e.target.files?.[0]; if (f) handleLogoFile(f) }}
+                  />
+                  <div
+                    onDragOver={(e) => { e.preventDefault(); setDraggingLogo(true) }}
+                    onDragLeave={() => setDraggingLogo(false)}
+                    onDrop={handleLogoDrop}
+                    onClick={() => !isUploadingLogo && logoInputRef.current?.click()}
+                    className={`pb-1 flex cursor-pointer items-center gap-4 rounded-xl border-2 border-dashed px-4 py-3.5 transition ${
+                      isDraggingLogo
+                        ? 'border-blue-500 bg-blue-50 dark:border-blue-400 dark:bg-blue-950/30'
+                        : 'border-slate-300 bg-slate-50 hover:border-slate-400 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800 dark:hover:border-slate-500 dark:hover:bg-slate-700'
+                    }`}
+                  >
+                    {isUploadingLogo ? (
+                      <Loader2 size={28} className="spin text-blue-600" />
+                    ) : companyProfile.logo_url ? (
+                      <img
+                        src={resolveMediaUrl(companyProfile.logo_url) ?? undefined}
+                        alt={companyProfile.company_name}
+                        className="h-12 w-12 shrink-0 rounded-lg border border-slate-200 object-contain bg-white dark:border-slate-600"
+                      />
+                    ) : (
+                      <ImageUp size={28} className="shrink-0 text-slate-400 dark:text-slate-500" />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <div className="leading-relaxed pb-1 text-sm font-medium text-slate-700 dark:text-slate-200">
+                        {isUploadingLogo ? t('settings.company.logoUploading') : t('settings.company.logoDropzoneText')}
+                      </div>
+                      <div className="leading-relaxed pb-1 truncate text-xs text-slate-500 dark:text-slate-400">
+                        {companyProfile.logo_url || t('settings.company.logoDropzoneHint')}
+                      </div>
+                    </div>
+                    {companyProfile.logo_url && !isUploadingLogo && (
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); setCompanyProfile({ ...companyProfile, logo_url: '' }) }}
+                        className="pb-1 shrink-0 rounded-md p-1.5 text-slate-400 hover:bg-slate-200 hover:text-slate-600 dark:hover:bg-slate-600 dark:hover:text-slate-200"
+                        aria-label={t('inventory.import.clearFile')}
+                      >
+                        <X size={14} />
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
               <button type="button" onClick={() => saveTab('company')} disabled={saving.company} className="pb-2" style={buttonStyle}>
                 {saving.company ? <Loader2 size={16} className="spin" /> : <Save size={16} />}

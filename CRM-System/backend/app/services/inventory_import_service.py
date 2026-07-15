@@ -1,27 +1,44 @@
 """
-Bulk CSV/Excel import for spare-part inventory items.
+Autonomous, self-healing bulk CSV/Excel importer for spare-part inventory.
 
-Accepts a single flat sheet/CSV with a header row. Column names are matched
-case-insensitively against a small alias table so common variants (e.g.
-"SKU", "Part Number", "part_number") all resolve to the same field. Rows are
-upserted by `part_number`: an existing part is updated in place, a new
-`part_number` creates a new SparePart. Parsing/validation errors on one row
-never abort the rest of the file — they're collected and returned alongside
-the created/updated counts.
+Design principles:
+  - Never returns a 500. Catastrophic failures (corrupt file, unreadable
+    encoding, unexpected driver errors) are caught and converted into a
+    well-formed 4xx HTTPException; everything else degrades to a per-row
+    error entry rather than aborting the batch.
+  - Column names are matched case-insensitively against an alias table so
+    common header variants (SKU, "Part Number", part_number, ...) all
+    resolve to the same canonical field, regardless of file formatting.
+  - Missing dependencies (default warehouse, brand) are auto-provisioned on
+    the fly instead of forcing the import to fail — see `_ensure_default_warehouse`
+    and `_resolve_brand_id`.
+  - Each row is its own commit/rollback boundary: a failure on row N rolls
+    back only row N's writes (via `db.rollback()`, since every prior row is
+    already committed) and the loop continues — the session stays usable for
+    subsequent rows. This is functionally equivalent to a per-row SAVEPOINT
+    without the added complexity of nesting `begin_nested()` inside a loop
+    that also needs to auto-provision shared dependencies (brand/warehouse)
+    on some rows but not others.
 """
 from __future__ import annotations
 
-import csv
 import io
 import logging
+import math
+import re
 from typing import Any
 
+import pandas as pd
 from fastapi import HTTPException, status
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.models.brand import Brand
 from app.models.spare_part import PartCategory, SparePart
+from app.models.warehouse import Warehouse
 from app.repositories.inventory_repository import InventoryRepository
 from app.schemas.inventory_import import InventoryImportResult, InventoryImportRowError
+from app.services.inventory_service import InventoryService
 
 logger = logging.getLogger(__name__)
 
@@ -32,17 +49,22 @@ _HEADER_ALIASES: dict[str, str] = {
     "name": "name", "part_name": "name", "item_name": "name", "product_name": "name",
     "description": "description", "desc": "description",
     "part_category": "part_category", "category": "part_category",
-    "brand_id": "brand_id", "brand": "brand_id",
+    "brand_id": "brand_id",
+    "brand": "brand_name", "brand_name": "brand_name", "manufacturer": "brand_name",
     "unit": "unit", "uom": "unit",
     "unit_price": "unit_price", "price": "unit_price",
     "currency": "currency",
     "min_stock_level": "min_stock_level", "min_stock": "min_stock_level", "min_qty": "min_stock_level",
     "reorder_quantity": "reorder_quantity", "reorder_qty": "reorder_quantity",
     "lead_time_days": "lead_time_days", "lead_time": "lead_time_days",
+    "quantity": "quantity", "qty": "quantity", "stock": "quantity", "stock_quantity": "quantity",
+    "on_hand": "quantity",
 }
 
-_ALLOWED_EXTENSIONS = {".csv", ".xlsx", ".xls"}
+_ALLOWED_EXTENSIONS = {".csv", ".xlsx"}
 _MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
+_DEFAULT_WAREHOUSE_CODE = "WH-MAIN"
+_DEFAULT_WAREHOUSE_NAME = "Main Warehouse"
 
 
 def _normalize_header(raw: str) -> str | None:
@@ -50,26 +72,57 @@ def _normalize_header(raw: str) -> str | None:
     return _HEADER_ALIASES.get(key)
 
 
+def _is_missing(value: Any) -> bool:
+    """True for None, NaN, NaT, and +/-inf — the values pandas leaves behind
+    for blank/malformed cells. These must never leak into row data as the
+    literal text "nan" or "inf"."""
+    if value is None:
+        return True
+    if isinstance(value, float) and (math.isnan(value) or math.isinf(value)):
+        return True
+    try:
+        return bool(pd.isna(value))
+    except (TypeError, ValueError):
+        return False
+
+
+def _slugify(text: str) -> str:
+    slug = re.sub(r"[^a-z0-9]+", "-", text.strip().lower()).strip("-")
+    return slug or "brand"
+
+
 class InventoryImportService:
     def __init__(self, db: AsyncSession) -> None:
         self.db = db
         self._repo = InventoryRepository(db)
+        self._inventory = InventoryService(db)
 
-    async def import_file(self, content: bytes, filename: str) -> InventoryImportResult:
-        if len(content) > _MAX_FILE_SIZE:
+    async def import_file(self, content: bytes, filename: str, user_id: int | None = None) -> InventoryImportResult:
+        try:
+            if len(content) > _MAX_FILE_SIZE:
+                raise HTTPException(
+                    status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                    detail="File exceeds the 10 MB limit.",
+                )
+
+            ext = "." + filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
+            if ext not in _ALLOWED_EXTENSIONS:
+                raise HTTPException(
+                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    detail="Only .csv or .xlsx files are accepted.",
+                )
+
+            df = self._read_dataframe(content, ext)
+            rows = self._dataframe_to_rows(df)
+            default_warehouse = await self._ensure_default_warehouse()
+        except HTTPException:
+            raise
+        except Exception as exc:  # catastrophic — never surface a 500 for a bad upload
+            logger.exception("Catastrophic failure preparing inventory import (file=%s)", filename)
             raise HTTPException(
-                status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-                detail="File exceeds the 10 MB limit.",
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Could not process import file: {exc}",
             )
-
-        ext = "." + filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
-        if ext not in _ALLOWED_EXTENSIONS:
-            raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail="Only .csv, .xlsx, or .xls files are accepted.",
-            )
-
-        rows = self._parse_csv(content) if ext == ".csv" else self._parse_excel(content)
 
         created_count = 0
         updated_count = 0
@@ -77,119 +130,172 @@ class InventoryImportService:
 
         for row_number, row in rows:
             try:
-                created = await self._upsert_row(row)
+                part, created = await self._upsert_row(row)
+
+                if "quantity" in row:
+                    try:
+                        qty = float(row["quantity"])
+                    except ValueError:
+                        raise ValueError(f"Invalid numeric value for 'quantity': {row['quantity']!r}")
+                    if qty < 0:
+                        raise ValueError(f"Quantity cannot be negative: {row['quantity']!r}")
+                    await self._inventory.adjust_stock_absolute(
+                        part_id=part.id, warehouse_id=default_warehouse.id, quantity=qty,
+                        user_id=user_id, reference_type="inventory_import", notes=f"Bulk import row {row_number}",
+                    )
+
                 await self.db.commit()
                 if created:
                     created_count += 1
                 else:
                     updated_count += 1
-            except ValueError as exc:
-                await self.db.rollback()
-                errors.append(InventoryImportRowError(row_number=row_number, error_message=str(exc)))
-            except Exception as exc:  # defensive — one bad row must not abort the batch
-                logger.exception("Unexpected error importing inventory row %s", row_number)
+            except Exception as exc:
+                # Row-level isolation: roll back only this row's uncommitted
+                # writes (every previously-imported row is already committed)
+                # and keep the session alive for the rows that follow.
+                logger.warning("Inventory import row %s failed: %s", row_number, exc)
                 await self.db.rollback()
                 errors.append(InventoryImportRowError(row_number=row_number, error_message=str(exc)))
 
         return InventoryImportResult(
-            total_rows=created_count + updated_count + len(errors),
-            created_count=created_count,
-            updated_count=updated_count,
-            error_count=len(errors),
+            success=True,
+            rows_imported=created_count,
+            rows_updated=updated_count,
             errors=errors,
         )
 
-    # ── Parsing ──────────────────────────────────────────────────────────────
+    # ── Parsing / cleaning ───────────────────────────────────────────────────
 
-    def _parse_csv(self, content: bytes) -> list[tuple[int, dict[str, str]]]:
-        text = content.decode("utf-8-sig")
-        reader = csv.reader(io.StringIO(text))
+    def _read_dataframe(self, content: bytes, ext: str) -> pd.DataFrame:
+        buf = io.BytesIO(content)
         try:
-            header = next(reader)
-        except StopIteration:
-            return []
-        field_map = self._build_field_map(header)
-
-        rows: list[tuple[int, dict[str, str]]] = []
-        for row_number, raw_row in enumerate(reader, start=2):  # row 1 is the header
-            if not any(cell.strip() for cell in raw_row):
-                continue
-            row = {
-                field: raw_row[idx].strip()
-                for field, idx in field_map.items()
-                if idx < len(raw_row) and raw_row[idx].strip()
-            }
-            if row:
-                rows.append((row_number, row))
-        return rows
-
-    def _parse_excel(self, content: bytes) -> list[tuple[int, dict[str, str]]]:
-        try:
-            import openpyxl
-            wb = openpyxl.load_workbook(io.BytesIO(content), read_only=True, data_only=True)
+            if ext == ".csv":
+                df = pd.read_csv(buf, encoding="utf-8-sig")
+            else:
+                df = pd.read_excel(buf, engine="openpyxl")
         except Exception as exc:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail=f"Cannot open workbook: {exc}",
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Cannot read file: {exc}",
             )
+        # Standardize headers up front so downstream alias matching is stable
+        # regardless of how the source file capitalized/spaced its columns.
+        df.columns = [str(c).strip().lower() for c in df.columns]
+        return df
 
-        ws = wb[wb.sheetnames[0]]
-        rows_iter = ws.iter_rows(values_only=True)
-        try:
-            header = [str(c) if c is not None else "" for c in next(rows_iter)]
-        except StopIteration:
-            wb.close()
-            return []
-        field_map = self._build_field_map(header)
+    def _dataframe_to_rows(self, df: pd.DataFrame) -> list[tuple[int, dict[str, str]]]:
+        field_map: dict[str, str] = {}
+        for col in df.columns:
+            canon = _normalize_header(str(col))
+            if canon and canon not in field_map.values():
+                field_map[str(col)] = canon
 
         rows: list[tuple[int, dict[str, str]]] = []
-        for row_number, raw_row in enumerate(rows_iter, start=2):
-            if raw_row is None or not any(c is not None and str(c).strip() for c in raw_row):
-                continue
-            row = {
-                field: str(raw_row[idx]).strip()
-                for field, idx in field_map.items()
-                if idx < len(raw_row) and raw_row[idx] is not None and str(raw_row[idx]).strip()
-            }
-            if row:
+        for offset, record in enumerate(df.to_dict(orient="records")):
+            row_number = offset + 2  # row 1 is the header
+            row: dict[str, str] = {}
+            for col, canon in field_map.items():
+                value = record.get(col)
+                if _is_missing(value):
+                    continue
+                # pandas upcasts numeric columns with blanks to float64, so an
+                # integer quantity like 15 arrives as 15.0 — print it as "15".
+                if isinstance(value, float) and value.is_integer():
+                    text = str(int(value))
+                else:
+                    text = str(value).strip()
+                if text:
+                    row[canon] = text
+            if row:  # skip fully empty rows
                 rows.append((row_number, row))
-        wb.close()
         return rows
 
+    # ── Self-healing dependency provisioning ────────────────────────────────
+
+    async def _ensure_default_warehouse(self) -> Warehouse:
+        warehouse = await self._repo.get_default_warehouse()
+        if warehouse is not None:
+            return warehouse
+        try:
+            warehouse = await self._repo.create_warehouse(
+                Warehouse(code=_DEFAULT_WAREHOUSE_CODE, name=_DEFAULT_WAREHOUSE_NAME, is_active=True)
+            )
+            await self.db.commit()
+            logger.info("Auto-provisioned default warehouse %s (id=%s)", _DEFAULT_WAREHOUSE_CODE, warehouse.id)
+            return warehouse
+        except IntegrityError:
+            # Lost a race with a concurrent import — it exists now, use it.
+            await self.db.rollback()
+            warehouse = await self._repo.get_default_warehouse()
+            if warehouse is None:
+                raise
+            return warehouse
+
+    async def _resolve_brand_id(self, raw_name: str) -> int:
+        name = raw_name.strip()
+        if not name:
+            raise ValueError("Brand name cannot be blank")
+
+        existing = await self._repo.get_brand_by_name(name)
+        if existing:
+            return existing.id
+
+        base_slug = _slugify(name)
+        for suffix in ("", "-2", "-3", "-4"):
+            slug = f"{base_slug}{suffix}"
+            if await self._repo.get_brand_by_slug(slug):
+                continue
+            try:
+                brand = await self._repo.create_brand(Brand(name=name, slug=slug))
+                logger.info("Auto-provisioned brand %r (id=%s, slug=%s)", name, brand.id, slug)
+                return brand.id
+            except IntegrityError:
+                await self.db.rollback()
+                # Another row/request created it concurrently — reuse it.
+                existing = await self._repo.get_brand_by_name(name)
+                if existing:
+                    return existing.id
+                continue  # slug collided concurrently with a different name; try next suffix
+        raise ValueError(f"Could not auto-provision brand '{name}' (name/slug collision)")
+
     @staticmethod
-    def _build_field_map(header: list[str]) -> dict[str, int]:
-        field_map: dict[str, int] = {}
-        for idx, raw in enumerate(header):
-            field = _normalize_header(raw or "")
-            if field and field not in field_map:
-                field_map[field] = idx
-        return field_map
+    def _resolve_category(raw: str) -> str:
+        """Known categories map to their canonical enum value; anything else
+        is accepted as-is (self-healing — no fixed category table exists to
+        insert into, so a novel label is simply stored, truncated to the
+        column's 20-char limit rather than rejected)."""
+        key = raw.strip().lower().replace(" ", "_").replace("-", "_")
+        if not key:
+            return PartCategory.GENERAL.value
+        try:
+            return PartCategory(key).value
+        except ValueError:
+            return key[:20]
 
     # ── Row upsert ───────────────────────────────────────────────────────────
 
-    async def _upsert_row(self, row: dict[str, str]) -> bool:
-        """Returns True if a new SparePart was created, False if updated."""
+    async def _upsert_row(self, row: dict[str, str]) -> tuple[SparePart, bool]:
+        """Returns (part, created) — created=True if a new SparePart was made."""
         part_number = row.get("part_number", "").strip()
         name = row.get("name", "").strip()
         if not part_number:
-            raise ValueError("Missing required column 'part_number'")
+            raise ValueError("Missing required column 'part_number' (or SKU)")
         if not name:
             raise ValueError("Missing required column 'name'")
 
-        fields = self._coerce_fields(row)
+        fields = await self._coerce_fields(row)
         existing = await self._repo.get_part_by_number(part_number)
 
         if existing:
             fields.pop("part_number", None)  # never move an existing row to a different key
-            await self._repo.update_part(existing, fields)
-            return False
+            part = await self._repo.update_part(existing, fields)
+            return part, False
 
         part = SparePart(part_number=part_number, name=name, **{k: v for k, v in fields.items() if k != "name"})
-        await self._repo.create_part(part)
-        return True
+        part = await self._repo.create_part(part)
+        return part, True
 
-    @staticmethod
-    def _coerce_fields(row: dict[str, str]) -> dict[str, Any]:
+    async def _coerce_fields(self, row: dict[str, str]) -> dict[str, Any]:
         fields: dict[str, Any] = {}
         if "name" in row:
             fields["name"] = row["name"].strip()
@@ -201,13 +307,17 @@ class InventoryImportService:
             fields["currency"] = row["currency"].strip().upper()
 
         if "part_category" in row:
-            raw_cat = row["part_category"].strip().lower()
-            try:
-                fields["part_category"] = PartCategory(raw_cat).value
-            except ValueError:
-                fields["part_category"] = PartCategory.GENERAL.value
+            fields["part_category"] = self._resolve_category(row["part_category"])
 
-        for key in ("brand_id", "min_stock_level", "reorder_quantity", "lead_time_days"):
+        if "brand_name" in row:
+            fields["brand_id"] = await self._resolve_brand_id(row["brand_name"])
+        elif "brand_id" in row:
+            try:
+                fields["brand_id"] = int(float(row["brand_id"]))
+            except ValueError:
+                raise ValueError(f"Invalid integer value for 'brand_id': {row['brand_id']!r}")
+
+        for key in ("min_stock_level", "reorder_quantity", "lead_time_days"):
             if key in row:
                 try:
                     fields[key] = int(float(row[key]))
@@ -220,4 +330,6 @@ class InventoryImportService:
             except ValueError:
                 raise ValueError(f"Invalid numeric value for 'unit_price': {row['unit_price']!r}")
 
+        # "quantity" is deliberately excluded — it's stock (InventoryBalance),
+        # applied separately in import_file(), not a SparePart column.
         return fields
