@@ -308,7 +308,8 @@
     "userActions": "ຄຳສັ່ງຜູ້ໃຊ້",
     "markAllRead": "ໝາຍວ່າອ່ານທັງໝົດແລ້ວ",
     "myProfile": "ໂປຣໄຟລ໌ຂອງຂ້ອຍ",
-    "changePassword": "ປ່ຽນລະຫັດຜ່ານ"
+    "changePassword": "ປ່ຽນລະຫັດຜ່ານ",
+    "adminBroadcast": "ຜູ້ດູແລລະບົບ"
   },
   "login": {
     "subtitle": "ເຂົ້າສູ່ລະບົບເພື່ອດຳເນີນການຕໍ່",
@@ -822,6 +823,21 @@
         "createSuccess": "ສ້າງສາງສຳເລັດແລ້ວ.",
         "createError": "ບໍ່ສາມາດສ້າງສາງໄດ້.",
         "creating": "ກຳລັງສ້າງ..."
+      },
+      "detail": {
+        "backToList": "ກັບໄປລາຍການສາງ",
+        "loadError": "ບໍ່ສາມາດໂຫຼດຂໍ້ມູນສາງໄດ້.",
+        "notFound": "ບໍ່ພົບສາງ.",
+        "address": "ທີ່ຢູ່",
+        "contactName": "ຜູ້ຕິດຕໍ່",
+        "contactPhone": "ເບີໂທຜູ້ຕິດຕໍ່",
+        "distinctParts": "ຈຳນວນອາໄຫຼ່",
+        "totalStock": "ຈຳນວນສະຕັອກລວມ",
+        "stockTitle": "ສະຕັອກໃນສາງນີ້",
+        "noStock": "ຍັງບໍ່ມີສະຕັອກໃນສາງນີ້.",
+        "columns": {
+          "part": "ອາໄຫຼ່"
+        }
       }
     },
     "stockBadge": {
@@ -890,7 +906,6 @@
       "dropzoneText": "ລາກ ແລະ ວາງໄຟລ໌ຂອງທ່ານທີ່ນີ້, ຫຼືກົດເພື່ອເລືອກໄຟລ໌",
       "dropzoneHint": "ຮອງຮັບໄຟລ໌ .csv ແລະ .xlsx, ຂະໜາດບໍ່ເກີນ 10 MB",
       "clearFile": "ລຶບ",
-      "invalidFileType": "ກະລຸນາເລືອກໄຟລ໌ .csv ຫຼື .xlsx.",
       "uploadButton": "ອັບໂຫຼດ ແລະ ນຳເຂົ້າ",
       "uploading": "ກຳລັງອັບໂຫຼດ ແລະ ປະມວນຜົນຂໍ້ມູນ…",
       "uploadingHint": "ອາດໃຊ້ເວລາຫຼາຍວິນາທີສຳລັບໄຟລ໌ຂະໜາດໃຫຍ່.",
@@ -1918,53 +1933,31 @@
       "title": "ລາຍການສິນຄ້າ"
     },
     "import": {
-      "analysing": "ກຳລັງວິເຄາະ…",
       "autoDetectHint": "ຕົວນຳເຂົ້າຈະກວດຫາຊີດອັດຕະໂນມັດຕາມຊື່ທັງພາສາອັງກິດ ແລະ ພາສາລາວ.",
       "clear": "ລ້າງ",
       "dropzoneHint": "ຮອງຮັບໄຟລ໌ .xlsx ແລະ .xls ຈາກລາຍການສິນຄ້າ DK LAO",
       "dropzoneText": "ລາກໄຟລ໌ Excel ຂອງທ່ານມາໃສ່ນີ້, ຫຼື ຄລິກເພື່ອເລືອກໄຟລ໌",
-      "errorRows": "ແຖວທີ່ຜິດພາດ",
       "errorToast": "ນຳເຂົ້າສຳເລັດພ້ອມຂໍ້ຜິດພາດ {{count}} ລາຍການ.",
       "errors": "ຂໍ້ຜິດພາດ",
-      "errorsCount": "{{count}} ຂໍ້ຜິດພາດ",
-      "executeFailed": "ນຳເຂົ້າບໍ່ສຳເລັດ. ກະລຸນາລອງໃໝ່ອີກຄັ້ງ.",
       "failedRows": "ແຖວທີ່ບໍ່ສຳເລັດ",
-      "handlerLabel": "ຕົວຈັດການ: {{handler}}",
       "importAnother": "ນຳເຂົ້າໄຟລ໌ອື່ນ",
-      "importCount": "ນຳເຂົ້າສິນຄ້າ {{count}} ລາຍການ",
+      "importButton": "ອັບໂຫຼດ ແລະ ນຳເຂົ້າ",
       "imported": "ນຳເຂົ້າແລ້ວ",
       "importing": "ກຳລັງນຳເຂົ້າ…",
-      "invalidFileType": "ກະລຸນາເລືອກໄຟລ໌ Excel (.xlsx ຫຼື .xls)",
-      "noValidRows": "ບໍ່ມີແຖວທີ່ຖືກຕ້ອງໃຫ້ນຳເຂົ້າ. ກະລຸນາແກ້ໄຂຂໍ້ຜິດພາດ ແລະ ອັບໂຫຼດໃໝ່.",
-      "parseFailed": "ບໍ່ສາມາດອ່ານໄຟລ໌ Excel ໄດ້. ກະລຸນາກວດສອບຮູບແບບໄຟລ໌.",
       "partialBanner": "ນຳເຂົ້າສຳເລັດພ້ອມຂໍ້ຜິດພາດ",
-      "previewImport": "ເບິ່ງຕົວຢ່າງກ່ອນນຳເຂົ້າ",
-      "productsToImport": "ສິນຄ້າທີ່ຈະນຳເຂົ້າ ({{count}})",
-      "rowsWithErrors": "ແຖວທີ່ມີຂໍ້ຜິດພາດ ({{count}})",
-      "sheetsDetected": "ຊີດທີ່ກວດພົບ",
-      "startOver": "ເລີ່ມໃໝ່",
-      "steps": {
-        "preview": "ເບິ່ງຕົວຢ່າງ",
-        "result": "ຜົນລັບ",
-        "upload": "ອັບໂຫຼດ"
-      },
       "subtitle": "ອັບໂຫຼດໄຟລ໌ Excel ເພື່ອນຳເຂົ້າສິນຄ້າ, ຍີ່ຫໍ້, ແລະ ໝວດໝູ່ເປັນຈຳນວນຫຼາຍ.",
       "successBanner": "ນຳເຂົ້າສຳເລັດແລ້ວ",
       "successToast": "ນຳເຂົ້າສຳເລັດ: ນຳເຂົ້າສິນຄ້າ {{count}} ລາຍການແລ້ວ.",
       "supportedSheetsLabel": "ຊີດທີ່ຮອງຮັບ:",
       "supportedSheetsList": "ລົດຍົກ Jungheinrich, ລົດຍົກ Mitsubishi, ອຸປະກອນເສີມ (ອຸປະກອນ), ສາງ (ສາງ), ເຄື່ອງດູດຝຸ່ນ (ດູດຝຸ່ນ), ເຄື່ອງທຳຄວາມສະອາດພື້ນ (ເຊັດຄັດ), ຍີ່ຫໍ້ (ບໍລິການ).",
       "table": {
-        "action": "ການດຳເນີນການ",
-        "brand": "ຍີ່ຫໍ້",
         "error": "ຂໍ້ຜິດພາດ",
-        "model": "ລຸ້ນ",
         "rowNum": "#",
-        "sheet": "ຊີດ",
-        "specs": "ຂໍ້ມູນສະເພາະ"
+        "sheet": "ຊີດ"
       },
       "title": "ນຳເຂົ້າສິນຄ້າ",
-      "validCount": "{{count}} ຖືກຕ້ອງ",
-      "validRows": "ແຖວທີ່ຖືກຕ້ອງ",
+      "uploadFailed": "ນຳເຂົ້າບໍ່ສຳເລັດ. ກະລຸນາລອງໃໝ່ອີກຄັ້ງ.",
+      "uploadingHint": "ອາດໃຊ້ເວລາຫຼາຍວິນາທີສຳລັບໄຟລ໌ຂະໜາດໃຫຍ່.",
       "viewCatalog": "ເບິ່ງລາຍການສິນຄ້າ"
     },
     "megaMenu": {

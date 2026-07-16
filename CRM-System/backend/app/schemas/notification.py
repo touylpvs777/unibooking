@@ -20,10 +20,17 @@ class NotificationCreate(BaseModel):
     # Set when this is a staff-facing alert for a subscribed User (Smart Audit).
     recipient_user_id: int | None = None
 
+    # Enterprise Audit & Alert: set instead of recipient_user_id to broadcast
+    # to everyone holding a role (e.g. "admin") rather than one user.
+    target_role: str | None = None
+
     @model_validator(mode="after")
     def require_at_least_one_recipient(self) -> "NotificationCreate":
-        if not self.recipient_phone and not self.recipient_email:
-            raise ValueError("At least one of recipient_phone or recipient_email is required")
+        if not (self.recipient_phone or self.recipient_email or self.recipient_user_id or self.target_role):
+            raise ValueError(
+                "At least one of recipient_phone, recipient_email, recipient_user_id, "
+                "or target_role is required"
+            )
         return self
 
 
@@ -42,6 +49,7 @@ class NotificationOut(BaseModel):
     entity_type: str | None = None
     entity_id: int | None = None
     recipient_user_id: int | None = None
+    target_role: str | None = None
     is_read: bool = False
     created_at: datetime
     sent_at: datetime | None = None

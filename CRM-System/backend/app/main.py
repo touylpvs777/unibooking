@@ -70,6 +70,12 @@ async def _apply_sqlite_migrations(conn) -> None:
     except OperationalError:
         pass  # column already exists
 
+    # ── notifications.target_role (Enterprise Audit & Alert: role broadcast) ─
+    try:
+        await conn.execute(text("ALTER TABLE notifications ADD COLUMN target_role VARCHAR(50)"))
+    except OperationalError:
+        pass  # column already exists
+
     # ── activity_logs: rebuild to drop Enum CHECK constraints + add details ─
     # The original table used Enum(ActionType) which creates a CHECK constraint.
     # New ActionType values violate that constraint, so we rebuild as plain VARCHAR.
@@ -201,6 +207,7 @@ async def _apply_postgres_migrations(conn) -> None:
         "ALTER TABLE activity_logs ADD COLUMN IF NOT EXISTS details JSON",
         "ALTER TABLE notifications ADD COLUMN IF NOT EXISTS recipient_user_id INTEGER",
         "ALTER TABLE notifications ADD COLUMN IF NOT EXISTS is_read BOOLEAN NOT NULL DEFAULT false",
+        "ALTER TABLE notifications ADD COLUMN IF NOT EXISTS target_role VARCHAR(50)",
     ):
         await conn.execute(text(statement))
 

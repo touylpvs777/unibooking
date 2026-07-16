@@ -49,8 +49,11 @@ async def my_notifications(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    # Administrators additionally see the global ADMIN_ROLE activity feed
+    # (Enterprise Audit & Alert) merged in alongside their own personal alerts.
     return await NotificationService(db).get_for_user(
-        current_user.id, skip=skip, limit=limit, unread_only=unread_only
+        current_user.id, skip=skip, limit=limit, unread_only=unread_only,
+        include_admin_feed=current_user.is_superuser,
     )
 
 
@@ -59,7 +62,9 @@ async def my_unread_count(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    count = await NotificationService(db).get_unread_count(current_user.id)
+    count = await NotificationService(db).get_unread_count(
+        current_user.id, include_admin_feed=current_user.is_superuser,
+    )
     return UnreadCountOut(count=count)
 
 
@@ -69,7 +74,9 @@ async def mark_notification_read(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    notification = await NotificationService(db).mark_read(notification_id, current_user.id)
+    notification = await NotificationService(db).mark_read(
+        notification_id, current_user.id, include_admin_feed=current_user.is_superuser,
+    )
     if not notification:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Notification not found")
     return notification
@@ -80,7 +87,9 @@ async def mark_all_notifications_read(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    updated = await NotificationService(db).mark_all_read(current_user.id)
+    updated = await NotificationService(db).mark_all_read(
+        current_user.id, include_admin_feed=current_user.is_superuser,
+    )
     return UnreadCountOut(count=updated)
 
 

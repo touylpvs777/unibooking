@@ -32,6 +32,7 @@ from app.schemas.import_job import (
 )
 from app.services.brand_service import BrandService
 from app.services.category_service import CategoryService
+from app.services.notification_service import ADMIN_ROLE, NotificationService, resolve_actor_name
 from app.services.product_service import ProductService
 from app.schemas.product import ProductCreate, SpecCreate
 
@@ -88,6 +89,10 @@ class ParsedRow:
     model_number: str | None = None
     brand_name: str | None = None
     category_key: str = "accessories"
+    # Set by the generic fallback parser for a free-text category read
+    # straight from the sheet; when present it wins over category_key /
+    # _CATEGORY_PATHS, since it isn't one of the fixed DK LAO taxonomy keys.
+    category_free_text: str | None = None
     description_en: str | None = None
     specs: list[dict[str, Any]] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
@@ -340,6 +345,100 @@ def _parse_brands_sheet(ws) -> list[ParsedRow]:
     return []
 
 
+# ── Generic fallback parser ───────────────────────────────────────────────────
+# Used only when NO sheet in the workbook matches a known DK LAO template
+# keyword (see _detect_handler). Rather than silently importing nothing, this
+# reads the first sheet with a flexible, header-driven column mapping —
+# case-insensitive and whitespace-tolerant, like the Inventory importer.
+
+_GENERIC_HEADER_ALIASES: dict[str, str] = {
+    "name": "name_en", "product": "name_en", "product_name": "name_en",
+    "item": "name_en", "item_name": "name_en", "name_en": "name_en",
+    "model": "model_number", "model_number": "model_number", "model_no": "model_number", "sku": "model_number",
+    "brand": "brand_name", "brand_name": "brand_name", "manufacturer": "brand_name",
+    "category": "category_l1", "category_l1": "category_l1", "type": "category_l1",
+    "description": "description_en", "desc": "description_en",
+    "notes": "description_en", "remark": "description_en", "remarks": "description_en",
+}
+
+
+def _normalize_generic_header(raw: str) -> str | None:
+    key = raw.strip().lower().replace(" ", "_").replace("-", "_")
+    return _GENERIC_HEADER_ALIASES.get(key)
+
+
+def _find_header_row(ws, max_scan: int = 5) -> tuple[int, dict[int, str]] | None:
+    """Scan the first few rows for whichever one looks most like a header —
+    the row with the most cells matching a known alias. Returns None if no
+    row within the scan window contains a recognizable 'name' column."""
+    best_row: int | None = None
+    best_map: dict[int, str] = {}
+    best_score = 0
+    max_col = ws.max_column or 1
+    for r in range(1, max_scan + 1):
+        col_map: dict[int, str] = {}
+        for c in range(1, max_col + 1):
+            raw = _cell(ws, r, c)
+            if not raw:
+                continue
+            canon = _normalize_generic_header(raw)
+            if canon and canon not in col_map.values():
+                col_map[c] = canon
+        if len(col_map) > best_score:
+            best_score = len(col_map)
+            best_row = r
+            best_map = col_map
+    if best_row is None or "name_en" not in best_map.values():
+        return None
+    return best_row, best_map
+
+
+def _parse_generic(ws) -> list[ParsedRow]:
+    rows: list[ParsedRow] = []
+    header = _find_header_row(ws)
+    if header is None:
+        logger.warning(
+            "Generic fallback parser: no recognizable header row (with a Name/Product column) "
+            "found in the first %d rows of sheet %r — nothing to import.",
+            5, ws.title,
+        )
+        return rows
+
+    header_row, col_map = header
+    logger.info(
+        "Generic fallback parser: sheet %r — detected header row %d with columns %s",
+        ws.title, header_row, {c: canon for c, canon in col_map.items()},
+    )
+
+    max_row = ws.max_row
+    for r in range(header_row + 1, max_row + 1):
+        values: dict[str, str] = {}
+        for c, canon in col_map.items():
+            text = _cell(ws, r, c)
+            if text:
+                values[canon] = text
+
+        name_en = values.get("name_en", "")
+        if not name_en:
+            continue  # blank row — not an error, just nothing to import
+
+        parsed = ParsedRow(
+            row_number=r,
+            name_en=name_en,
+            model_number=values.get("model_number") or None,
+            brand_name=values.get("brand_name") or None,
+            category_free_text=values.get("category_l1") or None,
+            description_en=values.get("description_en") or None,
+        )
+        rows.append(parsed)
+
+    logger.info(
+        "Generic fallback parser: sheet %r — parsed %d data row(s) out of %d total row(s) scanned.",
+        ws.title, len(rows), max(max_row - header_row, 0),
+    )
+    return rows
+
+
 _HANDLERS: dict[str, Any] = {
     "jungheinrich_forklift": _parse_jungheinrich,
     "mitsubishi_forklift":   _parse_mitsubishi,
@@ -371,6 +470,63 @@ class ImportService:
         self._brand_svc = BrandService(db)
         self._category_svc = CategoryService(db)
 
+    async def _rows_to_preview(
+        self, parsed_rows: list[ParsedRow], sheet_name: str,
+    ) -> tuple[list[PreviewProduct], list[PreviewError]]:
+        """Shared by both the keyword-matched handlers and the generic
+        fallback parser — converts ParsedRow objects into preview rows,
+        resolving the create/update action and category path for each."""
+        valid_rows: list[PreviewProduct] = []
+        error_rows: list[PreviewError] = []
+
+        for row in parsed_rows:
+            if row.is_valid:
+                if row.category_free_text:
+                    # Free-text category from the generic parser — not one
+                    # of the fixed DK LAO taxonomy keys, so it bypasses
+                    # _CATEGORY_PATHS and is used (and auto-created) as-is.
+                    cat = (row.category_free_text, None, None)
+                else:
+                    cat = _CATEGORY_PATHS.get(row.category_key, (None, None, None))
+                action = "create"
+                if row.model_number:
+                    existing = await self._product_repo.get_by_model_and_brand(
+                        row.model_number, None
+                    )
+                    if existing:
+                        action = "update"
+                valid_rows.append(PreviewProduct(
+                    row_number=row.row_number,
+                    action=action,
+                    name_en=row.name_en,
+                    model_number=row.model_number,
+                    brand_name=row.brand_name,
+                    category_l1=cat[0],
+                    category_l2=cat[1],
+                    category_l3=cat[2],
+                    description_en=row.description_en,
+                    specs=[
+                        PreviewSpec(
+                            spec_group=s["group"],
+                            spec_key=s["key"],
+                            spec_label=s["label"],
+                            spec_value=s["value"],
+                            spec_unit=s.get("unit"),
+                        )
+                        for s in row.specs
+                    ],
+                ))
+            else:
+                for err in row.errors:
+                    error_rows.append(PreviewError(
+                        row_number=row.row_number,
+                        sheet_name=sheet_name,
+                        error_message=err,
+                        row_data={"name_en": row.name_en, "model": row.model_number},
+                    ))
+
+        return valid_rows, error_rows
+
     async def preview(
         self,
         file_content: bytes,
@@ -395,6 +551,11 @@ class ImportService:
                 detail=f"Cannot open workbook: {exc}",
             )
 
+        logger.info(
+            "Import preview: workbook %r has %d sheet(s): %s",
+            filename, len(wb.sheetnames), wb.sheetnames,
+        )
+
         sheets_detected: list[str] = []
         sheet_previews: list[SheetPreview] = []
         total_valid = 0
@@ -417,50 +578,14 @@ class ImportService:
                 logger.error("Error parsing sheet %s: %s", sheet_name, exc)
                 continue
 
-            valid_rows: list[PreviewProduct] = []
-            error_rows: list[PreviewError] = []
+            logger.info(
+                "Sheet %r (handler=%s): parsed %d row(s) out of %d row(s) in the sheet.",
+                sheet_name, handler_key, len(parsed_rows), ws.max_row,
+            )
 
-            for row in parsed_rows:
-                if row.is_valid:
-                    cat = _CATEGORY_PATHS.get(row.category_key, (None, None, None))
-                    action = "create"
-                    if row.model_number:
-                        existing = await self._product_repo.get_by_model_and_brand(
-                            row.model_number, None
-                        )
-                        if existing:
-                            action = "update"
-                    valid_rows.append(PreviewProduct(
-                        row_number=row.row_number,
-                        action=action,
-                        name_en=row.name_en,
-                        model_number=row.model_number,
-                        brand_name=row.brand_name,
-                        category_l1=cat[0],
-                        category_l2=cat[1],
-                        category_l3=cat[2],
-                        description_en=row.description_en,
-                        specs=[
-                            PreviewSpec(
-                                spec_group=s["group"],
-                                spec_key=s["key"],
-                                spec_label=s["label"],
-                                spec_value=s["value"],
-                                spec_unit=s.get("unit"),
-                            )
-                            for s in row.specs
-                        ],
-                    ))
-                    total_valid += 1
-                else:
-                    for err in row.errors:
-                        error_rows.append(PreviewError(
-                            row_number=row.row_number,
-                            sheet_name=sheet_name,
-                            error_message=err,
-                            row_data={"name_en": row.name_en, "model": row.model_number},
-                        ))
-                        total_errors += 1
+            valid_rows, error_rows = await self._rows_to_preview(parsed_rows, sheet_name)
+            total_valid += len(valid_rows)
+            total_errors += len(error_rows)
 
             sheet_previews.append(SheetPreview(
                 sheet_name=sheet_name,
@@ -470,6 +595,42 @@ class ImportService:
                 total_valid=len(valid_rows),
                 total_errors=len(error_rows),
             ))
+
+        if not sheets_detected and wb.sheetnames:
+            # No sheet name matched a known DK LAO template keyword — rather
+            # than silently importing nothing, fall back to a flexible,
+            # header-driven read of the first sheet.
+            first_sheet_name = wb.sheetnames[0]
+            ws = wb[first_sheet_name]
+            logger.warning(
+                "No sheet in %r matched a known template keyword (sheets: %s) — "
+                "falling back to the generic parser on the first sheet %r (%d rows x %d cols).",
+                filename, wb.sheetnames, first_sheet_name, ws.max_row, ws.max_column,
+            )
+            try:
+                parsed_rows = _parse_generic(ws)
+            except Exception as exc:
+                logger.error("Generic fallback parser failed on sheet %r: %s", first_sheet_name, exc)
+                parsed_rows = []
+
+            sheets_detected.append(first_sheet_name)
+            valid_rows, error_rows = await self._rows_to_preview(parsed_rows, first_sheet_name)
+            total_valid += len(valid_rows)
+            total_errors += len(error_rows)
+
+            sheet_previews.append(SheetPreview(
+                sheet_name=first_sheet_name,
+                handler="generic",
+                valid_rows=valid_rows,
+                error_rows=error_rows,
+                total_valid=len(valid_rows),
+                total_errors=len(error_rows),
+            ))
+
+        logger.info(
+            "Import preview: %r — total_valid=%d, total_errors=%d across %d sheet(s).",
+            filename, total_valid, total_errors, len(sheets_detected),
+        )
 
         wb.close()
 
@@ -563,6 +724,25 @@ class ImportService:
             "preview_data": None,  # free memory after execution
         })
         await self.db.commit()
+
+        if success + len(errors) > 0:
+            # Enterprise Audit & Alert: one summary notification for the whole
+            # catalog import batch, not per-row.
+            try:
+                actor_name = await resolve_actor_name(self.db, executed_by)
+                await NotificationService(self.db).notify_role(
+                    role=ADMIN_ROLE,
+                    subject="Catalog Import Completed",
+                    message=(
+                        f"{actor_name} imported the product catalog: "
+                        f"{success} product(s) created/updated, {len(errors)} row error(s)."
+                    ),
+                    event_type="catalog.import_completed",
+                    entity_type="catalog_import",
+                    entity_id=job.id,
+                )
+            except Exception:
+                logger.exception("Failed to notify admins of catalog import completion")
 
         return ImportExecuteResponse(
             job_id=job.id,

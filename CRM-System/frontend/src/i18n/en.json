@@ -329,6 +329,21 @@
         "createSuccess": "Warehouse created.",
         "createError": "Failed to create warehouse.",
         "creating": "Creating..."
+      },
+      "detail": {
+        "backToList": "Back to Warehouses",
+        "loadError": "Failed to load warehouse.",
+        "notFound": "Warehouse not found.",
+        "address": "Address",
+        "contactName": "Contact Person",
+        "contactPhone": "Contact Phone",
+        "distinctParts": "Distinct Parts",
+        "totalStock": "Total Stock Units",
+        "stockTitle": "Stock in this Warehouse",
+        "noStock": "No stock recorded in this warehouse yet.",
+        "columns": {
+          "part": "Part"
+        }
       }
     },
     "stockBadge": {
@@ -397,7 +412,6 @@
       "dropzoneText": "Drag & drop your file here, or click to browse",
       "dropzoneHint": "Supports .csv and .xlsx files, up to 10 MB",
       "clearFile": "Clear",
-      "invalidFileType": "Please select a .csv or .xlsx file.",
       "uploadButton": "Upload & Import",
       "uploading": "Uploading and processing data…",
       "uploadingHint": "This can take a few seconds for larger files.",
@@ -1494,26 +1508,16 @@
     "import": {
       "title": "Import Products",
       "subtitle": "Upload an Excel file to bulk-import products, brands, and categories.",
-      "startOver": "Start Over",
-      "steps": {
-        "upload": "Upload",
-        "preview": "Preview",
-        "result": "Result"
-      },
       "dropzoneText": "Drop your Excel file here, or click to browse",
       "dropzoneHint": "Supports .xlsx and .xls files from DK LAO product catalog",
       "clear": "Clear",
-      "analysing": "Analysing…",
-      "previewImport": "Preview Import",
       "supportedSheetsLabel": "Supported sheets:",
       "supportedSheetsList": "Jungheinrich Forklift, Mitsubishi Forklift, Accessories (ອຸປະກອນ), Warehouse (ສາງ), Vacuum (ດູດຝຸ່ນ), Floor Cleaner (ເຊັດຄັດ), Brands (ບໍລິການ).",
       "autoDetectHint": "The importer auto-detects sheets by name in both English and Lao.",
-      "sheetsDetected": "Sheets detected",
-      "validRows": "Valid rows",
-      "errorRows": "Error rows",
+      "importButton": "Upload & Import",
       "importing": "Importing…",
-      "importCount": "Import {{count}} Products",
-      "noValidRows": "No valid rows to import. Please fix the errors and re-upload.",
+      "uploadingHint": "This can take a few seconds for larger files.",
+      "uploadFailed": "Import failed. Please try again.",
       "successBanner": "Import completed successfully",
       "partialBanner": "Import finished with errors",
       "imported": "Imported",
@@ -1521,22 +1525,10 @@
       "failedRows": "Failed Rows",
       "importAnother": "Import Another File",
       "viewCatalog": "View Catalog",
-      "invalidFileType": "Please select an Excel file (.xlsx or .xls)",
-      "parseFailed": "Failed to parse Excel file. Please check the file format.",
       "successToast": "Import complete: {{count}} products imported.",
       "errorToast": "Import finished with {{count}} errors.",
-      "executeFailed": "Import failed. Please try again.",
-      "handlerLabel": "handler: {{handler}}",
-      "validCount": "{{count}} valid",
-      "errorsCount": "{{count}} errors",
-      "productsToImport": "Products to import ({{count}})",
-      "rowsWithErrors": "Rows with errors ({{count}})",
       "table": {
         "rowNum": "#",
-        "action": "Action",
-        "model": "Model",
-        "brand": "Brand",
-        "specs": "Specs",
         "error": "Error",
         "sheet": "Sheet"
       }
@@ -1956,7 +1948,8 @@
     "userActions": "User actions",
     "markAllRead": "Mark all as read",
     "myProfile": "My Profile",
-    "changePassword": "Change Password"
+    "changePassword": "Change Password",
+    "adminBroadcast": "Admin"
   },
   "login": {
     "subtitle": "Sign in to continue",

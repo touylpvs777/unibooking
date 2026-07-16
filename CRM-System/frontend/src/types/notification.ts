@@ -11,6 +11,7 @@ export interface NotificationItem {
   entity_type: string | null
   entity_id: number | null
   recipient_user_id: number | null
+  target_role: string | null
   is_read: boolean
   created_at: string
   sent_at: string | null

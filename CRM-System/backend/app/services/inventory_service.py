@@ -13,6 +13,7 @@ from app.models.purchase_order import POStatus, PurchaseOrder
 from app.models.purchase_order_item import PurchaseOrderItem
 from app.models.part_consumption import PartConsumption
 from app.repositories.inventory_repository import InventoryRepository, PartFilter
+from app.services.notification_service import ADMIN_ROLE, NotificationService, resolve_actor_name
 from app.schemas.inventory import (
     BalanceOut, ConsumeAction, ConsumptionOut, InventoryDashboardSummary,
     POCreate, POListResponse, POListOut, POOut,
@@ -69,6 +70,12 @@ class InventoryService:
     async def list_warehouses(self) -> list[Warehouse]:
         return await self._repo.get_warehouses()
 
+    async def get_warehouse(self, warehouse_id: int) -> Warehouse:
+        wh = await self._repo.get_warehouse_by_id(warehouse_id)
+        if wh is None:
+            raise HTTPException(status_code=404, detail="Warehouse not found")
+        return wh
+
     async def create_warehouse(self, data: WarehouseCreate) -> Warehouse:
         wh = Warehouse(code=data.code.strip().upper(), name=data.name.strip(), address=data.address, contact_name=data.contact_name, contact_phone=data.contact_phone)
         try:
@@ -88,7 +95,7 @@ class InventoryService:
     # ── Transactions ─────────────────────────────────────────────────────────
 
     async def create_transaction(self, data: TransactionCreate, user_id: int) -> InventoryTransaction:
-        await self.get_part(data.spare_part_id)
+        part = await self.get_part(data.spare_part_id)
         wh = await self._repo.get_warehouse_by_id(data.warehouse_id)
         if wh is None: raise HTTPException(status_code=404, detail="Warehouse not found")
 
@@ -105,6 +112,26 @@ class InventoryService:
         await self._apply_balance(data.spare_part_id, data.warehouse_id, data.transaction_type.value, data.quantity)
         await self.db.commit()
 
+        # Enterprise Audit & Alert: a manually-entered Goods Receipt or stock
+        # adjustment is a "major operational movement" — notify admins. Manual
+        # entries are naturally one-at-a-time (unlike bulk import), so a
+        # per-transaction notification here doesn't flood the feed. ISSUE/
+        # TRANSFER/RETURN/CONSUME are routine day-to-day movements and don't notify.
+        if data.transaction_type.value in (TransactionType.RECEIVE.value, TransactionType.ADJUST.value):
+            try:
+                actor_name = await resolve_actor_name(self.db, user_id)
+                verb = "recorded a Goods Receipt of" if data.transaction_type.value == TransactionType.RECEIVE.value else "adjusted stock of"
+                await NotificationService(self.db).notify_role(
+                    role=ADMIN_ROLE,
+                    subject="Goods Receipt Recorded" if data.transaction_type.value == TransactionType.RECEIVE.value else "Stock Adjusted",
+                    message=f"{actor_name} {verb} {part.name} ({part.part_number}) at {wh.name}: {data.quantity} {part.unit}.",
+                    event_type=f"inventory.transaction.{data.transaction_type.value}",
+                    entity_type="inventory_transaction",
+                    entity_id=txn.id,
+                )
+            except Exception:
+                logger.exception("Failed to notify admins of inventory transaction %s", txn.id)
+
         loaded = await self._repo.get_transactions(part_id=data.spare_part_id, limit=1)
         return loaded[0] if loaded else txn
 
@@ -119,11 +146,13 @@ class InventoryService:
         notes: str | None = None,
     ) -> InventoryTransaction:
         """
-        Sets on-hand stock to an absolute value (ADJUST) — used by the bulk
-        inventory importer. Deliberately bypasses TransactionCreate's `gt=0`
-        constraint, since a legitimate absolute adjustment (e.g. an import row
-        that reports zero stock) may set quantity to exactly 0. Does not
-        commit — the caller controls the transaction boundary.
+        Sets on-hand stock to an absolute value (ADJUST) — for stock-count
+        corrections, where the caller knows the true total and wants to
+        overwrite whatever the system currently shows. Deliberately bypasses
+        TransactionCreate's `gt=0` constraint, since a legitimate absolute
+        adjustment (e.g. a recount that finds zero stock) may set quantity to
+        exactly 0. Does not commit — the caller controls the transaction
+        boundary.
         """
         if quantity < 0:
             raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Quantity cannot be negative")
@@ -137,6 +166,39 @@ class InventoryService:
         )
         txn = await self._repo.create_transaction(txn)
         await self._apply_balance(part_id, warehouse_id, TransactionType.ADJUST.value, quantity)
+        return txn
+
+    async def receive_stock(
+        self,
+        part_id: int,
+        warehouse_id: int,
+        quantity: float,
+        user_id: int | None,
+        reference_type: str | None = None,
+        reference_id: int | None = None,
+        notes: str | None = None,
+    ) -> InventoryTransaction:
+        """
+        Records a Goods Receipt (RECEIVE) — stock that has physically arrived
+        and is being added to whatever is already on hand, as opposed to
+        `adjust_stock_absolute` which overwrites the total. This is what the
+        bulk inventory importer and any "stock received" entry point should
+        call: it's additive, auditable, and produces the transaction record
+        a future goods-receipt document/printout would be built from. Does
+        not commit — the caller controls the transaction boundary.
+        """
+        if quantity <= 0:
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Received quantity must be greater than zero")
+        number = await self._gen_number("IT")
+        txn = InventoryTransaction(
+            transaction_number=number, transaction_type=TransactionType.RECEIVE.value,
+            spare_part_id=part_id, warehouse_id=warehouse_id,
+            quantity=quantity, unit_cost=0.0, total_cost=0.0,
+            reference_type=reference_type, reference_id=reference_id,
+            notes=notes, created_by=user_id,
+        )
+        txn = await self._repo.create_transaction(txn)
+        await self._apply_balance(part_id, warehouse_id, TransactionType.RECEIVE.value, quantity)
         return txn
 
     async def _apply_balance(self, part_id: int, wh_id: int, txn_type: str, qty: float) -> None:

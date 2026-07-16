@@ -16,6 +16,7 @@ import {
 import ConfirmDialog from '@/components/ui/ConfirmDialog'
 import ProductForm from './ProductForm'
 import type { Product } from '@/types/catalog'
+import { resolveMediaUrl } from '@/utils/media'
 import './CatalogPage.css'
 import '@/styles/shared.css'
 
@@ -267,8 +268,16 @@ export default function CatalogPage() {
                       <td>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                           {p.primary_image_url
-                            ? <img src={p.primary_image_url} alt={p.name_en} style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 4, border: '1px solid var(--color-border)' }} loading="lazy" />
-                            : <div style={{ width: 36, height: 36, background: 'var(--color-bg-subtle)', borderRadius: 4, border: '1px solid var(--color-border)' }} />}
+                            ? <img
+                                src={resolveMediaUrl(p.primary_image_url)!}
+                                alt={p.name_en}
+                                style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 4, border: '1px solid var(--color-border)' }}
+                                loading="lazy"
+                                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+                              />
+                            : <div style={{ width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-bg-subtle)', borderRadius: 4, border: '1px solid var(--color-border)' }}>
+                                <Package size={16} style={{ color: 'var(--color-text-muted)' }} />
+                              </div>}
                           <div>
                             <div style={{ fontWeight: 600, fontSize: 13.5 }}>{p.name_en}</div>
                             {p.model_number && <div className="cell-muted" style={{ fontSize: 12 }}>{p.model_number}</div>}

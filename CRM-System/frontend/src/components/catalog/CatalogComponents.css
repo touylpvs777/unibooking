@@ -222,6 +222,11 @@
 }
 .cpc-img { width: 100%; height: 100%; object-fit: contain; padding: 10px; transition: transform var(--duration-slow); }
 .cpc:hover .cpc-img { transform: scale(1.04); }
+.cpc-img-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--color-text-muted);
+}
 
 .cpc-badges { position: absolute; bottom: 8px; left: 8px; display: flex; gap: 4px; flex-wrap: wrap; }
 .cpc-badge {

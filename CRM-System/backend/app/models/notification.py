@@ -11,6 +11,9 @@ from app.database.base import Base
 class NotificationChannel(str, enum.Enum):
     WHATSAPP = "whatsapp"
     EMAIL = "email"
+    # Pure in-app record — no external delivery is attempted. Used for the
+    # role-targeted admin activity feed, where "sent" just means "created".
+    IN_APP = "in_app"
 
 
 class NotificationStatus(str, enum.Enum):
@@ -41,6 +44,11 @@ class Notification(Base):
     recipient_user_id: Mapped[int | None] = mapped_column(
         Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=True, index=True
     )
+    # Enterprise Audit & Alert (role broadcast): set instead of recipient_user_id
+    # when this notification targets everyone holding a role (e.g. "admin") —
+    # a global activity-feed entry rather than a single user's personal alert.
+    # A row has either recipient_user_id OR target_role, not both.
+    target_role: Mapped[str | None] = mapped_column(String(50), nullable=True, index=True)
     is_read: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     provider_message_id: Mapped[str | None] = mapped_column(String(200), nullable=True)

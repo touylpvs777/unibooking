@@ -6,14 +6,33 @@ from datetime import UTC, datetime
 from email.message import EmailMessage
 
 import httpx
-from sqlalchemy import func, select, update
+from sqlalchemy import func, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.models.notification import Notification, NotificationChannel, NotificationStatus
+from app.models.user import User
 from app.schemas.notification import NotificationCreate
 
 logger = logging.getLogger("app.notifications")
+
+# Enterprise Audit & Alert: the one role-broadcast target this system
+# currently supports. Kept as a plain string constant (not tied to the RBAC
+# Role table) because "admin" here means the same "can see everything"
+# audience already identified by User.is_superuser everywhere else in this
+# codebase — not a specific Role row.
+ADMIN_ROLE = "admin"
+
+
+async def resolve_actor_name(db: AsyncSession, user_id: int | None) -> str:
+    """Best-effort display name for an activity message ("<Name> imported ...").
+    Never raises — falls back to a generic label if the user can't be resolved."""
+    if user_id is None:
+        return "A user"
+    user = await db.get(User, user_id)
+    if user is None:
+        return "A user"
+    return user.full_name or user.username
 
 
 class NotificationDeliveryError(Exception):
@@ -148,6 +167,40 @@ class NotificationService:
         await self.db.refresh(notification)
         return notification
 
+    async def notify_role(
+        self,
+        role: str,
+        message: str,
+        subject: str | None = None,
+        event_type: str | None = None,
+        entity_type: str | None = None,
+        entity_id: int | None = None,
+    ) -> Notification:
+        """
+        Enterprise Audit & Alert: broadcasts a global activity-feed entry to
+        everyone holding `role` (currently only ADMIN_ROLE), instead of a
+        single recipient. This is a pure in-app record — unlike `send()`, it
+        never attempts WhatsApp/email delivery, so it can't fail or be marked
+        FAILED; "sent" here just means "created and visible in the feed".
+        Commits on its own, same as `send()`.
+        """
+        notification = Notification(
+            channel=NotificationChannel.IN_APP.value,
+            status=NotificationStatus.SENT.value,
+            recipient=f"role:{role}",
+            subject=subject,
+            message=message,
+            event_type=event_type,
+            entity_type=entity_type,
+            entity_id=entity_id,
+            target_role=role,
+            sent_at=datetime.now(UTC),
+        )
+        self.db.add(notification)
+        await self.db.commit()
+        await self.db.refresh(notification)
+        return notification
+
     async def get_by_id(self, notification_id: int) -> Notification | None:
         result = await self.db.execute(select(Notification).where(Notification.id == notification_id))
         return result.scalar_one_or_none()
@@ -159,13 +212,23 @@ class NotificationService:
         return list(result.scalars().all())
 
     # ── Staff-facing "my alerts" (Smart Audit bell) ────────────────────────
+    # `include_admin_feed` is set by the route from current_user.is_superuser —
+    # when true, the global ADMIN_ROLE activity feed is merged in alongside
+    # the user's own personal alerts, so an admin's bell shows both.
+
+    @staticmethod
+    def _own_or_admin_feed(user_id: int, include_admin_feed: bool):
+        if include_admin_feed:
+            return or_(Notification.recipient_user_id == user_id, Notification.target_role == ADMIN_ROLE)
+        return Notification.recipient_user_id == user_id
 
     async def get_for_user(
-        self, user_id: int, skip: int = 0, limit: int = 50, unread_only: bool = False
+        self, user_id: int, skip: int = 0, limit: int = 50, unread_only: bool = False,
+        include_admin_feed: bool = False,
     ) -> list[Notification]:
         stmt = (
             select(Notification)
-            .where(Notification.recipient_user_id == user_id)
+            .where(self._own_or_admin_feed(user_id, include_admin_feed))
             .order_by(Notification.created_at.desc())
         )
         if unread_only:
@@ -174,27 +237,35 @@ class NotificationService:
         result = await self.db.execute(stmt)
         return list(result.scalars().all())
 
-    async def get_unread_count(self, user_id: int) -> int:
+    async def get_unread_count(self, user_id: int, include_admin_feed: bool = False) -> int:
         result = await self.db.execute(
             select(func.count())
             .select_from(Notification)
-            .where(Notification.recipient_user_id == user_id, Notification.is_read.is_(False))
+            .where(self._own_or_admin_feed(user_id, include_admin_feed))
+            .where(Notification.is_read.is_(False))
         )
         return int(result.scalar_one())
 
-    async def mark_read(self, notification_id: int, user_id: int) -> Notification | None:
+    async def mark_read(
+        self, notification_id: int, user_id: int, include_admin_feed: bool = False,
+    ) -> Notification | None:
         notification = await self.get_by_id(notification_id)
-        if notification is None or notification.recipient_user_id != user_id:
+        if notification is None:
+            return None
+        is_own = notification.recipient_user_id == user_id
+        is_admin_feed_item = include_admin_feed and notification.target_role == ADMIN_ROLE
+        if not (is_own or is_admin_feed_item):
             return None
         notification.is_read = True
         await self.db.commit()
         await self.db.refresh(notification)
         return notification
 
-    async def mark_all_read(self, user_id: int) -> int:
+    async def mark_all_read(self, user_id: int, include_admin_feed: bool = False) -> int:
         result = await self.db.execute(
             update(Notification)
-            .where(Notification.recipient_user_id == user_id, Notification.is_read.is_(False))
+            .where(self._own_or_admin_feed(user_id, include_admin_feed))
+            .where(Notification.is_read.is_(False))
             .values(is_read=True)
         )
         await self.db.commit()

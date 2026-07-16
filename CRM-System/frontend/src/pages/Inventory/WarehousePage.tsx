@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { AlertCircle, Plus, RefreshCw } from 'lucide-react'
 import { getWarehouses, createWarehouse } from '@/api/inventory'
@@ -10,6 +11,7 @@ import '@/styles/shared.css'
 
 export default function WarehousePage() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const [items, setItems] = useState<WH[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -43,7 +45,7 @@ export default function WarehousePage() {
 
       {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}
 
-      {isLoading ? <WarehouseGridSkeleton /> : <WarehouseGrid warehouses={items} />}
+      {isLoading ? <WarehouseGridSkeleton /> : <WarehouseGrid warehouses={items} onSelect={(w) => navigate(`/inventory/warehouses/${w.id}`)} />}
 
       <AddWarehouseModal isOpen={formOpen} onClose={() => setFormOpen(false)} onSuccess={load} />
     </div>

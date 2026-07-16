@@ -11,27 +11,27 @@ interface InventoryImportModalProps {
   onImported: () => void
 }
 
-const ACCEPTED_EXTENSIONS = ['.csv', '.xlsx']
-
-function isAcceptedFile(file: File): boolean {
-  const lower = file.name.toLowerCase()
-  return ACCEPTED_EXTENSIONS.some((ext) => lower.endsWith(ext))
-}
-
+/**
+ * Dumb frontend / smart backend: this component never reads, parses, or
+ * validates the file's contents — it only collects a File and hands it to
+ * the backend as-is. Every accept/reject decision (extension, size, sheet
+ * structure, row data) is made by POST /inventory/import, and the result
+ * shown below is exactly what that response says, nothing inferred here.
+ */
 export default function InventoryImportModal({ isOpen, onClose, onImported }: InventoryImportModalProps) {
   const { t } = useTranslation()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const [file, setFile] = useState<File | null>(null)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
   const [result, setResult] = useState<InventoryImportResult | null>(null)
-  const [fileError, setFileError] = useState<string | null>(null)
+  const [transportError, setTransportError] = useState<string | null>(null)
 
   const reset = () => {
-    setFile(null)
+    setSelectedFile(null)
     setResult(null)
-    setFileError(null)
+    setTransportError(null)
     setIsUploading(false)
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
@@ -48,13 +48,8 @@ export default function InventoryImportModal({ isOpen, onClose, onImported }: In
   }
 
   const handleFileSelect = (f: File) => {
-    if (!isAcceptedFile(f)) {
-      setFileError(t('inventory.import.invalidFileType'))
-      setFile(null)
-      return
-    }
-    setFileError(null)
-    setFile(f)
+    setTransportError(null)
+    setSelectedFile(f)
   }
 
   const handleDrop = (e: React.DragEvent) => {
@@ -65,13 +60,17 @@ export default function InventoryImportModal({ isOpen, onClose, onImported }: In
   }
 
   const handleUpload = async () => {
-    if (!file) return
+    if (!selectedFile) return
     setIsUploading(true)
+    setTransportError(null)
     try {
-      const { data } = await importInventory(file)
+      const { data } = await importInventory(selectedFile)
       setResult(data)
     } catch {
-      setFileError(t('inventory.import.uploadFailed'))
+      // The request never reached (or never returned from) the backend —
+      // there is no API response to display, so this is the one message
+      // not sourced from it.
+      setTransportError(t('inventory.import.uploadFailed'))
     } finally {
       setIsUploading(false)
     }
@@ -97,7 +96,7 @@ export default function InventoryImportModal({ isOpen, onClose, onImported }: In
       <button
         type="button"
         onClick={handleUpload}
-        disabled={!file || isUploading}
+        disabled={!selectedFile || isUploading}
         className="pb-2 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isUploading ? (
@@ -197,14 +196,14 @@ export default function InventoryImportModal({ isOpen, onClose, onImported }: In
               className="hidden"
               onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFileSelect(f) }}
             />
-            {file ? (
+            {selectedFile ? (
               <>
                 <FileSpreadsheet size={36} className="text-blue-600 dark:text-blue-400" />
                 <div className="leading-relaxed pb-1 text-sm font-medium text-slate-800 dark:text-slate-100">
-                  {file.name}
+                  {selectedFile.name}
                 </div>
                 <div className="leading-relaxed pb-1 text-xs text-slate-500 dark:text-slate-400">
-                  {(file.size / 1024).toFixed(1)} KB
+                  {(selectedFile.size / 1024).toFixed(1)} KB
                 </div>
                 <button
                   type="button"
@@ -227,9 +226,9 @@ export default function InventoryImportModal({ isOpen, onClose, onImported }: In
             )}
           </div>
 
-          {fileError && (
+          {transportError && (
             <div className="leading-relaxed pb-1 mt-3 text-sm text-red-600 dark:text-red-400">
-              {fileError}
+              {transportError}
             </div>
           )}
         </>

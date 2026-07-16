@@ -39,6 +39,7 @@ from app.models.warehouse import Warehouse
 from app.repositories.inventory_repository import InventoryRepository
 from app.schemas.inventory_import import InventoryImportResult, InventoryImportRowError
 from app.services.inventory_service import InventoryService
+from app.services.notification_service import ADMIN_ROLE, NotificationService, resolve_actor_name
 
 logger = logging.getLogger(__name__)
 
@@ -139,10 +140,17 @@ class InventoryImportService:
                         raise ValueError(f"Invalid numeric value for 'quantity': {row['quantity']!r}")
                     if qty < 0:
                         raise ValueError(f"Quantity cannot be negative: {row['quantity']!r}")
-                    await self._inventory.adjust_stock_absolute(
-                        part_id=part.id, warehouse_id=default_warehouse.id, quantity=qty,
-                        user_id=user_id, reference_type="inventory_import", notes=f"Bulk import row {row_number}",
-                    )
+                    if qty > 0:
+                        # Goods Receipt semantics: imported quantity is stock that
+                        # has arrived and is ADDED to whatever is already on hand
+                        # (e.g. two partial-shipment imports for the same SKU both
+                        # count), not an absolute overwrite. A row reporting 0 is
+                        # a legitimate "nothing received" and creates no transaction.
+                        await self._inventory.receive_stock(
+                            part_id=part.id, warehouse_id=default_warehouse.id, quantity=qty,
+                            user_id=user_id, reference_type="inventory_import",
+                            notes=f"Goods receipt via bulk import — row {row_number}",
+                        )
 
                 await self.db.commit()
                 if created:
@@ -156,6 +164,27 @@ class InventoryImportService:
                 logger.warning("Inventory import row %s failed: %s", row_number, exc)
                 await self.db.rollback()
                 errors.append(InventoryImportRowError(row_number=row_number, error_message=str(exc)))
+
+        if created_count + updated_count > 0:
+            # Enterprise Audit & Alert: a bulk import is a "major operational
+            # movement" — one summary notification for the whole batch (not
+            # per-row, which would flood the admin feed for a large file).
+            try:
+                actor_name = await resolve_actor_name(self.db, user_id)
+                await NotificationService(self.db).notify_role(
+                    role=ADMIN_ROLE,
+                    subject="Inventory Import Completed",
+                    message=(
+                        f"{actor_name} imported inventory into {default_warehouse.name}: "
+                        f"{created_count} new part(s), {updated_count} updated, "
+                        f"{len(errors)} row error(s)."
+                    ),
+                    event_type="inventory.import_completed",
+                    entity_type="warehouse",
+                    entity_id=default_warehouse.id,
+                )
+            except Exception:
+                logger.exception("Failed to notify admins of inventory import completion")
 
         return InventoryImportResult(
             success=True,

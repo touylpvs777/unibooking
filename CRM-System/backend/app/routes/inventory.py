@@ -70,9 +70,10 @@ async def import_inventory(
     Expected columns (case-insensitive; common aliases accepted): SKU/part_number,
     Name, Category, Quantity, Unit Price — plus description, brand_id, unit,
     currency, min_stock_level, reorder_quantity, lead_time_days. Rows are
-    upserted by part_number/SKU — an existing part is updated, a new one created.
-    Quantity, if present, adjusts the default warehouse's on-hand stock via an
-    auditable inventory transaction rather than overwriting it blindly.
+    upserted by part_number/SKU — an existing part is updated, a new one created,
+    never duplicated. Quantity, if present, is treated as a Goods Receipt: it is
+    ADDED to the default warehouse's existing on-hand stock (not an absolute
+    overwrite) via an auditable RECEIVE inventory transaction.
     """
     content = await file.read()
     # Captured before the import runs: a row-level rollback inside import_file()
@@ -107,6 +108,11 @@ async def import_inventory(
 async def list_warehouses(db: AsyncSession = Depends(get_db), _: User = require_permission(PermissionName.MANAGE_CATALOG)):
     whs = await InventoryService(db).list_warehouses()
     return [WarehouseOut.model_validate(w) for w in whs]
+
+@router.get("/warehouses/{warehouse_id}", response_model=WarehouseOut)
+async def get_warehouse(warehouse_id: int, db: AsyncSession = Depends(get_db), _: User = require_permission(PermissionName.MANAGE_CATALOG)):
+    wh = await InventoryService(db).get_warehouse(warehouse_id)
+    return WarehouseOut.model_validate(wh)
 
 @router.post("/warehouses", response_model=WarehouseOut, status_code=status.HTTP_201_CREATED)
 async def create_warehouse(data: WarehouseCreate, db: AsyncSession = Depends(get_db), _: User = require_permission(PermissionName.MANAGE_CATALOG)):

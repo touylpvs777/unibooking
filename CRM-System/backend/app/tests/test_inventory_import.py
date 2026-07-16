@@ -8,9 +8,12 @@ from app.core.security import hash_password
 from app.models.activity_log import ActivityLog
 from app.models.brand import Brand
 from app.models.inventory_balance import InventoryBalance
+from app.models.inventory_transaction import InventoryTransaction
 from app.models.spare_part import SparePart
 from app.models.user import User
+from app.models.notification import Notification
 from app.models.warehouse import Warehouse
+from app.services.notification_service import ADMIN_ROLE
 
 pytestmark = pytest.mark.anyio
 
@@ -96,6 +99,103 @@ async def test_import_creates_updates_and_reports_row_errors(client: AsyncClient
     assert len(logs) == 1
     assert logs[0].details["rows_imported"] == 1
     assert logs[0].details["rows_updated"] == 1
+
+
+async def test_import_quantity_is_additive_goods_receipt(client: AsyncClient, db_session: AsyncSession):
+    """Importing a Quantity for a part that already has stock must ADD to
+    the existing balance (a goods receipt — more stock arrived) rather than
+    overwrite it, and must record a RECEIVE transaction (not ADJUST) as the
+    auditable Goods Receipt document."""
+    await _create_admin(db_session)
+
+    warehouse = Warehouse(code="MAIN", name="Main Warehouse")
+    db_session.add(warehouse)
+    existing = SparePart(part_number="RESTOCK-001", name="Restock Widget", unit_price=5.0)
+    db_session.add(existing)
+    await db_session.commit()
+    await db_session.refresh(existing)
+
+    balance = InventoryBalance(
+        spare_part_id=existing.id, warehouse_id=warehouse.id,
+        quantity_on_hand=5, quantity_reserved=0, quantity_available=5,
+    )
+    db_session.add(balance)
+    await db_session.commit()
+
+    token = await _login(client)
+    csv_bytes = b"SKU,Name,Quantity\nRESTOCK-001,Restock Widget,10\n"
+    response = await client.post(
+        "/api/v1/inventory/import",
+        headers={"Authorization": f"Bearer {token}"},
+        files={"file": ("restock.csv", csv_bytes, "text/csv")},
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["success"] is True
+    assert body["rows_updated"] == 1
+    assert len(body["errors"]) == 0
+
+    await db_session.refresh(balance)
+    assert balance.quantity_on_hand == 15  # 5 existing + 10 received, not overwritten to 10
+
+    txn = (await db_session.execute(
+        select(InventoryTransaction).where(InventoryTransaction.spare_part_id == existing.id)
+    )).scalar_one()
+    assert txn.transaction_type == "receive"
+    assert txn.quantity == 10
+    assert txn.reference_type == "inventory_import"
+
+
+async def test_import_zero_quantity_creates_no_transaction(client: AsyncClient, db_session: AsyncSession):
+    """A row that explicitly reports Quantity=0 is 'nothing received', not
+    an error and not a goods receipt — no transaction should be created."""
+    await _create_admin(db_session)
+    token = await _login(client)
+
+    csv_bytes = b"SKU,Name,Quantity\nZERO-001,Zero Widget,0\n"
+    response = await client.post(
+        "/api/v1/inventory/import",
+        headers={"Authorization": f"Bearer {token}"},
+        files={"file": ("zero.csv", csv_bytes, "text/csv")},
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["rows_imported"] == 1
+    assert len(body["errors"]) == 0
+
+    part = (await db_session.execute(
+        select(SparePart).where(SparePart.part_number == "ZERO-001")
+    )).scalar_one()
+    txns = (await db_session.execute(
+        select(InventoryTransaction).where(InventoryTransaction.spare_part_id == part.id)
+    )).scalars().all()
+    assert txns == []
+
+
+async def test_import_completion_notifies_admins(client: AsyncClient, db_session: AsyncSession):
+    """Enterprise Audit & Alert: a completed import fires one summary
+    notification to the admin role feed — not one per row."""
+    await _create_admin(db_session)
+    token = await _login(client)
+
+    csv_bytes = b"SKU,Name,Quantity\nAUDIT-001,Audit Test Part,5\n"
+    response = await client.post(
+        "/api/v1/inventory/import",
+        headers={"Authorization": f"Bearer {token}"},
+        files={"file": ("audit.csv", csv_bytes, "text/csv")},
+    )
+    assert response.status_code == 200
+
+    notifications = (await db_session.execute(
+        select(Notification).where(
+            Notification.target_role == ADMIN_ROLE,
+            Notification.event_type == "inventory.import_completed",
+        )
+    )).scalars().all()
+    assert len(notifications) == 1
+    assert "imported inventory into" in notifications[0].message
+    assert "1 new part(s)" in notifications[0].message
+    assert notifications[0].channel == "in_app"
 
 
 async def test_import_rejects_unsupported_file_type(client: AsyncClient, db_session: AsyncSession):

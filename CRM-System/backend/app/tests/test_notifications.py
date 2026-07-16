@@ -1,12 +1,17 @@
 import pytest
 from httpx import AsyncClient
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.security import hash_password
+from app.models.notification import Notification
 from app.models.user import User
+from app.models.warehouse import Warehouse
 from app.services.notification_service import (
+    ADMIN_ROLE,
     EmailAdapter,
     NotificationDeliveryError,
+    NotificationService,
     WhatsAppAdapter,
 )
 
@@ -28,6 +33,26 @@ async def _login(client: AsyncClient, db_session: AsyncSession) -> str:
         json={"username": "agent", "password": "Test@1234"},
     )
     return response.json()["access_token"]
+
+
+async def _login_as(client: AsyncClient, db_session: AsyncSession, *, username: str, is_superuser: bool) -> tuple[str, User]:
+    user = User(
+        email=f"{username}@example.com",
+        username=username,
+        hashed_password=hash_password("Test@1234"),
+        is_active=True,
+        is_superuser=is_superuser,
+    )
+    db_session.add(user)
+    await db_session.commit()
+    await db_session.refresh(user)
+
+    response = await client.post(
+        "/api/v1/auth/login",
+        json={"username": username, "password": "Test@1234"},
+    )
+    assert response.status_code == 200
+    return response.json()["access_token"], user
 
 
 async def test_send_notification_via_whatsapp_success(
@@ -156,3 +181,98 @@ async def test_list_and_get_notifications(
 
     missing_response = await client.get("/api/v1/notifications/999999", headers=headers)
     assert missing_response.status_code == 404
+
+
+# ── Enterprise Audit & Alert: role-targeted admin broadcast ────────────────────
+
+async def test_notify_role_creates_in_app_admin_notification(db_session: AsyncSession):
+    notification = await NotificationService(db_session).notify_role(
+        role=ADMIN_ROLE,
+        subject="Test Alert",
+        message="Something important happened.",
+        event_type="test.event",
+    )
+    assert notification.channel == "in_app"
+    assert notification.status == "sent"
+    assert notification.target_role == ADMIN_ROLE
+    assert notification.recipient_user_id is None
+    assert notification.sent_at is not None
+
+
+async def test_admin_sees_role_targeted_feed_but_regular_user_does_not(
+    client: AsyncClient, db_session: AsyncSession,
+):
+    admin_token, admin = await _login_as(client, db_session, username="admin1", is_superuser=True)
+    user_token, _ = await _login_as(client, db_session, username="staff1", is_superuser=False)
+
+    await NotificationService(db_session).notify_role(
+        role=ADMIN_ROLE, message="Global activity feed entry.", event_type="test.broadcast",
+    )
+
+    admin_resp = await client.get("/api/v1/notifications/me", headers={"Authorization": f"Bearer {admin_token}"})
+    assert admin_resp.status_code == 200
+    admin_items = admin_resp.json()
+    assert any(n["target_role"] == ADMIN_ROLE for n in admin_items)
+
+    user_resp = await client.get("/api/v1/notifications/me", headers={"Authorization": f"Bearer {user_token}"})
+    assert user_resp.status_code == 200
+    user_items = user_resp.json()
+    assert not any(n["target_role"] == ADMIN_ROLE for n in user_items)
+
+    admin_count = await client.get("/api/v1/notifications/me/unread-count", headers={"Authorization": f"Bearer {admin_token}"})
+    assert admin_count.json()["count"] >= 1
+    user_count = await client.get("/api/v1/notifications/me/unread-count", headers={"Authorization": f"Bearer {user_token}"})
+    assert user_count.json()["count"] == 0
+
+
+async def test_admin_mark_all_read_clears_role_targeted_feed(
+    client: AsyncClient, db_session: AsyncSession,
+):
+    admin_token, _ = await _login_as(client, db_session, username="admin2", is_superuser=True)
+    await NotificationService(db_session).notify_role(role=ADMIN_ROLE, message="Broadcast.", event_type="test.broadcast")
+
+    headers = {"Authorization": f"Bearer {admin_token}"}
+    before = await client.get("/api/v1/notifications/me/unread-count", headers=headers)
+    assert before.json()["count"] >= 1
+
+    mark_response = await client.post("/api/v1/notifications/read-all", headers=headers)
+    assert mark_response.status_code == 200
+
+    after = await client.get("/api/v1/notifications/me/unread-count", headers=headers)
+    assert after.json()["count"] == 0
+
+
+async def test_manual_receive_transaction_notifies_admins(
+    client: AsyncClient, db_session: AsyncSession,
+):
+    admin_token, admin = await _login_as(client, db_session, username="admin3", is_superuser=True)
+
+    warehouse = Warehouse(code="WH-NOTIFY", name="Notify Test Warehouse")
+    db_session.add(warehouse)
+    from app.models.spare_part import SparePart
+    part = SparePart(part_number="NOTIFY-001", name="Notify Test Part", unit="piece")
+    db_session.add(part)
+    await db_session.commit()
+    await db_session.refresh(warehouse)
+    await db_session.refresh(part)
+
+    response = await client.post(
+        "/api/v1/inventory/transactions",
+        headers={"Authorization": f"Bearer {admin_token}"},
+        json={
+            "transaction_type": "receive",
+            "spare_part_id": part.id,
+            "warehouse_id": warehouse.id,
+            "quantity": 25,
+            "unit_cost": 1.5,
+        },
+    )
+    assert response.status_code == 201
+
+    notifications = (await db_session.execute(
+        select(Notification).where(Notification.target_role == ADMIN_ROLE, Notification.event_type == "inventory.transaction.receive")
+    )).scalars().all()
+    assert len(notifications) == 1
+    assert "Goods Receipt" in notifications[0].message
+    assert "Notify Test Part" in notifications[0].message
+    assert "Notify Test Warehouse" in notifications[0].message

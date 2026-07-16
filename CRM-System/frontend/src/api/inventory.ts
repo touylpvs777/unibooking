@@ -19,6 +19,7 @@ export const createPart = (data: SparePartCreate) => client.post<SparePart>(`${B
 export const updatePart = (id: number, data: Record<string, unknown>) => client.put<SparePart>(`${B}/parts/${id}`, data)
 
 export const getWarehouses = () => client.get<Warehouse[]>(`${B}/warehouses`)
+export const getWarehouse = (id: number) => client.get<Warehouse>(`${B}/warehouses/${id}`)
 export const createWarehouse = (data: { code: string; name: string; address?: string }) => client.post<Warehouse>(`${B}/warehouses`, data)
 
 export const getBalances = (params?: { spare_part_id?: number; warehouse_id?: number }) => client.get<InventoryBalance[]>(`${B}/balances`, { params })

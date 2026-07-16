@@ -6,9 +6,8 @@ import {
   Menu, ChevronDown,
 } from 'lucide-react'
 import type { Product, Brand, ProductCategory } from '@/types/catalog'
+import { resolveMediaUrl } from '@/utils/media'
 import './CatalogComponents.css'
-
-const PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="%23cbd5e1" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"%3E%3Crect x="2" y="2" width="20" height="20" rx="2"/%3E%3Cpath d="M7 8h10M7 12h10M7 16h6"/%3E%3C/svg%3E'
 
 const CATEGORY_ICONS: Record<string, React.ElementType> = {
   forklifts: Truck, forklift: Truck,
@@ -254,7 +253,9 @@ interface CatalogProductCardProps {
 
 export function CatalogProductCard({ product, onClick, onEdit }: CatalogProductCardProps) {
   const { t } = useTranslation()
-  const imgSrc = product.primary_image_url ?? PLACEHOLDER
+  const [imgFailed, setImgFailed] = useState(false)
+  const resolvedSrc = resolveMediaUrl(product.primary_image_url)
+  const showImage = Boolean(resolvedSrc) && !imgFailed
 
   return (
     <div
@@ -265,8 +266,14 @@ export function CatalogProductCard({ product, onClick, onEdit }: CatalogProductC
       onKeyDown={onClick ? (e) => { if (e.key === 'Enter') onClick() } : undefined}
     >
       <div className="cpc-img-wrap">
-        <img src={imgSrc} alt={product.name_en} className="cpc-img" loading="lazy"
-          onError={(e) => { (e.currentTarget as HTMLImageElement).src = PLACEHOLDER }} />
+        {showImage ? (
+          <img src={resolvedSrc!} alt={product.name_en} className="cpc-img" loading="lazy"
+            onError={() => setImgFailed(true)} />
+        ) : (
+          <div className="cpc-img-placeholder">
+            <Package size={48} strokeWidth={1.5} />
+          </div>
+        )}
         <div className="cpc-badges">
           {product.is_sale && <span className="cpc-badge sale"><ShoppingCart size={10} /> {t('catalog.products.badges.sale')}</span>}
           {product.is_rental && <span className="cpc-badge rental"><Wrench size={10} /> {t('catalog.products.badges.rental')}</span>}

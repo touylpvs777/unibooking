@@ -109,7 +109,12 @@ export default function NotificationCenter() {
                 >
                   <div className="notification-item-icon"><AlertTriangle size={14} /></div>
                   <div className="notification-item-content">
-                    <div className="notification-item-text">{item.subject ?? eventLabel(item.event_type)}</div>
+                    <div className="notification-item-text">
+                      {item.subject ?? eventLabel(item.event_type)}
+                      {item.target_role && (
+                        <span className="notification-item-role-badge">{t('header.adminBroadcast')}</span>
+                      )}
+                    </div>
                     <div className="notification-item-meta">
                       {item.message} · {relativeTime(item.created_at)}
                     </div>

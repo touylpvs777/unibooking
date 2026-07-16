@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Search, Plus, Upload, AlertCircle, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Search, Plus, Upload, AlertCircle, RefreshCw, ChevronLeft, ChevronRight, Package } from 'lucide-react'
 import { getParts } from '@/api/inventory'
 import { PartCategoryBadge } from '@/components/inventory/StockBadge'
 import InventoryImportModal from '@/components/inventory/InventoryImportModal'
 import type { SparePart, PartListParams } from '@/types/inventory'
+import { resolveMediaUrl } from '@/utils/media'
 import '@/styles/shared.css'
 import '@/styles/detail.css'
 
@@ -67,7 +68,25 @@ export default function SparePartListPage() {
               {isLoading ? Array.from({ length: 8 }).map((_, i) => <tr key={i} className="skeleton-row"><td><div className="skeleton-cell" style={{ width: '80%' }} /></td><td><div className="skeleton-cell" style={{ width: '60%' }} /></td><td><div className="skeleton-cell" style={{ width: 60 }} /></td><td className="col-hide-sm"><div className="skeleton-cell" style={{ width: 60 }} /></td><td className="col-hide-sm"><div className="skeleton-cell" style={{ width: 40 }} /></td><td className="col-hide-sm"><div className="skeleton-cell" style={{ width: 40 }} /></td></tr>) : items.length === 0 ? <tr><td colSpan={6}><div className="table-empty"><p>{t('inventory.spareParts.list.noPartsFound')}</p></div></td></tr> : items.map((p) => (
                 <tr key={p.id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/inventory/parts/${p.id}`)}>
                   <td className="cell-desc">{p.part_number}</td>
-                  <td><div className="cell-desc">{p.name}</div>{p.brand && <div className="cell-muted cell-sub">{p.brand.name}</div>}</td>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      {p.image_url
+                        ? <img
+                            src={resolveMediaUrl(p.image_url)!}
+                            alt={p.name}
+                            style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 4, border: '1px solid var(--color-border)', flexShrink: 0 }}
+                            loading="lazy"
+                            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+                          />
+                        : <div style={{ width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-bg-subtle)', borderRadius: 4, border: '1px solid var(--color-border)', flexShrink: 0 }}>
+                            <Package size={16} style={{ color: 'var(--color-text-muted)' }} />
+                          </div>}
+                      <div>
+                        <div className="cell-desc">{p.name}</div>
+                        {p.brand && <div className="cell-muted cell-sub">{p.brand.name}</div>}
+                      </div>
+                    </div>
+                  </td>
                   <td><PartCategoryBadge category={p.part_category} /></td>
                   <td className="cell-muted col-hide-sm cell-mono">{fmtAmt(p.unit_price)} {p.currency}</td>
                   <td className="cell-muted col-hide-sm">{p.min_stock_level}</td>
