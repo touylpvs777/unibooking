@@ -1,6 +1,6 @@
 export type ServiceType = 'preventive' | 'corrective' | 'inspection' | 'certification'
 export type IntervalType = 'hours' | 'days' | 'months'
-export type OrderType = 'preventive' | 'corrective' | 'emergency' | 'inspection'
+export type OrderType = 'preventive' | 'corrective' | 'emergency' | 'inspection' | 'install'
 export type WOStatus = 'scheduled' | 'due' | 'in_progress' | 'completed' | 'verified' | 'cancelled'
 export type WOPriority = 'low' | 'normal' | 'high' | 'critical'
 export type MCostType = 'labor' | 'parts' | 'external_service' | 'other'

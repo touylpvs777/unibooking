@@ -9,12 +9,14 @@ interface Props {
   brandId: number | null
   fuelType: string
   condition: string
+  ownershipState: string
   statusCounts: Record<string, number>
   brands: BrandOption[]
   onStatusChange: (status: ForkliftStatus | null) => void
   onBrandChange: (id: number | null) => void
   onFuelChange: (fuel: string) => void
   onConditionChange: (cond: string) => void
+  onOwnershipChange: (ownership: string) => void
   onClear: () => void
   hasFilters: boolean
 }
@@ -25,8 +27,8 @@ const STATUS_COLORS: Record<string, string> = {
 }
 
 export default function EquipmentFilters({
-  activeStatus, brandId, fuelType, condition, statusCounts, brands,
-  onStatusChange, onBrandChange, onFuelChange, onConditionChange, onClear, hasFilters,
+  activeStatus, brandId, fuelType, condition, ownershipState, statusCounts, brands,
+  onStatusChange, onBrandChange, onFuelChange, onConditionChange, onOwnershipChange, onClear, hasFilters,
 }: Props) {
   const { t } = useTranslation()
   const STATUS_LABELS: Record<string, string> = {
@@ -40,6 +42,11 @@ export default function EquipmentFilters({
   const COND_OPTS = [
     { value: '', label: t('equipment.filters.allConditions') }, { value: 'new', label: t('equipment.condition.new') },
     { value: 'used', label: t('equipment.condition.used') }, { value: 'refurbished', label: t('equipment.condition.refurbished') },
+  ]
+  const OWNERSHIP_OPTS = [
+    { value: '', label: t('equipment.filters.allOwnership') }, { value: 'for_sale', label: t('equipment.ownership.forSale') },
+    { value: 'rental', label: t('equipment.ownership.rental') }, { value: 'customer_owned', label: t('equipment.ownership.customerOwned') },
+    { value: 'retired', label: t('equipment.ownership.retired') },
   ]
   const allStatuses = ['in_stock', 'rented', 'in_service', 'reserved', 'sold', 'decommissioned'] as ForkliftStatus[]
 
@@ -90,6 +97,9 @@ export default function EquipmentFilters({
         </select>
         <select className="filter-select" value={condition} onChange={(e) => onConditionChange(e.target.value)}>
           {COND_OPTS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+        </select>
+        <select className="filter-select" value={ownershipState} onChange={(e) => onOwnershipChange(e.target.value)}>
+          {OWNERSHIP_OPTS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
         {hasFilters && (
           <button className="clear-btn" onClick={onClear}><X size={12} /> {t('equipment.filters.clear')}</button>

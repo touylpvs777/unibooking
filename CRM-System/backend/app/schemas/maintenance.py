@@ -154,7 +154,7 @@ class WorkOrderCreate(BaseModel):
     title: str = Field(..., min_length=1, max_length=300)
     description: str | None = None
     assigned_to: int | None = None
-    scheduled_date: date
+    scheduled_date: datetime
     estimated_hours: float = Field(default=1.0, gt=0)
     estimated_cost: float = Field(default=0.0, ge=0)
 
@@ -164,7 +164,7 @@ class WorkOrderUpdate(BaseModel):
     description: str | None = None
     priority: WorkOrderPriority | None = None
     assigned_to: int | None = None
-    scheduled_date: date | None = None
+    scheduled_date: datetime | None = None
     estimated_hours: float | None = Field(default=None, gt=0)
     estimated_cost: float | None = Field(default=None, ge=0)
 
@@ -200,7 +200,7 @@ class WorkOrderOut(BaseModel):
     status: str
     priority: str
     title: str
-    scheduled_date: date
+    scheduled_date: datetime
     started_at: datetime | None = None
     completed_at: datetime | None = None
     estimated_hours: float

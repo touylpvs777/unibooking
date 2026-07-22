@@ -1,6 +1,6 @@
 import { Fuel, Gauge, Calendar, Tag, User, Eye, Pencil } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { ForkliftStatusBadge, ForkliftConditionBadge } from '@/components/equipment/ForkliftStatusBadge'
+import { ForkliftStatusBadge, ForkliftConditionBadge, OwnershipStateBadge } from '@/components/equipment/ForkliftStatusBadge'
 import type { Forklift } from '@/types/forklift'
 
 const PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="150" viewBox="0 0 24 24" fill="none" stroke="%23cbd5e1" stroke-width="1"%3E%3Crect x="1" y="3" width="22" height="14" rx="2"/%3E%3Cpath d="M5 21h2M17 21h2M6 17v4M18 17v4M3 17h18"/%3E%3C/svg%3E'
@@ -56,9 +56,10 @@ export default function EquipmentCard({ forklift, onClick, onEdit, compact }: Pr
       {/* Body */}
       <div className="mp-card-body" style={{ padding: compact ? '12px 14px' : undefined }}>
         {compact && (
-          <div style={{ display: 'flex', gap: 6, marginBottom: 6 }}>
+          <div style={{ display: 'flex', gap: 6, marginBottom: 6, flexWrap: 'wrap' }}>
             <ForkliftStatusBadge status={forklift.status} />
             <ForkliftConditionBadge condition={forklift.condition} />
+            <OwnershipStateBadge ownershipState={forklift.ownership_state} />
           </div>
         )}
 
@@ -74,7 +75,8 @@ export default function EquipmentCard({ forklift, onClick, onEdit, compact }: Pr
         </p>
 
         {/* Meta chips */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8, alignItems: 'center' }}>
+          {!compact && <OwnershipStateBadge ownershipState={forklift.ownership_state} />}
           {forklift.fuel_type && (
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 3, fontSize: 11, color: 'var(--color-text-muted)', background: 'var(--color-bg-subtle)', padding: '2px 7px', borderRadius: 'var(--radius-full)' }}>
               <Fuel size={10} /> {FUEL_LABELS[forklift.fuel_type] ?? forklift.fuel_type}

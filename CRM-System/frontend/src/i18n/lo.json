@@ -1068,6 +1068,30 @@
         "all": "ທຸກສະຖານະ",
         "partially_paid": "ຊຳລະບາງສ່ວນ"
       },
+      "form": {
+        "addRow": "ເພີ່ມແຖວ",
+        "backToList": "ກັບໄປໃບແຈ້ງໜີ້",
+        "createFailed": "ບໍ່ສາມາດສ້າງໃບແຈ້ງໜີ້ໄດ້.",
+        "createInvoice": "ສ້າງໃບແຈ້ງໜີ້",
+        "created": "ສ້າງໃບແຈ້ງໜີ້ {{number}} ແລ້ວ.",
+        "creating": "ກຳລັງສ້າງ...",
+        "customer": "ລູກຄ້າ",
+        "customerSearchPlaceholder": "ຄົ້ນຫາຊື່, ບໍລິສັດ...",
+        "description": "ລາຍລະອຽດ",
+        "descriptionPlaceholder": "ລາຍລະອຽດລາຍການ ຫຼື ບໍລິການ",
+        "errors": {
+          "customerRequired": "ກະລຸນາເລືອກລູກຄ້າ.",
+          "itemRequired": "ຕ້ອງມີຢ່າງໜ້ອຍໜຶ່ງລາຍການທີ່ມີລາຍລະອຽດ."
+        },
+        "grandTotal": "ຍອດລວມທັງໝົດ",
+        "lineTotal": "ຍອດລວມແຖວ",
+        "noCustomersFound": "ບໍ່ພົບລູກຄ້າ",
+        "referenceType": "ປະເພດໃບແຈ້ງໜີ້",
+        "subtotal": "ຍອດລວມຍ່ອຍ",
+        "taxRate": "ອັດຕາພາສີ (%)",
+        "title": "ໃບແຈ້ງໜີ້ໃໝ່",
+        "unitPrice": "ລາຄາຕໍ່ໜ່ວຍ"
+      },
       "lineItems": {
         "empty": "ບໍ່ມີລາຍການ",
         "number": "#",
@@ -1079,6 +1103,7 @@
       "list": {
         "empty": "ບໍ່ພົບໃບແຈ້ງໜີ້",
         "loadError": "ບໍ່ສາມາດໂຫຼດໃບແຈ້ງໜີ້ໄດ້.",
+        "newInvoice": "ໃບແຈ້ງໜີ້ໃໝ່",
         "resultsCount": "{{count}} ຜົນລັບ",
         "searchPlaceholder": "ຄົ້ນຫາເລກທີໃບແຈ້ງໜີ້...",
         "subtitle": "{{count}} ໃບແຈ້ງໜີ້",
@@ -1090,7 +1115,8 @@
         "dueDate": "ວັນຄົບກຳນົດ",
         "issueDate": "ວັນທີອອກ",
         "paidDate": "ວັນທີຊຳລະ",
-        "period": "ໄລຍະເວລາ"
+        "period": "ໄລຍະເວລາ",
+        "referenceType": "ປະເພດໃບແຈ້ງໜີ້"
       },
       "modal": {
         "cancel": {
@@ -1101,6 +1127,11 @@
       },
       "pagination": {
         "info": "ໜ້າ {{page}} ຈາກ {{pages}} (ທັງໝົດ {{total}})"
+      },
+      "referenceType": {
+        "rental": "ການເຊົ່າ",
+        "sales": "ການຂາຍ",
+        "workOrder": "ໃບສັ່ງງານ"
       },
       "status": {
         "cancelled": "ຍົກເລີກແລ້ວ",
@@ -1310,6 +1341,7 @@
       "corrective": "ການແກ້ໄຂ",
       "emergency": "ສຸກເສີນ",
       "inspection": "ການກວດກາ",
+      "install": "ການຕິດຕັ້ງ",
       "preventive": "ການປ້ອງກັນ"
     },
     "workOrders": {
@@ -1364,6 +1396,28 @@
         "startWork": "ເລີ່ມວຽກ",
         "toastStarted": "ເລີ່ມວຽກແລ້ວ",
         "verify": "ຢືນຢັນ"
+      },
+      "form": {
+        "asset": "ຊັບສິນ",
+        "assetSearchPlaceholder": "ຄົ້ນຫາເລກຊີຣີ ຫຼື ຊື່...",
+        "assignee": "ຜູ້ຮັບຜິດຊອບ",
+        "backToList": "ກັບໄປລາຍການໃບສັ່ງງານ",
+        "createFailed": "ບໍ່ສາມາດສ້າງໃບສັ່ງງານໄດ້.",
+        "createWorkOrder": "ສ້າງໃບສັ່ງງານ",
+        "created": "ສ້າງໃບສັ່ງງານ {{number}} ແລ້ວ.",
+        "creating": "ກຳລັງສ້າງ...",
+        "errors": {
+          "assetRequired": "ກະລຸນາເລືອກຊັບສິນ.",
+          "scheduleRequired": "ຕ້ອງລະບຸວັນທີ ແລະ ເວລານັດໝາຍ.",
+          "titleRequired": "ຕ້ອງລະບຸຫົວຂໍ້."
+        },
+        "noAssetsFound": "ບໍ່ພົບຊັບສິນ",
+        "schedule": "ວັນທີ ແລະ ເວລານັດໝາຍ",
+        "title": "ໃບສັ່ງງານໃໝ່",
+        "unassigned": "— ຍັງບໍ່ໄດ້ມອບໝາຍ —",
+        "workOrderTitle": "ຫົວຂໍ້",
+        "workOrderTitlePlaceholder": "ຕົວຢ່າງ: ບໍລິການ PM ປະຈຳເດືອນ",
+        "workType": "ປະເພດວຽກ"
       },
       "list": {
         "allStatuses": "ທຸກສະຖານະ",
@@ -1679,6 +1733,7 @@
       "allBrands": "ທຸກຍີ່ຫໍ້",
       "allConditions": "ທຸກສະພາບ",
       "allFuelTypes": "ທຸກປະເພດເຊື້ອໄຟ",
+      "allOwnership": "ທຸກປະເພດການເປັນເຈົ້າຂອງ",
       "clear": "ລ້າງ",
       "countLabel": "{{count}} ອຸປະກອນ",
       "noneFound": "ບໍ່ພົບອຸປະກອນ",
@@ -1707,6 +1762,8 @@
       "nameRequired": "ຕ້ອງລະບຸຊື່.",
       "noBrand": "— ບໍ່ມີຍີ່ຫໍ້ —",
       "notesPlaceholder": "ໝາຍເຫດເພີ່ມເຕີມ (ບໍ່ບັງຄັບ)...",
+      "operationalStatus": "ສະຖານະການດຳເນີນງານ",
+      "ownershipState": "ສະຖານະການເປັນເຈົ້າຂອງ",
       "purchaseDate": "ວັນທີຊື້",
       "registerTitle": "ລົງທະບຽນລົດຍົກ",
       "saveChanges": "ບັນທຶກການປ່ຽນແປງ",
@@ -1730,6 +1787,18 @@
       "noPhotosHint": "ຮູບພາບຊ່ວຍລະບຸ ແລະ ບັນທຶກຂໍ້ມູນອຸປະກອນນີ້",
       "previousPhoto": "ຮູບກ່ອນໜ້າ",
       "viewFullscreen": "ເບິ່ງເຕັມຈໍ"
+    },
+    "operationalStatus": {
+      "available": "ພ້ອມໃຫ້ບໍລິການ",
+      "inService": "ກຳລັງບໍລິການ",
+      "onRent": "ຖືກເຊົ່າຢູ່",
+      "sold": "ຂາຍແລ້ວ"
+    },
+    "ownership": {
+      "customerOwned": "ລູກຄ້າເປັນເຈົ້າຂອງ",
+      "forSale": "ສຳລັບຂາຍ",
+      "rental": "ກຳລັງລົດເຊົ່າ",
+      "retired": "ປົດລະວາງ"
     },
     "quickActions": {
       "maintenance": {
@@ -1768,7 +1837,9 @@
       "subtitle": "ຈັດການ ແລະ ຕິດຕາມກຳລັງລົດຍົກຂອງທ່ານ",
       "table": {
         "forklift": "ລົດຍົກ",
-        "hours": "ຊົ່ວໂມງ"
+        "hours": "ຊົ່ວໂມງມິເຕີ",
+        "model": "ລຸ້ນ",
+        "ownership": "ການເປັນເຈົ້າຂອງ"
       },
       "title": "ທະບຽນອຸປະກອນ"
     },

@@ -148,7 +148,7 @@ async def test_pm_scan_skips_schedule_with_existing_open_work_order(db_session: 
         work_order_number="WO-EXISTING-001",
         forklift_id=forklift.id, schedule_id=schedule.id,
         order_type="preventive", status="in_progress",
-        title="Already in progress", scheduled_date=date.today(),
+        title="Already in progress", scheduled_date=datetime.now(),
     ))
     await db_session.commit()
 

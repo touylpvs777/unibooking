@@ -30,10 +30,12 @@ const MovementDetailPage = lazy(() => import('@/pages/Movement/MovementDetailPag
 const MovementForm = lazy(() => import('@/pages/Movement/MovementForm'))
 const MaintenanceDashboardPage = lazy(() => import('@/pages/Maintenance/MaintenanceDashboardPage'))
 const WorkOrderListPage = lazy(() => import('@/pages/Maintenance/WorkOrderListPage'))
+const WorkOrderFormPage = lazy(() => import('@/pages/Maintenance/WorkOrderFormPage'))
 const WorkOrderDetailPage = lazy(() => import('@/pages/Maintenance/WorkOrderDetailPage'))
 const MaintenanceSchedulePage = lazy(() => import('@/pages/Maintenance/MaintenanceSchedulePage'))
 const BillingDashboardPage = lazy(() => import('@/pages/Billing/BillingDashboardPage'))
 const InvoiceListPage = lazy(() => import('@/pages/Billing/InvoiceListPage'))
+const InvoiceFormPage = lazy(() => import('@/pages/Billing/InvoiceFormPage'))
 const InvoiceDetailPage = lazy(() => import('@/pages/Billing/InvoiceDetailPage'))
 const PaymentListPage = lazy(() => import('@/pages/Billing/PaymentListPage'))
 const PaymentDetailPage = lazy(() => import('@/pages/Billing/PaymentDetailPage'))
@@ -111,6 +113,7 @@ export default function App() {
 
             <Route path="/billing"                         element={<Suspense fallback={<PageLoader />}><BillingDashboardPage /></Suspense>} />
             <Route path="/billing/invoices"                element={<Suspense fallback={<PageLoader />}><InvoiceListPage /></Suspense>} />
+            <Route path="/billing/invoices/new"            element={<Suspense fallback={<PageLoader />}><InvoiceFormPage /></Suspense>} />
             <Route path="/billing/invoices/:id"            element={<Suspense fallback={<PageLoader />}><InvoiceDetailPage /></Suspense>} />
             <Route path="/billing/payments"                element={<Suspense fallback={<PageLoader />}><PaymentListPage /></Suspense>} />
             <Route path="/billing/payments/:id"            element={<Suspense fallback={<PageLoader />}><PaymentDetailPage /></Suspense>} />
@@ -124,7 +127,7 @@ export default function App() {
 
             <Route path="/maintenance"                    element={<Suspense fallback={<PageLoader />}><MaintenanceDashboardPage /></Suspense>} />
             <Route path="/maintenance/work-orders"        element={<Suspense fallback={<PageLoader />}><WorkOrderListPage /></Suspense>} />
-            <Route path="/maintenance/work-orders/new"    element={<Placeholder name="New Work Order" />} />
+            <Route path="/maintenance/work-orders/new"    element={<Suspense fallback={<PageLoader />}><WorkOrderFormPage /></Suspense>} />
             <Route path="/maintenance/work-orders/:id"    element={<Suspense fallback={<PageLoader />}><WorkOrderDetailPage /></Suspense>} />
             <Route path="/maintenance/schedules"          element={<Suspense fallback={<PageLoader />}><MaintenanceSchedulePage /></Suspense>} />
 

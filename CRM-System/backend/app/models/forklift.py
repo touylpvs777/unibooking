@@ -28,6 +28,20 @@ class ForkliftCondition(str, enum.Enum):
     REFURBISHED = "refurbished"
 
 
+class OwnershipState(str, enum.Enum):
+    """
+    Who holds the asset, independent of its day-to-day operational status
+    (`ForkliftStatus`). Kept as a separate dimension per the Asset Registry
+    spec (M3) rather than folded into `ForkliftStatus`, since ownership and
+    operations change independently (a rental-fleet unit cycles through
+    IN_STOCK/RENTED/IN_SERVICE while its ownership_state stays `rental`).
+    """
+    FOR_SALE = "for_sale"
+    RENTAL = "rental"
+    CUSTOMER_OWNED = "customer_owned"
+    RETIRED = "retired"
+
+
 class FuelType(str, enum.Enum):
     ELECTRIC = "electric"
     DIESEL = "diesel"
@@ -86,6 +100,9 @@ class Forklift(Base):
     status: Mapped[str] = mapped_column(
         String(30), default=ForkliftStatus.IN_STOCK.value, nullable=False, index=True,
     )
+    ownership_state: Mapped[str] = mapped_column(
+        String(20), default=OwnershipState.FOR_SALE.value, nullable=False, index=True,
+    )
     condition: Mapped[str] = mapped_column(
         String(20), default=ForkliftCondition.NEW.value, nullable=False,
     )
@@ -98,6 +115,14 @@ class Forklift(Base):
 
     initial_hour_meter: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     current_hour_meter: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
+
+    @property
+    def meter_hours(self) -> int:
+        """Integer engine-hours view for the Asset Registry API. `current_hour_meter`
+        (float, with its own audit log via ForkliftHourMeterLog) stays the single
+        source of truth — this is a read-only rounded projection, not a second
+        writable field that could drift out of sync."""
+        return round(self.current_hour_meter)
 
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False, index=True)

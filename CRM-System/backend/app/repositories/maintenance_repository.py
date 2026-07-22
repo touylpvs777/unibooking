@@ -1,6 +1,6 @@
 import logging
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime
 
 from sqlalchemy import and_, func, or_, select
 from sqlalchemy.exc import IntegrityError
@@ -13,6 +13,7 @@ from app.models.maintenance_schedule import MaintenanceSchedule
 from app.models.work_order import WorkOrder
 from app.models.service_history import ServiceHistory
 from app.models.maintenance_cost import MaintenanceCost
+from app.models.user import User
 
 logger = logging.getLogger(__name__)
 
@@ -26,8 +27,8 @@ class WorkOrderFilter:
     forklift_id: int | None = None
     assigned_to: int | None = None
     is_active: bool | None = True
-    scheduled_from: date | None = None
-    scheduled_to: date | None = None
+    scheduled_from: datetime | None = None
+    scheduled_to: datetime | None = None
     page: int = 1
     page_size: int = 20
     sort: str = "scheduled_date"
@@ -127,6 +128,14 @@ class MaintenanceRepository:
                 )
             )
             .order_by(MaintenanceSchedule.next_due_date.asc())
+        )
+        return list(result.scalars().all())
+
+    # ── Technicians ──────────────────────────────────────────────────────────
+
+    async def get_active_users(self) -> list[User]:
+        result = await self.db.execute(
+            select(User).where(User.is_active == True).order_by(User.full_name, User.username)  # noqa: E712
         )
         return list(result.scalars().all())
 

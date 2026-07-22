@@ -129,6 +129,11 @@ class MaintenanceService:
         await self.db.commit()
         return await self._repo.get_schedule_by_id(schedule.id)
 
+    # ── Technicians ──────────────────────────────────────────────────────────
+
+    async def list_technicians(self):
+        return await self._repo.get_active_users()
+
     # ── Work Orders ──────────────────────────────────────────────────────────
 
     async def list_work_orders(self, **kwargs) -> WorkOrderListResponse:

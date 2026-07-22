@@ -1,7 +1,7 @@
 import client from './client'
 import type { Customer, Customer360, CustomerCreate, CustomerUpdate } from '@/types/customer'
 
-export const getCustomers = (params?: { skip?: number; limit?: number; status?: string }) =>
+export const getCustomers = (params?: { skip?: number; limit?: number; status?: string; q?: string }) =>
   client.get<Customer[]>('/customers/', { params })
 
 export const getCustomer = (id: number) =>

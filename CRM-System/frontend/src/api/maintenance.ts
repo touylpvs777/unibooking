@@ -1,9 +1,11 @@
 import client from './client'
-import type { MaintenancePlan, MaintenanceSchedule, WorkOrder, WorkOrderDetail, WorkOrderListResponse, WOListParams, WOCreate, PlanCreate, CostEntry, ServiceHistoryEntry, DashboardSummary } from '@/types/maintenance'
+import type { MaintenancePlan, MaintenanceSchedule, WorkOrder, WorkOrderDetail, WorkOrderListResponse, WOListParams, WOCreate, PlanCreate, CostEntry, ServiceHistoryEntry, DashboardSummary, UserBrief } from '@/types/maintenance'
 
 const B = '/maintenance'
 
 export const getDashboard = () => client.get<DashboardSummary>(`${B}/dashboard`)
+
+export const getTechnicians = () => client.get<UserBrief[]>(`${B}/technicians`)
 
 export const getPlans = (is_active?: boolean) => client.get<MaintenancePlan[]>(`${B}/plans`, { params: { is_active } })
 export const getPlan = (id: number) => client.get<MaintenancePlan>(`${B}/plans/${id}`)

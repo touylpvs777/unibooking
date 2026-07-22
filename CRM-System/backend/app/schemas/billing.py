@@ -3,7 +3,7 @@ from datetime import date, datetime
 from pydantic import BaseModel, Field
 
 from app.models.deposit import DepositRecordStatus, DepositType
-from app.models.invoice import InvoiceStatus
+from app.models.invoice import InvoiceStatus, ReferenceType
 from app.models.payment import PaymentMethod, PaymentRecordStatus
 from app.models.revenue_recognition import RecognitionStatus, RecognitionType
 
@@ -51,9 +51,18 @@ class InvoiceItemOut(BaseModel):
     updated_at: datetime | None = None
 
 
+class InvoiceItemCreate(BaseModel):
+    description: str = Field(..., min_length=1, max_length=500)
+    quantity: float = Field(default=1.0, gt=0)
+    unit_rate: float = Field(..., ge=0)
+
+
 class InvoiceCreate(BaseModel):
-    contract_id: int
+    contract_id: int | None = None
     customer_id: int
+    reference_type: ReferenceType | None = None
+    reference_id: int | None = None
+    issue_date: date | None = None
     due_date: date | None = None
     billing_period_start: date | None = None
     billing_period_end: date | None = None
@@ -63,6 +72,7 @@ class InvoiceCreate(BaseModel):
     notes: str | None = None
     internal_notes: str | None = None
     billing_cycle_ids: list[int] = Field(default_factory=list)
+    items: list[InvoiceItemCreate] = Field(default_factory=list)
 
 
 class InvoiceUpdate(BaseModel):
@@ -77,8 +87,10 @@ class InvoiceOut(BaseModel):
     model_config = {"from_attributes": True}
     id: int
     invoice_number: str
-    contract_id: int
+    contract_id: int | None = None
     customer_id: int
+    reference_type: str | None = None
+    reference_id: int | None = None
     status: str
     issue_date: date | None = None
     due_date: date | None = None
@@ -94,7 +106,7 @@ class InvoiceOut(BaseModel):
     billing_period_start: date | None = None
     billing_period_end: date | None = None
     customer: CustomerBrief
-    contract: ContractBrief
+    contract: ContractBrief | None = None
     creator: UserBrief | None = None
     created_at: datetime
     updated_at: datetime | None = None

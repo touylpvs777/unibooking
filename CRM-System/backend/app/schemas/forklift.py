@@ -10,6 +10,7 @@ from app.models.forklift import (
     ForkliftCondition,
     ForkliftStatus,
     FuelType,
+    OwnershipState,
 )
 from app.schemas.brand import BrandBrief
 
@@ -103,6 +104,7 @@ class ForkliftCreate(BaseModel):
     brand_id: int | None = None
     customer_id: int | None = None
     status: ForkliftStatus = ForkliftStatus.IN_STOCK
+    ownership_state: OwnershipState = OwnershipState.FOR_SALE
     condition: ForkliftCondition = ForkliftCondition.NEW
     fuel_type: FuelType | None = None
     capacity_kg: float | None = Field(default=None, ge=0)
@@ -139,6 +141,7 @@ class ForkliftUpdate(BaseModel):
     brand_id: int | None = None
     customer_id: int | None = None
     status: ForkliftStatus | None = None
+    ownership_state: OwnershipState | None = None
     condition: ForkliftCondition | None = None
     fuel_type: FuelType | None = None
     capacity_kg: float | None = None
@@ -167,11 +170,13 @@ class ForkliftOut(BaseModel):
     brand: BrandBrief | None = None
     customer: CustomerBrief | None = None
     status: str
+    ownership_state: str
     condition: str
     fuel_type: str | None = None
     capacity_kg: float | None = None
     year_manufactured: int | None = None
     current_hour_meter: float
+    meter_hours: int
     is_active: bool
     primary_photo_url: str | None = None
     created_at: datetime

@@ -1,5 +1,5 @@
 import logging
-from datetime import date
+from datetime import datetime
 
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -20,6 +20,7 @@ from app.schemas.maintenance import (
     ScheduleOut,
     ServiceHistoryOut,
     StartAction,
+    UserBrief,
     VerifyAction,
     WorkOrderCreate,
     WorkOrderDetail,
@@ -42,6 +43,20 @@ async def dashboard(
     current_user: User = require_permission(PermissionName.FORKLIFT_READ),
 ):
     return await MaintenanceService(db).get_dashboard()
+
+
+# ── Technicians (assignee picker) ───────────────────────────────────────────
+# A lightweight, non-PII brief list for the work-order assignee dropdown.
+# Deliberately separate from GET /users (which is superuser-only and returns
+# full account details) so anyone with FORKLIFT_READ can populate the picker.
+
+@router.get("/technicians", response_model=list[UserBrief], summary="List assignable technicians")
+async def list_technicians(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = require_permission(PermissionName.FORKLIFT_READ),
+):
+    users = await MaintenanceService(db).list_technicians()
+    return [UserBrief.model_validate(u) for u in users]
 
 
 # ── Plans ────────────────────────────────────────────────────────────────────
@@ -120,8 +135,8 @@ async def list_work_orders(
     forklift_id: int | None = None,
     assigned_to: int | None = None,
     is_active: bool | None = True,
-    scheduled_from: date | None = None,
-    scheduled_to: date | None = None,
+    scheduled_from: datetime | None = None,
+    scheduled_to: datetime | None = None,
     page: int = Query(default=1, ge=1),
     page_size: int = Query(default=20, ge=1, le=100),
     sort: str = Query(default="scheduled_date", pattern="^(scheduled_date|created_at|priority|status|work_order_number)$"),

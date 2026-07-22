@@ -673,6 +673,7 @@
       "list": {
         "title": "Invoices",
         "subtitle": "{{count}} invoices",
+        "newInvoice": "New Invoice",
         "loadError": "Failed to load invoices.",
         "searchPlaceholder": "Search invoice #...",
         "resultsCount": "{{count}} results",
@@ -688,8 +689,38 @@
         "dueDate": "Due Date",
         "paidDate": "Paid Date",
         "contract": "Contract",
+        "referenceType": "Invoice Type",
         "period": "Period",
         "createdBy": "Created By"
+      },
+      "referenceType": {
+        "sales": "Sales",
+        "workOrder": "Work Order",
+        "rental": "Rental"
+      },
+      "form": {
+        "title": "New Invoice",
+        "backToList": "Back to Invoices",
+        "customer": "Customer",
+        "customerSearchPlaceholder": "Search name, company...",
+        "noCustomersFound": "No customers found",
+        "referenceType": "Invoice Type",
+        "taxRate": "Tax Rate (%)",
+        "description": "Description",
+        "descriptionPlaceholder": "Item or service description",
+        "unitPrice": "Unit Price",
+        "lineTotal": "Line Total",
+        "addRow": "Add Row",
+        "subtotal": "Subtotal",
+        "grandTotal": "Grand Total",
+        "creating": "Creating...",
+        "createInvoice": "Create Invoice",
+        "created": "Invoice {{number}} created.",
+        "createFailed": "Failed to create invoice.",
+        "errors": {
+          "customerRequired": "Please select a customer.",
+          "itemRequired": "At least one line item with a description is required."
+        }
       },
       "pagination": {
         "info": "Page {{page}} of {{pages}} ({{total}} total)"
@@ -849,7 +880,8 @@
       "preventive": "Preventive",
       "corrective": "Corrective",
       "emergency": "Emergency",
-      "inspection": "Inspection"
+      "inspection": "Inspection",
+      "install": "Install"
     },
     "priority": {
       "low": "Low",
@@ -894,6 +926,28 @@
           "priority": "Priority"
         },
         "paginationInfo": "Page {{page}} of {{pages}} ({{total}} total)"
+      },
+      "form": {
+        "title": "New Work Order",
+        "backToList": "Back to Work Orders",
+        "workOrderTitle": "Title",
+        "workOrderTitlePlaceholder": "e.g. Monthly PM Service",
+        "asset": "Asset",
+        "assetSearchPlaceholder": "Search serial number or name...",
+        "noAssetsFound": "No assets found",
+        "workType": "Work Type",
+        "assignee": "Assignee",
+        "unassigned": "— Unassigned —",
+        "schedule": "Scheduled Date & Time",
+        "creating": "Creating...",
+        "createWorkOrder": "Create Work Order",
+        "created": "Work order {{number}} created.",
+        "createFailed": "Failed to create work order.",
+        "errors": {
+          "titleRequired": "Title is required.",
+          "assetRequired": "Please select an asset.",
+          "scheduleRequired": "Scheduled date and time is required."
+        }
       },
       "detail": {
         "notFound": "Work order not found.",
@@ -1124,6 +1178,18 @@
       "reserved": "Reserved",
       "decommissioned": "Decommissioned"
     },
+    "ownership": {
+      "forSale": "For Sale",
+      "rental": "Rental Fleet",
+      "customerOwned": "Customer Owned",
+      "retired": "Retired"
+    },
+    "operationalStatus": {
+      "available": "Available",
+      "onRent": "On Rent",
+      "inService": "In Service",
+      "sold": "Sold"
+    },
     "condition": {
       "new": "New",
       "used": "Used",
@@ -1151,6 +1217,7 @@
       },
       "allFuelTypes": "All Fuel Types",
       "allConditions": "All Conditions",
+      "allOwnership": "All Ownership",
       "allBrands": "All Brands",
       "clear": "Clear",
       "countLabel": "{{count}} equipment",
@@ -1205,6 +1272,8 @@
       "modelNumber": "Model Number",
       "modelNumberPlaceholder": "e.g. EFG 216k",
       "condition": "Condition",
+      "operationalStatus": "Operational Status",
+      "ownershipState": "Ownership State",
       "fuelType": "Fuel Type",
       "capacityKg": "Capacity (kg)",
       "yearManufactured": "Year Manufactured",
@@ -1235,7 +1304,9 @@
       },
       "table": {
         "forklift": "Forklift",
-        "hours": "Hours"
+        "model": "Model",
+        "ownership": "Ownership",
+        "hours": "Meter Hours"
       }
     },
     "detail": {

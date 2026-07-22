@@ -1,8 +1,8 @@
 import enum
-from datetime import date, datetime
+from datetime import datetime
 
 from sqlalchemy import (
-    Boolean, Date, DateTime, Float, ForeignKey, Integer, String, Text,
+    Boolean, DateTime, Float, ForeignKey, Integer, String, Text,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
@@ -31,6 +31,7 @@ class OrderType(str, enum.Enum):
     CORRECTIVE = "corrective"
     EMERGENCY = "emergency"
     INSPECTION = "inspection"
+    INSTALL = "install"
 
 
 class WorkOrder(Base):
@@ -63,7 +64,9 @@ class WorkOrder(Base):
     assigned_to: Mapped[int | None] = mapped_column(
         Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True,
     )
-    scheduled_date: Mapped[date] = mapped_column(Date, nullable=False, index=True)
+    # Full timestamp (not just a calendar date) so a work order can be scheduled
+    # to a specific time of day, per the Asset Registry M6 spec's `scheduled_at`.
+    scheduled_date: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
     started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     verified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

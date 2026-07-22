@@ -31,7 +31,8 @@ from app.schemas.billing import (
     DepositListResponse, DepositReceiveAction, DepositRefundAction,
     DepositUpdate,
     InvoiceCancelAction, InvoiceCreate, InvoiceFromCyclesRequest,
-    InvoiceIssueAction, InvoiceListResponse, InvoiceSendAction, InvoiceUpdate,
+    InvoiceIssueAction, InvoiceItemCreate, InvoiceListResponse,
+    InvoiceSendAction, InvoiceUpdate,
     PaymentConfirmAction, PaymentCreate, PaymentListResponse, PaymentUpdate,
     PaymentAllocationCreate,
     RevenueRecognitionCreate, RevenueRecognitionListResponse,
@@ -52,9 +53,17 @@ class BillingService:
     async def create_invoice(
         self, data: InvoiceCreate, created_by: int,
     ) -> Invoice:
-        contract = await self.db.get(RentalContract, data.contract_id)
-        if contract is None:
-            raise HTTPException(status_code=404, detail="Contract not found")
+        if data.billing_cycle_ids and data.items:
+            raise HTTPException(
+                status_code=422,
+                detail="Provide either billing_cycle_ids or items, not both.",
+            )
+
+        contract = None
+        if data.contract_id is not None:
+            contract = await self.db.get(RentalContract, data.contract_id)
+            if contract is None:
+                raise HTTPException(status_code=404, detail="Contract not found")
         customer = await self.db.get(Customer, data.customer_id)
         if customer is None:
             raise HTTPException(status_code=404, detail="Customer not found")
@@ -64,9 +73,13 @@ class BillingService:
             invoice_number=number,
             contract_id=data.contract_id,
             customer_id=data.customer_id,
+            reference_type=data.reference_type.value if data.reference_type else None,
+            reference_id=data.reference_id,
             currency=data.currency,
             tax_rate=data.tax_rate,
             discount_amount=data.discount_amount,
+            issue_date=data.issue_date,
+            due_date=data.due_date,
             billing_period_start=data.billing_period_start,
             billing_period_end=data.billing_period_end,
             notes=data.notes,
@@ -79,6 +92,8 @@ class BillingService:
             await self._populate_items_from_cycles(
                 invoice, data.billing_cycle_ids, data.tax_rate,
             )
+        elif data.items:
+            await self._populate_manual_items(invoice, data.items, data.tax_rate)
 
         await self._recalculate_invoice_totals(invoice)
         await self.db.commit()
@@ -1223,6 +1238,31 @@ class BillingService:
             invoice.billing_period_start = min(period_starts)
         if period_ends:
             invoice.billing_period_end = max(period_ends)
+        await self.db.flush()
+
+    async def _populate_manual_items(
+        self, invoice: Invoice, items: list[InvoiceItemCreate], tax_rate: float,
+    ) -> None:
+        """Freeform counterpart to `_populate_items_from_cycles` for
+        work-order/sales invoices that have no RentalBillingCycle to draw
+        from — the caller types description/quantity/unit_rate directly."""
+        for line_number, item_data in enumerate(items, start=1):
+            amount = round(item_data.quantity * item_data.unit_rate, 2)
+            tax_amt = round(amount * tax_rate / 100, 2)
+            line_total = round(amount + tax_amt, 2)
+
+            item = InvoiceItem(
+                invoice_id=invoice.id,
+                line_number=line_number,
+                description=item_data.description.strip(),
+                quantity=item_data.quantity,
+                unit_rate=item_data.unit_rate,
+                amount=amount,
+                tax_amount=tax_amt,
+                line_total=line_total,
+                sort_order=line_number,
+            )
+            await self._repo.add_invoice_item(item)
         await self.db.flush()
 
     async def _recalculate_invoice_totals(self, invoice: Invoice) -> None:

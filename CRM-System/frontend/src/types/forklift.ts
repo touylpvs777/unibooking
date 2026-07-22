@@ -12,6 +12,8 @@ export type ForkliftStatus =
 
 export type ForkliftCondition = 'new' | 'used' | 'refurbished'
 
+export type OwnershipState = 'for_sale' | 'rental' | 'customer_owned' | 'retired'
+
 export type FuelType = 'electric' | 'diesel' | 'lpg' | 'dual_fuel'
 
 // ── ForkliftModel ────────────────────────────────────────────────────────────
@@ -107,11 +109,13 @@ export interface Forklift {
   brand: BrandBrief | null
   customer: CustomerBrief | null
   status: ForkliftStatus
+  ownership_state: OwnershipState
   condition: ForkliftCondition
   fuel_type: string | null
   capacity_kg: number | null
   year_manufactured: number | null
   current_hour_meter: number
+  meter_hours: number
   is_active: boolean
   primary_photo_url: string | null
   created_at: string
@@ -170,6 +174,7 @@ export interface ForkliftCreate {
   brand_id?: number | null
   customer_id?: number | null
   status?: ForkliftStatus
+  ownership_state?: OwnershipState
   condition?: ForkliftCondition
   fuel_type?: FuelType | null
   capacity_kg?: number | null
@@ -191,6 +196,7 @@ export interface ForkliftListParams {
   model_id?: number
   customer_id?: number
   status?: ForkliftStatus
+  ownership_state?: OwnershipState
   condition?: ForkliftCondition
   fuel_type?: FuelType
   is_active?: boolean

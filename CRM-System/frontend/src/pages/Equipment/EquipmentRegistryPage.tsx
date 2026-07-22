@@ -7,7 +7,7 @@ import {
 } from 'lucide-react'
 import { useForklifts } from '@/hooks/useForklifts'
 import { useBrands } from '@/hooks/useBrands'
-import { ForkliftStatusBadge, ForkliftConditionBadge } from '@/components/equipment/ForkliftStatusBadge'
+import { OperationalStatusBadge, OwnershipStateBadge } from '@/components/equipment/ForkliftStatusBadge'
 import ConfirmDialog from '@/components/ui/ConfirmDialog'
 import ViewToggle from '@/components/ui/ViewToggle'
 import ForkliftForm from './ForkliftForm'
@@ -78,7 +78,7 @@ export default function EquipmentRegistryPage() {
   }, [forklifts])
 
   const activeStatus = (params.status as ForkliftStatus) || null
-  const hasFilters = !!(params.q || params.brand_id || params.status || params.fuel_type || params.condition)
+  const hasFilters = !!(params.q || params.brand_id || params.status || params.fuel_type || params.condition || params.ownership_state)
 
   const pageNumbers = (() => {
     if (pages <= 7) return Array.from({ length: pages }, (_, i) => i + 1)
@@ -170,13 +170,15 @@ export default function EquipmentRegistryPage() {
         brandId={params.brand_id ? Number(params.brand_id) : null}
         fuelType={(params.fuel_type as string) ?? ''}
         condition={(params.condition as string) ?? ''}
+        ownershipState={(params.ownership_state as string) ?? ''}
         statusCounts={statusCounts}
         brands={brands}
         onStatusChange={(s) => applyParams({ status: (s || undefined) as never, page: 1 })}
         onBrandChange={(id) => applyParams({ brand_id: id ?? undefined, page: 1 })}
         onFuelChange={(v) => applyParams({ fuel_type: (v || undefined) as never, page: 1 })}
         onConditionChange={(v) => applyParams({ condition: (v || undefined) as never, page: 1 })}
-        onClear={() => applyParams({ q: undefined, brand_id: undefined, status: undefined, fuel_type: undefined, condition: undefined, page: 1 })}
+        onOwnershipChange={(v) => applyParams({ ownership_state: (v || undefined) as never, page: 1 })}
+        onClear={() => applyParams({ q: undefined, brand_id: undefined, status: undefined, fuel_type: undefined, condition: undefined, ownership_state: undefined, page: 1 })}
         hasFilters={hasFilters}
       />
 
@@ -204,9 +206,9 @@ export default function EquipmentRegistryPage() {
                 <tr>
                   <th>{t('equipment.registry.table.forklift')}</th>
                   <th>{t('equipment.form.serialNumber')}</th>
-                  <th>{t('common.status')}</th>
-                  <th>{t('equipment.form.condition')}</th>
-                  <th className="col-hide-sm">{t('equipment.form.brand')}</th>
+                  <th className="col-hide-sm">{t('equipment.registry.table.model')}</th>
+                  <th>{t('equipment.registry.table.ownership')}</th>
+                  <th>{t('equipment.form.operationalStatus')}</th>
                   <th className="col-hide-sm">{t('equipment.registry.table.hours')}</th>
                   <th className="col-hide-sm">{t('common.createdAt')}</th>
                   <th style={{ width: 80 }}></th>
@@ -218,9 +220,9 @@ export default function EquipmentRegistryPage() {
                     <tr key={i} className="skeleton-row">
                       <td><div className="skeleton-cell" style={{ width: '70%' }} /></td>
                       <td><div className="skeleton-cell" style={{ width: '80%' }} /></td>
-                      <td><div className="skeleton-cell" style={{ width: 60 }} /></td>
-                      <td><div className="skeleton-cell" style={{ width: 50 }} /></td>
                       <td className="col-hide-sm"><div className="skeleton-cell" style={{ width: '55%' }} /></td>
+                      <td><div className="skeleton-cell" style={{ width: 60 }} /></td>
+                      <td><div className="skeleton-cell" style={{ width: 60 }} /></td>
                       <td className="col-hide-sm"><div className="skeleton-cell" style={{ width: 40 }} /></td>
                       <td className="col-hide-sm"><div className="skeleton-cell" style={{ width: 80 }} /></td>
                       <td><div className="skeleton-cell" style={{ width: 40 }} /></td>
@@ -240,10 +242,10 @@ export default function EquipmentRegistryPage() {
                       </div>
                     </td>
                     <td className="cell-muted cell-mono">{f.serial_number}</td>
-                    <td><ForkliftStatusBadge status={f.status} /></td>
-                    <td><ForkliftConditionBadge condition={f.condition} /></td>
-                    <td className="cell-muted col-hide-sm">{f.brand?.name ?? '—'}</td>
-                    <td className="cell-muted col-hide-sm cell-mono">{f.current_hour_meter.toLocaleString(undefined, { maximumFractionDigits: 1 })}</td>
+                    <td className="cell-muted col-hide-sm">{f.model?.name ?? f.model_number ?? '—'}</td>
+                    <td><OwnershipStateBadge ownershipState={f.ownership_state} /></td>
+                    <td><OperationalStatusBadge status={f.status} /></td>
+                    <td className="cell-muted col-hide-sm cell-mono">{f.meter_hours.toLocaleString()}</td>
                     <td className="cell-muted col-hide-sm">{fmtDate(f.created_at)}</td>
                     <td>
                       <div className="row-actions" onClick={(e) => e.stopPropagation()}>

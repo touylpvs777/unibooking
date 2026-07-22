@@ -17,10 +17,11 @@ router = APIRouter(prefix="/customers", tags=["Customers"])
 async def list_customers(
     skip: int = 0,
     limit: int = 100,
+    q: str | None = None,
     db: AsyncSession = Depends(get_db),
     _: User = Depends(get_current_user),
 ):
-    return await CustomerService(db).get_all(skip=skip, limit=limit)
+    return await CustomerService(db).get_all(skip=skip, limit=limit, q=q)
 
 
 @router.post("/", response_model=CustomerOut, status_code=status.HTTP_201_CREATED)

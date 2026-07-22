@@ -21,6 +21,14 @@ class InvoiceStatus(str, enum.Enum):
     VOIDED = "voided"
 
 
+class ReferenceType(str, enum.Enum):
+    """What kind of thing this invoice bills for, when it isn't tied to a
+    rental contract (see `contract_id`/`reference_id` below)."""
+    WORK_ORDER = "work_order"
+    RENTAL = "rental"
+    SALES = "sales"
+
+
 class Invoice(Base):
     __tablename__ = "invoices"
 
@@ -28,14 +36,24 @@ class Invoice(Base):
     invoice_number: Mapped[str] = mapped_column(
         String(50), nullable=False, unique=True, index=True,
     )
-    contract_id: Mapped[int] = mapped_column(
+    # Nullable: only rental-billing-cycle invoices (the original design) are
+    # tied to a contract. Invoices billing a work order or a plain sale have
+    # no rental contract at all — see `reference_type`/`reference_id` below.
+    contract_id: Mapped[int | None] = mapped_column(
         Integer, ForeignKey("rental_contracts.id", ondelete="RESTRICT"),
-        nullable=False, index=True,
+        nullable=True, index=True,
     )
     customer_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("customers.id", ondelete="RESTRICT"),
         nullable=False, index=True,
     )
+
+    # Generic source tag for non-rental invoices (mirrors the entity_type/
+    # entity_id polymorphic-association pattern already used by ActivityLog).
+    # Not a FK: reference_id can point into work_orders, rental_contracts, or
+    # nowhere (a plain sale), so no single table could constrain it.
+    reference_type: Mapped[str | None] = mapped_column(String(20), nullable=True, index=True)
+    reference_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
     status: Mapped[str] = mapped_column(
         String(30), default=InvoiceStatus.DRAFT.value, nullable=False, index=True,
@@ -85,7 +103,7 @@ class Invoice(Base):
     )
 
     customer: Mapped["Customer"] = relationship("Customer")
-    contract: Mapped["RentalContract"] = relationship("RentalContract")
+    contract: Mapped["RentalContract | None"] = relationship("RentalContract")
     items: Mapped[list["InvoiceItem"]] = relationship(
         "InvoiceItem", back_populates="invoice",
         cascade="all, delete-orphan", order_by="InvoiceItem.sort_order",

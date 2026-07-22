@@ -116,12 +116,21 @@ export default function InvoiceDetailPage() {
           <dt>{t('common.createdAt')}</dt><dd>{fmtDate(inv.created_at)}</dd>
         </dl>
         <dl className="detail-meta">
-          <dt>{t('billing.invoice.meta.contract')}</dt>
-          <dd>
-            <span style={{ cursor: 'pointer', color: 'var(--color-primary-600)' }} onClick={() => navigate(`/rental-contracts/${inv.contract_id}`)}>
-              {inv.contract.contract_number}
-            </span>
-          </dd>
+          {inv.contract ? (
+            <>
+              <dt>{t('billing.invoice.meta.contract')}</dt>
+              <dd>
+                <span style={{ cursor: 'pointer', color: 'var(--color-primary-600)' }} onClick={() => navigate(`/rental-contracts/${inv.contract_id}`)}>
+                  {inv.contract.contract_number}
+                </span>
+              </dd>
+            </>
+          ) : (
+            <>
+              <dt>{t('billing.invoice.meta.referenceType')}</dt>
+              <dd>{inv.reference_type ?? '—'}</dd>
+            </>
+          )}
           {inv.billing_period_start && <><dt>{t('billing.invoice.meta.period')}</dt><dd>{fmtDate(inv.billing_period_start)} — {fmtDate(inv.billing_period_end)}</dd></>}
           {inv.creator && <><dt>{t('billing.invoice.meta.createdBy')}</dt><dd>{inv.creator.full_name || inv.creator.username}</dd></>}
         </dl>

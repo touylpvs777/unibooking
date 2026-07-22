@@ -43,6 +43,22 @@ from app.services.rbac_service import RBACService
 register_notification_subscribers()
 
 
+async def _backfill_ownership_state(conn) -> None:
+    """
+    One-time backfill for the newly-added forklifts.ownership_state column,
+    run immediately after it's added (both engines default new rows to
+    'for_sale', so this only needs to touch pre-existing rows).
+    Heuristic: a linked customer implies the unit is customer-owned; a
+    decommissioned unit is retired; everything else keeps the column default.
+    """
+    await conn.execute(text(
+        "UPDATE forklifts SET ownership_state = 'customer_owned' WHERE customer_id IS NOT NULL"
+    ))
+    await conn.execute(text(
+        "UPDATE forklifts SET ownership_state = 'retired' WHERE status = 'decommissioned'"
+    ))
+
+
 async def _apply_sqlite_migrations(conn) -> None:
     """
     Non-destructive schema migrations for SQLite.
@@ -75,6 +91,43 @@ async def _apply_sqlite_migrations(conn) -> None:
         await conn.execute(text("ALTER TABLE notifications ADD COLUMN target_role VARCHAR(50)"))
     except OperationalError:
         pass  # column already exists
+
+    # ── forklifts.ownership_state (Asset Registry M3) ────────────────────────
+    try:
+        await conn.execute(text(
+            "ALTER TABLE forklifts ADD COLUMN ownership_state VARCHAR(20) NOT NULL DEFAULT 'for_sale'"
+        ))
+        await _backfill_ownership_state(conn)
+    except OperationalError:
+        pass  # column already exists
+
+    # ── work_orders.scheduled_date: DATE -> DATETIME (Work Order M6) ─────────
+    # SQLite has no real column-type enforcement (type affinity only), so no
+    # ALTER is needed for the widened type itself. But old rows may hold a
+    # bare 'YYYY-MM-DD' string that SQLAlchemy's DateTime type can't parse
+    # back — normalize those to midnight so they stay readable. The length
+    # check makes this idempotent (already-normalized rows are 19+ chars).
+    await conn.execute(text(
+        "UPDATE work_orders SET scheduled_date = scheduled_date || ' 00:00:00' "
+        "WHERE length(scheduled_date) = 10"
+    ))
+
+    # ── invoices.reference_type / reference_id (Finance M10) ─────────────────
+    try:
+        await conn.execute(text("ALTER TABLE invoices ADD COLUMN reference_type VARCHAR(20)"))
+    except OperationalError:
+        pass  # column already exists
+    try:
+        await conn.execute(text("ALTER TABLE invoices ADD COLUMN reference_id INTEGER"))
+    except OperationalError:
+        pass  # column already exists
+    # NOTE: invoices.contract_id also became nullable in this change (work-order
+    # and sales invoices have no rental contract). SQLite can't drop a NOT NULL
+    # constraint via ALTER TABLE without a full table rebuild, and every other
+    # column here is untouched, so — unlike the activity_logs rebuild above —
+    # we don't do that rebuild for a dev-only engine. A pre-existing local
+    # dev.db predating this change will reject a null contract_id until it's
+    # recreated; Postgres (below) gets the real, unconditional fix.
 
     # ── activity_logs: rebuild to drop Enum CHECK constraints + add details ─
     # The original table used Enum(ActionType) which creates a CHECK constraint.
@@ -208,8 +261,35 @@ async def _apply_postgres_migrations(conn) -> None:
         "ALTER TABLE notifications ADD COLUMN IF NOT EXISTS recipient_user_id INTEGER",
         "ALTER TABLE notifications ADD COLUMN IF NOT EXISTS is_read BOOLEAN NOT NULL DEFAULT false",
         "ALTER TABLE notifications ADD COLUMN IF NOT EXISTS target_role VARCHAR(50)",
+        "ALTER TABLE invoices ADD COLUMN IF NOT EXISTS reference_type VARCHAR(20)",
+        "ALTER TABLE invoices ADD COLUMN IF NOT EXISTS reference_id INTEGER",
+        "ALTER TABLE invoices ALTER COLUMN contract_id DROP NOT NULL",
     ):
         await conn.execute(text(statement))
+
+    # ── forklifts.ownership_state (Asset Registry M3) ────────────────────────
+    # Not part of the tuple above: "ADD COLUMN IF NOT EXISTS" is silently a
+    # no-op on every startup once the column exists, so a one-time backfill
+    # gated on it would re-run forever and stomp on values an admin has since
+    # changed by hand. Detect first-creation explicitly instead.
+    result = await conn.execute(text(
+        "SELECT 1 FROM information_schema.columns "
+        "WHERE table_name = 'forklifts' AND column_name = 'ownership_state'"
+    ))
+    if result.scalar_one_or_none() is None:
+        await conn.execute(text(
+            "ALTER TABLE forklifts ADD COLUMN ownership_state VARCHAR(20) NOT NULL DEFAULT 'for_sale'"
+        ))
+        await _backfill_ownership_state(conn)
+
+    # ── work_orders.scheduled_date: DATE -> TIMESTAMPTZ (Work Order M6) ──────
+    # A straight type widening, not an ADD COLUMN, so it can't join the tuple
+    # loop above — but casting an already-timestamptz column to timestamptz
+    # is a harmless no-op, so this is safe to run on every startup too.
+    await conn.execute(text(
+        "ALTER TABLE work_orders ALTER COLUMN scheduled_date TYPE TIMESTAMPTZ "
+        "USING scheduled_date::timestamptz"
+    ))
 
 
 @asynccontextmanager

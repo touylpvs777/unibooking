@@ -20,6 +20,7 @@ class ForkliftFilter:
     model_id: int | None = None
     customer_id: int | None = None
     status: str | None = None
+    ownership_state: str | None = None
     condition: str | None = None
     fuel_type: str | None = None
     is_active: bool | None = True
@@ -123,6 +124,8 @@ class ForkliftRepository:
             stmt = stmt.where(Forklift.customer_id == f.customer_id)
         if f.status is not None:
             stmt = stmt.where(Forklift.status == f.status)
+        if f.ownership_state is not None:
+            stmt = stmt.where(Forklift.ownership_state == f.ownership_state)
         if f.condition is not None:
             stmt = stmt.where(Forklift.condition == f.condition)
         if f.fuel_type is not None:

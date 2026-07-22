@@ -1106,6 +1106,7 @@
       "list": {
         "title": "ใบแจ้งหนี้",
         "subtitle": "ใบแจ้งหนี้ {{count}} ฉบับ",
+        "newInvoice": "ใบแจ้งหนี้ใหม่",
         "loadError": "ไม่สามารถโหลดใบแจ้งหนี้ได้",
         "searchPlaceholder": "ค้นหาเลขที่ใบแจ้งหนี้...",
         "resultsCount": "{{count}} รายการ",
@@ -1121,8 +1122,14 @@
         "dueDate": "วันครบกำหนด",
         "paidDate": "วันที่ชำระ",
         "contract": "สัญญา",
+        "referenceType": "ประเภทใบแจ้งหนี้",
         "period": "งวด",
         "createdBy": "สร้างโดย"
+      },
+      "referenceType": {
+        "sales": "การขาย",
+        "workOrder": "ใบสั่งงาน",
+        "rental": "การเช่า"
       },
       "pagination": {
         "info": "หน้า {{page}} จาก {{pages}} (ทั้งหมด {{total}} รายการ)"
@@ -1157,6 +1164,30 @@
         "title": "การจัดสรรการชำระเงิน",
         "payment": "การชำระเงิน",
         "paymentLabel": "การชำระเงิน #{{id}}"
+      },
+      "form": {
+        "title": "ใบแจ้งหนี้ใหม่",
+        "backToList": "กลับไปยังใบแจ้งหนี้",
+        "customer": "ลูกค้า",
+        "customerSearchPlaceholder": "ค้นหาชื่อ, บริษัท...",
+        "noCustomersFound": "ไม่พบลูกค้า",
+        "referenceType": "ประเภทใบแจ้งหนี้",
+        "taxRate": "อัตราภาษี (%)",
+        "description": "รายละเอียด",
+        "descriptionPlaceholder": "รายละเอียดสินค้าหรือบริการ",
+        "unitPrice": "ราคาต่อหน่วย",
+        "lineTotal": "ยอดรวมรายการ",
+        "addRow": "เพิ่มแถว",
+        "subtotal": "ยอดรวมย่อย",
+        "grandTotal": "ยอดรวมทั้งหมด",
+        "creating": "กำลังสร้าง...",
+        "createInvoice": "สร้างใบแจ้งหนี้",
+        "created": "สร้างใบแจ้งหนี้ {{number}} แล้ว",
+        "createFailed": "ไม่สามารถสร้างใบแจ้งหนี้ได้",
+        "errors": {
+          "customerRequired": "กรุณาเลือกลูกค้า",
+          "itemRequired": "ต้องมีอย่างน้อยหนึ่งรายการที่มีรายละเอียด"
+        }
       },
       "modal": {
         "cancel": {
@@ -1282,7 +1313,8 @@
       "preventive": "การบำรุงรักษาเชิงป้องกัน",
       "corrective": "การบำรุงรักษาเชิงแก้ไข",
       "emergency": "ฉุกเฉิน",
-      "inspection": "การตรวจสอบ"
+      "inspection": "การตรวจสอบ",
+      "install": "การติดตั้ง"
     },
     "priority": {
       "low": "ต่ำ",
@@ -1327,6 +1359,28 @@
           "priority": "ความสำคัญ"
         },
         "paginationInfo": "หน้า {{page}} จาก {{pages}} (ทั้งหมด {{total}} รายการ)"
+      },
+      "form": {
+        "title": "ใบสั่งงานใหม่",
+        "backToList": "กลับไปยังใบสั่งงาน",
+        "workOrderTitle": "หัวข้อ",
+        "workOrderTitlePlaceholder": "เช่น บริการ PM ประจำเดือน",
+        "asset": "ทรัพย์สิน",
+        "assetSearchPlaceholder": "ค้นหาหมายเลขซีเรียลหรือชื่อ...",
+        "noAssetsFound": "ไม่พบทรัพย์สิน",
+        "workType": "ประเภทงาน",
+        "assignee": "ผู้รับผิดชอบ",
+        "unassigned": "— ยังไม่มอบหมาย —",
+        "schedule": "วันที่และเวลานัดหมาย",
+        "creating": "กำลังสร้าง...",
+        "createWorkOrder": "สร้างใบสั่งงาน",
+        "created": "สร้างใบสั่งงาน {{number}} แล้ว",
+        "createFailed": "ไม่สามารถสร้างใบสั่งงานได้",
+        "errors": {
+          "titleRequired": "ต้องระบุหัวข้อ",
+          "assetRequired": "กรุณาเลือกทรัพย์สิน",
+          "scheduleRequired": "ต้องระบุวันที่และเวลานัดหมาย"
+        }
       },
       "detail": {
         "notFound": "ไม่พบใบสั่งงาน",
@@ -1557,6 +1611,18 @@
       "reserved": "จองแล้ว",
       "decommissioned": "ปลดระวางแล้ว"
     },
+    "ownership": {
+      "forSale": "สำหรับขาย",
+      "rental": "กองรถให้เช่า",
+      "customerOwned": "ลูกค้าเป็นเจ้าของ",
+      "retired": "ปลดระวาง"
+    },
+    "operationalStatus": {
+      "available": "พร้อมใช้งาน",
+      "onRent": "ให้เช่าอยู่",
+      "inService": "อยู่ระหว่างซ่อมบำรุง",
+      "sold": "ขายแล้ว"
+    },
     "condition": {
       "new": "ใหม่",
       "used": "มือสอง",
@@ -1606,6 +1672,8 @@
       "modelNumber": "หมายเลขรุ่น",
       "modelNumberPlaceholder": "เช่น EFG 216k",
       "condition": "สภาพ",
+      "operationalStatus": "สถานะการดำเนินงาน",
+      "ownershipState": "สถานะความเป็นเจ้าของ",
       "fuelType": "ประเภทเชื้อเพลิง",
       "capacityKg": "ความสามารถในการยก (กก.)",
       "yearManufactured": "ปีที่ผลิต",
@@ -1636,7 +1704,9 @@
       },
       "table": {
         "forklift": "รถโฟล์คลิฟท์",
-        "hours": "ชั่วโมง"
+        "model": "รุ่น",
+        "ownership": "ความเป็นเจ้าของ",
+        "hours": "ชั่วโมงมิเตอร์"
       }
     },
     "detail": {
@@ -1698,6 +1768,7 @@
       },
       "allFuelTypes": "ประเภทเชื้อเพลิงทั้งหมด",
       "allConditions": "สภาพทั้งหมด",
+      "allOwnership": "ความเป็นเจ้าของทั้งหมด",
       "allBrands": "ยี่ห้อทั้งหมด",
       "clear": "ล้าง",
       "countLabel": "{{count}} อุปกรณ์",

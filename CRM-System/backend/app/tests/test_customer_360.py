@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 import pytest
 from httpx import AsyncClient
@@ -68,7 +68,7 @@ async def _seed_customer_360_data(db_session: AsyncSession) -> Customer:
         order_type="preventive",
         status="in_progress",
         title="500-hour service",
-        scheduled_date=date(2026, 3, 1),
+        scheduled_date=datetime(2026, 3, 1),
     )
     invoice = Invoice(
         invoice_number="INV-001",

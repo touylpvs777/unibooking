@@ -193,8 +193,12 @@ class BillingRepository:
         await self.db.flush()
 
     async def get_invoice_items_subtotal(self, invoice_id: int) -> float:
+        # Pre-tax sum: `_recalculate_invoice_totals` applies `invoice.tax_rate`
+        # to this figure, so it must be `amount` (pre-tax), not `line_total`
+        # (amount + that line's own tax) — summing line_total here would
+        # double-tax every invoice.
         result = await self.db.execute(
-            select(func.coalesce(func.sum(InvoiceItem.line_total), 0.0))
+            select(func.coalesce(func.sum(InvoiceItem.amount), 0.0))
             .where(InvoiceItem.invoice_id == invoice_id)
         )
         return float(result.scalar_one())

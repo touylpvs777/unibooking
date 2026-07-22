@@ -5,6 +5,7 @@ export type DepositType = 'security' | 'advance' | 'guarantee'
 export type DepositRecordStatus = 'pending' | 'received' | 'partially_refunded' | 'refunded' | 'forfeited' | 'applied'
 export type RecognitionType = 'rental_income' | 'service_fee' | 'penalty_fee' | 'damage_recovery' | 'deposit_forfeiture'
 export type RecognitionStatus = 'scheduled' | 'recognized' | 'reversed'
+export type ReferenceType = 'work_order' | 'rental' | 'sales'
 
 export interface CustomerBrief { id: number; first_name: string; last_name: string; company: string | null }
 export interface UserBrief { id: number; username: string; full_name: string | null }
@@ -23,12 +24,13 @@ export interface PaymentAllocationOut {
 }
 
 export interface InvoiceOut {
-  id: number; invoice_number: string; contract_id: number; customer_id: number
+  id: number; invoice_number: string; contract_id: number | null; customer_id: number
+  reference_type: ReferenceType | null; reference_id: number | null
   status: InvoiceStatus; issue_date: string | null; due_date: string | null; paid_date: string | null
   subtotal: number; tax_rate: number; tax_amount: number; discount_amount: number
   total_amount: number; amount_paid: number; balance_due: number; currency: string
   billing_period_start: string | null; billing_period_end: string | null
-  customer: CustomerBrief; contract: ContractBrief; creator: UserBrief | null
+  customer: CustomerBrief; contract: ContractBrief | null; creator: UserBrief | null
   created_at: string; updated_at: string | null; is_active: boolean
 }
 
@@ -85,11 +87,16 @@ export interface BillingDashboardSummary {
   total_overdue: number; invoice_count: number; payment_count: number; currency: string
 }
 
+export interface InvoiceItemCreate { description: string; quantity: number; unit_rate: number }
+
 export interface InvoiceCreate {
-  contract_id: number; customer_id: number; due_date?: string
+  contract_id?: number; customer_id: number
+  reference_type?: ReferenceType; reference_id?: number
+  issue_date?: string; due_date?: string
   billing_period_start?: string; billing_period_end?: string
   tax_rate?: number; discount_amount?: number; currency?: string
-  notes?: string; internal_notes?: string; billing_cycle_ids?: number[]
+  notes?: string; internal_notes?: string
+  billing_cycle_ids?: number[]; items?: InvoiceItemCreate[]
 }
 export interface InvoiceUpdate { due_date?: string; tax_rate?: number; discount_amount?: number; notes?: string; internal_notes?: string }
 export interface InvoiceFromCyclesRequest { contract_id: number; billing_cycle_ids: number[]; tax_rate?: number; discount_amount?: number; currency?: string; notes?: string }

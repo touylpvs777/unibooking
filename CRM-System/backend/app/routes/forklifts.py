@@ -57,6 +57,7 @@ async def list_forklifts(
     model_id: int | None = None,
     customer_id: int | None = None,
     status: str | None = Query(default=None, alias="status"),
+    ownership_state: str | None = None,
     condition: str | None = None,
     fuel_type: str | None = None,
     is_active: bool | None = True,
@@ -72,8 +73,9 @@ async def list_forklifts(
 ):
     return await ForkliftService(db).list_forklifts(
         q=q, brand_id=brand_id, model_id=model_id, customer_id=customer_id,
-        status_filter=status, condition=condition, fuel_type=fuel_type,
-        is_active=is_active, page=page, page_size=page_size, sort=sort, order=order,
+        status_filter=status, ownership_state=ownership_state, condition=condition,
+        fuel_type=fuel_type, is_active=is_active, page=page, page_size=page_size,
+        sort=sort, order=order,
     )
 
 

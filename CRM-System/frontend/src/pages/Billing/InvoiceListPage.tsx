@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { AlertCircle, RefreshCw, ChevronLeft, ChevronRight, FileText, Search } from 'lucide-react'
+import { AlertCircle, RefreshCw, ChevronLeft, ChevronRight, FileText, Search, Plus } from 'lucide-react'
 import { getInvoices } from '@/api/billing'
 import { Badge } from '@/components/ui/Badge'
 import type { BadgeVariant } from '@/components/ui/Badge'
@@ -59,9 +59,14 @@ export default function InvoiceListPage() {
           <h1>{t('billing.invoice.list.title')}</h1>
           <p className="page-header-sub">{t('billing.invoice.list.subtitle', { count: total })}</p>
         </div>
-        <button className="btn btn-ghost" onClick={load} disabled={isLoading}>
-          <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('billing.common.refresh')}
-        </button>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button className="btn btn-ghost" onClick={load} disabled={isLoading}>
+            <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('billing.common.refresh')}
+          </button>
+          <button className="btn btn-primary" onClick={() => navigate('/billing/invoices/new')}>
+            <Plus size={15} /> {t('billing.invoice.list.newInvoice')}
+          </button>
+        </div>
       </div>
 
       {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}

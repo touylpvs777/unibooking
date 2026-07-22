@@ -1,5 +1,5 @@
 from fastapi import HTTPException, status
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -42,8 +42,19 @@ class CustomerService:
         result = await self.db.execute(select(Customer).where(Customer.id == customer_id))
         return result.scalar_one_or_none()
 
-    async def get_all(self, skip: int = 0, limit: int = 100) -> list[Customer]:
-        result = await self.db.execute(select(Customer).offset(skip).limit(limit))
+    async def get_all(self, skip: int = 0, limit: int = 100, q: str | None = None) -> list[Customer]:
+        stmt = select(Customer)
+        if q:
+            pattern = f"%{q}%"
+            stmt = stmt.where(or_(
+                Customer.first_name.ilike(pattern),
+                Customer.last_name.ilike(pattern),
+                Customer.email.ilike(pattern),
+                Customer.phone.ilike(pattern),
+                Customer.company.ilike(pattern),
+            ))
+        stmt = stmt.offset(skip).limit(limit)
+        result = await self.db.execute(stmt)
         return list(result.scalars().all())
 
     async def create(self, data: CustomerCreate, created_by: int) -> Customer:

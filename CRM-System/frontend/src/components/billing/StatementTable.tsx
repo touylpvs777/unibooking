@@ -49,7 +49,7 @@ export default function StatementTable({ invoices, onRowClick }: Props) {
                 >
                   <td className="cell-muted">{fmtDate(inv.issue_date || inv.created_at)}</td>
                   <td className="cell-desc">{inv.invoice_number}</td>
-                  <td className="cell-muted">{inv.contract.contract_number}</td>
+                  <td className="cell-muted">{inv.contract?.contract_number ?? '—'}</td>
                   <td><InvoiceStatusBadge status={inv.status} /></td>
                   <td className="cell-mono" style={{ textAlign: 'right' }}>{fmtAmt(inv.total_amount)}</td>
                   <td className="cell-mono" style={{ textAlign: 'right', color: 'var(--color-success-600)' }}>

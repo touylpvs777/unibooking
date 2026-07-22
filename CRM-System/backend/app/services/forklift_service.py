@@ -67,6 +67,7 @@ class ForkliftService:
         model_id: int | None = None,
         customer_id: int | None = None,
         status_filter: str | None = None,
+        ownership_state: str | None = None,
         condition: str | None = None,
         fuel_type: str | None = None,
         is_active: bool | None = True,
@@ -86,6 +87,7 @@ class ForkliftService:
             model_id=model_id,
             customer_id=customer_id,
             status=status_filter,
+            ownership_state=ownership_state,
             condition=condition,
             fuel_type=fuel_type,
             is_active=is_active,
@@ -141,6 +143,7 @@ class ForkliftService:
             brand_id=data.brand_id,
             customer_id=data.customer_id,
             status=data.status.value,
+            ownership_state=data.ownership_state.value,
             condition=data.condition.value,
             fuel_type=data.fuel_type.value if data.fuel_type else None,
             capacity_kg=data.capacity_kg,
@@ -194,6 +197,8 @@ class ForkliftService:
             new_status_value = changes["status"].value
             self._validate_transition(forklift.status, new_status_value)
             changes["status"] = new_status_value
+        if "ownership_state" in changes:
+            changes["ownership_state"] = changes["ownership_state"].value
         if "condition" in changes:
             changes["condition"] = changes["condition"].value
         if "fuel_type" in changes and changes["fuel_type"] is not None:

@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 import pytest
 from sqlalchemy import select
@@ -127,7 +127,7 @@ async def test_completing_work_order_triggers_notification(db_session: AsyncSess
         order_type="preventive",
         status="in_progress",
         title="500-hour service",
-        scheduled_date=date(2026, 3, 1),
+        scheduled_date=datetime(2026, 3, 1),
     )
     db_session.add(work_order)
     await db_session.commit()
@@ -160,7 +160,7 @@ async def test_completing_work_order_without_customer_skips_notification(db_sess
         order_type="preventive",
         status="in_progress",
         title="Internal check",
-        scheduled_date=date(2026, 3, 1),
+        scheduled_date=datetime(2026, 3, 1),
     )
     db_session.add(work_order)
     await db_session.commit()

@@ -21,6 +21,7 @@ const EMPTY = {
   internal_code: '',
   brand_id: '',
   status: 'in_stock',
+  ownership_state: 'for_sale',
   condition: 'new',
   fuel_type: '',
   capacity_kg: '',
@@ -40,6 +41,13 @@ const STATUS_OPTIONS = [
   { value: 'in_service', labelKey: 'equipment.status.inService' },
   { value: 'reserved', labelKey: 'equipment.status.reserved' },
   { value: 'decommissioned', labelKey: 'equipment.status.decommissioned' },
+]
+
+const OWNERSHIP_OPTIONS = [
+  { value: 'for_sale', labelKey: 'equipment.ownership.forSale' },
+  { value: 'rental', labelKey: 'equipment.ownership.rental' },
+  { value: 'customer_owned', labelKey: 'equipment.ownership.customerOwned' },
+  { value: 'retired', labelKey: 'equipment.ownership.retired' },
 ]
 
 const CONDITION_OPTIONS = [
@@ -79,6 +87,7 @@ export default function ForkliftForm({
         internal_code:      forklift.internal_code ?? '',
         brand_id:           forklift.brand?.id?.toString() ?? '',
         status:             forklift.status,
+        ownership_state:    forklift.ownership_state,
         condition:          forklift.condition,
         fuel_type:          forklift.fuel_type ?? '',
         capacity_kg:        forklift.capacity_kg?.toString() ?? '',
@@ -115,6 +124,7 @@ export default function ForkliftForm({
       internal_code:      form.internal_code.trim() || undefined,
       brand_id:           form.brand_id ? Number(form.brand_id) : null,
       status:             form.status,
+      ownership_state:    form.ownership_state,
       condition:          form.condition,
       fuel_type:          form.fuel_type || null,
       capacity_kg:        form.capacity_kg ? Number(form.capacity_kg) : null,
@@ -211,7 +221,7 @@ export default function ForkliftForm({
         {/* Row 4: Status + Condition */}
         <div className="form-row-2">
           <div className="form-group">
-            <label>{t('common.status')}</label>
+            <label>{t('equipment.form.operationalStatus')}</label>
             <select value={form.status} onChange={(e) => set('status', e.target.value)}>
               {STATUS_OPTIONS.map((o) => <option key={o.value} value={o.value}>{t(o.labelKey)}</option>)}
             </select>
@@ -220,6 +230,16 @@ export default function ForkliftForm({
             <label>{t('equipment.form.condition')}</label>
             <select value={form.condition} onChange={(e) => set('condition', e.target.value)}>
               {CONDITION_OPTIONS.map((o) => <option key={o.value} value={o.value}>{t(o.labelKey)}</option>)}
+            </select>
+          </div>
+        </div>
+
+        {/* Row 4b: Ownership State */}
+        <div className="form-row-2">
+          <div className="form-group">
+            <label>{t('equipment.form.ownershipState')} <span className="required">*</span></label>
+            <select value={form.ownership_state} onChange={(e) => set('ownership_state', e.target.value)} required>
+              {OWNERSHIP_OPTIONS.map((o) => <option key={o.value} value={o.value}>{t(o.labelKey)}</option>)}
             </select>
           </div>
         </div>

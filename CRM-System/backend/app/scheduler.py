@@ -173,7 +173,10 @@ async def _run_pm_scan(db: AsyncSession) -> int:
                     plan_id=schedule.plan_id,
                     order_type=OrderType.PREVENTIVE,
                     title=f"Preventive Maintenance: {plan.name}",
-                    scheduled_date=schedule.next_due_date or date.today(),
+                    scheduled_date=(
+                        datetime.combine(schedule.next_due_date, datetime.min.time())
+                        if schedule.next_due_date else datetime.now()
+                    ),
                     estimated_hours=plan.estimated_duration_hours,
                     estimated_cost=plan.estimated_cost,
                 )
