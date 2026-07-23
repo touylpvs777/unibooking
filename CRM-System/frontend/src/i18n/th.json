@@ -436,6 +436,60 @@
       "totalProducts": "สินค้าทั้งหมด",
       "brands": "แบรนด์",
       "categories": "หมวดหมู่"
+    },
+    "store": {
+      "get": "รับ",
+      "free": "ฟรี",
+      "comingSoon": "เร็วๆ นี้",
+      "hero": {
+        "assets": {
+          "eyebrow": "โมดูลแนะนำ",
+          "title": "ทะเบียนทรัพย์สิน ออกแบบใหม่สำหรับภาคสนาม",
+          "desc": "ติดตามรถโฟล์คลิฟท์ รถพ่วง และเครื่องจักรทุกรายการตลอดอายุการใช้งาน — ความเป็นเจ้าของ สถานะ และชั่วโมงการใช้งานในทะเบียนเดียวแบบเรียลไทม์"
+        },
+        "invoicing": {
+          "eyebrow": "พร้อมใช้งานแล้ว",
+          "title": "ออกใบแจ้งหนี้อัจฉริยะ พร้อมภาษีมูลค่าเพิ่มอัตโนมัติ",
+          "desc": "สร้างใบสั่งซื้อ ใบเสนอราคา และใบแจ้งหนี้จากขั้นตอนเดียว — คำนวณยอดรวมย่อย ภาษีมูลค่าเพิ่ม และยอดรวมทั้งหมดให้อัตโนมัติ"
+        },
+        "maintenance": {
+          "eyebrow": "คัดสรรโดยทีมงาน",
+          "title": "จัดตารางบำรุงรักษาล่วงหน้า",
+          "desc": "ค้นหาเครื่องจักรที่ครบกำหนดบริการก่อนที่จะเสีย โดยใช้ข้อมูลชั่วโมงการใช้งานและประวัติแบบเรียลไทม์"
+        }
+      },
+      "promo": {
+        "sale": { "kicker": "ช่วงเวลาจำกัด", "title": "ลดสูงสุด — ลดถึง 50% อะไหล่" },
+        "new": { "kicker": "เปิดตัวใหม่", "title": "โมดูลใหม่สัปดาห์นี้" },
+        "staffPicks": { "kicker": "ทีมงานแนะนำ", "title": "ยอดนิยมในงานบริการภาคสนาม" }
+      },
+      "rows": {
+        "mostUsed": "โมดูลที่ใช้มากที่สุด",
+        "recommended": "โมดูลที่แนะนำ",
+        "fieldService": "แอปยอดนิยมในงานบริการภาคสนาม"
+      },
+      "modules": {
+        "equipmentRegistry": { "title": "DK Equipment Registry", "sub": "ทะเบียนอุปกรณ์และยานพาหนะ" },
+        "customers": { "title": "DK Customers", "sub": "จัดการข้อมูลลูกค้า" },
+        "quotations": { "title": "DK Quotations", "sub": "ใบเสนอราคา" },
+        "rentalContracts": { "title": "DK Rental Contracts", "sub": "สัญญาเช่า" },
+        "movements": { "title": "DK Movements", "sub": "การเคลื่อนย้ายอุปกรณ์" },
+        "projects": { "title": "DK Projects", "sub": "โครงการและคลังสินค้า" },
+        "smartInvoicing": { "title": "DK Smart Invoicing", "sub": "ออกใบแจ้งหนี้อัตโนมัติ" },
+        "payments": { "title": "DK Payments", "sub": "การชำระเงิน" },
+        "deposits": { "title": "DK Deposits", "sub": "เงินมัดจำ" },
+        "statements": { "title": "DK Statements", "sub": "ใบแจ้งยอด" },
+        "inventory": { "title": "DK Inventory", "sub": "คลังสินค้า" },
+        "purchaseOrders": { "title": "DK Purchase Orders", "sub": "สั่งซื้ออะไหล่" },
+        "workOrders": { "title": "DK Work Orders", "sub": "จัดตารางบริการ" },
+        "assetRegistry": { "title": "DK Asset Registry", "sub": "ทะเบียนทรัพย์สิน" },
+        "maintenanceSchedule": { "title": "DK Maintenance Schedule", "sub": "การบำรุงรักษาเชิงป้องกัน" }
+      },
+      "thirdParty": {
+        "routeWise": { "title": "RouteWise", "sub": "Meridian Labs" },
+        "fleetPulse": { "title": "FleetPulse", "sub": "Orbit Communications" },
+        "partsBin": { "title": "PartsBin", "sub": "Ironclad Systems" }
+      }
     }
   },
   "customer360": {

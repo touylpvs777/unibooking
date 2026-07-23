@@ -436,6 +436,60 @@
       "totalProducts": "ສິນຄ້າທັງໝົດ",
       "brands": "ຍີ່ຫໍ້",
       "categories": "ໝວດໝູ່"
+    },
+    "store": {
+      "get": "ຮັບ",
+      "free": "ຟຣີ",
+      "comingSoon": "ກຳລັງມາ",
+      "hero": {
+        "assets": {
+          "eyebrow": "ໂມດູນແນະນຳ",
+          "title": "ທະບຽນຊັບສິນ ອອກແບບໃໝ່ສຳລັບພາກສະໜາມ",
+          "desc": "ຕິດຕາມລົດຍົກ, ພ່ວງ, ແລະ ເຄື່ອງຈັກທຸກລາຍການຕະຫຼອດອາຍຸການນຳໃຊ້ — ຄວາມເປັນເຈົ້າຂອງ, ສະຖານະ, ແລະ ຊົ່ວໂມງນຳໃຊ້ຢູ່ໃນທະບຽນດຽວແບບສົດ."
+        },
+        "invoicing": {
+          "eyebrow": "ພ້ອມໃຊ້ງານແລ້ວ",
+          "title": "ອອກໃບແຈ້ງໜີ້ອັດສະລິຍະ ພ້ອມອາກອນມູນຄ່າເພີ່ມອັດຕະໂນມັດ",
+          "desc": "ສ້າງໃບສັ່ງຊື້, ໃບສະເໜີລາຄາ, ແລະ ໃບແຈ້ງໜີ້ຈາກຂັ້ນຕອນດຽວ — ຄິດໄລ່ຍອດລວມຍ່ອຍ, ອາກອນມູນຄ່າເພີ່ມ, ແລະ ຍອດລວມທັງໝົດໃຫ້ທ່ານໂດຍອັດຕະໂນມັດ."
+        },
+        "maintenance": {
+          "eyebrow": "ຄັດເລືອກໂດຍທີມງານ",
+          "title": "ຈັດຕາຕະລາງບຳລຸງຮັກສາລ່ວງໜ້າ",
+          "desc": "ຄົ້ນຫາເຄື່ອງຈັກທີ່ຄົບກຳນົດບໍລິການກ່ອນທີ່ຈະເສຍ, ໂດຍໃຊ້ຂໍ້ມູນຊົ່ວໂມງນຳໃຊ້ ແລະ ປະຫວັດແບບສົດ."
+        }
+      },
+      "promo": {
+        "sale": { "kicker": "ໄລຍະເວລາຈຳກັດ", "title": "ຫຼຸດລາຄາສູງສຸດ — ຫຼຸດເຖິງ 50% ອະໄຫຼ່" },
+        "new": { "kicker": "ເປີດຕົວໃໝ່", "title": "ໂມດູນໃໝ່ອາທິດນີ້" },
+        "staffPicks": { "kicker": "ທີມງານແນະນຳ", "title": "ຍອດນິຍົມໃນການບໍລິການພາກສະໜາມ" }
+      },
+      "rows": {
+        "mostUsed": "ໂມດູນທີ່ໃຊ້ຫຼາຍທີ່ສຸດ",
+        "recommended": "ໂມດູນທີ່ແນະນຳ",
+        "fieldService": "ແອັບໃນການບໍລິການພາກສະໜາມທີ່ຍອດນິຍົມ"
+      },
+      "modules": {
+        "equipmentRegistry": { "title": "DK Equipment Registry", "sub": "ທະບຽນອຸປະກອນ ແລະ ຍານພາຫະນະ" },
+        "customers": { "title": "DK Customers", "sub": "ຈັດການຂໍ້ມູນລູກຄ້າ" },
+        "quotations": { "title": "DK Quotations", "sub": "ໃບສະເໜີລາຄາ" },
+        "rentalContracts": { "title": "DK Rental Contracts", "sub": "ສັນຍາເຊົ່າ" },
+        "movements": { "title": "DK Movements", "sub": "ການເຄື່ອນຍ້າຍອຸປະກອນ" },
+        "projects": { "title": "DK Projects", "sub": "ໂຄງການ ແລະ ສາງ" },
+        "smartInvoicing": { "title": "DK Smart Invoicing", "sub": "ອອກໃບແຈ້ງໜີ້ອັດຕະໂນມັດ" },
+        "payments": { "title": "DK Payments", "sub": "ການຊຳລະເງິນ" },
+        "deposits": { "title": "DK Deposits", "sub": "ເງິນມັດຈຳ" },
+        "statements": { "title": "DK Statements", "sub": "ໃບແຈ້ງຍອດ" },
+        "inventory": { "title": "DK Inventory", "sub": "ຄັງສິນຄ້າ" },
+        "purchaseOrders": { "title": "DK Purchase Orders", "sub": "ສັ່ງຊື້ອະໄຫຼ່" },
+        "workOrders": { "title": "DK Work Orders", "sub": "ຈັດຕາຕະລາງບໍລິການ" },
+        "assetRegistry": { "title": "DK Asset Registry", "sub": "ທະບຽນຊັບສິນ" },
+        "maintenanceSchedule": { "title": "DK Maintenance Schedule", "sub": "ການບຳລຸງຮັກສາເຊິງປ້ອງກັນ" }
+      },
+      "thirdParty": {
+        "routeWise": { "title": "RouteWise", "sub": "Meridian Labs" },
+        "fleetPulse": { "title": "FleetPulse", "sub": "Orbit Communications" },
+        "partsBin": { "title": "PartsBin", "sub": "Ironclad Systems" }
+      }
     }
   },
   "customer360": {

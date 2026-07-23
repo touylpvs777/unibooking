@@ -11,11 +11,11 @@ interface ThemeState {
 }
 
 export const useThemeStore = create<ThemeState>((set) => ({
-  mode: (localStorage.getItem('dk-theme') as ThemeMode) || 'system',
-  resolved: 'light',
+  mode: (localStorage.getItem('dk-theme-v2') as ThemeMode) || 'dark',
+  resolved: 'dark',
 
   setMode: (mode) => {
-    localStorage.setItem('dk-theme', mode)
+    localStorage.setItem('dk-theme-v2', mode)
     set({ mode })
   },
 

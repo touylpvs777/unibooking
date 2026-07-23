@@ -11,7 +11,7 @@ export default function AppLayout() {
   const setState = useSidebarStore((s) => s.setState)
 
   useEffect(() => {
-    let lastDesktopState: 'expanded' | 'collapsed' = 'expanded'
+    let lastDesktopState: 'expanded' | 'collapsed' = 'collapsed'
 
     const handler = () => {
       const w = window.innerWidth
@@ -20,7 +20,7 @@ export default function AppLayout() {
       } else if (w <= 1024) {
         setState('collapsed')
       } else {
-        const saved = localStorage.getItem('dk-sidebar') as 'expanded' | 'collapsed' | null
+        const saved = localStorage.getItem('dk-sidebar-v2') as 'expanded' | 'collapsed' | null
         setState(saved === 'collapsed' ? 'collapsed' : lastDesktopState)
       }
     }

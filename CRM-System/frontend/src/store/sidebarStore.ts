@@ -21,12 +21,12 @@ function readGroups(): string[] {
 }
 
 export const useSidebarStore = create<SidebarStore>((set, get) => ({
-  state: (localStorage.getItem('dk-sidebar') as SidebarState) || 'expanded',
+  state: (localStorage.getItem('dk-sidebar-v2') as SidebarState) || 'collapsed',
   collapsedGroups: readGroups(),
   hoverExpanded: false,
 
   setState: (state) => {
-    localStorage.setItem('dk-sidebar', state)
+    localStorage.setItem('dk-sidebar-v2', state)
     set({ state })
   },
 
@@ -37,7 +37,7 @@ export const useSidebarStore = create<SidebarStore>((set, get) => ({
       set({ state: state === 'hidden' ? 'expanded' : 'hidden' })
     } else {
       const next = state === 'expanded' ? 'collapsed' : 'expanded'
-      localStorage.setItem('dk-sidebar', next)
+      localStorage.setItem('dk-sidebar-v2', next)
       set({ state: next })
     }
   },

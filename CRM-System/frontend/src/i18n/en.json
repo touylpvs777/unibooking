@@ -2147,6 +2147,60 @@
       "totalProducts": "Total Products",
       "brands": "Brands",
       "categories": "Categories"
+    },
+    "store": {
+      "get": "Get",
+      "free": "Free",
+      "comingSoon": "Coming Soon",
+      "hero": {
+        "assets": {
+          "eyebrow": "Featured Module",
+          "title": "Asset Registry, reimagined for the field",
+          "desc": "Track every forklift, trailer, and machine across its full lifecycle — ownership, status, and hour meters in one live registry."
+        },
+        "invoicing": {
+          "eyebrow": "Now Available",
+          "title": "Smart Invoicing with automatic VAT",
+          "desc": "Generate Purchase Orders, Quotations, and Invoices from one flow — subtotal, VAT, and totals calculated for you."
+        },
+        "maintenance": {
+          "eyebrow": "Editor's Pick",
+          "title": "Maintenance scheduling that stays ahead",
+          "desc": "Surface machines that are due for service before they break down, using live hour-meter and history data."
+        }
+      },
+      "promo": {
+        "sale": { "kicker": "Limited Time", "title": "Ultimate Sale — Up to 50% Off Parts" },
+        "new": { "kicker": "Just Launched", "title": "New Modules This Week" },
+        "staffPicks": { "kicker": "Staff Picks", "title": "Top Rated in Field Service" }
+      },
+      "rows": {
+        "mostUsed": "Most Used Modules",
+        "recommended": "Recommended Modules",
+        "fieldService": "Popular in Field Service"
+      },
+      "modules": {
+        "equipmentRegistry": { "title": "DK Equipment Registry", "sub": "Equipment & vehicle registry" },
+        "customers": { "title": "DK Customers", "sub": "Manage customer records" },
+        "quotations": { "title": "DK Quotations", "sub": "Quotations" },
+        "rentalContracts": { "title": "DK Rental Contracts", "sub": "Rental contracts" },
+        "movements": { "title": "DK Movements", "sub": "Equipment movements" },
+        "projects": { "title": "DK Projects", "sub": "Projects & warehouses" },
+        "smartInvoicing": { "title": "DK Smart Invoicing", "sub": "Automatic invoicing" },
+        "payments": { "title": "DK Payments", "sub": "Payments" },
+        "deposits": { "title": "DK Deposits", "sub": "Deposits" },
+        "statements": { "title": "DK Statements", "sub": "Statements" },
+        "inventory": { "title": "DK Inventory", "sub": "Inventory" },
+        "purchaseOrders": { "title": "DK Purchase Orders", "sub": "Order spare parts" },
+        "workOrders": { "title": "DK Work Orders", "sub": "Schedule service" },
+        "assetRegistry": { "title": "DK Asset Registry", "sub": "Asset registry" },
+        "maintenanceSchedule": { "title": "DK Maintenance Schedule", "sub": "Preventive maintenance" }
+      },
+      "thirdParty": {
+        "routeWise": { "title": "RouteWise", "sub": "Meridian Labs" },
+        "fleetPulse": { "title": "FleetPulse", "sub": "Orbit Communications" },
+        "partsBin": { "title": "PartsBin", "sub": "Ironclad Systems" }
+      }
     }
   },
   "customer360": {

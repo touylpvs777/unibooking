@@ -17,7 +17,7 @@
 }
 
 [data-theme="dark"] .header {
-  background: rgba(30, 33, 48, 0.85);
+  background: rgba(21, 21, 21, 0.78);
 }
 
 .header-left {
@@ -29,7 +29,10 @@
 }
 
 .header-center {
-  flex-shrink: 0;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
 }
 
 .header-right {
