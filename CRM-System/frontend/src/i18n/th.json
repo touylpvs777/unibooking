@@ -266,6 +266,7 @@
       "activity": "กิจกรรม",
       "reports": "รายงาน",
       "analytics": "การวิเคราะห์",
+      "iotTelemetry": "ระบบ IoT",
       "settings": "ตั้งค่า",
       "warehouseProjects": "โครงการคลังสินค้า"
     },
@@ -341,6 +342,59 @@
     "viewAll": "ดูทั้งหมด",
     "noRecentActivity": "ไม่มีกิจกรรมล่าสุด",
     "loadError": "ไม่สามารถโหลดข้อมูลแดชบอร์ดได้",
+    "exec": {
+      "eyebrow": "ภาพรวมผู้บริหาร",
+      "title": "ศูนย์ควบคุมการเช่า",
+      "kpi": {
+        "totalFleet": "จำนวนรถทั้งหมด",
+        "totalFleetSub": "จำนวนรถโฟล์คลิฟท์ที่ลงทะเบียน",
+        "activeRented": "กำลังให้เช่า",
+        "activeRentedSub": "หน่วยที่กำลังเช่าอยู่ในปัจจุบัน",
+        "utilizationRate": "อัตราการใช้งาน",
+        "utilizationRateSub": "สัดส่วนรถเช่าต่อรถทั้งหมด",
+        "pendingMaintenance": "รอซ่อมบำรุง",
+        "pendingMaintenanceSub": "งาน PM / ตรวจสอบที่ยังเปิดอยู่",
+        "pendingMaintenanceCritical": "{{count}} กำลังดำเนินการ",
+        "totalStockValue": "มูลค่าสต็อกทั้งหมด",
+        "totalStockValueSub": "เงินทุนที่ผูกอยู่ในอะไหล่",
+        "lowStockAlerts": "แจ้งเตือนสต็อกต่ำ",
+        "lowStockAlertsItems": "{{count}} รายการ",
+        "lowStockAlertsSub": "ต่ำกว่าจุดสั่งซื้อซ้ำ",
+        "lowStockAlertsCritical": "{{count}} วิกฤต"
+      },
+      "chart": {
+        "utilizationTab": "แนวโน้มการใช้งานรถ",
+        "revenueTab": "รายได้ เทียบกับ ค่าซ่อมบำรุง",
+        "last6Months": "6 เดือนล่าสุด",
+        "utilizationSeries": "อัตราการใช้งาน %",
+        "revenueSeries": "รายได้",
+        "maintenanceSeries": "ค่าซ่อมบำรุง"
+      },
+      "contracts": {
+        "title": "สัญญาเช่าที่กำลังดำเนินการ",
+        "columnContractId": "รหัสสัญญา",
+        "columnCustomerName": "ชื่อลูกค้า",
+        "columnForkliftModel": "รุ่นรถโฟล์คลิฟท์",
+        "columnEndDate": "วันที่สิ้นสุด",
+        "columnStatus": "สถานะ"
+      },
+      "lowStock": {
+        "title": "อะไหล่ใกล้หมดสต็อก",
+        "minSuffix": "ขั้นต่ำ"
+      },
+      "status": {
+        "booked": "จองแล้ว",
+        "onRent": "กำลังเช่า",
+        "expiringSoon": "ใกล้หมดอายุ",
+        "overdue": "เกินกำหนด",
+        "returned": "คืนแล้ว",
+        "cancelled": "ยกเลิก"
+      },
+      "customizer": {
+        "fontSize": "ขนาดตัวอักษร",
+        "language": "ภาษา"
+      }
+    },
     "kpi": {
       "totalRevenue": "รายได้รวม",
       "activeRentals": "สัญญาเช่าที่ใช้งานอยู่",
@@ -773,7 +827,8 @@
     "purchaseOrders": "ใบสั่งซื้อ",
     "executiveDashboard": "แดชบอร์ดผู้บริหาร",
     "projects": "โครงการคลังสินค้า",
-    "projectDetail": "รายละเอียดโครงการ"
+    "projectDetail": "รายละเอียดโครงการ",
+    "iotManagement": "การจัดการ IoT"
   },
   "inventory": {
     "common": {
@@ -1695,7 +1750,10 @@
       "serial": "หมายเลขซีเรียล",
       "brand": "ยี่ห้อ",
       "fuel": "เชื้อเพลิง",
-      "customer": "ลูกค้า"
+      "customer": "ลูกค้า",
+      "iotLive": "ออนไลน์",
+      "iotOffline": "ออฟไลน์",
+      "iotAutoSynced": "ซิงค์อัตโนมัติผ่าน IoT"
     },
     "gallery": {
       "noPhotos": "ยังไม่มีการอัปโหลดรูปภาพ",
@@ -2484,6 +2542,43 @@
       "title": "แนวโน้มรายได้",
       "subtitle": "6 เดือนล่าสุด ({{currency}})",
       "empty": "ยังไม่มีข้อมูลรายได้"
+    }
+  },
+  "iot": {
+    "title": "การจัดการ IoT",
+    "subtitle": "จัดการการจับคู่อุปกรณ์ GPS/มิเตอร์ชั่วโมง และติดตามการเชื่อมต่อแบบสดของกองยานพาหนะ",
+    "refresh": "รีเฟรช",
+    "searchPlaceholder": "ค้นหาด้วยชื่อรถโฟล์คลิฟท์หรือหมายเลขซีเรียล...",
+    "kpi": {
+      "totalPaired": "อุปกรณ์ที่จับคู่แล้ว",
+      "live": "ออนไลน์ตอนนี้",
+      "offline": "ออฟไลน์",
+      "unpaired": "หน่วยที่ยังไม่จับคู่"
+    },
+    "table": {
+      "forklift": "รถโฟล์คลิฟท์",
+      "deviceId": "รหัสอุปกรณ์",
+      "lastPing": "ส่งข้อมูลล่าสุด",
+      "status": "สถานะ"
+    },
+    "notPaired": "ยังไม่จับคู่",
+    "never": "ไม่เคย",
+    "pairAction": "จับคู่อุปกรณ์",
+    "unpairAction": "ยกเลิกการจับคู่",
+    "noResults": "ไม่พบรถโฟล์คลิฟท์",
+    "pairModal": {
+      "title": "จับคู่อุปกรณ์ IoT — {{name}}",
+      "deviceIdLabel": "รหัสอุปกรณ์",
+      "deviceIdPlaceholder": "เช่น DK-IOT-001",
+      "deviceIdRequired": "กรุณาระบุรหัสอุปกรณ์",
+      "duplicateError": "รหัสอุปกรณ์นี้ถูกจับคู่กับรถคันอื่นแล้ว",
+      "submitError": "จับคู่อุปกรณ์ไม่สำเร็จ กรุณาลองใหม่",
+      "submit": "จับคู่อุปกรณ์",
+      "pairing": "กำลังจับคู่..."
+    },
+    "unpairConfirm": {
+      "title": "ยกเลิกการจับคู่อุปกรณ์",
+      "message": "ลบอุปกรณ์ \"{{deviceId}}\" ออกจาก {{name}} หรือไม่? ระบบจะหยุดส่งข้อมูลชั่วโมงอัตโนมัติจนกว่าจะจับคู่ใหม่"
     }
   }
 }

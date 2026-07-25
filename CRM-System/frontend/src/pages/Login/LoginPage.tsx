@@ -51,10 +51,6 @@ export default function LoginPage() {
             />
           </div>
 
-          <div className="neon-lang-toggle">
-            <LanguageToggle />
-          </div>
-
           <h1 className="neon-title">{t('common.brandName')}</h1>
           <p className="neon-brand">{t('common.brandTagline')}</p>
           <p className="neon-subtitle">{t('login.subtitle')}</p>
@@ -107,6 +103,10 @@ export default function LoginPage() {
               ) : t('login.signIn')}
             </button>
           </form>
+
+          <div className="neon-lang-toggle mt-6 mb-4">
+            <LanguageToggle />
+          </div>
 
           <p className="neon-footer">
             {t('login.footer')}

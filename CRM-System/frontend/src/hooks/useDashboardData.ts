@@ -61,7 +61,7 @@ const FUEL_LABEL_KEYS: Record<string, string> = {
   lpg: 'dashboard.fuelType.lpg', dual_fuel: 'dashboard.fuelType.dualFuel', unknown: 'dashboard.fuelType.unknown',
 }
 
-function daysUntil(dateStr: string): number {
+export function daysUntil(dateStr: string): number {
   return Math.ceil((new Date(dateStr).getTime() - Date.now()) / 86400000)
 }
 

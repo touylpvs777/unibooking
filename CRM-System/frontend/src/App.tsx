@@ -53,9 +53,11 @@ const WarehousePage = lazy(() => import('@/pages/Inventory/WarehousePage'))
 const WarehouseDetailPage = lazy(() => import('@/pages/Inventory/WarehouseDetailPage'))
 const PurchaseOrderPage = lazy(() => import('@/pages/Inventory/PurchaseOrderPage'))
 const ExecutiveDashboardPage = lazy(() => import('@/pages/Executive/ExecutiveDashboardPage'))
+const IoTManagementPage = lazy(() => import('@/pages/IoT/IoTManagementPage'))
 const ProjectListPage = lazy(() => import('@/pages/Projects/ProjectListPage'))
 const ProjectDetailPage = lazy(() => import('@/pages/Projects/ProjectDetailPage'))
 const SettingsPage = lazy(() => import('@/pages/Settings/Settings'))
+const RentalMvpDashboard = lazy(() => import('@/pages/RentalMvp/RentalDashboard'))
 
 function PageLoader() {
   return (
@@ -106,6 +108,7 @@ export default function App() {
             <Route path="/rental-contracts"       element={<Suspense fallback={<PageLoader />}><RentalContractListPage /></Suspense>} />
             <Route path="/rental-contracts/new"   element={<Suspense fallback={<PageLoader />}><RentalContractFormPage /></Suspense>} />
             <Route path="/rental-contracts/:id"   element={<Suspense fallback={<PageLoader />}><RentalContractDetailPage /></Suspense>} />
+            <Route path="/rental-mvp"             element={<Suspense fallback={<PageLoader />}><RentalMvpDashboard /></Suspense>} />
 
             <Route path="/movements"              element={<Suspense fallback={<PageLoader />}><MovementListPage /></Suspense>} />
             <Route path="/movements/new"          element={<Suspense fallback={<PageLoader />}><MovementForm /></Suspense>} />
@@ -140,6 +143,7 @@ export default function App() {
             <Route path="/inventory/purchase-orders"      element={<Suspense fallback={<PageLoader />}><PurchaseOrderPage /></Suspense>} />
 
             <Route path="/executive"                     element={<Suspense fallback={<PageLoader />}><ExecutiveDashboardPage /></Suspense>} />
+            <Route path="/iot-management"                element={<Suspense fallback={<PageLoader />}><IoTManagementPage /></Suspense>} />
 
             <Route path="/projects"               element={<Suspense fallback={<PageLoader />}><ProjectListPage /></Suspense>} />
             <Route path="/projects/:id"           element={<Suspense fallback={<PageLoader />}><ProjectDetailPage /></Suspense>} />

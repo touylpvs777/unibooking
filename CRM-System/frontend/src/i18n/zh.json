@@ -1,0 +1,60 @@
+{
+  "common": {
+    "brandName": "DK Service"
+  },
+  "dashboard": {
+    "exec": {
+      "eyebrow": "管理层概览",
+      "title": "租赁指挥中心",
+      "kpi": {
+        "totalFleet": "车队总数",
+        "totalFleetSub": "已登记的叉车数量",
+        "activeRented": "出租中",
+        "activeRentedSub": "当前正在出租的车辆",
+        "utilizationRate": "使用率",
+        "utilizationRateSub": "出租车辆占车队总数的比例",
+        "pendingMaintenance": "待维护",
+        "pendingMaintenanceSub": "待处理的保养/检查工单",
+        "pendingMaintenanceCritical": "{{count}} 项进行中",
+        "totalStockValue": "库存总值",
+        "totalStockValueSub": "占用于备件的资金",
+        "lowStockAlerts": "低库存警报",
+        "lowStockAlertsItems": "{{count}} 项",
+        "lowStockAlertsSub": "低于再订购点",
+        "lowStockAlertsCritical": "{{count}} 项紧急"
+      },
+      "chart": {
+        "utilizationTab": "车队使用率趋势",
+        "revenueTab": "收入 与 维护成本对比",
+        "last6Months": "最近6个月",
+        "utilizationSeries": "使用率 %",
+        "revenueSeries": "收入",
+        "maintenanceSeries": "维护成本"
+      },
+      "contracts": {
+        "title": "进行中的租赁合同",
+        "columnContractId": "合同编号",
+        "columnCustomerName": "客户名称",
+        "columnForkliftModel": "叉车型号",
+        "columnEndDate": "结束日期",
+        "columnStatus": "状态"
+      },
+      "lowStock": {
+        "title": "库存紧张备件",
+        "minSuffix": "最低"
+      },
+      "status": {
+        "booked": "已预订",
+        "onRent": "出租中",
+        "expiringSoon": "即将到期",
+        "overdue": "已逾期",
+        "returned": "已归还",
+        "cancelled": "已取消"
+      },
+      "customizer": {
+        "fontSize": "字体大小",
+        "language": "语言"
+      }
+    }
+  }
+}

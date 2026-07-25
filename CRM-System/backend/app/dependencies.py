@@ -1,8 +1,9 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, Header, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import settings
 from app.core.security import decode_token
 from app.database.session import get_db
 from app.models.revoked_token import RevokedToken
@@ -48,3 +49,22 @@ async def get_current_superuser(current_user: User = Depends(get_current_user)) 
             detail="Insufficient permissions",
         )
     return current_user
+
+
+async def verify_iot_api_key(x_api_key: str | None = Header(default=None)) -> None:
+    """
+    Auth for machine-to-machine IoT webhooks — a shared secret header instead
+    of a user JWT, since telemetry devices aren't users and can't log in.
+    If IOT_WEBHOOK_API_KEY isn't configured, the endpoint is treated as
+    unavailable rather than silently accepting an empty/missing key.
+    """
+    if not settings.IOT_WEBHOOK_API_KEY:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="IoT webhook is not configured",
+        )
+    if not x_api_key or x_api_key != settings.IOT_WEBHOOK_API_KEY:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or missing X-API-Key",
+        )

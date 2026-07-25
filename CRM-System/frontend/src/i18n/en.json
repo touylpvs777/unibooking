@@ -1208,7 +1208,10 @@
       "serial": "Serial",
       "brand": "Brand",
       "fuel": "Fuel",
-      "customer": "Customer"
+      "customer": "Customer",
+      "iotLive": "Live",
+      "iotOffline": "Offline",
+      "iotAutoSynced": "Auto-synced via IoT"
     },
     "filters": {
       "statusShort": {
@@ -1977,6 +1980,7 @@
       "activity": "Activity",
       "reports": "Reports",
       "analytics": "Analytics",
+      "iotTelemetry": "IoT Telemetry",
       "settings": "Settings",
       "warehouseProjects": "Warehouse Projects"
     },
@@ -2052,6 +2056,59 @@
     "viewAll": "View All",
     "noRecentActivity": "No recent activity",
     "loadError": "Failed to load dashboard data.",
+    "exec": {
+      "eyebrow": "Executive Overview",
+      "title": "Rental Command Center",
+      "kpi": {
+        "totalFleet": "Total Fleet",
+        "totalFleetSub": "Forklift units registered",
+        "activeRented": "Active Rented",
+        "activeRentedSub": "Units currently on rent",
+        "utilizationRate": "Utilization Rate",
+        "utilizationRateSub": "Rented vs. total fleet",
+        "pendingMaintenance": "Pending Maintenance",
+        "pendingMaintenanceSub": "Open PM / inspection jobs",
+        "pendingMaintenanceCritical": "{{count}} in progress",
+        "totalStockValue": "Total Stock Value",
+        "totalStockValueSub": "Capital tied up in spare parts",
+        "lowStockAlerts": "Low Stock Alerts",
+        "lowStockAlertsItems": "{{count}} Items",
+        "lowStockAlertsSub": "Below reorder threshold",
+        "lowStockAlertsCritical": "{{count}} critical"
+      },
+      "chart": {
+        "utilizationTab": "Fleet Utilization Trend",
+        "revenueTab": "Revenue vs. Maintenance Cost",
+        "last6Months": "Last 6 months",
+        "utilizationSeries": "Utilization %",
+        "revenueSeries": "Revenue",
+        "maintenanceSeries": "Maintenance Cost"
+      },
+      "contracts": {
+        "title": "Active Rental Contracts",
+        "columnContractId": "Contract ID",
+        "columnCustomerName": "Customer Name",
+        "columnForkliftModel": "Forklift Model",
+        "columnEndDate": "End Date",
+        "columnStatus": "Status"
+      },
+      "lowStock": {
+        "title": "Critical Low Stock",
+        "minSuffix": "min"
+      },
+      "status": {
+        "booked": "Booked",
+        "onRent": "On Rent",
+        "expiringSoon": "Expiring Soon",
+        "overdue": "Overdue",
+        "returned": "Returned",
+        "cancelled": "Cancelled"
+      },
+      "customizer": {
+        "fontSize": "Font Size",
+        "language": "Language"
+      }
+    },
     "kpi": {
       "totalRevenue": "Total Revenue",
       "activeRentals": "Active Rentals",
@@ -2484,6 +2541,44 @@
     "purchaseOrders": "Purchase Orders",
     "executiveDashboard": "Executive Dashboard",
     "projects": "Warehouse Projects",
-    "projectDetail": "Project Detail"
+    "projectDetail": "Project Detail",
+    "iotManagement": "IoT Management"
+  },
+  "iot": {
+    "title": "IoT Telemetry",
+    "subtitle": "Manage GPS/hour-meter device pairings and monitor live connectivity across the fleet.",
+    "refresh": "Refresh",
+    "searchPlaceholder": "Search by forklift name or serial number...",
+    "kpi": {
+      "totalPaired": "Devices Paired",
+      "live": "Live Now",
+      "offline": "Offline",
+      "unpaired": "Unpaired Units"
+    },
+    "table": {
+      "forklift": "Forklift",
+      "deviceId": "Device ID",
+      "lastPing": "Last Ping",
+      "status": "Status"
+    },
+    "notPaired": "Not paired",
+    "never": "Never",
+    "pairAction": "Pair device",
+    "unpairAction": "Unpair",
+    "noResults": "No forklifts found.",
+    "pairModal": {
+      "title": "Pair IoT Device — {{name}}",
+      "deviceIdLabel": "Device ID",
+      "deviceIdPlaceholder": "e.g. DK-IOT-001",
+      "deviceIdRequired": "Device ID is required.",
+      "duplicateError": "This device ID is already paired to another forklift.",
+      "submitError": "Failed to pair device. Please try again.",
+      "submit": "Pair Device",
+      "pairing": "Pairing..."
+    },
+    "unpairConfirm": {
+      "title": "Unpair device",
+      "message": "Remove device \"{{deviceId}}\" from {{name}}? It will stop sending automated hour-meter updates until re-paired."
+    }
   }
 }

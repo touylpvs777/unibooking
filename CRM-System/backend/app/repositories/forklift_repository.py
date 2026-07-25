@@ -49,6 +49,12 @@ class ForkliftRepository:
         )
         return result.scalar_one_or_none()
 
+    async def get_by_iot_device_id(self, iot_device_id: str) -> Forklift | None:
+        result = await self.db.execute(
+            select(Forklift).where(Forklift.iot_device_id == iot_device_id)
+        )
+        return result.scalar_one_or_none()
+
     async def get_detail(self, forklift_id: int) -> Forklift | None:
         result = await self.db.execute(
             select(Forklift)

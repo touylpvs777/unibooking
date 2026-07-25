@@ -1,0 +1,60 @@
+{
+  "common": {
+    "brandName": "DK Service"
+  },
+  "dashboard": {
+    "exec": {
+      "eyebrow": "Tổng Quan Điều Hành",
+      "title": "Trung Tâm Điều Hành Cho Thuê",
+      "kpi": {
+        "totalFleet": "Tổng Số Xe",
+        "totalFleetSub": "Số xe nâng đã đăng ký",
+        "activeRented": "Đang Cho Thuê",
+        "activeRentedSub": "Số xe đang được thuê",
+        "utilizationRate": "Tỷ Lệ Sử Dụng",
+        "utilizationRateSub": "Tỷ lệ xe cho thuê trên tổng số xe",
+        "pendingMaintenance": "Chờ Bảo Trì",
+        "pendingMaintenanceSub": "Công việc PM / kiểm tra đang mở",
+        "pendingMaintenanceCritical": "{{count}} đang thực hiện",
+        "totalStockValue": "Tổng Giá Trị Tồn Kho",
+        "totalStockValueSub": "Vốn đọng trong phụ tùng",
+        "lowStockAlerts": "Cảnh Báo Tồn Kho Thấp",
+        "lowStockAlertsItems": "{{count}} mục",
+        "lowStockAlertsSub": "Dưới ngưỡng đặt hàng lại",
+        "lowStockAlertsCritical": "{{count}} nghiêm trọng"
+      },
+      "chart": {
+        "utilizationTab": "Xu Hướng Sử Dụng Xe",
+        "revenueTab": "Doanh Thu so với Chi Phí Bảo Trì",
+        "last6Months": "6 tháng gần nhất",
+        "utilizationSeries": "Tỷ lệ sử dụng %",
+        "revenueSeries": "Doanh thu",
+        "maintenanceSeries": "Chi phí bảo trì"
+      },
+      "contracts": {
+        "title": "Hợp Đồng Cho Thuê Đang Hoạt Động",
+        "columnContractId": "Mã Hợp Đồng",
+        "columnCustomerName": "Tên Khách Hàng",
+        "columnForkliftModel": "Model Xe Nâng",
+        "columnEndDate": "Ngày Kết Thúc",
+        "columnStatus": "Trạng Thái"
+      },
+      "lowStock": {
+        "title": "Phụ Tùng Sắp Hết",
+        "minSuffix": "tối thiểu"
+      },
+      "status": {
+        "booked": "Đã Đặt",
+        "onRent": "Đang Thuê",
+        "expiringSoon": "Sắp Hết Hạn",
+        "overdue": "Quá Hạn",
+        "returned": "Đã Trả",
+        "cancelled": "Đã Hủy"
+      },
+      "customizer": {
+        "fontSize": "Cỡ Chữ",
+        "language": "Ngôn Ngữ"
+      }
+    }
+  }
+}

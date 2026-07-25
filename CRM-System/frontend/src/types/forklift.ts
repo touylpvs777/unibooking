@@ -118,6 +118,8 @@ export interface Forklift {
   meter_hours: number
   is_active: boolean
   primary_photo_url: string | null
+  iot_device_id: string | null
+  last_telemetry_ping: string | null
   created_at: string
   updated_at: string | null
 }
@@ -188,6 +190,7 @@ export interface ForkliftCreate {
 
 export interface ForkliftUpdate extends Partial<ForkliftCreate> {
   is_active?: boolean
+  iot_device_id?: string | null
 }
 
 export interface ForkliftListParams {

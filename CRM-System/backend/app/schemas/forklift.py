@@ -151,6 +151,7 @@ class ForkliftUpdate(BaseModel):
     current_hour_meter: float | None = Field(default=None, ge=0)
     notes: str | None = None
     is_active: bool | None = None
+    iot_device_id: str | None = Field(default=None, max_length=100)
 
 
 class ForkliftOut(BaseModel):
@@ -179,6 +180,8 @@ class ForkliftOut(BaseModel):
     meter_hours: int
     is_active: bool
     primary_photo_url: str | None = None
+    iot_device_id: str | None = None
+    last_telemetry_ping: datetime | None = None
     created_at: datetime
     updated_at: datetime | None = None
 

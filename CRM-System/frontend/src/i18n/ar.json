@@ -1,0 +1,60 @@
+{
+  "common": {
+    "brandName": "DK Service"
+  },
+  "dashboard": {
+    "exec": {
+      "eyebrow": "نظرة عامة تنفيذية",
+      "title": "مركز قيادة التأجير",
+      "kpi": {
+        "totalFleet": "إجمالي الأسطول",
+        "totalFleetSub": "عدد الرافعات الشوكية المسجلة",
+        "activeRented": "قيد التأجير",
+        "activeRentedSub": "الوحدات المؤجرة حالياً",
+        "utilizationRate": "معدل الاستخدام",
+        "utilizationRateSub": "نسبة التأجير إلى إجمالي الأسطول",
+        "pendingMaintenance": "صيانة معلقة",
+        "pendingMaintenanceSub": "أعمال الصيانة الوقائية / الفحص المفتوحة",
+        "pendingMaintenanceCritical": "{{count}} قيد التنفيذ",
+        "totalStockValue": "إجمالي قيمة المخزون",
+        "totalStockValueSub": "رأس المال المستثمر في قطع الغيار",
+        "lowStockAlerts": "تنبيهات انخفاض المخزون",
+        "lowStockAlertsItems": "{{count}} عناصر",
+        "lowStockAlertsSub": "أقل من حد إعادة الطلب",
+        "lowStockAlertsCritical": "{{count}} حرجة"
+      },
+      "chart": {
+        "utilizationTab": "اتجاه استخدام الأسطول",
+        "revenueTab": "الإيرادات مقابل تكلفة الصيانة",
+        "last6Months": "آخر 6 أشهر",
+        "utilizationSeries": "نسبة الاستخدام %",
+        "revenueSeries": "الإيرادات",
+        "maintenanceSeries": "تكلفة الصيانة"
+      },
+      "contracts": {
+        "title": "عقود التأجير النشطة",
+        "columnContractId": "رقم العقد",
+        "columnCustomerName": "اسم العميل",
+        "columnForkliftModel": "طراز الرافعة",
+        "columnEndDate": "تاريخ الانتهاء",
+        "columnStatus": "الحالة"
+      },
+      "lowStock": {
+        "title": "قطع غيار على وشك النفاد",
+        "minSuffix": "الحد الأدنى"
+      },
+      "status": {
+        "booked": "محجوز",
+        "onRent": "مؤجر",
+        "expiringSoon": "قريب الانتهاء",
+        "overdue": "متأخر",
+        "returned": "تم الإرجاع",
+        "cancelled": "ملغى"
+      },
+      "customizer": {
+        "fontSize": "حجم الخط",
+        "language": "اللغة"
+      }
+    }
+  }
+}

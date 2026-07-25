@@ -266,6 +266,7 @@
       "activity": "ກິດຈະກຳ",
       "reports": "ລາຍງານ",
       "analytics": "ການວິເຄາະ",
+      "iotTelemetry": "ລະບົບ IoT",
       "settings": "ຕັ້ງຄ່າ",
       "warehouseProjects": "ໂຄງການສາງເກັບເຄື່ອງ"
     },
@@ -341,6 +342,59 @@
     "viewAll": "ເບິ່ງທັງໝົດ",
     "noRecentActivity": "ບໍ່ມີກິດຈະກຳຫຼ້າສຸດ",
     "loadError": "ບໍ່ສາມາດໂຫຼດຂໍ້ມູນໜ້າຫຼັກໄດ້.",
+    "exec": {
+      "eyebrow": "ພາບລວມຜູ້ບໍລິຫານ",
+      "title": "ສູນຄວບຄຸມການເຊົ່າ",
+      "kpi": {
+        "totalFleet": "ຝູງລົດທັງໝົດ",
+        "totalFleetSub": "ຈຳນວນລົດຍົກທີ່ລົງທະບຽນ",
+        "activeRented": "ກຳລັງເຊົ່າຢູ່",
+        "activeRentedSub": "ຫົວໜ່ວຍທີ່ກຳລັງເຊົ່າຢູ່ໃນປັດຈຸບັນ",
+        "utilizationRate": "ອັດຕາການນຳໃຊ້",
+        "utilizationRateSub": "ອັດຕາສ່ວນເຊົ່າຕໍ່ຝູງລົດທັງໝົດ",
+        "pendingMaintenance": "ລໍຖ້າຊ່ອມບຳລຸງ",
+        "pendingMaintenanceSub": "ວຽກ PM / ກວດສອບທີ່ຍັງເປີດຢູ່",
+        "pendingMaintenanceCritical": "{{count}} ກຳລັງດຳເນີນການ",
+        "totalStockValue": "ມູນຄ່າສາງທັງໝົດ",
+        "totalStockValueSub": "ທຶນທີ່ຕິດຢູ່ໃນອະໄຫຼ່",
+        "lowStockAlerts": "ແຈ້ງເຕືອນສະຕັອກຕ່ຳ",
+        "lowStockAlertsItems": "{{count}} ລາຍການ",
+        "lowStockAlertsSub": "ຕ່ຳກວ່າຈຸດສັ່ງຊື້ຄືນ",
+        "lowStockAlertsCritical": "{{count}} ວິກິດ"
+      },
+      "chart": {
+        "utilizationTab": "ແນວໂນ້ມການນຳໃຊ້ຝູງລົດ",
+        "revenueTab": "ລາຍຮັບ ທຽບກັບ ຄ່າຊ່ອມບຳລຸງ",
+        "last6Months": "6 ເດືອນຫຼ້າສຸດ",
+        "utilizationSeries": "ອັດຕາການນຳໃຊ້ %",
+        "revenueSeries": "ລາຍຮັບ",
+        "maintenanceSeries": "ຄ່າຊ່ອມບຳລຸງ"
+      },
+      "contracts": {
+        "title": "ສັນຍາເຊົ່າທີ່ກຳລັງດຳເນີນການ",
+        "columnContractId": "ລະຫັດສັນຍາ",
+        "columnCustomerName": "ຊື່ລູກຄ້າ",
+        "columnForkliftModel": "ຮຸ່ນລົດຍົກ",
+        "columnEndDate": "ວັນທີສິ້ນສຸດ",
+        "columnStatus": "ສະຖານະ"
+      },
+      "lowStock": {
+        "title": "ອະໄຫຼ່ໃກ້ໝົດສາງ",
+        "minSuffix": "ຂັ້ນຕ່ຳ"
+      },
+      "status": {
+        "booked": "ຈອງແລ້ວ",
+        "onRent": "ກຳລັງເຊົ່າ",
+        "expiringSoon": "ໃກ້ໝົດອາຍຸ",
+        "overdue": "ເກີນກຳນົດ",
+        "returned": "ສົ່ງຄືນແລ້ວ",
+        "cancelled": "ຍົກເລີກ"
+      },
+      "customizer": {
+        "fontSize": "ຂະໜາດຕົວອັກສອນ",
+        "language": "ພາສາ"
+      }
+    },
     "kpi": {
       "totalRevenue": "ລາຍຮັບລວມ",
       "activeRentals": "ສັນຍາເຊົ່າທີ່ໃຊ້ງານ",
@@ -773,7 +827,8 @@
     "purchaseOrders": "ໃບສັ່ງຊື້",
     "executiveDashboard": "ໜ້າຫຼັກຜູ້ບໍລິຫານ",
     "projects": "ໂຄງການສາງເກັບເຄື່ອງ",
-    "projectDetail": "ລາຍລະອຽດໂຄງການ"
+    "projectDetail": "ລາຍລະອຽດໂຄງການ",
+    "iotManagement": "ຈັດການ IoT"
   },
   "inventory": {
     "common": {
@@ -1724,6 +1779,9 @@
       "editForklift": "ແກ້ໄຂລົດຍົກ",
       "fuel": "ເຊື້ອໄຟ",
       "hoursValue": "{{count}} ຊົ່ວໂມງ",
+      "iotAutoSynced": "ອັບເດດອັດຕະໂນມັດຜ່ານ IoT",
+      "iotLive": "ອອນລາຍ",
+      "iotOffline": "ອອບລາຍ",
       "serial": "ເລກຊີຣີ"
     },
     "condition": {
@@ -2484,6 +2542,43 @@
       "returning": "ກຳລັງສົ່ງຄືນ",
       "revision": "ດັດແກ້",
       "settling": "ກຳລັງຮຽບຮ້ອຍ"
+    }
+  },
+  "iot": {
+    "title": "ຈັດການອຸປະກອນ IoT",
+    "subtitle": "ຈັດການການເຊື່ອມຕໍ່ອຸປະກອນ GPS/ມິເຕີຊົ່ວໂມງ ແລະ ຕິດຕາມການເຊື່ອມຕໍ່ແບບສົດຂອງກອງຍານພາຫະນະ.",
+    "refresh": "ໂຫລດຄືນໃໝ່",
+    "searchPlaceholder": "ຄົ້ນຫາຕາມຊື່ລົດຍົກ ຫຼື ໝາຍເລກຊີເຣຍລ...",
+    "kpi": {
+      "totalPaired": "ອຸປະກອນທີ່ຈັບຄູ່ແລ້ວ",
+      "live": "ອອນລາຍຕອນນີ້",
+      "offline": "ອອບລາຍ",
+      "unpaired": "ໜ່ວຍທີ່ຍັງບໍ່ຈັບຄູ່"
+    },
+    "table": {
+      "forklift": "ລົດຍົກ",
+      "deviceId": "ລະຫັດອຸປະກອນ",
+      "lastPing": "ສົ່ງຂໍ້ມູນຫຼ້າສຸດ",
+      "status": "ສະຖານະ"
+    },
+    "notPaired": "ຍັງບໍ່ຈັບຄູ່",
+    "never": "ບໍ່ເຄີຍ",
+    "pairAction": "ຈັບຄູ່ອຸປະກອນ",
+    "unpairAction": "ຍົກເລີກຈັບຄູ່",
+    "noResults": "ບໍ່ພົບລົດຍົກ.",
+    "pairModal": {
+      "title": "ຈັບຄູ່ອຸປະກອນ IoT — {{name}}",
+      "deviceIdLabel": "ລະຫັດອຸປະກອນ",
+      "deviceIdPlaceholder": "ຕົວຢ່າງ: DK-IOT-001",
+      "deviceIdRequired": "ກະລຸນາປ້ອນລະຫັດອຸປະກອນ.",
+      "duplicateError": "ລະຫັດອຸປະກອນນີ້ຖືກຈັບຄູ່ກັບລົດຍົກຄັນອື່ນແລ້ວ.",
+      "submitError": "ຈັບຄູ່ອຸປະກອນລົ້ມເຫລວ. ກະລຸນາລອງໃໝ່.",
+      "submit": "ຈັບຄູ່ອຸປະກອນ",
+      "pairing": "ກຳລັງຈັບຄູ່..."
+    },
+    "unpairConfirm": {
+      "title": "ຍົກເລີກຈັບຄູ່ອຸປະກອນ",
+      "message": "ລຶບອຸປະກອນ \"{{deviceId}}\" ອອກຈາກ {{name}} ບໍ? ມັນຈະຢຸດສົ່ງຂໍ້ມູນຊົ່ວໂມງອັດຕະໂນມັດຈົນກວ່າຈະຈັບຄູ່ໃໝ່."
     }
   }
 }

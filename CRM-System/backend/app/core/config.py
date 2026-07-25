@@ -36,6 +36,9 @@ class Settings(BaseSettings):
     SMTP_FROM_EMAIL: str = "no-reply@dkservice.com"
     SMTP_USE_TLS: bool = True
 
+    # ── IoT Telemetry (forklift GPS/hour-meter device webhook) ───────────────
+    IOT_WEBHOOK_API_KEY: str = ""
+
     ALLOWED_ORIGINS: list[str] = [
         "http://localhost:3000",
         "http://localhost:8080",

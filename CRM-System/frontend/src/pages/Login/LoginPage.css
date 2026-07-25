@@ -102,10 +102,8 @@
 }
 
 .neon-lang-toggle {
-  position: absolute;
-  top: 16px;
-  right: 36px;
-  z-index: 11;
+  display: flex;
+  justify-content: center;
 }
 
 .neon-card-inner {

@@ -32,7 +32,7 @@ from app.core.security import hash_password
 from app.models.role import Role, RoleName
 from app.models.user import User
 from app.models.warehouse import Warehouse
-from app.routes import activity, auth, billing, customers, dashboard, forklifts, inventory, leads, maintenance, movements, notifications, projects, quotations, rentals, reports, roles, users, uploads
+from app.routes import activity, auth, billing, customers, dashboard, forklifts, inventory, iot_telemetry, leads, maintenance, movements, notifications, projects, quotations, rentals, reports, roles, users, uploads
 from app.routes.catalog import router as catalog_router
 from app.routes.settings import router as settings_router
 from app.scheduler import shutdown_scheduler, start_scheduler
@@ -100,6 +100,22 @@ async def _apply_sqlite_migrations(conn) -> None:
         await _backfill_ownership_state(conn)
     except OperationalError:
         pass  # column already exists
+
+    # ── forklifts.iot_device_id / last_telemetry_ping (IoT Telemetry) ────────
+    try:
+        await conn.execute(text("ALTER TABLE forklifts ADD COLUMN iot_device_id VARCHAR(100)"))
+    except OperationalError:
+        pass  # column already exists
+    try:
+        await conn.execute(text("ALTER TABLE forklifts ADD COLUMN last_telemetry_ping DATETIME"))
+    except OperationalError:
+        pass  # column already exists
+    # SQLite can't ADD COLUMN ... UNIQUE directly, so the uniqueness constraint
+    # from the model (iot_device_id, unique=True) is created as a separate
+    # index here; naturally idempotent, safe to run every startup.
+    await conn.execute(text(
+        "CREATE UNIQUE INDEX IF NOT EXISTS ix_forklifts_iot_device_id ON forklifts (iot_device_id)"
+    ))
 
     # ── work_orders.scheduled_date: DATE -> DATETIME (Work Order M6) ─────────
     # SQLite has no real column-type enforcement (type affinity only), so no
@@ -264,6 +280,9 @@ async def _apply_postgres_migrations(conn) -> None:
         "ALTER TABLE invoices ADD COLUMN IF NOT EXISTS reference_type VARCHAR(20)",
         "ALTER TABLE invoices ADD COLUMN IF NOT EXISTS reference_id INTEGER",
         "ALTER TABLE invoices ALTER COLUMN contract_id DROP NOT NULL",
+        "ALTER TABLE forklifts ADD COLUMN IF NOT EXISTS iot_device_id VARCHAR(100)",
+        "ALTER TABLE forklifts ADD COLUMN IF NOT EXISTS last_telemetry_ping TIMESTAMPTZ",
+        "CREATE UNIQUE INDEX IF NOT EXISTS ix_forklifts_iot_device_id ON forklifts (iot_device_id)",
     ):
         await conn.execute(text(statement))
 
@@ -337,6 +356,7 @@ app.include_router(roles.router, prefix="/api/v1")
 app.include_router(reports.router, prefix="/api/v1")
 app.include_router(catalog_router, prefix="/api/v1/catalog")
 app.include_router(forklifts.router, prefix="/api/v1")
+app.include_router(iot_telemetry.router, prefix="/api/v1")
 app.include_router(quotations.router, prefix="/api/v1")
 app.include_router(rentals.router, prefix="/api/v1")
 app.include_router(movements.router, prefix="/api/v1")

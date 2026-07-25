@@ -1,0 +1,60 @@
+{
+  "common": {
+    "brandName": "DK Service"
+  },
+  "dashboard": {
+    "exec": {
+      "eyebrow": "Aperçu Exécutif",
+      "title": "Centre de Commande Location",
+      "kpi": {
+        "totalFleet": "Flotte Totale",
+        "totalFleetSub": "Chariots élévateurs enregistrés",
+        "activeRented": "En Location",
+        "activeRentedSub": "Unités actuellement louées",
+        "utilizationRate": "Taux d'Utilisation",
+        "utilizationRateSub": "Loués par rapport à la flotte totale",
+        "pendingMaintenance": "Maintenance en Attente",
+        "pendingMaintenanceSub": "Travaux PM / inspections ouverts",
+        "pendingMaintenanceCritical": "{{count}} en cours",
+        "totalStockValue": "Valeur Totale du Stock",
+        "totalStockValueSub": "Capital immobilisé en pièces détachées",
+        "lowStockAlerts": "Alertes Stock Faible",
+        "lowStockAlertsItems": "{{count}} articles",
+        "lowStockAlertsSub": "Sous le seuil de réapprovisionnement",
+        "lowStockAlertsCritical": "{{count}} critiques"
+      },
+      "chart": {
+        "utilizationTab": "Tendance d'Utilisation de la Flotte",
+        "revenueTab": "Revenus vs. Coût de Maintenance",
+        "last6Months": "6 derniers mois",
+        "utilizationSeries": "Utilisation %",
+        "revenueSeries": "Revenus",
+        "maintenanceSeries": "Coût de Maintenance"
+      },
+      "contracts": {
+        "title": "Contrats de Location Actifs",
+        "columnContractId": "N° de Contrat",
+        "columnCustomerName": "Nom du Client",
+        "columnForkliftModel": "Modèle de Chariot",
+        "columnEndDate": "Date de Fin",
+        "columnStatus": "Statut"
+      },
+      "lowStock": {
+        "title": "Stock Critique",
+        "minSuffix": "min"
+      },
+      "status": {
+        "booked": "Réservé",
+        "onRent": "En Location",
+        "expiringSoon": "Expire Bientôt",
+        "overdue": "En Retard",
+        "returned": "Retourné",
+        "cancelled": "Annulé"
+      },
+      "customizer": {
+        "fontSize": "Taille du Texte",
+        "language": "Langue"
+      }
+    }
+  }
+}

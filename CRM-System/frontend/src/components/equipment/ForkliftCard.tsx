@@ -1,8 +1,15 @@
 import { useTranslation } from 'react-i18next'
-import { Fuel, Gauge, Calendar, Tag } from 'lucide-react'
+import { Fuel, Gauge, Calendar, Tag, Zap } from 'lucide-react'
 import { ForkliftStatusBadge, ForkliftConditionBadge } from './ForkliftStatusBadge'
 import type { Forklift } from '@/types/forklift'
 import './ForkliftCard.css'
+
+const IOT_LIVE_WINDOW_MS = 24 * 60 * 60 * 1000
+
+function isIotLive(lastPing: string | null): boolean {
+  if (!lastPing) return false
+  return Date.now() - new Date(lastPing).getTime() <= IOT_LIVE_WINDOW_MS
+}
 
 interface ForkliftCardProps {
   forklift: Forklift
@@ -22,6 +29,7 @@ const PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg
 export default function ForkliftCard({ forklift, onClick, onEdit }: ForkliftCardProps) {
   const { t } = useTranslation()
   const imgSrc = forklift.primary_photo_url ?? PLACEHOLDER
+  const iotLive = isIotLive(forklift.last_telemetry_ping)
 
   return (
     <div
@@ -74,7 +82,18 @@ export default function ForkliftCard({ forklift, onClick, onEdit }: ForkliftCard
         </div>
 
         <div className="forklift-card-hours">
-          {t('equipment.card.hoursValue', { count: forklift.current_hour_meter.toLocaleString(undefined, { maximumFractionDigits: 1 }) })}
+          <span className="forklift-card-hours-value">
+            {t('equipment.card.hoursValue', { count: forklift.current_hour_meter.toLocaleString(undefined, { maximumFractionDigits: 1 }) })}
+            {forklift.last_telemetry_ping && (
+              <Zap size={10} title={t('equipment.card.iotAutoSynced')} />
+            )}
+          </span>
+          {forklift.iot_device_id && (
+            <span className={`forklift-card-iot ${iotLive ? 'live' : 'offline'}`}>
+              <span className="forklift-card-iot-dot" />
+              {iotLive ? t('equipment.card.iotLive') : t('equipment.card.iotOffline')}
+            </span>
+          )}
         </div>
       </div>
 

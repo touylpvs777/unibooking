@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   ChevronLeft, Fuel, Gauge, Calendar, Clock, MapPin,
-  AlertCircle, FileText, Wrench, User, Shield,
+  AlertCircle, FileText, Wrench, User, Shield, Zap,
 } from 'lucide-react'
 import { getForklift } from '@/api/forklift'
 import { ForkliftStatusBadge, ForkliftConditionBadge } from '@/components/equipment/ForkliftStatusBadge'
@@ -14,6 +14,13 @@ import './ForkliftDetailPage.css'
 import '@/styles/shared.css'
 
 const FUEL_LABEL_KEYS: Record<string, string> = { electric: 'equipment.fuel.electric', diesel: 'equipment.fuel.diesel', lpg: 'equipment.fuel.lpg', dual_fuel: 'equipment.fuel.dualFuel' }
+
+const IOT_LIVE_WINDOW_MS = 24 * 60 * 60 * 1000
+
+function isIotLive(lastPing: string | null): boolean {
+  if (!lastPing) return false
+  return Date.now() - new Date(lastPing).getTime() <= IOT_LIVE_WINDOW_MS
+}
 
 function fmtDate(iso: string | null) {
   if (!iso) return '—'
@@ -94,6 +101,7 @@ export default function ForkliftDetailPage() {
   const barColor = pct < 60 ? 'var(--color-success-500)' : pct < 85 ? 'var(--color-warning-500)' : 'var(--color-danger-500)'
 
   const warrantyExpired = forklift.warranty_expiry ? new Date(forklift.warranty_expiry) < new Date() : null
+  const iotLive = isIotLive(forklift.last_telemetry_ping)
 
   const tabs: { id: TabId; label: string; count?: number }[] = [
     { id: 'overview', label: t('equipment.detail.tabs.overview') },
@@ -218,12 +226,25 @@ export default function ForkliftDetailPage() {
           <div className="fd-sidebar">
             {/* Hour Meter */}
             <div className="fd-card">
-              <div className="fd-card-header"><Clock size={16} /> {t('equipment.detail.hourMeter')}</div>
+              <div className="fd-card-header">
+                <Clock size={16} /> {t('equipment.detail.hourMeter')}
+                {forklift.iot_device_id && (
+                  <span className={`fd-iot-status ${iotLive ? 'live' : 'offline'}`}>
+                    <span className="fd-iot-dot" />
+                    {iotLive ? t('equipment.card.iotLive') : t('equipment.card.iotOffline')}
+                  </span>
+                )}
+              </div>
               <div className="fd-card-body">
                 <div className="fd-hours-big">
                   {forklift.current_hour_meter.toLocaleString(undefined, { maximumFractionDigits: 1 })}
                   <span className="fd-hours-unit"> {t('equipment.detail.hoursUnit')}</span>
                 </div>
+                {forklift.last_telemetry_ping && (
+                  <div className="fd-hours-synced">
+                    <Zap size={11} /> {t('equipment.card.iotAutoSynced')}
+                  </div>
+                )}
                 <div className="fd-hours-bar">
                   <div className="fd-hours-bar-track"><div className="fd-hours-bar-fill" style={{ width: `${pct}%`, background: barColor }} /></div>
                   <div className="fd-hours-bar-label">

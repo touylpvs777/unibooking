@@ -1,0 +1,60 @@
+{
+  "common": {
+    "brandName": "DK Service"
+  },
+  "dashboard": {
+    "exec": {
+      "eyebrow": "Обзор для руководства",
+      "title": "Центр управления арендой",
+      "kpi": {
+        "totalFleet": "Весь парк",
+        "totalFleetSub": "Зарегистрированные погрузчики",
+        "activeRented": "В аренде",
+        "activeRentedSub": "Единицы, находящиеся в аренде",
+        "utilizationRate": "Коэффициент использования",
+        "utilizationRateSub": "Доля арендованных от всего парка",
+        "pendingMaintenance": "Ожидает ТО",
+        "pendingMaintenanceSub": "Открытые заявки на ТО / осмотр",
+        "pendingMaintenanceCritical": "{{count}} в процессе",
+        "totalStockValue": "Общая стоимость склада",
+        "totalStockValueSub": "Капитал, вложенный в запчасти",
+        "lowStockAlerts": "Низкий остаток",
+        "lowStockAlertsItems": "{{count}} позиций",
+        "lowStockAlertsSub": "Ниже точки повторного заказа",
+        "lowStockAlertsCritical": "{{count}} критично"
+      },
+      "chart": {
+        "utilizationTab": "Тренд использования парка",
+        "revenueTab": "Доход и расходы на ТО",
+        "last6Months": "Последние 6 месяцев",
+        "utilizationSeries": "Использование %",
+        "revenueSeries": "Доход",
+        "maintenanceSeries": "Расходы на ТО"
+      },
+      "contracts": {
+        "title": "Активные договоры аренды",
+        "columnContractId": "№ договора",
+        "columnCustomerName": "Имя клиента",
+        "columnForkliftModel": "Модель погрузчика",
+        "columnEndDate": "Дата окончания",
+        "columnStatus": "Статус"
+      },
+      "lowStock": {
+        "title": "Критически низкий запас",
+        "minSuffix": "мин."
+      },
+      "status": {
+        "booked": "Забронировано",
+        "onRent": "В аренде",
+        "expiringSoon": "Скоро истекает",
+        "overdue": "Просрочено",
+        "returned": "Возвращено",
+        "cancelled": "Отменено"
+      },
+      "customizer": {
+        "fontSize": "Размер шрифта",
+        "language": "Язык"
+      }
+    }
+  }
+}

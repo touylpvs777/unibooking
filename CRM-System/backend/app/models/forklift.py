@@ -116,6 +116,14 @@ class Forklift(Base):
     initial_hour_meter: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     current_hour_meter: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
 
+    # ── IoT Telemetry (GPS/hour-meter devices) ────────────────────────────
+    iot_device_id: Mapped[str | None] = mapped_column(
+        String(100), nullable=True, unique=True, index=True,
+    )
+    last_telemetry_ping: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True,
+    )
+
     @property
     def meter_hours(self) -> int:
         """Integer engine-hours view for the Asset Registry API. `current_hour_meter`
