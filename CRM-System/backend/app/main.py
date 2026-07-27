@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy import select, text
-from sqlalchemy.exc import OperationalError
+from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
@@ -387,6 +387,30 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         status_code=422,
         content={
             "detail": jsonable_encoder(exc.errors()),
+            "error_id": error_id,
+        },
+    )
+
+
+@app.exception_handler(IntegrityError)
+async def integrity_error_handler(request: Request, exc: IntegrityError):
+    # Safety net for the ~50+ commit sites that don't already catch this locally
+    # (most services do, with a tailored 409 message — see e.g. customer_service.py).
+    # The `get_db` dependency (app/database/session.py) already rolled the session
+    # back in its `except Exception: await session.rollback(); raise` block before
+    # this handler runs, so no rollback call is needed (or possible) here.
+    error_id = uuid.uuid4().hex[:12]
+    logger.warning(
+        "Integrity error [%s] %s %s — %s",
+        error_id,
+        request.method,
+        request.url.path,
+        str(getattr(exc, "orig", exc)),
+    )
+    return JSONResponse(
+        status_code=400,
+        content={
+            "detail": "Data already exists or constraint violated. Please check your input.",
             "error_id": error_id,
         },
     )

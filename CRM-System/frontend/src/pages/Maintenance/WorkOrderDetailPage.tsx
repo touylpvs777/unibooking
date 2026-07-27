@@ -69,7 +69,7 @@ export default function WorkOrderDetailPage() {
           {canComplete && <button className="btn btn-primary" disabled={aL} onClick={() => setCompleteModal(true)}><Check size={14} /> {t('maintenance.workOrders.detail.completeAction')}</button>}
           {canVerify && <button className="btn btn-primary" disabled={aL} onClick={() => doAction(t('maintenance.status.verified'), () => verifyWorkOrder(wo.id))}><ShieldCheck size={14} /> {t('maintenance.workOrders.detail.verify')}</button>}
           {canAddCost && <button className="btn btn-secondary" disabled={aL} onClick={() => setCostModal(true)}><DollarSign size={14} /> {t('maintenance.workOrders.detail.addCost')}</button>}
-          {canCancel && <button className="btn btn-secondary" disabled={aL} onClick={() => doAction(t('common.cancelled'), () => cancelWorkOrder(wo.id, 'Cancelled by user'))}><X size={14} /> {t('common.cancel')}</button>}
+          {canCancel && <button className="btn btn-secondary" disabled={aL} onClick={() => doAction(t('common.cancelled'), () => cancelWorkOrder(wo.id, t('maintenance.workOrders.detail.cancelReasonDefault')))}><X size={14} /> {t('common.cancel')}</button>}
         </div>
       </div>
 

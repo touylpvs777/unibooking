@@ -159,7 +159,7 @@ export default function RentalContractDetailPage() {
           )}
           {actions.includes('reject') && (
             <button className="btn btn-secondary" disabled={actionLoading}
-              onClick={() => doAction(t('rental.detail.toasts.revisionRequested'), () => rejectContract(ct.id, 'Revision needed'))}>
+              onClick={() => doAction(t('rental.detail.toasts.revisionRequested'), () => rejectContract(ct.id, t('rental.detail.reasons.revisionNeeded')))}>
               <RotateCcw size={14} /> {t('rental.detail.requestRevision')}
             </button>
           )}
@@ -195,7 +195,7 @@ export default function RentalContractDetailPage() {
           )}
           {actions.includes('cancel') && (
             <button className="btn btn-secondary" disabled={actionLoading}
-              onClick={() => doAction(t('common.cancelled'), () => cancelContract(ct.id, 'Cancelled by user'))}>
+              onClick={() => doAction(t('common.cancelled'), () => cancelContract(ct.id, t('rental.detail.reasons.cancelledByUser')))}>
               <X size={14} /> {t('common.cancel')}
             </button>
           )}
@@ -377,7 +377,7 @@ export default function RentalContractDetailPage() {
                             {t('rental.detail.approve')}
                           </button>
                           <button className="btn btn-secondary btn-sm" disabled={actionLoading}
-                            onClick={() => doAction(t('rental.detail.toasts.extensionRejected'), () => rejectExtension(ct.id, ext.id, 'Rejected'))}>
+                            onClick={() => doAction(t('rental.detail.toasts.extensionRejected'), () => rejectExtension(ct.id, ext.id, t('rental.detail.reasons.rejected')))}>
                             {t('common.rejected')}
                           </button>
                         </div>

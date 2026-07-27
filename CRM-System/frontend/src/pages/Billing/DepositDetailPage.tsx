@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { AlertCircle, ArrowLeft } from 'lucide-react'
 import { getDeposit, receiveDeposit, refundDeposit, forfeitDeposit, applyDeposit, getInvoices } from '@/api/billing'
 import type { DepositOut, InvoiceOut } from '@/types/billing'
+import { getHeaderColorClass } from '@/utils/routeHeaderColor'
 import '@/styles/shared.css'
 import '@/styles/detail.css'
 
@@ -28,6 +29,7 @@ export default function DepositDetailPage() {
   const { t } = useTranslation()
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const headerColorClass = getHeaderColorClass(useLocation().pathname)
   const [dep, setDep] = useState<DepositOut | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -76,7 +78,7 @@ export default function DepositDetailPage() {
 
   return (
     <div>
-      <div className="page-header">
+      <div className={`page-header page-header-banner ${headerColorClass}`}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <button className="btn btn-secondary" onClick={() => navigate('/billing/deposits')} style={{ padding: '6px 10px' }}><ArrowLeft size={16} /></button>
           <div>

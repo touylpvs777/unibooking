@@ -7,6 +7,7 @@ import CustomerSelect from '@/components/billing/CustomerSelect'
 import { toast } from '@/store/toastStore'
 import type { ReferenceType } from '@/types/billing'
 import type { Customer } from '@/types/customer'
+import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 
 interface LineItemRow {
@@ -98,7 +99,7 @@ export default function InvoiceFormPage() {
         <ChevronLeft size={16} /> {t('billing.invoice.form.backToList')}
       </button>
 
-      <div className="page-header" style={{ marginBottom: 24 }}><h1>{t('billing.invoice.form.title')}</h1></div>
+      <PageHeader title={t('billing.invoice.form.title')} style={{ marginBottom: 24 }} />
 
       <div style={{ maxWidth: 900, background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 10, padding: 24 }}>
         <form onSubmit={handleSubmit} className="form-grid">

@@ -5,6 +5,7 @@ import { ChevronLeft, AlertCircle } from 'lucide-react'
 import { createQuotation } from '@/api/quotation'
 import type { QuotationType } from '@/types/quotation'
 import { toast } from '@/store/toastStore'
+import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 
 const EMPTY = {
@@ -79,9 +80,7 @@ export default function QuotationFormPage() {
         <ChevronLeft size={16} /> {t('quotations.form.backToQuotations')}
       </button>
 
-      <div className="page-header" style={{ marginBottom: 24 }}>
-        <h1>{t('quotations.form.newQuotation')}</h1>
-      </div>
+      <PageHeader title={t('quotations.form.newQuotation')} style={{ marginBottom: 24 }} />
 
       <div style={{ maxWidth: 700, background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 10, padding: 24 }}>
         <form onSubmit={handleSubmit} className="form-grid">

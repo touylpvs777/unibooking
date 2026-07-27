@@ -7,11 +7,12 @@ import {
   Package, Truck, FileText, ClipboardList,
   Building2, ArrowRightLeft, Wrench, Radio,
   Box, Receipt, CreditCard, Landmark, FileSpreadsheet, Warehouse, LogOut,
-  UserCircle, KeyRound, PanelLeftClose, PanelLeftOpen, Pencil, Check,
+  UserCircle, KeyRound, PanelLeftClose, PanelLeftOpen,
 } from 'lucide-react'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import { useAuthStore } from '@/store/authStore'
 import { useSidebarStore } from '@/store/sidebarStore'
+import { useCompanyStore } from '@/store/companyStore'
 import './Sidebar.css'
 
 interface NavGroup {
@@ -56,14 +57,14 @@ const NAV_GROUPS: NavGroup[] = [
     id: 'maintenance',
     labelKey: 'nav.groups.maintenance',
     items: [
-      { to: '/maintenance', labelKey: 'nav.items.dashboard', icon: Wrench },
+      { to: '/maintenance', labelKey: 'nav.items.maintenance', icon: Wrench },
     ],
   },
   {
     id: 'inventory',
     labelKey: 'nav.groups.inventory',
     items: [
-      { to: '/inventory', labelKey: 'nav.items.dashboard', icon: Box },
+      { to: '/inventory', labelKey: 'nav.items.inventory', icon: Box },
       { to: '/catalog', labelKey: 'nav.items.products', icon: Package },
     ],
   },
@@ -78,7 +79,7 @@ const NAV_GROUPS: NavGroup[] = [
     id: 'finance',
     labelKey: 'nav.groups.finance',
     items: [
-      { to: '/billing', labelKey: 'nav.items.dashboard', icon: Receipt },
+      { to: '/billing', labelKey: 'nav.items.billing', icon: Receipt },
       { to: '/billing/invoices', labelKey: 'nav.items.invoices', icon: FileText },
       { to: '/billing/payments', labelKey: 'nav.items.payments', icon: CreditCard },
       { to: '/billing/deposits', labelKey: 'nav.items.deposits', icon: Landmark },
@@ -152,44 +153,8 @@ export default function Sidebar() {
     navigate('/login', { replace: true })
   }
 
-  const [logoSrc, setLogoSrc] = useState<string | null>(() => localStorage.getItem('sidebarLogo'))
-  const logoInputRef = useRef<HTMLInputElement>(null)
-
-  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    const reader = new FileReader()
-    reader.onload = () => {
-      const result = reader.result
-      if (typeof result !== 'string') return
-      setLogoSrc(result)
-      try {
-        localStorage.setItem('sidebarLogo', result)
-      } catch {
-        // localStorage quota exceeded (e.g. very large image) — keep the logo in memory for this session only
-      }
-    }
-    reader.readAsDataURL(file)
-    e.target.value = ''
-  }
-
-  const [companyName, setCompanyName] = useState<string>(() => localStorage.getItem('companyName') || 'DK Service')
-  const [nameDraft, setNameDraft] = useState(companyName)
-
-  const saveCompanyName = () => {
-    const trimmed = nameDraft.trim() || 'DK Service'
-    setCompanyName(trimmed)
-    setNameDraft(trimmed)
-    localStorage.setItem('companyName', trimmed)
-  }
-
-  const handleNameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      saveCompanyName()
-      e.currentTarget.blur()
-    }
-  }
+  const brandLogoUrl = useCompanyStore((s) => s.logoUrl)
+  const brandCompanyName = useCompanyStore((s) => s.companyName) || t('common.brandName')
 
   return (
     <>
@@ -199,56 +164,21 @@ export default function Sidebar() {
         aria-hidden="true"
       />
 
-      <aside className="sidebar transition-all duration-300" data-state={sidebarState} aria-label="Main navigation">
+      <aside className="sidebar transition-all duration-300" data-state={sidebarState} aria-label={t('common.mainNavigation')}>
         {/* Brand */}
         <div className="sidebar-brand">
-          <NavLink to="/dashboard" className="sidebar-brand-icon-link" onClick={closeMobile} title={companyName}>
-            <div className="sidebar-brand-icon-wrap">
-              <div className="sidebar-brand-icon">
-                {logoSrc
-                  ? <img src={logoSrc} alt="" className="sidebar-brand-logo-img" />
-                  : <Building2 size={18} />}
-              </div>
-              <button
-                type="button"
-                className="sidebar-logo-edit-btn"
-                title={t('common.changeLogo', 'Change logo')}
-                onClick={(e) => { e.preventDefault(); e.stopPropagation(); logoInputRef.current?.click() }}
-              >
-                <Pencil size={10} />
-              </button>
+          <NavLink to="/dashboard" className="sidebar-brand-icon-link" onClick={closeMobile} title={brandCompanyName}>
+            <div className="sidebar-brand-icon">
+              {brandLogoUrl
+                ? <img src={brandLogoUrl} alt="" className="sidebar-brand-logo-img" />
+                : <Building2 size={18} />}
             </div>
           </NavLink>
 
           {isExpanded && (
-            <div className="sidebar-brand-name-edit">
-              <input
-                type="text"
-                className="sidebar-brand-name-input"
-                value={nameDraft}
-                onChange={(e) => setNameDraft(e.target.value)}
-                onKeyDown={handleNameKeyDown}
-                placeholder={t('common.brandName')}
-                aria-label={t('common.companyName', 'Company name')}
-              />
-              <button
-                type="button"
-                className="sidebar-brand-name-save"
-                title={t('common.save', 'Save')}
-                onClick={saveCompanyName}
-              >
-                <Check size={13} />
-              </button>
-            </div>
+            <span className="sidebar-brand-name-text">{brandCompanyName}</span>
           )}
         </div>
-        <input
-          ref={logoInputRef}
-          type="file"
-          accept="image/*"
-          hidden
-          onChange={handleLogoChange}
-        />
 
         {/* Navigation */}
         <nav className="sidebar-nav">
@@ -297,10 +227,10 @@ export default function Sidebar() {
           type="button"
           className="sidebar-toggle-btn"
           onClick={toggle}
-          title={isExpanded ? t('common.collapseSidebar', 'Collapse') : t('common.expandSidebar', 'Expand')}
+          title={isExpanded ? t('nav.collapseSidebar') : t('nav.expandSidebar')}
         >
           {isExpanded ? <PanelLeftClose size={16} /> : <PanelLeftOpen size={16} />}
-          {isExpanded && <span className="sidebar-nav-label">{t('common.collapseSidebar', 'Collapse')}</span>}
+          {isExpanded && <span className="sidebar-nav-label">{t('nav.collapseSidebar')}</span>}
         </button>
 
         {/* Footer */}

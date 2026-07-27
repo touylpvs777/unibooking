@@ -7,6 +7,7 @@ import { Badge, type BadgeVariant } from '@/components/ui/Badge'
 import Modal from '@/components/ui/Modal'
 import { toast } from '@/store/toastStore'
 import type { DepositOut } from '@/types/billing'
+import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 
 function fmtDate(iso: string | null) { return iso ? new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—' }
@@ -64,15 +65,11 @@ export default function DepositPage() {
 
   return (
     <div>
-      <div className="page-header">
-        <div>
-          <h1>{t('billing.deposit.list.title')}</h1>
-          <p className="page-header-sub">{t('billing.deposit.list.subtitle', { count: total })}</p>
-        </div>
+      <PageHeader title={t('billing.deposit.list.title')} subtitle={t('billing.deposit.list.subtitle', { count: total })}>
         <button className="btn btn-ghost" onClick={load} disabled={isLoading}>
           <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('billing.common.refresh')}
         </button>
-      </div>
+      </PageHeader>
 
       {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}
 

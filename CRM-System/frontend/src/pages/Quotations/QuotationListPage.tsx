@@ -9,6 +9,7 @@ import { useQuotations } from '@/hooks/useQuotations'
 import { QuotationStatusBadge, QuotationTypeBadge } from '@/components/quotation/QuotationStatusBadge'
 import ConfirmDialog from '@/components/ui/ConfirmDialog'
 import type { Quotation } from '@/types/quotation'
+import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 
 function fmtDate(iso: string | null) {
@@ -73,11 +74,7 @@ export default function QuotationListPage() {
 
   return (
     <div>
-      <div className="page-header">
-        <div>
-          <h1>{t('quotations.list.title')}</h1>
-          <p className="page-header-sub">{t('quotations.list.totalCount', { count: total })}</p>
-        </div>
+      <PageHeader title={t('quotations.list.title')} subtitle={t('quotations.list.totalCount', { count: total })}>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="btn btn-ghost" onClick={refetch} disabled={isLoading} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('quotations.list.refresh')}
@@ -86,7 +83,7 @@ export default function QuotationListPage() {
             <Plus size={15} /> {t('quotations.list.newQuotation')}
           </button>
         </div>
-      </div>
+      </PageHeader>
 
       {error && (
         <div className="page-error">

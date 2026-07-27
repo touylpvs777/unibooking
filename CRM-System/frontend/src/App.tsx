@@ -57,6 +57,7 @@ const IoTManagementPage = lazy(() => import('@/pages/IoT/IoTManagementPage'))
 const ProjectListPage = lazy(() => import('@/pages/Projects/ProjectListPage'))
 const ProjectDetailPage = lazy(() => import('@/pages/Projects/ProjectDetailPage'))
 const SettingsPage = lazy(() => import('@/pages/Settings/Settings'))
+const ChangePasswordPage = lazy(() => import('@/pages/Settings/ChangePasswordPage'))
 const RentalMvpDashboard = lazy(() => import('@/pages/RentalMvp/RentalDashboard'))
 
 function PageLoader() {
@@ -90,7 +91,7 @@ export default function App() {
             <Route path="/reports"  element={<Suspense fallback={<PageLoader />}><ReportsPage /></Suspense>} />
             <Route path="/settings" element={<Suspense fallback={<PageLoader />}><SettingsPage /></Suspense>} />
             <Route path="/profile" element={<Placeholder name="My Profile" />} />
-            <Route path="/change-password" element={<Placeholder name="Change Password" />} />
+            <Route path="/change-password" element={<Suspense fallback={<PageLoader />}><ChangePasswordPage /></Suspense>} />
 
             <Route path="/catalog"                element={<Suspense fallback={<PageLoader />}><CatalogPage /></Suspense>} />
             <Route path="/catalog/products/:id"   element={<Suspense fallback={<PageLoader />}><ProductDetailPage /></Suspense>} />

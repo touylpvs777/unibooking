@@ -70,3 +70,12 @@ class UserService:
     async def delete(self, user: User) -> None:
         await self.db.delete(user)
         await self.db.commit()
+
+    async def change_password(self, user: User, current_password: str, new_password: str) -> bool:
+        if not verify_password(current_password, user.hashed_password):
+            logger.warning("change_password: current password mismatch for user id=%s", user.id)
+            return False
+        user.hashed_password = hash_password(new_password)
+        await self.db.commit()
+        logger.info("change_password: password changed for user id=%s", user.id)
+        return True

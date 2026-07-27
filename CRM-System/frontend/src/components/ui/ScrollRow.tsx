@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
 import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface ScrollRowProps {
@@ -9,6 +10,7 @@ interface ScrollRowProps {
 }
 
 export default function ScrollRow({ title, sub, children }: ScrollRowProps) {
+  const { t } = useTranslation()
   const trackRef = useRef<HTMLDivElement>(null)
   const [canLeft, setCanLeft] = useState(false)
   const [canRight, setCanRight] = useState(false)
@@ -44,10 +46,10 @@ export default function ScrollRow({ title, sub, children }: ScrollRowProps) {
           {sub && <span className="mp-section-sub">{sub}</span>}
         </div>
         <div className="mp-row-nav">
-          <button type="button" className="mp-row-nav-btn" onClick={() => scrollBy(-1)} disabled={!canLeft} aria-label="Scroll left">
+          <button type="button" className="mp-row-nav-btn" onClick={() => scrollBy(-1)} disabled={!canLeft} aria-label={t('common.scrollLeft')}>
             <ChevronLeft size={16} />
           </button>
-          <button type="button" className="mp-row-nav-btn" onClick={() => scrollBy(1)} disabled={!canRight} aria-label="Scroll right">
+          <button type="button" className="mp-row-nav-btn" onClick={() => scrollBy(1)} disabled={!canRight} aria-label={t('common.scrollRight')}>
             <ChevronRight size={16} />
           </button>
         </div>

@@ -9,6 +9,7 @@ import { useRentalContracts } from '@/hooks/useRentals'
 import { RentalStatusBadge, RentalContractTypeBadge } from '@/components/rental/RentalStatusBadge'
 import ConfirmDialog from '@/components/ui/ConfirmDialog'
 import type { RentalContract } from '@/types/rental'
+import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 
 function fmtDate(iso: string | null) {
@@ -76,11 +77,7 @@ export default function RentalContractListPage() {
 
   return (
     <div>
-      <div className="page-header">
-        <div>
-          <h1>{t('rental.list.title')}</h1>
-          <p className="page-header-sub">{t('rental.list.totalCount', { count: total })}</p>
-        </div>
+      <PageHeader title={t('rental.list.title')} subtitle={t('rental.list.totalCount', { count: total })}>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="btn btn-ghost" onClick={refetch} disabled={isLoading} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('rental.list.refresh')}
@@ -89,7 +86,7 @@ export default function RentalContractListPage() {
             <Plus size={15} /> {t('rental.list.newContract')}
           </button>
         </div>
-      </div>
+      </PageHeader>
 
       {error && (
         <div className="page-error">

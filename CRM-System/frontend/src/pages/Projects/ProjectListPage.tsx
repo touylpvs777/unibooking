@@ -8,6 +8,7 @@ import { MilestoneProgressBar } from '@/components/projects/MilestoneProgressBar
 import { toast } from '@/store/toastStore'
 import ProjectForm from './ProjectForm'
 import type { Project, ProjectCreate, ProjectUpdate } from '@/types/project'
+import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 
 const STATUS_VALUES = ['', 'draft', 'survey', 'design', 'boq_approved', 'installation', 'handover', 'completed']
@@ -75,15 +76,11 @@ export default function ProjectListPage() {
 
   return (
     <div>
-      <div className="page-header">
-        <div>
-          <h1>{t('projects.title')}</h1>
-          <p className="page-header-sub">{t('projects.totalCount', { count: total })}</p>
-        </div>
+      <PageHeader title={t('projects.title')} subtitle={t('projects.totalCount', { count: total })}>
         <button className="btn btn-primary" onClick={() => setFormOpen(true)}>
           <Plus size={14} /> {t('projects.createProject')}
         </button>
-      </div>
+      </PageHeader>
 
       {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}
 

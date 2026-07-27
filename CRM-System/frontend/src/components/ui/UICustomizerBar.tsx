@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { useCustomUI, type FontSizeTier } from '@/config/customLanguageStore'
 
-const FONT_SIZE_OPTIONS: { tier: FontSizeTier; label: string }[] = [
-  { tier: 'small', label: 'S' },
-  { tier: 'medium', label: 'M' },
-  { tier: 'large', label: 'L' },
+const FONT_SIZE_OPTIONS: { tier: FontSizeTier; label: string; titleKey: string }[] = [
+  { tier: 'small', label: 'S', titleKey: 'dashboard.exec.customizer.small' },
+  { tier: 'medium', label: 'M', titleKey: 'dashboard.exec.customizer.medium' },
+  { tier: 'large', label: 'L', titleKey: 'dashboard.exec.customizer.large' },
 ]
 
 // Language now lives entirely in the topbar (LanguageToggle → i18next,
@@ -23,7 +23,7 @@ export default function UICustomizerBar() {
             type="button"
             onClick={() => setFontSize(opt.tier)}
             aria-pressed={fontSize === opt.tier}
-            title={opt.tier}
+            title={t(opt.titleKey)}
             className={`w-7 rounded-md py-1 text-xs font-semibold transition-colors ${
               fontSize === opt.tier ? 'bg-violet-500/20 text-violet-300' : 'text-gray-400 hover:text-gray-100'
             }`}

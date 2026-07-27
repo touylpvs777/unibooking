@@ -22,7 +22,7 @@ export interface DistributionBarChartProps {
   colorMap?: Record<string, string>
   defaultColor?: string
   /** Tooltip series label */
-  label?: string
+  label: string
   height?: number
 }
 
@@ -38,7 +38,7 @@ export default function DistributionBarChart({
   data,
   colorMap = {},
   defaultColor = '#94a3b8',
-  label = 'Count',
+  label,
   height = 200,
 }: DistributionBarChartProps) {
   return (

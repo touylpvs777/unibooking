@@ -10,6 +10,7 @@ import { LeadStatusBadge } from '@/components/ui/Badge'
 import ConfirmDialog from '@/components/ui/ConfirmDialog'
 import LeadForm from './LeadForm'
 import type { Lead, LeadCreate, LeadStatus, LeadSource } from '@/types/lead'
+import PageHeader from '@/components/layout/PageHeader'
 import './LeadsPage.css'
 
 const PAGE_SIZE = 20
@@ -156,15 +157,11 @@ export default function LeadsPage() {
   return (
     <div>
       {/* Header */}
-      <div className="page-header">
-        <div>
-          <h1>{t('leads.list.title')}</h1>
-          <p className="page-header-sub">{t('leads.list.totalCount', { count: leads.length })}</p>
-        </div>
+      <PageHeader title={t('leads.list.title')} subtitle={t('leads.list.totalCount', { count: leads.length })}>
         <button className="btn btn-primary" onClick={openCreate}>
           <TrendingUp size={15} /> {t('leads.list.newLead')}
         </button>
-      </div>
+      </PageHeader>
 
       {error && (
         <div className="page-error"><AlertCircle size={16} /> {error}</div>

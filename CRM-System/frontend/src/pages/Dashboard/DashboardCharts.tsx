@@ -5,7 +5,7 @@ import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts'
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+const MONTH_KEYS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun']
 
 const TOOLTIP_STYLE = {
   contentStyle: { background: '#1c1c1e', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10, fontSize: 12, padding: '8px 12px' },
@@ -16,15 +16,15 @@ const TOOLTIP_STYLE = {
 const lakShort = (v: number) =>
   v >= 1_000_000 ? `${(v / 1_000_000).toFixed(1)}M` : v >= 1_000 ? `${(v / 1_000).toFixed(0)}K` : String(v)
 
-function buildUtilizationTrend(current: number) {
+function buildUtilizationTrend(current: number, months: string[]) {
   const deltas = [18, 14, 11, 7, 3, 0]
-  return MONTHS.map((month, i) => ({ month, value: Math.max(0, current - deltas[i]) }))
+  return months.map((month, i) => ({ month, value: Math.max(0, current - deltas[i]) }))
 }
 
-function buildFinanceTrend(currentRevenue: number, currentMaintenance: number) {
+function buildFinanceTrend(currentRevenue: number, currentMaintenance: number, months: string[]) {
   const revenueFactors = [0.72, 0.79, 0.85, 0.9, 0.95, 1]
   const maintenanceFactors = [0.68, 0.83, 0.52, 1.1, 0.76, 1]
-  return MONTHS.map((month, i) => ({
+  return months.map((month, i) => ({
     month,
     revenue: Math.round(currentRevenue * revenueFactors[i]),
     maintenance: Math.round(currentMaintenance * maintenanceFactors[i]),
@@ -43,8 +43,9 @@ export default function DashboardCharts({ utilizationRate, currentRevenueLak, cu
   const { t } = useTranslation()
   const [view, setView] = useState<View>('utilization')
 
-  const utilizationData = buildUtilizationTrend(utilizationRate)
-  const financeData = buildFinanceTrend(currentRevenueLak, currentMaintenanceCostLak)
+  const months = MONTH_KEYS.map((key) => t(`dashboard.exec.chart.months.${key}`))
+  const utilizationData = buildUtilizationTrend(utilizationRate, months)
+  const financeData = buildFinanceTrend(currentRevenueLak, currentMaintenanceCostLak, months)
   const trendStart = utilizationData[0].value
 
   return (

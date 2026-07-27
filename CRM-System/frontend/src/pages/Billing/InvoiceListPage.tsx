@@ -6,6 +6,7 @@ import { getInvoices } from '@/api/billing'
 import { Badge } from '@/components/ui/Badge'
 import type { BadgeVariant } from '@/components/ui/Badge'
 import type { InvoiceOut } from '@/types/billing'
+import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 
 function fmtDate(iso: string | null) { return iso ? new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—' }
@@ -54,11 +55,7 @@ export default function InvoiceListPage() {
 
   return (
     <div>
-      <div className="page-header">
-        <div>
-          <h1>{t('billing.invoice.list.title')}</h1>
-          <p className="page-header-sub">{t('billing.invoice.list.subtitle', { count: total })}</p>
-        </div>
+      <PageHeader title={t('billing.invoice.list.title')} subtitle={t('billing.invoice.list.subtitle', { count: total })}>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="btn btn-ghost" onClick={load} disabled={isLoading}>
             <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('billing.common.refresh')}
@@ -67,7 +64,7 @@ export default function InvoiceListPage() {
             <Plus size={15} /> {t('billing.invoice.list.newInvoice')}
           </button>
         </div>
-      </div>
+      </PageHeader>
 
       {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}
 

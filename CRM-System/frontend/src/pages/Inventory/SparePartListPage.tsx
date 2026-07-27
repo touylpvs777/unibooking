@@ -7,6 +7,7 @@ import { PartCategoryBadge } from '@/components/inventory/StockBadge'
 import InventoryImportModal from '@/components/inventory/InventoryImportModal'
 import type { SparePart, PartListParams } from '@/types/inventory'
 import { resolveMediaUrl } from '@/utils/media'
+import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 import '@/styles/detail.css'
 
@@ -41,14 +42,13 @@ export default function SparePartListPage() {
 
   return (
     <div>
-      <div className="page-header">
-        <div><h1>{t('inventory.spareParts.list.title')}</h1><p className="page-header-sub">{t('inventory.spareParts.list.subtitle', { count: total })}</p></div>
+      <PageHeader title={t('inventory.spareParts.list.title')} subtitle={t('inventory.spareParts.list.subtitle', { count: total })}>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="btn btn-ghost" onClick={load} disabled={isLoading} style={{ display: 'flex', alignItems: 'center', gap: 6 }}><RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('inventory.common.refresh')}</button>
           <button className="btn btn-ghost" onClick={() => setImportOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Upload size={14} /> {t('inventory.import.button')}</button>
           <button className="btn btn-primary" onClick={() => navigate('/inventory/parts/new')}><Plus size={15} /> {t('inventory.spareParts.list.addPart')}</button>
         </div>
-      </div>
+      </PageHeader>
       {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}
       <InventoryImportModal
         isOpen={isImportOpen}

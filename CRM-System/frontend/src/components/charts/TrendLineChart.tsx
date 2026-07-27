@@ -16,7 +16,7 @@ export interface TrendLineChartProps {
   /** Key to use for the Y axis value (default "count") */
   dataKey?: string
   /** Series label shown in tooltip */
-  name?: string
+  name: string
   /** Line + dot color */
   color?: string
   height?: number
@@ -34,7 +34,7 @@ export default function TrendLineChart({
   data,
   xKey = 'month',
   dataKey = 'count',
-  name = 'Count',
+  name,
   color = '#2563eb',
   height = 200,
 }: TrendLineChartProps) {

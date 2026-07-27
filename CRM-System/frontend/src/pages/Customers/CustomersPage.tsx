@@ -11,6 +11,7 @@ import { CustomerStatusBadge } from '@/components/ui/Badge'
 import ConfirmDialog from '@/components/ui/ConfirmDialog'
 import CustomerForm from './CustomerForm'
 import type { Customer, CustomerCreate, CustomerStatus } from '@/types/customer'
+import PageHeader from '@/components/layout/PageHeader'
 import './CustomersPage.css'
 
 const PAGE_SIZE = 20
@@ -136,15 +137,11 @@ export default function CustomersPage() {
   return (
     <div>
       {/* Header */}
-      <div className="page-header">
-        <div>
-          <h1>{t('customers.list.title')}</h1>
-          <p className="page-header-sub">{t('customers.list.totalCount', { count: customers.length })}</p>
-        </div>
+      <PageHeader title={t('customers.list.title')} subtitle={t('customers.list.totalCount', { count: customers.length })}>
         <button className="btn btn-primary" onClick={openCreate}>
           <UserPlus size={15} /> {t('customers.list.newCustomer')}
         </button>
-      </div>
+      </PageHeader>
 
       {/* Error */}
       {error && (

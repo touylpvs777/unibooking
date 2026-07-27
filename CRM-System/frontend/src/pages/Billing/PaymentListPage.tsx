@@ -5,6 +5,7 @@ import { AlertCircle, RefreshCw, ChevronLeft, ChevronRight, CreditCard, Search }
 import { getPayments } from '@/api/billing'
 import { Badge, type BadgeVariant } from '@/components/ui/Badge'
 import type { PaymentOut } from '@/types/billing'
+import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 
 function fmtDate(iso: string) { return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }
@@ -45,15 +46,11 @@ export default function PaymentListPage() {
 
   return (
     <div>
-      <div className="page-header">
-        <div>
-          <h1>{t('billing.payment.list.title')}</h1>
-          <p className="page-header-sub">{t('billing.payment.list.subtitle', { count: total })}</p>
-        </div>
+      <PageHeader title={t('billing.payment.list.title')} subtitle={t('billing.payment.list.subtitle', { count: total })}>
         <button className="btn btn-ghost" onClick={load} disabled={isLoading}>
           <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('billing.common.refresh')}
         </button>
-      </div>
+      </PageHeader>
 
       {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}
 

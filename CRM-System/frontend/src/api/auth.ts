@@ -8,3 +8,11 @@ export const logoutApi = () =>
   client.post('/auth/logout')
 
 export const getMe = () => client.get<User>('/users/me')
+
+export interface ChangePasswordRequest {
+  current_password: string
+  new_password: string
+}
+
+export const changePassword = (data: ChangePasswordRequest) =>
+  client.put('/users/me/password', data)

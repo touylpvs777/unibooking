@@ -7,6 +7,7 @@ import AssetSelect from '@/components/maintenance/AssetSelect'
 import { toast } from '@/store/toastStore'
 import type { OrderType, UserBrief } from '@/types/maintenance'
 import type { Forklift } from '@/types/forklift'
+import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 
 const TYPE_OPTIONS: { value: OrderType; labelKey: string }[] = [
@@ -69,7 +70,7 @@ export default function WorkOrderFormPage() {
         <ChevronLeft size={16} /> {t('maintenance.workOrders.form.backToList')}
       </button>
 
-      <div className="page-header" style={{ marginBottom: 24 }}><h1>{t('maintenance.workOrders.form.title')}</h1></div>
+      <PageHeader title={t('maintenance.workOrders.form.title')} style={{ marginBottom: 24 }} />
 
       <div style={{ maxWidth: 700, background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 10, padding: 24 }}>
         <form onSubmit={handleSubmit} className="form-grid">

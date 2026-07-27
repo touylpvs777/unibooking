@@ -4,6 +4,7 @@ import { AlertCircle, RefreshCw } from 'lucide-react'
 import { getPurchaseOrders } from '@/api/inventory'
 import { PurchaseOrderTable } from '@/modules/inventory'
 import type { POListItem } from '@/types/inventory'
+import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 
 export default function PurchaseOrderPage() {
@@ -37,15 +38,11 @@ export default function PurchaseOrderPage() {
 
   return (
     <div>
-      <div className="page-header">
-        <div>
-          <h1>{t('inventory.purchaseOrder.title')}</h1>
-          <p className="page-header-sub">{t('inventory.purchaseOrder.subtitle', { count: total })}</p>
-        </div>
+      <PageHeader title={t('inventory.purchaseOrder.title')} subtitle={t('inventory.purchaseOrder.subtitle', { count: total })}>
         <button className="btn btn-ghost" onClick={load} disabled={isLoading}>
           <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('inventory.common.refresh')}
         </button>
-      </div>
+      </PageHeader>
 
       {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}
 

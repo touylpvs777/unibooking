@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { AlertCircle, ChevronLeft, Send, XCircle, CheckCircle, Ban } from 'lucide-react'
 import { getInvoice, issueInvoice, sendInvoice, cancelInvoice, voidInvoice } from '@/api/billing'
@@ -8,6 +8,7 @@ import Modal from '@/components/ui/Modal'
 import PrintButton from '@/components/ui/PrintButton'
 import { toast } from '@/store/toastStore'
 import type { InvoiceDetail } from '@/types/billing'
+import { getHeaderColorClass } from '@/utils/routeHeaderColor'
 import '@/styles/shared.css'
 import '@/styles/detail.css'
 
@@ -29,6 +30,7 @@ export default function InvoiceDetailPage() {
   const { t } = useTranslation()
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const headerColorClass = getHeaderColorClass(useLocation().pathname)
   const [inv, setInv] = useState<InvoiceDetail | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -65,7 +67,7 @@ export default function InvoiceDetailPage() {
   return (
     <div>
       {/* Header */}
-      <div className="page-header">
+      <div className={`page-header page-header-banner ${headerColorClass}`}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <button className="btn btn-ghost" onClick={() => navigate('/billing/invoices')} style={{ padding: '6px 8px' }}>
             <ChevronLeft size={16} />

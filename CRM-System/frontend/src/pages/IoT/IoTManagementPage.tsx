@@ -9,6 +9,7 @@ import Modal from '@/components/ui/Modal'
 import ConfirmDialog from '@/components/ui/ConfirmDialog'
 import { EquipmentSearch } from '@/modules/equipment'
 import type { Forklift } from '@/types/forklift'
+import PageHeader from '@/components/layout/PageHeader'
 import './IoTManagementPage.css'
 import '@/styles/shared.css'
 
@@ -70,17 +71,13 @@ export default function IoTManagementPage() {
 
   return (
     <div>
-      <div className="page-header">
-        <div>
-          <h1>{t('iot.title')}</h1>
-          <p className="page-header-sub">{t('iot.subtitle')}</p>
-        </div>
+      <PageHeader title={t('iot.title')} subtitle={t('iot.subtitle')}>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="btn btn-ghost" onClick={refetch} disabled={isLoading}>
             <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('iot.refresh')}
           </button>
         </div>
-      </div>
+      </PageHeader>
 
       {error && <div className="page-error" style={{ marginBottom: 16 }}><WifiOff size={16} /> {error}</div>}
 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   getBrands,
   createBrand as apiCreate,
@@ -9,6 +10,7 @@ import { toast } from '@/store/toastStore'
 import type { Brand, BrandCreate, BrandUpdate } from '@/types/catalog'
 
 export function useBrands(activeOnly = false) {
+  const { t } = useTranslation()
   const [brands, setBrands]       = useState<Brand[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError]         = useState<string | null>(null)
@@ -20,11 +22,11 @@ export function useBrands(activeOnly = false) {
       const { data } = await getBrands(activeOnly ? { is_active: true, limit: 500 } : { limit: 500 })
       setBrands(data)
     } catch {
-      setError('Failed to load brands.')
+      setError(t('catalog.brands.toast.loadError'))
     } finally {
       setIsLoading(false)
     }
-  }, [activeOnly])
+  }, [activeOnly, t])
 
   useEffect(() => { load() }, [load])
 
@@ -32,10 +34,10 @@ export function useBrands(activeOnly = false) {
     try {
       await apiCreate(data)
       await load()
-      toast.success('Brand created successfully.')
+      toast.success(t('catalog.brands.toast.createSuccess'))
       return true
     } catch {
-      toast.error('Failed to create brand.')
+      toast.error(t('catalog.brands.toast.createError'))
       return false
     }
   }
@@ -44,10 +46,10 @@ export function useBrands(activeOnly = false) {
     try {
       await apiUpdate(id, data)
       await load()
-      toast.success('Brand updated successfully.')
+      toast.success(t('catalog.brands.toast.updateSuccess'))
       return true
     } catch {
-      toast.error('Failed to update brand.')
+      toast.error(t('catalog.brands.toast.updateError'))
       return false
     }
   }
@@ -56,10 +58,10 @@ export function useBrands(activeOnly = false) {
     try {
       await apiDelete(id)
       await load()
-      toast.success('Brand deleted.')
+      toast.success(t('catalog.brands.toast.deleteSuccess'))
       return true
     } catch {
-      toast.error('Failed to delete brand.')
+      toast.error(t('catalog.brands.toast.deleteError'))
       return false
     }
   }

@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useSidebarStore } from '@/store/sidebarStore'
 import Sidebar from './Sidebar'
 import Header from './Header'
@@ -7,6 +8,7 @@ import PrintHeader from '@/components/print/PrintHeader'
 import './AppLayout.css'
 
 export default function AppLayout() {
+  const { t } = useTranslation()
   const sidebarState = useSidebarStore((s) => s.state)
   const setState = useSidebarStore((s) => s.setState)
 
@@ -43,7 +45,7 @@ export default function AppLayout() {
       className="app-shell"
       style={{ '--sidebar-width': sidebarWidth } as React.CSSProperties}
     >
-      <a href="#main-content" className="skip-to-content">Skip to content</a>
+      <a href="#main-content" className="skip-to-content">{t('common.skipToContent')}</a>
       <PrintHeader />
       <Sidebar />
       <div className="app-main">

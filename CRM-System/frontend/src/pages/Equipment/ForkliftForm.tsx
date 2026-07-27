@@ -258,7 +258,7 @@ export default function ForkliftForm({
               type="number"
               value={form.capacity_kg}
               onChange={(e) => set('capacity_kg', e.target.value)}
-              placeholder="e.g. 1600"
+              placeholder={t('equipment.form.capacityKgPlaceholder')}
               min="0"
             />
           </div>
@@ -272,7 +272,7 @@ export default function ForkliftForm({
               type="number"
               value={form.year_manufactured}
               onChange={(e) => set('year_manufactured', e.target.value)}
-              placeholder="e.g. 2024"
+              placeholder={t('equipment.form.yearManufacturedPlaceholder')}
               min="1900"
               max="2100"
             />

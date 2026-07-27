@@ -6,6 +6,7 @@ import { getWorkOrders } from '@/api/maintenance'
 import { WOStatusBadge, WOTypeBadge, WOPriorityBadge } from '@/components/maintenance/MaintenanceStatusBadge'
 import WorkOrderCard from '@/components/maintenance/WorkOrderCard'
 import type { WorkOrder, WOListParams, WOStatus } from '@/types/maintenance'
+import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 import '@/styles/detail.css'
 
@@ -47,13 +48,12 @@ export default function WorkOrderListPage() {
 
   return (
     <div>
-      <div className="page-header">
-        <div><h1>{t('maintenance.workOrders.list.title')}</h1><p className="page-header-sub">{t('maintenance.workOrders.list.subtitle', { count: total })}</p></div>
+      <PageHeader title={t('maintenance.workOrders.list.title')} subtitle={t('maintenance.workOrders.list.subtitle', { count: total })}>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="btn btn-ghost" onClick={load} disabled={isLoading} style={{ display: 'flex', alignItems: 'center', gap: 6 }}><RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('maintenance.actions.refresh')}</button>
           <button className="btn btn-primary" onClick={() => navigate('/maintenance/work-orders/new')}><Plus size={15} /> {t('maintenance.workOrders.list.newWorkOrder')}</button>
         </div>
-      </div>
+      </PageHeader>
 
       {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}
 

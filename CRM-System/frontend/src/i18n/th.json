@@ -75,7 +75,17 @@
     "rowsPerPage": "แถวต่อหน้า",
     "selectAll": "เลือกทั้งหมด",
     "createdAt": "สร้างเมื่อ",
-    "updatedAt": "อัปเดตเมื่อ"
+    "updatedAt": "อัปเดตเมื่อ",
+    "mainNavigation": "เมนูนำทางหลัก",
+    "moreLanguages": "ภาษาเพิ่มเติม",
+    "loadingApplication": "กำลังโหลดแอปพลิเคชัน",
+    "skipToContent": "ข้ามไปยังเนื้อหา",
+    "theme": "ธีม",
+    "themeLight": "โหมดสว่าง",
+    "themeDark": "โหมดมืด",
+    "themeSystem": "ตามระบบ",
+    "scrollLeft": "เลื่อนไปทางซ้าย",
+    "scrollRight": "เลื่อนไปทางขวา"
   },
   "settings": {
     "title": "การตั้งค่าทั่วโลก",
@@ -102,7 +112,14 @@
       "logoUploadError": "ไม่สามารถอัปโหลดโลโก้ได้ในขณะนี้",
       "logoUploading": "กำลังอัปโหลดโลโก้…",
       "logoDropzoneText": "คลิกหรือลากและวางเพื่ออัปโหลดโลโก้",
-      "logoDropzoneHint": "PNG, JPG หรือ WebP"
+      "logoDropzoneHint": "PNG, JPG หรือ WebP",
+      "sidebarBranding": {
+        "title": "โลโก้แถบเมนู (อุปกรณ์นี้)",
+        "description": "ปรับแต่งโลโก้และชื่อที่แสดงในแถบเมนูของเบราว์เซอร์นี้ แยกต่างหากจากโปรไฟล์บริษัทด้านบนซึ่งใช้ในใบแจ้งหนี้และเอกสาร",
+        "nameLabel": "ชื่อที่แสดงในแถบเมนู",
+        "logoLabel": "โลโก้แถบเมนู",
+        "logoHint": "บันทึกไว้ในเบราว์เซอร์นี้เท่านั้น"
+      }
     },
     "financial": {
       "description": "ค่าตั้งต้นทางการเงิน",
@@ -177,7 +194,16 @@
       "createFirstCustomer": "สร้างลูกค้ารายแรกของคุณเพื่อเริ่มต้นใช้งาน",
       "showingRange": "แสดง {{start}}–{{end}} จาก {{total}}",
       "deleteTitle": "ลบลูกค้า",
-      "deleteMessage": "คุณแน่ใจหรือไม่ว่าต้องการลบ \"{{name}}\"? การดำเนินการนี้ไม่สามารถย้อนกลับได้"
+      "deleteMessage": "คุณแน่ใจหรือไม่ว่าต้องการลบ \"{{name}}\"? การดำเนินการนี้ไม่สามารถย้อนกลับได้",
+      "toast": {
+        "loadError": "โหลดลูกค้าไม่สำเร็จ",
+        "createSuccess": "สร้างลูกค้าสำเร็จแล้ว",
+        "createError": "สร้างลูกค้าไม่สำเร็จ",
+        "updateSuccess": "อัปเดตลูกค้าสำเร็จแล้ว",
+        "updateError": "อัปเดตลูกค้าไม่สำเร็จ",
+        "deleteSuccess": "ลบลูกค้าแล้ว",
+        "deleteError": "ลบลูกค้าไม่สำเร็จ"
+      }
     }
   },
   "leads": {
@@ -224,7 +250,16 @@
       "createFirstLead": "สร้างลูกค้าเป้าหมายรายแรกของคุณเพื่อเริ่มต้นใช้งาน",
       "showingRange": "แสดง {{start}}–{{end}} จาก {{total}}",
       "deleteTitle": "ลบลูกค้าเป้าหมาย",
-      "deleteMessage": "คุณแน่ใจหรือไม่ว่าต้องการลบ \"{{title}}\"? การดำเนินการนี้ไม่สามารถย้อนกลับได้"
+      "deleteMessage": "คุณแน่ใจหรือไม่ว่าต้องการลบ \"{{title}}\"? การดำเนินการนี้ไม่สามารถย้อนกลับได้",
+      "toast": {
+        "loadError": "โหลดลูกค้าเป้าหมายไม่สำเร็จ",
+        "createSuccess": "สร้างลูกค้าเป้าหมายแล้ว",
+        "createError": "สร้างลูกค้าเป้าหมายไม่สำเร็จ",
+        "updateSuccess": "อัปเดตลูกค้าเป้าหมายแล้ว",
+        "updateError": "อัปเดตลูกค้าเป้าหมายไม่สำเร็จ",
+        "deleteSuccess": "ลบลูกค้าเป้าหมายแล้ว",
+        "deleteError": "ลบลูกค้าเป้าหมายไม่สำเร็จ"
+      }
     }
   },
   "imageUpload": {
@@ -235,43 +270,47 @@
     "remove": "นำออก",
     "uploadedSuccessfully": "อัปโหลดสำเร็จแล้ว",
     "clickOrDrag": "คลิกหรือลากรูปภาพเพื่ออัปโหลด",
-    "hint": "JPG, PNG, WebP · สูงสุด {{size}} MB"
+    "hint": "JPG, PNG, WebP · สูงสุด {{size}} MB",
+    "previewAlt": "ตัวอย่างรูปที่อัปโหลด"
   },
   "nav": {
     "groups": {
-      "dashboard": "แดชบอร์ด",
-      "crm": "ลูกค้าสัมพันธ์",
-      "equipment": "อุปกรณ์",
-      "rental": "การเช่า",
-      "maintenance": "การบำรุงรักษา",
-      "inventory": "คลังสินค้า",
-      "finance": "การเงิน",
-      "executive": "ข้อมูลผู้บริหาร",
-      "projects": "โครงการ"
+      "dashboard": "แดชบอร์ดบริหาร",
+      "crm": "CRM",
+      "equipment": "สินทรัพย์อุปกรณ์",
+      "rental": "การดำเนินงานเช่า",
+      "maintenance": "บริการและบำรุงรักษา",
+      "inventory": "ควบคุมสินค้าคงคลัง",
+      "finance": "การเงินและบัญชี",
+      "executive": "รายงานผู้บริหาร",
+      "projects": "พอร์ตโฟลิโoprojects"
     },
     "items": {
-      "overview": "ภาพรวม",
+      "overview": "ภาพรวมการดำเนินงาน",
       "customers": "ลูกค้า",
-      "leads": "โอกาสการขาย",
-      "quotations": "ใบเสนอราคา",
-      "registry": "ทะเบียน",
-      "movements": "การเคลื่อนย้าย",
-      "contracts": "สัญญา",
-      "dashboard": "แดชบอร์ด",
-      "products": "สินค้า",
+      "leads": "โอกาสทางการขาย",
+      "quotations": "ข้อเสนอเชิงพาณิชย์",
+      "registry": "ทะเบียนสินทรัพย์",
+      "movements": "การย้ายคลัง",
+      "contracts": "สัญญาบริการ",
+      "dashboard": "แดชบอร์ดบริหาร",
+      "maintenance": "บริการและบำรุงรักษา",
+      "inventory": "การจัดการสินค้าคงคลัง",
+      "billing": "ใบแจ้งหนี้และลูกหนี้",
+      "products": "แคตตาล็อกสินค้า",
       "invoices": "ใบแจ้งหนี้",
       "payments": "การชำระเงิน",
       "deposits": "เงินมัดจำ",
-      "statements": "ใบแจ้งยอด",
+      "statements": "คำร้องแจ้งยอด",
       "activity": "กิจกรรม",
       "reports": "รายงาน",
-      "analytics": "การวิเคราะห์",
+      "analytics": "การวิเคราะห์เชิงธุรกิจ",
       "iotTelemetry": "ระบบ IoT",
       "settings": "ตั้งค่า",
       "warehouseProjects": "โครงการคลังสินค้า"
     },
-    "expandSidebar": "ขยายแถบเมนู",
-    "collapseSidebar": "ย่อแถบเมนู"
+    "expandSidebar": "ขยายแผงนำทาง",
+    "collapseSidebar": "ย่อแผงนำทาง"
   },
   "header": {
     "searchPlaceholder": "ค้นหาหน้า, การดำเนินการ...",
@@ -345,6 +384,8 @@
     "exec": {
       "eyebrow": "ภาพรวมผู้บริหาร",
       "title": "ศูนย์ควบคุมการเช่า",
+      "rentalMvpEyebrow": "DK Rental · ภาพรวมผู้บริหาร",
+      "rentalMvpTitle": "แดชบอร์ดยานพาหนะและการเช่า",
       "kpi": {
         "totalFleet": "จำนวนรถทั้งหมด",
         "totalFleetSub": "จำนวนรถโฟล์คลิฟท์ที่ลงทะเบียน",
@@ -368,7 +409,15 @@
         "last6Months": "6 เดือนล่าสุด",
         "utilizationSeries": "อัตราการใช้งาน %",
         "revenueSeries": "รายได้",
-        "maintenanceSeries": "ค่าซ่อมบำรุง"
+        "maintenanceSeries": "ค่าซ่อมบำรุง",
+        "months": {
+          "jan": "ม.ค.",
+          "feb": "ก.พ.",
+          "mar": "มี.ค.",
+          "apr": "เม.ย.",
+          "may": "พ.ค.",
+          "jun": "มิ.ย."
+        }
       },
       "contracts": {
         "title": "สัญญาเช่าที่กำลังดำเนินการ",
@@ -392,8 +441,12 @@
       },
       "customizer": {
         "fontSize": "ขนาดตัวอักษร",
-        "language": "ภาษา"
-      }
+        "language": "ภาษา",
+        "small": "เล็ก",
+        "medium": "กลาง",
+        "large": "ใหญ่"
+      },
+      "brandsWeService": "แบรนด์ที่เราให้บริการ"
     },
     "kpi": {
       "totalRevenue": "รายได้รวม",
@@ -513,9 +566,18 @@
         }
       },
       "promo": {
-        "sale": { "kicker": "ช่วงเวลาจำกัด", "title": "ลดสูงสุด — ลดถึง 50% อะไหล่" },
-        "new": { "kicker": "เปิดตัวใหม่", "title": "โมดูลใหม่สัปดาห์นี้" },
-        "staffPicks": { "kicker": "ทีมงานแนะนำ", "title": "ยอดนิยมในงานบริการภาคสนาม" }
+        "sale": {
+          "kicker": "ช่วงเวลาจำกัด",
+          "title": "ลดสูงสุด — ลดถึง 50% อะไหล่"
+        },
+        "new": {
+          "kicker": "เปิดตัวใหม่",
+          "title": "โมดูลใหม่สัปดาห์นี้"
+        },
+        "staffPicks": {
+          "kicker": "ทีมงานแนะนำ",
+          "title": "ยอดนิยมในงานบริการภาคสนาม"
+        }
       },
       "rows": {
         "mostUsed": "โมดูลที่ใช้มากที่สุด",
@@ -523,27 +585,86 @@
         "fieldService": "แอปยอดนิยมในงานบริการภาคสนาม"
       },
       "modules": {
-        "equipmentRegistry": { "title": "DK Equipment Registry", "sub": "ทะเบียนอุปกรณ์และยานพาหนะ" },
-        "customers": { "title": "DK Customers", "sub": "จัดการข้อมูลลูกค้า" },
-        "quotations": { "title": "DK Quotations", "sub": "ใบเสนอราคา" },
-        "rentalContracts": { "title": "DK Rental Contracts", "sub": "สัญญาเช่า" },
-        "movements": { "title": "DK Movements", "sub": "การเคลื่อนย้ายอุปกรณ์" },
-        "projects": { "title": "DK Projects", "sub": "โครงการและคลังสินค้า" },
-        "smartInvoicing": { "title": "DK Smart Invoicing", "sub": "ออกใบแจ้งหนี้อัตโนมัติ" },
-        "payments": { "title": "DK Payments", "sub": "การชำระเงิน" },
-        "deposits": { "title": "DK Deposits", "sub": "เงินมัดจำ" },
-        "statements": { "title": "DK Statements", "sub": "ใบแจ้งยอด" },
-        "inventory": { "title": "DK Inventory", "sub": "คลังสินค้า" },
-        "purchaseOrders": { "title": "DK Purchase Orders", "sub": "สั่งซื้ออะไหล่" },
-        "workOrders": { "title": "DK Work Orders", "sub": "จัดตารางบริการ" },
-        "assetRegistry": { "title": "DK Asset Registry", "sub": "ทะเบียนทรัพย์สิน" },
-        "maintenanceSchedule": { "title": "DK Maintenance Schedule", "sub": "การบำรุงรักษาเชิงป้องกัน" }
+        "equipmentRegistry": {
+          "title": "DK Equipment Registry",
+          "sub": "ทะเบียนอุปกรณ์และยานพาหนะ"
+        },
+        "customers": {
+          "title": "DK Customers",
+          "sub": "จัดการข้อมูลลูกค้า"
+        },
+        "quotations": {
+          "title": "DK Quotations",
+          "sub": "ใบเสนอราคา"
+        },
+        "rentalContracts": {
+          "title": "DK Rental Contracts",
+          "sub": "สัญญาเช่า"
+        },
+        "movements": {
+          "title": "DK Movements",
+          "sub": "การเคลื่อนย้ายอุปกรณ์"
+        },
+        "projects": {
+          "title": "DK Projects",
+          "sub": "โครงการและคลังสินค้า"
+        },
+        "smartInvoicing": {
+          "title": "DK Smart Invoicing",
+          "sub": "ออกใบแจ้งหนี้อัตโนมัติ"
+        },
+        "payments": {
+          "title": "DK Payments",
+          "sub": "การชำระเงิน"
+        },
+        "deposits": {
+          "title": "DK Deposits",
+          "sub": "เงินมัดจำ"
+        },
+        "statements": {
+          "title": "DK Statements",
+          "sub": "ใบแจ้งยอด"
+        },
+        "inventory": {
+          "title": "DK Inventory",
+          "sub": "คลังสินค้า"
+        },
+        "purchaseOrders": {
+          "title": "DK Purchase Orders",
+          "sub": "สั่งซื้ออะไหล่"
+        },
+        "workOrders": {
+          "title": "DK Work Orders",
+          "sub": "จัดตารางบริการ"
+        },
+        "assetRegistry": {
+          "title": "DK Asset Registry",
+          "sub": "ทะเบียนทรัพย์สิน"
+        },
+        "maintenanceSchedule": {
+          "title": "DK Maintenance Schedule",
+          "sub": "การบำรุงรักษาเชิงป้องกัน"
+        }
       },
       "thirdParty": {
-        "routeWise": { "title": "RouteWise", "sub": "Meridian Labs" },
-        "fleetPulse": { "title": "FleetPulse", "sub": "Orbit Communications" },
-        "partsBin": { "title": "PartsBin", "sub": "Ironclad Systems" }
+        "routeWise": {
+          "title": "RouteWise",
+          "sub": "Meridian Labs"
+        },
+        "fleetPulse": {
+          "title": "FleetPulse",
+          "sub": "Orbit Communications"
+        },
+        "partsBin": {
+          "title": "PartsBin",
+          "sub": "Ironclad Systems"
+        }
       }
+    },
+    "errors": {
+      "leadTrend": "โหลดแนวโน้มลูกค้าเป้าหมายไม่สำเร็จ",
+      "customerTrend": "โหลดแนวโน้มลูกค้าไม่สำเร็จ",
+      "leadMetrics": "โหลดตัวชี้วัดลูกค้าเป้าหมายไม่สำเร็จ"
     }
   },
   "customer360": {
@@ -776,7 +897,9 @@
         "label": "ใบแจ้งหนี้",
         "description": "การออกใบแจ้งหนี้ การติดตามการชำระเงิน และการรายงานรายได้"
       }
-    }
+    },
+    "formatCsv": "CSV (.csv)",
+    "formatExcel": "Excel (.xlsx)"
   },
   "routes": {
     "dashboard": "แดชบอร์ด",
@@ -838,10 +961,10 @@
       "paginationInfo": "หน้า {{page}} จาก {{pages}}"
     },
     "dashboard": {
-      "title": "คลังสินค้าและอะไหล่",
+      "title": "สินค้าคงคลังอะไหล่",
       "subtitle": "ภาพรวมการบริหารสต๊อกและการจัดซื้อ",
       "purchaseOrdersButton": "ใบสั่งซื้อ",
-      "sparePartsButton": "อะไหล่",
+      "sparePartsButton": "สินค้าคงคลังอะไหล่",
       "quickAccess": "เข้าถึงด่วน",
       "loadError": "ไม่สามารถโหลดข้อมูลคลังสินค้าได้"
     },
@@ -877,7 +1000,7 @@
         "general": "ทั่วไป"
       },
       "list": {
-        "title": "อะไหล่",
+        "title": "สินค้าคงคลังอะไหล่",
         "subtitle_one": "{{count}} รายการ",
         "subtitle_other": "{{count}} รายการ",
         "addPart": "เพิ่มอะไหล่",
@@ -916,12 +1039,12 @@
       }
     },
     "warehouse": {
-      "title": "คลังสินค้า",
+      "title": "สถานที่เก็บสินค้า",
       "list": {
-        "subtitle_one": "{{count}} คลังสินค้า",
-        "subtitle_other": "{{count}} คลังสินค้า",
-        "addWarehouse": "เพิ่มคลังสินค้า",
-        "loadError": "ไม่สามารถโหลดคลังสินค้าได้"
+        "subtitle_one": "{{count}} สถานที่เก็บสินค้า",
+        "subtitle_other": "{{count}} สถานที่เก็บสินค้า",
+        "addWarehouse": "เพิ่มสถานที่เก็บสินค้า",
+        "loadError": "ไม่สามารถโหลดสถานที่เก็บสินค้าได้"
       },
       "form": {
         "codeLabel": "รหัส",
@@ -934,16 +1057,16 @@
         "creating": "กำลังสร้าง..."
       },
       "detail": {
-        "backToList": "กลับไปคลังสินค้า",
-        "loadError": "ไม่สามารถโหลดข้อมูลคลังสินค้าได้",
-        "notFound": "ไม่พบคลังสินค้า",
+        "backToList": "กลับไปยังสถานที่เก็บสินค้า",
+        "loadError": "ไม่สามารถโหลดข้อมูลสถานที่เก็บสินค้าได้",
+        "notFound": "ไม่พบสถานที่เก็บสินค้า",
         "address": "ที่อยู่",
         "contactName": "ผู้ติดต่อ",
         "contactPhone": "เบอร์โทรผู้ติดต่อ",
         "distinctParts": "จำนวนอะไหล่",
         "totalStock": "จำนวนสต็อกรวม",
-        "stockTitle": "สต็อกในคลังสินค้านี้",
-        "noStock": "ยังไม่มีสต็อกในคลังสินค้านี้",
+        "stockTitle": "สต็อกในสถานที่เก็บสินค้านี้",
+        "noStock": "ยังไม่มีสต็อกในสถานที่เก็บสินค้านี้",
         "columns": {
           "part": "อะไหล่"
         }
@@ -968,11 +1091,11 @@
     },
     "quickNav": {
       "parts": {
-        "label": "อะไหล่",
+        "label": "สินค้าคงคลังอะไหล่",
         "desc": "เรียกดูสินค้าคงคลัง"
       },
       "warehouses": {
-        "label": "คลังสินค้า",
+        "label": "สถานที่เก็บสินค้า",
         "desc": "จัดการสถานที่"
       },
       "purchaseOrders": {
@@ -1541,7 +1664,8 @@
           "typeOther": "อื่นๆ",
           "unitRate": "อัตราต่อหน่วย",
           "adding": "กำลังเพิ่ม..."
-        }
+        },
+        "cancelReasonDefault": "ยกเลิกโดยผู้ใช้"
       }
     }
   },
@@ -1709,6 +1833,107 @@
     },
     "pagination": {
       "showing": "แสดง {{start}}–{{end}} จาก {{total}}"
+    },
+    "loadError": "โหลดบันทึกกิจกรรมไม่สำเร็จ",
+    "action": {
+      "user_login": "เข้าสู่ระบบ",
+      "user_logout": "ออกจากระบบ",
+      "user_created": "สร้างผู้ใช้แล้ว",
+      "user_updated": "อัปเดตผู้ใช้แล้ว",
+      "user_deleted": "ลบผู้ใช้แล้ว",
+      "customer_created": "สร้างลูกค้าแล้ว",
+      "customer_updated": "อัปเดตลูกค้าแล้ว",
+      "customer_deleted": "ลบลูกค้าแล้ว",
+      "customer_status_changed": "เปลี่ยนสถานะแล้ว",
+      "lead_created": "สร้างลูกค้าเป้าหมายแล้ว",
+      "lead_updated": "อัปเดตลูกค้าเป้าหมายแล้ว",
+      "lead_deleted": "ลบลูกค้าเป้าหมายแล้ว",
+      "lead_status_changed": "เปลี่ยนสถานะแล้ว",
+      "lead_note_added": "เพิ่มหมายเหตุแล้ว",
+      "lead_note_deleted": "ลบหมายเหตุแล้ว",
+      "catalog_product_created": "สร้างสินค้าแล้ว",
+      "catalog_product_updated": "อัปเดตสินค้าแล้ว",
+      "catalog_product_deleted": "ลบสินค้าแล้ว",
+      "catalog_brand_created": "สร้างแบรนด์แล้ว",
+      "catalog_brand_updated": "อัปเดตแบรนด์แล้ว",
+      "catalog_brand_deleted": "ลบแบรนด์แล้ว",
+      "catalog_category_created": "สร้างหมวดหมู่แล้ว",
+      "catalog_category_updated": "อัปเดตหมวดหมู่แล้ว",
+      "catalog_category_deleted": "ลบหมวดหมู่แล้ว",
+      "catalog_import_previewed": "ดูตัวอย่างการนำเข้าสินค้าแล้ว",
+      "catalog_import_executed": "นำเข้าสินค้าแบบกลุ่มแล้ว",
+      "forklift_created": "ลงทะเบียนรถโฟล์คลิฟท์แล้ว",
+      "forklift_updated": "อัปเดตรถโฟล์คลิฟท์แล้ว",
+      "forklift_deleted": "ลบรถโฟล์คลิฟท์แล้ว",
+      "forklift_status_changed": "เปลี่ยนสถานะแล้ว",
+      "quotation_created": "สร้างใบเสนอราคาแล้ว",
+      "quotation_updated": "อัปเดตใบเสนอราคาแล้ว",
+      "quotation_deleted": "ลบใบเสนอราคาแล้ว",
+      "quotation_submitted": "ส่งเพื่อพิจารณาแล้ว",
+      "quotation_approved": "ใบเสนอราคาได้รับการอนุมัติแล้ว",
+      "quotation_revision_requested": "ขอแก้ไขแล้ว",
+      "quotation_sent": "ส่งใบเสนอราคาให้ลูกค้าแล้ว",
+      "quotation_accepted": "ทำเครื่องหมายว่ายอมรับแล้ว",
+      "quotation_declined": "ทำเครื่องหมายว่าปฏิเสธแล้ว",
+      "quotation_converted": "แปลงเป็นสัญญาแล้ว",
+      "quotation_cancelled": "ยกเลิกใบเสนอราคาแล้ว",
+      "quotation_reactivated": "เปิดใช้งานอีกครั้งแล้ว",
+      "rental_contract_created": "สร้างสัญญาเช่าแล้ว",
+      "rental_contract_updated": "อัปเดตสัญญาเช่าแล้ว",
+      "rental_contract_deleted": "ลบสัญญาเช่าแล้ว",
+      "rental_contract_submitted": "ส่งเพื่อพิจารณาแล้ว",
+      "rental_contract_approved": "อนุมัติสัญญาเช่าแล้ว",
+      "rental_contract_revision": "ขอแก้ไขแล้ว",
+      "rental_contract_activated": "เริ่มใช้งานสัญญาแล้ว",
+      "rental_contract_cancelled": "ยกเลิกสัญญาเช่าแล้ว",
+      "rental_contract_closed": "ปิดสัญญาแล้ว",
+      "rental_return_requested": "ส่งคำขอคืนอุปกรณ์แล้ว",
+      "rental_return_picked_up": "รับอุปกรณ์คืนจากลูกค้าแล้ว",
+      "rental_return_received": "ตรวจรับอุปกรณ์คืนแล้ว",
+      "rental_return_completed": "การคืนอุปกรณ์เสร็จสมบูรณ์แล้ว",
+      "rental_damage_assessed": "ประเมินความเสียหายแล้ว",
+      "rental_damage_disputed": "โต้แย้งการประเมินความเสียหายแล้ว",
+      "rental_damage_resolved": "ยุติกรณีความเสียหายแล้ว",
+      "rental_extension_requested": "ส่งคำขอขยายสัญญาแล้ว",
+      "rental_extension_approved": "อนุมัติการขยายสัญญาแล้ว",
+      "rental_extension_rejected": "ปฏิเสธการขยายสัญญาแล้ว",
+      "rental_billing_created": "สร้างใบเรียกเก็บเงินแล้ว",
+      "invoice_created": "สร้างใบแจ้งหนี้แล้ว",
+      "invoice_updated": "อัปเดตใบแจ้งหนี้แล้ว",
+      "invoice_issued": "ออกใบแจ้งหนี้แล้ว",
+      "invoice_sent": "ส่งใบแจ้งหนี้แล้ว",
+      "invoice_cancelled": "ยกเลิกใบแจ้งหนี้แล้ว",
+      "invoice_voided": "ยกเลิกใบแจ้งหนี้แล้ว (โมฆะ)",
+      "payment_recorded": "บันทึกการชำระเงินแล้ว",
+      "payment_confirmed": "ยืนยันการชำระเงินแล้ว",
+      "payment_rejected": "ปฏิเสธการชำระเงินแล้ว",
+      "payment_allocated": "จัดสรรการชำระเงินแล้ว",
+      "deposit_created": "สร้างเงินมัดจำแล้ว",
+      "deposit_received": "รับเงินมัดจำแล้ว",
+      "deposit_refunded": "คืนเงินมัดจำแล้ว",
+      "deposit_forfeited": "ริบเงินมัดจำแล้ว",
+      "deposit_applied": "นำเงินมัดจำไปหักแล้ว",
+      "revenue_recognized": "รับรู้รายได้แล้ว",
+      "revenue_reversed": "กลับรายการรายได้แล้ว",
+      "project_created": "สร้างโครงการแล้ว",
+      "project_updated": "อัปเดตโครงการแล้ว",
+      "project_deleted": "ลบโครงการแล้ว",
+      "project_milestone_status_changed": "เปลี่ยนสถานะเป้าหมายแล้ว",
+      "setting_updated": "อัปเดตการตั้งค่าระบบแล้ว",
+      "inventory_import_executed": "นำเข้าข้อมูลคลังสินค้าแบบกลุ่มแล้ว",
+      "notification_preference_created": "สมัครรับการแจ้งเตือนแล้ว",
+      "notification_preference_updated": "อัปเดตการตั้งค่าการแจ้งเตือนแล้ว",
+      "notification_preference_deleted": "ยกเลิกรับการแจ้งเตือนแล้ว"
+    },
+    "group": {
+      "user": "ผู้ใช้",
+      "customer": "ลูกค้า",
+      "lead": "ลูกค้าเป้าหมาย",
+      "billing": "การเงิน",
+      "project": "โครงการ",
+      "settings": "การตั้งค่า",
+      "inventory": "คลังสินค้า",
+      "notifications": "การแจ้งเตือน"
     }
   },
   "equipment": {
@@ -1794,7 +2019,9 @@
       "purchaseDate": "วันที่ซื้อ",
       "warrantyExpiry": "วันหมดประกัน",
       "notesPlaceholder": "หมายเหตุ (ไม่บังคับ)...",
-      "saveChanges": "บันทึกการเปลี่ยนแปลง"
+      "saveChanges": "บันทึกการเปลี่ยนแปลง",
+      "capacityKgPlaceholder": "เช่น 1600",
+      "yearManufacturedPlaceholder": "เช่น 2024"
     },
     "registry": {
       "title": "ทะเบียนอุปกรณ์",
@@ -1819,6 +2046,15 @@
         "model": "รุ่น",
         "ownership": "ความเป็นเจ้าของ",
         "hours": "ชั่วโมงมิเตอร์"
+      },
+      "toast": {
+        "loadError": "โหลดรถโฟล์คลิฟท์ไม่สำเร็จ",
+        "createSuccess": "ลงทะเบียนรถโฟล์คลิฟท์สำเร็จแล้ว",
+        "createError": "ลงทะเบียนรถโฟล์คลิฟท์ไม่สำเร็จ",
+        "updateSuccess": "อัปเดตรถโฟล์คลิฟท์สำเร็จแล้ว",
+        "updateError": "อัปเดตรถโฟล์คลิฟท์ไม่สำเร็จ",
+        "deleteSuccess": "ลบรถโฟล์คลิฟท์แล้ว",
+        "deleteError": "ลบรถโฟล์คลิฟท์ไม่สำเร็จ"
       }
     },
     "detail": {
@@ -2025,6 +2261,15 @@
       "deleteDialog": {
         "title": "ลบแบรนด์",
         "message": "ลบแบรนด์ \"{{name}}\" ใช่หรือไม่? สินค้าที่อ้างอิงแบรนด์นี้จะถูกล้างข้อมูลแบรนด์"
+      },
+      "toast": {
+        "loadError": "โหลดแบรนด์ไม่สำเร็จ",
+        "createSuccess": "สร้างแบรนด์สำเร็จแล้ว",
+        "createError": "สร้างแบรนด์ไม่สำเร็จ",
+        "updateSuccess": "อัปเดตแบรนด์สำเร็จแล้ว",
+        "updateError": "อัปเดตแบรนด์ไม่สำเร็จ",
+        "deleteSuccess": "ลบแบรนด์แล้ว",
+        "deleteError": "ลบแบรนด์ไม่สำเร็จ"
       }
     },
     "categories": {
@@ -2060,6 +2305,15 @@
       "deleteDialog": {
         "title": "ลบหมวดหมู่",
         "message": "ลบ \"{{name}}\" ใช่หรือไม่? การดำเนินการนี้จะล้มเหลวหากหมวดหมู่นี้มีหมวดหมู่ย่อยหรือสินค้าที่กำหนดไว้"
+      },
+      "toast": {
+        "loadError": "โหลดหมวดหมู่ไม่สำเร็จ",
+        "createSuccess": "สร้างหมวดหมู่สำเร็จแล้ว",
+        "createError": "สร้างหมวดหมู่ไม่สำเร็จ",
+        "updateSuccess": "อัปเดตหมวดหมู่สำเร็จแล้ว",
+        "updateError": "อัปเดตหมวดหมู่ไม่สำเร็จ",
+        "deleteSuccess": "ลบหมวดหมู่แล้ว",
+        "deleteError": "ลบหมวดหมู่ไม่สำเร็จ"
       }
     },
     "products": {
@@ -2111,6 +2365,15 @@
         "usedAvailable": "มีสินค้ามือสอง",
         "serviceItem": "รายการบริการ",
         "createProduct": "สร้างสินค้า"
+      },
+      "toast": {
+        "loadError": "โหลดสินค้าไม่สำเร็จ",
+        "createSuccess": "สร้างสินค้าสำเร็จแล้ว",
+        "createError": "สร้างสินค้าไม่สำเร็จ",
+        "updateSuccess": "อัปเดตสินค้าสำเร็จแล้ว",
+        "updateError": "อัปเดตสินค้าไม่สำเร็จ",
+        "deleteSuccess": "ลบสินค้าแล้ว",
+        "deleteError": "ลบสินค้าไม่สำเร็จ"
       }
     },
     "productDetail": {
@@ -2194,7 +2457,14 @@
       "resultsCount": "{{count}} รายการ",
       "pageOf": "หน้า {{page}} จาก {{pages}} (ทั้งหมด {{total}} รายการ)",
       "deleteConfirmTitle": "ลบใบเสนอราคา",
-      "deleteConfirmMessage": "ลบ \"{{number}}\" ใช่หรือไม่? การดำเนินการนี้ไม่สามารถย้อนกลับได้"
+      "deleteConfirmMessage": "ลบ \"{{number}}\" ใช่หรือไม่? การดำเนินการนี้ไม่สามารถย้อนกลับได้",
+      "toast": {
+        "loadError": "โหลดใบเสนอราคาไม่สำเร็จ",
+        "createSuccess": "สร้างใบเสนอราคาแล้ว",
+        "createError": "สร้างใบเสนอราคาไม่สำเร็จ",
+        "deleteSuccess": "ลบใบเสนอราคาแล้ว",
+        "deleteError": "ลบใบเสนอราคาไม่สำเร็จ"
+      }
     },
     "form": {
       "backToQuotations": "กลับไปยังใบเสนอราคา",
@@ -2297,7 +2567,8 @@
         "unitPriceRequired": "ต้องระบุราคาต่อหน่วย",
         "itemAdded": "เพิ่มรายการแล้ว",
         "addFailed": "ไม่สามารถเพิ่มรายการได้"
-      }
+      },
+      "revisionNeededReason": "ต้องการแก้ไข"
     }
   },
   "rental": {
@@ -2339,7 +2610,14 @@
       "resultsCount": "{{count}} รายการ",
       "pageOf": "หน้า {{page}} จาก {{pages}} (ทั้งหมด {{total}} รายการ)",
       "deleteConfirmTitle": "ลบสัญญาเช่า",
-      "deleteConfirmMessage": "ลบ \"{{number}}\" ใช่หรือไม่? การดำเนินการนี้ไม่สามารถย้อนกลับได้"
+      "deleteConfirmMessage": "ลบ \"{{number}}\" ใช่หรือไม่? การดำเนินการนี้ไม่สามารถย้อนกลับได้",
+      "toast": {
+        "loadError": "โหลดสัญญาเช่าไม่สำเร็จ",
+        "createSuccess": "สร้างสัญญาเช่าแล้ว",
+        "createError": "สร้างสัญญาเช่าไม่สำเร็จ",
+        "deleteSuccess": "ลบสัญญาเช่าแล้ว",
+        "deleteError": "ลบสัญญาเช่าไม่สำเร็จ"
+      }
     },
     "form": {
       "backToContracts": "กลับไปยังสัญญาเช่า",
@@ -2480,6 +2758,11 @@
         "requestedDateRequired": "ต้องระบุวันที่ร้องขอ",
         "returnRequested": "ส่งคำขอคืนอุปกรณ์แล้ว",
         "requestFailed": "ไม่สามารถสร้างคำขอคืนอุปกรณ์ได้"
+      },
+      "reasons": {
+        "revisionNeeded": "ต้องการแก้ไข",
+        "cancelledByUser": "ยกเลิกโดยผู้ใช้",
+        "rejected": "ปฏิเสธ"
       }
     }
   },
@@ -2580,5 +2863,22 @@
       "title": "ยกเลิกการจับคู่อุปกรณ์",
       "message": "ลบอุปกรณ์ \"{{deviceId}}\" ออกจาก {{name}} หรือไม่? ระบบจะหยุดส่งข้อมูลชั่วโมงอัตโนมัติจนกว่าจะจับคู่ใหม่"
     }
+  },
+  "changePassword": {
+    "title": "เปลี่ยนรหัสผ่าน",
+    "subtitle": "อัปเดตรหัสผ่านของคุณเพื่อความปลอดภัยของบัญชี",
+    "currentPassword": "รหัสผ่านปัจจุบัน",
+    "currentPasswordPlaceholder": "กรอกรหัสผ่านปัจจุบันของคุณ",
+    "newPassword": "รหัสผ่านใหม่",
+    "newPasswordPlaceholder": "อย่างน้อย 8 ตัวอักษร",
+    "confirmPassword": "ยืนยันรหัสผ่านใหม่",
+    "confirmPasswordPlaceholder": "กรอกรหัสผ่านใหม่อีกครั้ง",
+    "submit": "เปลี่ยนรหัสผ่าน",
+    "submitting": "กำลังเปลี่ยนรหัสผ่าน…",
+    "mismatchError": "รหัสผ่านใหม่และการยืนยันไม่ตรงกัน",
+    "tooShortError": "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร",
+    "successToast": "เปลี่ยนรหัสผ่านสำเร็จแล้ว",
+    "incorrectCurrentError": "รหัสผ่านปัจจุบันไม่ถูกต้อง",
+    "genericError": "เปลี่ยนรหัสผ่านไม่สำเร็จ กรุณาลองใหม่อีกครั้ง"
   }
 }

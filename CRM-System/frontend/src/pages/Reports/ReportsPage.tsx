@@ -18,6 +18,7 @@ import { downloadReport, type ReportFormat } from '@/api/reports'
 import { recordToBarData } from '@/utils/mockAdapter'
 import { PLANNED_MODULES } from '@/modules/registry'
 import { toast } from '@/store/toastStore'
+import PageHeader from '@/components/layout/PageHeader'
 import './ReportsPage.css'
 
 // ── Color maps ────────────────────────────────────────────────
@@ -165,11 +166,7 @@ export default function ReportsPage() {
     <div className="rp-page">
 
       {/* ── Header ────────────────────────────────────── */}
-      <div className="page-header" style={{ marginBottom: 28 }}>
-        <div>
-          <h1>{t('reports.title')}</h1>
-          <p className="page-header-sub">{t('reports.subtitle')}</p>
-        </div>
+      <PageHeader title={t('reports.title')} subtitle={t('reports.subtitle')} style={{ marginBottom: 28 }}>
         <div style={{ display: 'flex', gap: 8 }}>
           <PrintButton />
           <button
@@ -182,7 +179,7 @@ export default function ReportsPage() {
             {t('reports.refresh')}
           </button>
         </div>
-      </div>
+      </PageHeader>
 
       {/* Global error */}
       {summary.error && (
@@ -248,8 +245,8 @@ export default function ReportsPage() {
                 value={exportFormat}
                 onChange={e => setExportFormat(e.target.value as ReportFormat)}
               >
-                <option value="csv">CSV (.csv)</option>
-                <option value="excel">Excel (.xlsx)</option>
+                <option value="csv">{t('reports.formatCsv')}</option>
+                <option value="excel">{t('reports.formatExcel')}</option>
               </select>
             </div>
 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { AxiosError } from 'axios'
 import { getSummary, getLeadTrend, getCustomerTrend, getLeadMetrics } from '@/api/dashboard'
 import type { DashboardSummary, TrendPoint, LeadMetrics } from '@/types/dashboard'
@@ -6,6 +7,7 @@ import { withMockFallback, generateMockTrend } from '@/utils/mockAdapter'
 
 // ── Summary ─────────────────────────────────────────────────
 export function useDashboardSummary() {
+  const { t } = useTranslation()
   const [data, setData]         = useState<DashboardSummary | null>(null)
   const [isLoading, setLoading] = useState(true)
   const [error, setError]       = useState<string | null>(null)
@@ -17,11 +19,11 @@ export function useDashboardSummary() {
       const { data: summary } = await getSummary()
       setData(summary)
     } catch {
-      setError('Failed to load dashboard data. Check that the backend is running.')
+      setError(t('dashboard.loadError'))
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [t])
 
   useEffect(() => { load() }, [load])
   return { data, isLoading, error, refetch: load }
@@ -29,6 +31,7 @@ export function useDashboardSummary() {
 
 // ── Lead Trend ───────────────────────────────────────────────
 export function useLeadTrend(months = 12) {
+  const { t } = useTranslation()
   const [data, setData]         = useState<TrendPoint[]>([])
   const [isLoading, setLoading] = useState(true)
   const [error, setError]       = useState<string | null>(null)
@@ -49,12 +52,12 @@ export function useLeadTrend(months = 12) {
         setData([])           // non-auth errors → show empty state, not crash
         setError(null)
       } else {
-        setError('Failed to load lead trend.')
+        setError(t('dashboard.errors.leadTrend'))
       }
     } finally {
       setLoading(false)
     }
-  }, [months])
+  }, [months, t])
 
   useEffect(() => { load() }, [load])
   return { data, isLoading, error, isMock, refetch: load }
@@ -62,6 +65,7 @@ export function useLeadTrend(months = 12) {
 
 // ── Customer Trend ───────────────────────────────────────────
 export function useCustomerTrend(months = 12) {
+  const { t } = useTranslation()
   const [data, setData]         = useState<TrendPoint[]>([])
   const [isLoading, setLoading] = useState(true)
   const [error, setError]       = useState<string | null>(null)
@@ -81,12 +85,12 @@ export function useCustomerTrend(months = 12) {
         setData([])
         setError(null)
       } else {
-        setError('Failed to load customer trend.')
+        setError(t('dashboard.errors.customerTrend'))
       }
     } finally {
       setLoading(false)
     }
-  }, [months])
+  }, [months, t])
 
   useEffect(() => { load() }, [load])
   return { data, isLoading, error, isMock, refetch: load }
@@ -94,6 +98,7 @@ export function useCustomerTrend(months = 12) {
 
 // ── Lead Metrics ─────────────────────────────────────────────
 export function useLeadMetrics() {
+  const { t } = useTranslation()
   const [data, setData]         = useState<LeadMetrics | null>(null)
   const [isLoading, setLoading] = useState(true)
   const [error, setError]       = useState<string | null>(null)
@@ -119,13 +124,13 @@ export function useLeadMetrics() {
         setData(MOCK_METRICS)
         setError(null)
       } else {
-        setError('Failed to load lead metrics.')
+        setError(t('dashboard.errors.leadMetrics'))
       }
     } finally {
       setLoading(false)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [t])
 
   useEffect(() => { load() }, [load])
   return { data, isLoading, error, refetch: load }

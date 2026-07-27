@@ -5,6 +5,7 @@ import { ChevronLeft, AlertCircle } from 'lucide-react'
 import { createMovement } from '@/api/movement'
 import { toast } from '@/store/toastStore'
 import type { MovementType, MovementPriority } from '@/types/movement'
+import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 
 const TYPE_VALUES: MovementType[] = ['customer_deployment', 'customer_return', 'warehouse_transfer', 'internal_relocation']
@@ -77,7 +78,7 @@ export default function MovementForm() {
         <ChevronLeft size={16} /> {t('movement.form.backToMovements')}
       </button>
 
-      <div className="page-header" style={{ marginBottom: 24 }}><h1>{t('movement.form.title')}</h1></div>
+      <PageHeader title={t('movement.form.title')} style={{ marginBottom: 24 }} />
 
       <div style={{ maxWidth: 700, background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 10, padding: 24 }}>
         <form onSubmit={handleSubmit} className="form-grid">

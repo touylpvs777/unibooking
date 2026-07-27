@@ -5,6 +5,7 @@ import { ChevronLeft, AlertCircle } from 'lucide-react'
 import { createRentalContract } from '@/api/rental'
 import { toast } from '@/store/toastStore'
 import type { ContractType } from '@/types/rental'
+import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 
 const EMPTY = {
@@ -82,9 +83,7 @@ export default function RentalContractFormPage() {
         <ChevronLeft size={16} /> {t('rental.form.backToContracts')}
       </button>
 
-      <div className="page-header" style={{ marginBottom: 24 }}>
-        <h1>{t('rental.form.newContract')}</h1>
-      </div>
+      <PageHeader title={t('rental.form.newContract')} style={{ marginBottom: 24 }} />
 
       <div style={{ maxWidth: 700, background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 10, padding: 24 }}>
         <form onSubmit={handleSubmit} className="form-grid">

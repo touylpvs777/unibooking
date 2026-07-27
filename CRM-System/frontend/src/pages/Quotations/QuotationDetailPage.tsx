@@ -152,7 +152,7 @@ export default function QuotationDetailPage() {
           )}
           {actions.includes('reject') && (
             <button className="btn btn-secondary" disabled={actionLoading}
-              onClick={() => doAction(t('quotations.detail.toasts.revisionRequested'), () => rejectQuotation(qt.id, 'Revision needed'))}>
+              onClick={() => doAction(t('quotations.detail.toasts.revisionRequested'), () => rejectQuotation(qt.id, t('quotations.detail.revisionNeededReason')))}>
               <RotateCcw size={14} /> {t('quotations.detail.requestRevision')}
             </button>
           )}

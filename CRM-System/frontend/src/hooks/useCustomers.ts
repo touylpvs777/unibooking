@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   getCustomers,
   createCustomer as apiCreate,
@@ -9,6 +10,7 @@ import { toast } from '@/store/toastStore'
 import type { Customer, CustomerCreate, CustomerUpdate } from '@/types/customer'
 
 export function useCustomers() {
+  const { t } = useTranslation()
   const [customers, setCustomers] = useState<Customer[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -20,11 +22,11 @@ export function useCustomers() {
       const { data } = await getCustomers({ limit: 500 })
       setCustomers(data)
     } catch {
-      setError('Failed to load customers.')
+      setError(t('customers.list.toast.loadError'))
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [t])
 
   useEffect(() => { load() }, [load])
 
@@ -32,10 +34,10 @@ export function useCustomers() {
     try {
       await apiCreate(data)
       await load()
-      toast.success('Customer created successfully.')
+      toast.success(t('customers.list.toast.createSuccess'))
       return true
     } catch {
-      toast.error('Failed to create customer.')
+      toast.error(t('customers.list.toast.createError'))
       return false
     }
   }
@@ -44,10 +46,10 @@ export function useCustomers() {
     try {
       await apiUpdate(id, data)
       await load()
-      toast.success('Customer updated successfully.')
+      toast.success(t('customers.list.toast.updateSuccess'))
       return true
     } catch {
-      toast.error('Failed to update customer.')
+      toast.error(t('customers.list.toast.updateError'))
       return false
     }
   }
@@ -56,10 +58,10 @@ export function useCustomers() {
     try {
       await apiDelete(id)
       await load()
-      toast.success('Customer deleted.')
+      toast.success(t('customers.list.toast.deleteSuccess'))
       return true
     } catch {
-      toast.error('Failed to delete customer.')
+      toast.error(t('customers.list.toast.deleteError'))
       return false
     }
   }

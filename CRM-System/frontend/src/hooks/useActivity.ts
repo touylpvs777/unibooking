@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { getActivity } from '@/api/activity'
 import type { ActivityLog } from '@/types/activity'
 
@@ -10,6 +11,7 @@ export interface ActivityFilters {
 }
 
 export function useActivity(filters: ActivityFilters) {
+  const { t } = useTranslation()
   const [logs, setLogs]         = useState<ActivityLog[]>([])
   const [isLoading, setLoading] = useState(true)
   const [error, setError]       = useState<string | null>(null)
@@ -27,11 +29,11 @@ export function useActivity(filters: ActivityFilters) {
       })
       setLogs(data)
     } catch {
-      setError('Failed to load activity log.')
+      setError(t('activity.loadError'))
     } finally {
       setLoading(false)
     }
-  }, [filters.action, filters.entity_type, filters.from_date, filters.to_date])
+  }, [filters.action, filters.entity_type, filters.from_date, filters.to_date, t])
 
   useEffect(() => { load() }, [load])
 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   getProducts,
   createProduct as apiCreate,
@@ -15,6 +16,7 @@ const DEFAULT_PARAMS: ProductListParams = {
 }
 
 export function useCatalog(initialParams: ProductListParams = DEFAULT_PARAMS) {
+  const { t } = useTranslation()
   const [response, setResponse]   = useState<ProductListResponse | null>(null)
   const [params, setParams]       = useState<ProductListParams>(initialParams)
   const [isLoading, setIsLoading] = useState(true)
@@ -27,11 +29,11 @@ export function useCatalog(initialParams: ProductListParams = DEFAULT_PARAMS) {
       const { data } = await getProducts(p)
       setResponse(data)
     } catch {
-      setError('Failed to load products.')
+      setError(t('catalog.products.toast.loadError'))
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [t])
 
   useEffect(() => { load(params) }, [load, params])
 
@@ -42,10 +44,10 @@ export function useCatalog(initialParams: ProductListParams = DEFAULT_PARAMS) {
     try {
       await apiCreate(data)
       await load(params)
-      toast.success('Product created successfully.')
+      toast.success(t('catalog.products.toast.createSuccess'))
       return true
     } catch {
-      toast.error('Failed to create product.')
+      toast.error(t('catalog.products.toast.createError'))
       return false
     }
   }
@@ -54,10 +56,10 @@ export function useCatalog(initialParams: ProductListParams = DEFAULT_PARAMS) {
     try {
       await apiUpdate(id, data)
       await load(params)
-      toast.success('Product updated successfully.')
+      toast.success(t('catalog.products.toast.updateSuccess'))
       return true
     } catch {
-      toast.error('Failed to update product.')
+      toast.error(t('catalog.products.toast.updateError'))
       return false
     }
   }
@@ -69,10 +71,10 @@ export function useCatalog(initialParams: ProductListParams = DEFAULT_PARAMS) {
         ? params.page! - 1
         : params.page
       await load({ ...params, page: newPage })
-      toast.success('Product deleted.')
+      toast.success(t('catalog.products.toast.deleteSuccess'))
       return true
     } catch {
-      toast.error('Failed to delete product.')
+      toast.error(t('catalog.products.toast.deleteError'))
       return false
     }
   }

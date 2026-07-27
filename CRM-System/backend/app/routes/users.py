@@ -5,7 +5,7 @@ from app.database.session import get_db
 from app.dependencies import get_current_superuser, get_current_user
 from app.models.activity_log import ActionType, EntityType
 from app.models.user import User
-from app.schemas.user import UserCreate, UserOut, UserUpdate
+from app.schemas.user import PasswordChange, UserCreate, UserOut, UserUpdate
 from app.services.activity_log_service import ActivityLogService
 from app.services.user_service import UserService
 
@@ -15,6 +15,27 @@ router = APIRouter(prefix="/users", tags=["Users"])
 @router.get("/me", response_model=UserOut)
 async def get_me(current_user: User = Depends(get_current_user)):
     return current_user
+
+
+@router.put("/me/password", status_code=status.HTTP_204_NO_CONTENT)
+async def change_my_password(
+    data: PasswordChange,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    ok = await UserService(db).change_password(current_user, data.current_password, data.new_password)
+    if not ok:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Current password is incorrect",
+        )
+    await ActivityLogService(db).log(
+        user_id=current_user.id,
+        action=ActionType.USER_UPDATED,
+        entity_type=EntityType.USER,
+        entity_id=current_user.id,
+        details={"password_changed": True},
+    )
 
 
 @router.get("/", response_model=list[UserOut])

@@ -5,6 +5,7 @@ import { useCategories } from '@/hooks/useCategories'
 import Modal from '@/components/ui/Modal'
 import ConfirmDialog from '@/components/ui/ConfirmDialog'
 import type { CategoryCreate, CategoryUpdate, ProductCategory } from '@/types/catalog'
+import PageHeader from '@/components/layout/PageHeader'
 import './CategoriesPage.css'
 import '@/styles/shared.css'
 
@@ -167,15 +168,11 @@ export default function CategoriesPage() {
 
   return (
     <div>
-      <div className="page-header">
-        <div>
-          <h1>{t('catalog.categories.title')}</h1>
-          <p className="page-header-sub">{t('catalog.categories.subtitle', { count: flat.length })}</p>
-        </div>
+      <PageHeader title={t('catalog.categories.title')} subtitle={t('catalog.categories.subtitle', { count: flat.length })}>
         <button className="btn btn-primary" onClick={() => { setEditTarget(null); setFormOpen(true) }}>
           <Plus size={15} /> {t('catalog.categories.newCategory')}
         </button>
-      </div>
+      </PageHeader>
 
       {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}
 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   getRentalContracts,
   createRentalContract as apiCreate,
@@ -15,6 +16,7 @@ const DEFAULT_PARAMS: RentalContractListParams = {
 }
 
 export function useRentalContracts(initialParams: RentalContractListParams = DEFAULT_PARAMS) {
+  const { t } = useTranslation()
   const [response, setResponse]   = useState<RentalContractListResponse | null>(null)
   const [params, setParams]       = useState<RentalContractListParams>(initialParams)
   const [isLoading, setIsLoading] = useState(true)
@@ -27,11 +29,11 @@ export function useRentalContracts(initialParams: RentalContractListParams = DEF
       const { data } = await getRentalContracts(p)
       setResponse(data)
     } catch {
-      setError('Failed to load rental contracts.')
+      setError(t('rental.list.toast.loadError'))
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [t])
 
   useEffect(() => { load(params) }, [load, params])
 
@@ -42,11 +44,11 @@ export function useRentalContracts(initialParams: RentalContractListParams = DEF
     try {
       await apiCreate(data)
       await load(params)
-      toast.success('Rental contract created.')
+      toast.success(t('rental.list.toast.createSuccess'))
       return true
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail
-      toast.error(msg ?? 'Failed to create rental contract.')
+      toast.error(msg ?? t('rental.list.toast.createError'))
       return false
     }
   }
@@ -58,11 +60,11 @@ export function useRentalContracts(initialParams: RentalContractListParams = DEF
         ? params.page! - 1
         : params.page
       await load({ ...params, page: newPage })
-      toast.success('Rental contract deleted.')
+      toast.success(t('rental.list.toast.deleteSuccess'))
       return true
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail
-      toast.error(msg ?? 'Failed to delete rental contract.')
+      toast.error(msg ?? t('rental.list.toast.deleteError'))
       return false
     }
   }

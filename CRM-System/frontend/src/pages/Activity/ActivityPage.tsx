@@ -6,6 +6,7 @@ import {
 } from 'lucide-react'
 import { useActivity, type ActivityFilters } from '@/hooks/useActivity'
 import Drawer from '@/components/ui/Drawer'
+import PageHeader from '@/components/layout/PageHeader'
 import type { ActionType, ActivityLog } from '@/types/activity'
 import './ActivityPage.css'
 
@@ -147,7 +148,22 @@ const ACTION_GROUPS: Record<string, string> = {
 const PAGE_SIZE = 50
 
 // ── Helpers ───────────────────────────────────────────────
+type TFn = (key: string, opts?: Record<string, unknown>) => string
+
+function actionLabel(t: TFn, action: string): string {
+  const meta = ACTION_META[action as ActionType]
+  if (!meta) return action
+  return t(`activity.action.${action}`, { defaultValue: meta.label })
+}
+
+function groupLabel(t: TFn, action: string): string {
+  const group = ACTION_GROUPS[action]
+  if (!group) return '—'
+  return t(`activity.group.${group.toLowerCase()}`, { defaultValue: group })
+}
+
 function ActionBadge({ action, size = 'sm' }: { action: string; size?: 'sm' | 'lg' }) {
+  const { t } = useTranslation()
   const meta = ACTION_META[action as ActionType]
   if (!meta) return <span style={{ color: 'var(--color-text-muted)', fontSize: 12 }}>{action}</span>
   const style: CSSProperties = {
@@ -161,7 +177,7 @@ function ActionBadge({ action, size = 'sm' }: { action: string; size?: 'sm' | 'l
   return (
     <span style={style}>
       <span style={{ width: 6, height: 6, borderRadius: '50%', background: meta.color, flexShrink: 0 }} />
-      {meta.label}
+      {actionLabel(t, action)}
     </span>
   )
 }
@@ -221,7 +237,7 @@ function ActivityDetails({ log }: { log: ActivityLog }) {
       <div style={{ marginBottom: 20 }}>
         <ActionBadge action={log.action} size="lg" />
         <div style={{ fontSize: 11.5, color: 'var(--color-text-muted)', marginTop: 6 }}>
-          {t('activity.details.group', { group: ACTION_GROUPS[log.action] ?? '—' })}
+          {t('activity.details.group', { group: groupLabel(t, log.action) })}
         </div>
       </div>
 
@@ -357,9 +373,9 @@ export default function ActivityPage() {
         (l.user?.username ?? '').toLowerCase().includes(q) ||
         (l.user?.full_name ?? '').toLowerCase().includes(q) ||
         l.action.toLowerCase().includes(q) ||
-        (ACTION_META[l.action]?.label ?? '').toLowerCase().includes(q)
+        actionLabel(t, l.action).toLowerCase().includes(q)
     )
-  }, [logs, search])
+  }, [logs, search, t])
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
   const safePage   = Math.min(page, totalPages)
@@ -377,15 +393,11 @@ export default function ActivityPage() {
   return (
     <div>
       {/* Header */}
-      <div className="page-header">
-        <div>
-          <h1>{t('activity.title')}</h1>
-          <p className="page-header-sub">{t('activity.eventsLoaded', { count: filtered.length })}</p>
-        </div>
+      <PageHeader title={t('activity.title')} subtitle={t('activity.eventsLoaded', { count: filtered.length })}>
         <button className="btn btn-ghost" onClick={refetch} disabled={isLoading}>
           <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('activity.refresh')}
         </button>
-      </div>
+      </PageHeader>
 
       {error && (
         <div className="page-error"><AlertCircle size={16} /> {error}</div>
@@ -416,7 +428,7 @@ export default function ActivityPage() {
           >
             <option value="">{t('activity.filters.allActions')}</option>
             {ALL_ACTIONS.map((a) => (
-              <option key={a} value={a}>{ACTION_META[a].label} ({ACTION_GROUPS[a]})</option>
+              <option key={a} value={a}>{actionLabel(t, a)} ({groupLabel(t, a)})</option>
             ))}
           </select>
         </div>

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { AlertCircle, RefreshCw, ChevronLeft, ChevronRight, TrendingUp } from 'lucide-react'
 import { getRecognitions, recognizeRevenue, reverseRevenue } from '@/api/billing'
 import type { RevenueRecognitionOut } from '@/types/billing'
+import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 
 function fmtDate(iso: string | null) { return iso ? new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—' }
@@ -69,12 +70,11 @@ export default function RevenueRecognitionPage() {
 
   return (
     <div>
-      <div className="page-header">
-        <div><h1>{t('billing.revenue.title')}</h1><p className="page-header-sub">{t('billing.revenue.entriesCount', { count: total })}</p></div>
+      <PageHeader title={t('billing.revenue.title')} subtitle={t('billing.revenue.entriesCount', { count: total })}>
         <button className="btn btn-ghost" onClick={load} disabled={isLoading} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('billing.common.refresh')}
         </button>
-      </div>
+      </PageHeader>
 
       {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}
 

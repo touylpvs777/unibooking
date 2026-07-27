@@ -6,6 +6,7 @@ import { getPayments, confirmPayment, rejectPayment } from '@/api/billing'
 import PaymentStatusBadge from '@/components/billing/PaymentStatusBadge'
 import { toast } from '@/store/toastStore'
 import type { PaymentOut } from '@/types/billing'
+import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 
 function fmtDate(iso: string) { return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }
@@ -51,15 +52,11 @@ export default function PaymentPage() {
 
   return (
     <div>
-      <div className="page-header">
-        <div>
-          <h1>{t('billing.payment.list.title')}</h1>
-          <p className="page-header-sub">{t('billing.payment.list.subtitle', { count: total })}</p>
-        </div>
+      <PageHeader title={t('billing.payment.list.title')} subtitle={t('billing.payment.list.subtitle', { count: total })}>
         <button className="btn btn-ghost" onClick={load} disabled={isLoading}>
           <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('billing.common.refresh')}
         </button>
-      </div>
+      </PageHeader>
 
       {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}
 

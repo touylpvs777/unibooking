@@ -4,6 +4,7 @@ import { AlertCircle, RefreshCw } from 'lucide-react'
 import { getSchedules } from '@/api/maintenance'
 import PMCalendar from '@/components/maintenance/PMCalendar'
 import type { MaintenanceSchedule } from '@/types/maintenance'
+import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 
 export default function MaintenanceSchedulePage() {
@@ -23,15 +24,11 @@ export default function MaintenanceSchedulePage() {
 
   return (
     <div>
-      <div className="page-header">
-        <div>
-          <h1>{t('maintenance.schedule.title')}</h1>
-          <p className="page-header-sub">{t('maintenance.schedule.activeSchedules', { count: schedules.length })}</p>
-        </div>
+      <PageHeader title={t('maintenance.schedule.title')} subtitle={t('maintenance.schedule.activeSchedules', { count: schedules.length })}>
         <button className="btn btn-ghost" onClick={load} disabled={isLoading} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('maintenance.actions.refresh')}
         </button>
-      </div>
+      </PageHeader>
 
       {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}
 

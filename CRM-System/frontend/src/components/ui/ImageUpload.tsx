@@ -87,7 +87,7 @@ export default function ImageUpload({ onUploaded, className }: Props) {
     return (
       <div className={className}>
         <div className="img-upload-preview">
-          <img src={preview} alt="Upload preview" />
+          <img src={preview} alt={t('imageUpload.previewAlt')} />
           <button className="img-upload-remove" onClick={reset} title={t('imageUpload.remove')} type="button">
             <X size={14} />
           </button>

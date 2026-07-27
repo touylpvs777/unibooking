@@ -1,10 +1,12 @@
 import { Building2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useBrands } from '@/hooks/useBrands'
 
 // Reads real, admin-managed brand records (logo_url is set via /catalog/brands)
 // instead of static or scraped imagery — falls back to an icon chip per brand
 // until a logo is uploaded, so it never shows a broken image.
 export default function BrandShowcaseBanner() {
+  const { t } = useTranslation()
   const { brands, isLoading } = useBrands(true)
 
   if (isLoading) {
@@ -23,7 +25,7 @@ export default function BrandShowcaseBanner() {
 
   return (
     <section className="mt-8 rounded-2xl border border-white/8 bg-[#1c1c1e] p-5">
-      <h2 className="mb-4 text-base font-semibold text-gray-100">Brands We Service</h2>
+      <h2 className="mb-4 text-base font-semibold text-gray-100">{t('dashboard.exec.brandsWeService')}</h2>
       <div className="flex flex-wrap gap-3">
         {brands.map((brand) => (
           <div

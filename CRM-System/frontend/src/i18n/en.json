@@ -75,7 +75,17 @@
     "rowsPerPage": "Rows per page",
     "selectAll": "Select all",
     "createdAt": "Created",
-    "updatedAt": "Updated"
+    "updatedAt": "Updated",
+    "mainNavigation": "Main navigation",
+    "moreLanguages": "More languages",
+    "loadingApplication": "Loading application",
+    "skipToContent": "Skip to content",
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "scrollLeft": "Scroll left",
+    "scrollRight": "Scroll right"
   },
   "settings": {
     "title": "Global Settings",
@@ -102,7 +112,14 @@
       "logoUploadError": "Unable to upload the logo right now.",
       "logoUploading": "Uploading logo…",
       "logoDropzoneText": "Click or drag & drop to upload a logo",
-      "logoDropzoneHint": "PNG, JPG, or WebP"
+      "logoDropzoneHint": "PNG, JPG, or WebP",
+      "sidebarBranding": {
+        "title": "Sidebar Branding (This Device)",
+        "description": "Customize the logo and name shown in the sidebar on this browser. This is separate from the Company Profile above, which is used on invoices and documents.",
+        "nameLabel": "Sidebar Display Name",
+        "logoLabel": "Sidebar Logo",
+        "logoHint": "Saved to this browser only"
+      }
     },
     "financial": {
       "description": "Financial defaults",
@@ -177,7 +194,16 @@
       "createFirstCustomer": "Create your first customer to get started.",
       "showingRange": "Showing {{start}}–{{end}} of {{total}}",
       "deleteTitle": "Delete Customer",
-      "deleteMessage": "Are you sure you want to delete \"{{name}}\"? This cannot be undone."
+      "deleteMessage": "Are you sure you want to delete \"{{name}}\"? This cannot be undone.",
+      "toast": {
+        "loadError": "Failed to load customers.",
+        "createSuccess": "Customer created successfully.",
+        "createError": "Failed to create customer.",
+        "updateSuccess": "Customer updated successfully.",
+        "updateError": "Failed to update customer.",
+        "deleteSuccess": "Customer deleted.",
+        "deleteError": "Failed to delete customer."
+      }
     }
   },
   "leads": {
@@ -185,22 +211,22 @@
       "new": "New",
       "contacted": "Contacted",
       "qualified": "Qualified",
-      "proposal": "Proposal",
+      "proposal": "Commercial Proposal",
       "won": "Won",
       "lost": "Lost"
     },
     "form": {
-      "editTitle": "Edit Lead",
-      "newTitle": "New Lead",
+      "editTitle": "Edit Sales Lead",
+      "newTitle": "New Sales Lead",
       "saveChanges": "Save Changes",
-      "createLead": "Create Lead",
+      "createLead": "Create Sales Lead",
       "titleLabel": "Title",
-      "titlePlaceholder": "e.g. Enterprise Software Deal",
-      "wonLeadsCannotChange": "Won leads cannot be moved to another status.",
+      "titlePlaceholder": "e.g. Enterprise Equipment Opportunity",
+      "wonLeadsCannotChange": "Won sales opportunities cannot be moved to another status.",
       "sourceLabel": "Source",
       "sourceNone": "— None —",
       "valueLabel": "Value ($)",
-      "descriptionPlaceholder": "Brief notes about this lead…"
+      "descriptionPlaceholder": "Brief notes about this sales lead…"
     },
     "source": {
       "website": "Website",
@@ -211,20 +237,29 @@
       "other": "Other"
     },
     "list": {
-      "title": "Leads",
-      "totalCount": "{{count}} total leads",
-      "newLead": "New Lead",
-      "searchPlaceholder": "Search leads…",
+      "title": "Sales Leads",
+      "totalCount": "{{count}} sales leads",
+      "newLead": "New Sales Lead",
+      "searchPlaceholder": "Search sales leads…",
       "allSources": "All Sources",
       "resultsCount": "{{count}} results",
-      "colLead": "Lead",
+      "colLead": "Sales Lead",
       "colSource": "Source",
       "colValue": "Value",
-      "noLeadsFound": "No leads found",
-      "createFirstLead": "Create your first lead to get started.",
+      "noLeadsFound": "No sales leads found",
+      "createFirstLead": "Create your first sales lead to get started.",
       "showingRange": "Showing {{start}}–{{end}} of {{total}}",
-      "deleteTitle": "Delete Lead",
-      "deleteMessage": "Are you sure you want to delete \"{{title}}\"? This cannot be undone."
+      "deleteTitle": "Delete Sales Lead",
+      "deleteMessage": "Are you sure you want to delete \"{{title}}\"? This cannot be undone.",
+      "toast": {
+        "loadError": "Failed to load leads.",
+        "createSuccess": "Lead created.",
+        "createError": "Failed to create lead.",
+        "updateSuccess": "Lead updated.",
+        "updateError": "Failed to update lead.",
+        "deleteSuccess": "Lead deleted.",
+        "deleteError": "Failed to delete lead."
+      }
     }
   },
   "inventory": {
@@ -235,10 +270,10 @@
       "paginationInfo": "Page {{page}} of {{pages}}"
     },
     "dashboard": {
-      "title": "Inventory & Spare Parts",
+      "title": "Spare Parts Inventory",
       "subtitle": "Stock management and procurement overview",
       "purchaseOrdersButton": "POs",
-      "sparePartsButton": "Spare Parts",
+      "sparePartsButton": "Spare Parts Inventory",
       "quickAccess": "Quick Access",
       "loadError": "Failed to load inventory data."
     },
@@ -274,7 +309,7 @@
         "general": "General"
       },
       "list": {
-        "title": "Spare Parts",
+        "title": "Spare Parts Inventory",
         "subtitle_one": "{{count}} part",
         "subtitle_other": "{{count}} parts",
         "addPart": "Add Part",
@@ -313,12 +348,12 @@
       }
     },
     "warehouse": {
-      "title": "Warehouses",
+      "title": "Stock Locations",
       "list": {
-        "subtitle_one": "{{count}} warehouse",
-        "subtitle_other": "{{count}} warehouses",
-        "addWarehouse": "Add Warehouse",
-        "loadError": "Failed to load warehouses."
+        "subtitle_one": "{{count}} stock location",
+        "subtitle_other": "{{count}} stock locations",
+        "addWarehouse": "Add Stock Location",
+        "loadError": "Failed to load stock locations."
       },
       "form": {
         "codeLabel": "Code",
@@ -331,16 +366,16 @@
         "creating": "Creating..."
       },
       "detail": {
-        "backToList": "Back to Warehouses",
-        "loadError": "Failed to load warehouse.",
-        "notFound": "Warehouse not found.",
+        "backToList": "Back to Stock Locations",
+        "loadError": "Failed to load stock location.",
+        "notFound": "Stock location not found.",
         "address": "Address",
         "contactName": "Contact Person",
         "contactPhone": "Contact Phone",
         "distinctParts": "Distinct Parts",
         "totalStock": "Total Stock Units",
-        "stockTitle": "Stock in this Warehouse",
-        "noStock": "No stock recorded in this warehouse yet.",
+        "stockTitle": "Stock in this Stock Location",
+        "noStock": "No stock recorded in this stock location yet.",
         "columns": {
           "part": "Part"
         }
@@ -365,11 +400,11 @@
     },
     "quickNav": {
       "parts": {
-        "label": "Spare Parts",
+        "label": "Spare Parts Inventory",
         "desc": "Browse inventory"
       },
       "warehouses": {
-        "label": "Warehouses",
+        "label": "Stock Locations",
         "desc": "Manage locations"
       },
       "purchaseOrders": {
@@ -999,7 +1034,8 @@
           "typeOther": "Other",
           "unitRate": "Unit Rate",
           "adding": "Adding..."
-        }
+        },
+        "cancelReasonDefault": "Cancelled by user"
       }
     }
   },
@@ -1167,6 +1203,107 @@
     },
     "pagination": {
       "showing": "Showing {{start}}–{{end}} of {{total}}"
+    },
+    "loadError": "Failed to load activity log.",
+    "action": {
+      "user_login": "Login",
+      "user_logout": "Logout",
+      "user_created": "User Created",
+      "user_updated": "User Updated",
+      "user_deleted": "User Deleted",
+      "customer_created": "Customer Created",
+      "customer_updated": "Customer Updated",
+      "customer_deleted": "Customer Deleted",
+      "customer_status_changed": "Status Changed",
+      "lead_created": "Lead Created",
+      "lead_updated": "Lead Updated",
+      "lead_deleted": "Lead Deleted",
+      "lead_status_changed": "Status Changed",
+      "lead_note_added": "Note Added",
+      "lead_note_deleted": "Note Deleted",
+      "catalog_product_created": "Product Created",
+      "catalog_product_updated": "Product Updated",
+      "catalog_product_deleted": "Product Deleted",
+      "catalog_brand_created": "Brand Created",
+      "catalog_brand_updated": "Brand Updated",
+      "catalog_brand_deleted": "Brand Deleted",
+      "catalog_category_created": "Category Created",
+      "catalog_category_updated": "Category Updated",
+      "catalog_category_deleted": "Category Deleted",
+      "catalog_import_previewed": "Import Previewed",
+      "catalog_import_executed": "Import Executed",
+      "forklift_created": "Forklift Added",
+      "forklift_updated": "Forklift Updated",
+      "forklift_deleted": "Forklift Deleted",
+      "forklift_status_changed": "Status Changed",
+      "quotation_created": "Quote Created",
+      "quotation_updated": "Quote Updated",
+      "quotation_deleted": "Quote Deleted",
+      "quotation_submitted": "Quote Submitted",
+      "quotation_approved": "Quote Approved",
+      "quotation_revision_requested": "Revision Requested",
+      "quotation_sent": "Quote Sent",
+      "quotation_accepted": "Quote Accepted",
+      "quotation_declined": "Quote Declined",
+      "quotation_converted": "Quote Converted",
+      "quotation_cancelled": "Quote Cancelled",
+      "quotation_reactivated": "Quote Reactivated",
+      "rental_contract_created": "Contract Created",
+      "rental_contract_updated": "Contract Updated",
+      "rental_contract_deleted": "Contract Deleted",
+      "rental_contract_submitted": "Contract Submitted",
+      "rental_contract_approved": "Contract Approved",
+      "rental_contract_revision": "Revision Requested",
+      "rental_contract_activated": "Contract Activated",
+      "rental_contract_cancelled": "Contract Cancelled",
+      "rental_contract_closed": "Contract Closed",
+      "rental_return_requested": "Return Requested",
+      "rental_return_picked_up": "Return Picked Up",
+      "rental_return_received": "Return Received",
+      "rental_return_completed": "Return Completed",
+      "rental_damage_assessed": "Damage Assessed",
+      "rental_damage_disputed": "Damage Disputed",
+      "rental_damage_resolved": "Damage Resolved",
+      "rental_extension_requested": "Extension Requested",
+      "rental_extension_approved": "Extension Approved",
+      "rental_extension_rejected": "Extension Rejected",
+      "rental_billing_created": "Billing Created",
+      "invoice_created": "Invoice Created",
+      "invoice_updated": "Invoice Updated",
+      "invoice_issued": "Invoice Issued",
+      "invoice_sent": "Invoice Sent",
+      "invoice_cancelled": "Invoice Cancelled",
+      "invoice_voided": "Invoice Voided",
+      "payment_recorded": "Payment Recorded",
+      "payment_confirmed": "Payment Confirmed",
+      "payment_rejected": "Payment Rejected",
+      "payment_allocated": "Payment Allocated",
+      "deposit_created": "Deposit Created",
+      "deposit_received": "Deposit Received",
+      "deposit_refunded": "Deposit Refunded",
+      "deposit_forfeited": "Deposit Forfeited",
+      "deposit_applied": "Deposit Applied",
+      "revenue_recognized": "Revenue Recognized",
+      "revenue_reversed": "Revenue Reversed",
+      "project_created": "Project Created",
+      "project_updated": "Project Updated",
+      "project_deleted": "Project Deleted",
+      "project_milestone_status_changed": "Milestone Status Changed",
+      "setting_updated": "Setting Updated",
+      "inventory_import_executed": "Inventory Imported",
+      "notification_preference_created": "Alert Subscribed",
+      "notification_preference_updated": "Alert Preference Updated",
+      "notification_preference_deleted": "Alert Unsubscribed"
+    },
+    "group": {
+      "user": "User",
+      "customer": "Customer",
+      "lead": "Lead",
+      "billing": "Billing",
+      "project": "Project",
+      "settings": "Settings",
+      "inventory": "Inventory",
+      "notifications": "Notifications"
     }
   },
   "equipment": {
@@ -1285,7 +1422,9 @@
       "purchaseDate": "Purchase Date",
       "warrantyExpiry": "Warranty Expiry",
       "notesPlaceholder": "Optional notes...",
-      "saveChanges": "Save Changes"
+      "saveChanges": "Save Changes",
+      "capacityKgPlaceholder": "e.g. 1600",
+      "yearManufacturedPlaceholder": "e.g. 2024"
     },
     "registry": {
       "title": "Equipment Registry",
@@ -1310,6 +1449,15 @@
         "model": "Model",
         "ownership": "Ownership",
         "hours": "Meter Hours"
+      },
+      "toast": {
+        "loadError": "Failed to load forklifts.",
+        "createSuccess": "Forklift registered successfully.",
+        "createError": "Failed to register forklift.",
+        "updateSuccess": "Forklift updated successfully.",
+        "updateError": "Failed to update forklift.",
+        "deleteSuccess": "Forklift deleted.",
+        "deleteError": "Failed to delete forklift."
       }
     },
     "detail": {
@@ -1483,6 +1631,15 @@
       "deleteDialog": {
         "title": "Delete Brand",
         "message": "Delete brand \"{{name}}\"? Products referencing this brand will have their brand cleared."
+      },
+      "toast": {
+        "loadError": "Failed to load brands.",
+        "createSuccess": "Brand created successfully.",
+        "createError": "Failed to create brand.",
+        "updateSuccess": "Brand updated successfully.",
+        "updateError": "Failed to update brand.",
+        "deleteSuccess": "Brand deleted.",
+        "deleteError": "Failed to delete brand."
       }
     },
     "categories": {
@@ -1518,6 +1675,15 @@
       "deleteDialog": {
         "title": "Delete Category",
         "message": "Delete \"{{name}}\"? This will fail if the category has children or products assigned to it."
+      },
+      "toast": {
+        "loadError": "Failed to load categories.",
+        "createSuccess": "Category created successfully.",
+        "createError": "Failed to create category.",
+        "updateSuccess": "Category updated successfully.",
+        "updateError": "Failed to update category.",
+        "deleteSuccess": "Category deleted.",
+        "deleteError": "Failed to delete category."
       }
     },
     "products": {
@@ -1569,6 +1735,15 @@
         "usedAvailable": "Used Available",
         "serviceItem": "Service Item",
         "createProduct": "Create Product"
+      },
+      "toast": {
+        "loadError": "Failed to load products.",
+        "createSuccess": "Product created successfully.",
+        "createError": "Failed to create product.",
+        "updateSuccess": "Product updated successfully.",
+        "updateError": "Failed to update product.",
+        "deleteSuccess": "Product deleted.",
+        "deleteError": "Failed to delete product."
       }
     },
     "productDetail": {
@@ -1652,7 +1827,14 @@
       "resultsCount": "{{count}} results",
       "pageOf": "Page {{page}} of {{pages}} ({{total}} total)",
       "deleteConfirmTitle": "Delete Quotation",
-      "deleteConfirmMessage": "Delete \"{{number}}\"? This cannot be undone."
+      "deleteConfirmMessage": "Delete \"{{number}}\"? This cannot be undone.",
+      "toast": {
+        "loadError": "Failed to load quotations.",
+        "createSuccess": "Quotation created.",
+        "createError": "Failed to create quotation.",
+        "deleteSuccess": "Quotation deleted.",
+        "deleteError": "Failed to delete quotation."
+      }
     },
     "form": {
       "backToQuotations": "Back to Quotations",
@@ -1755,7 +1937,8 @@
         "unitPriceRequired": "Unit price is required.",
         "itemAdded": "Item added.",
         "addFailed": "Failed to add item."
-      }
+      },
+      "revisionNeededReason": "Revision needed"
     }
   },
   "rental": {
@@ -1797,7 +1980,14 @@
       "resultsCount": "{{count}} results",
       "pageOf": "Page {{page}} of {{pages}} ({{total}} total)",
       "deleteConfirmTitle": "Delete Rental Contract",
-      "deleteConfirmMessage": "Delete \"{{number}}\"? This cannot be undone."
+      "deleteConfirmMessage": "Delete \"{{number}}\"? This cannot be undone.",
+      "toast": {
+        "loadError": "Failed to load rental contracts.",
+        "createSuccess": "Rental contract created.",
+        "createError": "Failed to create rental contract.",
+        "deleteSuccess": "Rental contract deleted.",
+        "deleteError": "Failed to delete rental contract."
+      }
     },
     "form": {
       "backToContracts": "Back to Rental Contracts",
@@ -1938,6 +2128,11 @@
         "requestedDateRequired": "Requested date is required.",
         "returnRequested": "Return requested.",
         "requestFailed": "Failed to create return request."
+      },
+      "reasons": {
+        "revisionNeeded": "Revision needed",
+        "cancelledByUser": "Cancelled by user",
+        "rejected": "Rejected"
       }
     }
   },
@@ -1949,43 +2144,47 @@
     "remove": "Remove",
     "uploadedSuccessfully": "Uploaded successfully",
     "clickOrDrag": "Click or drag an image to upload",
-    "hint": "JPG, PNG, WebP · Max {{size}} MB"
+    "hint": "JPG, PNG, WebP · Max {{size}} MB",
+    "previewAlt": "Upload preview"
   },
   "nav": {
     "groups": {
-      "dashboard": "Dashboard",
+      "dashboard": "Executive Dashboard",
       "crm": "CRM",
-      "equipment": "Equipment",
-      "rental": "Rental",
-      "maintenance": "Maintenance",
-      "inventory": "Inventory",
-      "finance": "Finance",
-      "executive": "Executive BI",
-      "projects": "Projects"
+      "equipment": "Fleet & Equipment",
+      "rental": "Rental Operations",
+      "maintenance": "Service & Maintenance",
+      "inventory": "Inventory Control",
+      "finance": "Finance & Accounting",
+      "executive": "Executive Reporting",
+      "projects": "Project Portfolio"
     },
     "items": {
-      "overview": "Overview",
+      "overview": "Operations Overview",
       "customers": "Customers",
-      "leads": "Leads",
-      "quotations": "Quotations",
-      "registry": "Registry",
-      "movements": "Movements",
-      "contracts": "Contracts",
-      "dashboard": "Dashboard",
-      "products": "Products",
+      "leads": "Sales Leads",
+      "quotations": "Commercial Quotations",
+      "registry": "Asset Register",
+      "movements": "Stock Movements",
+      "contracts": "Service Contracts",
+      "dashboard": "Executive Dashboard",
+      "maintenance": "Service & Maintenance",
+      "inventory": "Inventory Control",
+      "billing": "Billing & Receivables",
+      "products": "Product Catalog",
       "invoices": "Invoices",
       "payments": "Payments",
       "deposits": "Deposits",
-      "statements": "Statements",
+      "statements": "Account Statements",
       "activity": "Activity",
       "reports": "Reports",
-      "analytics": "Analytics",
+      "analytics": "Business Analytics",
       "iotTelemetry": "IoT Telemetry",
       "settings": "Settings",
       "warehouseProjects": "Warehouse Projects"
     },
-    "expandSidebar": "Expand sidebar",
-    "collapseSidebar": "Collapse sidebar"
+    "expandSidebar": "Expand navigation pane",
+    "collapseSidebar": "Collapse navigation pane"
   },
   "header": {
     "searchPlaceholder": "Search pages, actions...",
@@ -2059,6 +2258,8 @@
     "exec": {
       "eyebrow": "Executive Overview",
       "title": "Rental Command Center",
+      "rentalMvpEyebrow": "DK Rental · Executive Overview",
+      "rentalMvpTitle": "Fleet & Rental Dashboard",
       "kpi": {
         "totalFleet": "Total Fleet",
         "totalFleetSub": "Forklift units registered",
@@ -2082,7 +2283,15 @@
         "last6Months": "Last 6 months",
         "utilizationSeries": "Utilization %",
         "revenueSeries": "Revenue",
-        "maintenanceSeries": "Maintenance Cost"
+        "maintenanceSeries": "Maintenance Cost",
+        "months": {
+          "jan": "Jan",
+          "feb": "Feb",
+          "mar": "Mar",
+          "apr": "Apr",
+          "may": "May",
+          "jun": "Jun"
+        }
       },
       "contracts": {
         "title": "Active Rental Contracts",
@@ -2106,8 +2315,12 @@
       },
       "customizer": {
         "fontSize": "Font Size",
-        "language": "Language"
-      }
+        "language": "Language",
+        "small": "Small",
+        "medium": "Medium",
+        "large": "Large"
+      },
+      "brandsWeService": "Brands We Service"
     },
     "kpi": {
       "totalRevenue": "Total Revenue",
@@ -2227,9 +2440,18 @@
         }
       },
       "promo": {
-        "sale": { "kicker": "Limited Time", "title": "Ultimate Sale — Up to 50% Off Parts" },
-        "new": { "kicker": "Just Launched", "title": "New Modules This Week" },
-        "staffPicks": { "kicker": "Staff Picks", "title": "Top Rated in Field Service" }
+        "sale": {
+          "kicker": "Limited Time",
+          "title": "Ultimate Sale — Up to 50% Off Parts"
+        },
+        "new": {
+          "kicker": "Just Launched",
+          "title": "New Modules This Week"
+        },
+        "staffPicks": {
+          "kicker": "Staff Picks",
+          "title": "Top Rated in Field Service"
+        }
       },
       "rows": {
         "mostUsed": "Most Used Modules",
@@ -2237,27 +2459,86 @@
         "fieldService": "Popular in Field Service"
       },
       "modules": {
-        "equipmentRegistry": { "title": "DK Equipment Registry", "sub": "Equipment & vehicle registry" },
-        "customers": { "title": "DK Customers", "sub": "Manage customer records" },
-        "quotations": { "title": "DK Quotations", "sub": "Quotations" },
-        "rentalContracts": { "title": "DK Rental Contracts", "sub": "Rental contracts" },
-        "movements": { "title": "DK Movements", "sub": "Equipment movements" },
-        "projects": { "title": "DK Projects", "sub": "Projects & warehouses" },
-        "smartInvoicing": { "title": "DK Smart Invoicing", "sub": "Automatic invoicing" },
-        "payments": { "title": "DK Payments", "sub": "Payments" },
-        "deposits": { "title": "DK Deposits", "sub": "Deposits" },
-        "statements": { "title": "DK Statements", "sub": "Statements" },
-        "inventory": { "title": "DK Inventory", "sub": "Inventory" },
-        "purchaseOrders": { "title": "DK Purchase Orders", "sub": "Order spare parts" },
-        "workOrders": { "title": "DK Work Orders", "sub": "Schedule service" },
-        "assetRegistry": { "title": "DK Asset Registry", "sub": "Asset registry" },
-        "maintenanceSchedule": { "title": "DK Maintenance Schedule", "sub": "Preventive maintenance" }
+        "equipmentRegistry": {
+          "title": "DK Equipment Registry",
+          "sub": "Equipment & vehicle registry"
+        },
+        "customers": {
+          "title": "DK Customers",
+          "sub": "Manage customer records"
+        },
+        "quotations": {
+          "title": "DK Quotations",
+          "sub": "Quotations"
+        },
+        "rentalContracts": {
+          "title": "DK Rental Contracts",
+          "sub": "Rental contracts"
+        },
+        "movements": {
+          "title": "DK Movements",
+          "sub": "Equipment movements"
+        },
+        "projects": {
+          "title": "DK Projects",
+          "sub": "Projects & warehouses"
+        },
+        "smartInvoicing": {
+          "title": "DK Smart Invoicing",
+          "sub": "Automatic invoicing"
+        },
+        "payments": {
+          "title": "DK Payments",
+          "sub": "Payments"
+        },
+        "deposits": {
+          "title": "DK Deposits",
+          "sub": "Deposits"
+        },
+        "statements": {
+          "title": "DK Statements",
+          "sub": "Statements"
+        },
+        "inventory": {
+          "title": "DK Inventory",
+          "sub": "Inventory"
+        },
+        "purchaseOrders": {
+          "title": "DK Purchase Orders",
+          "sub": "Order spare parts"
+        },
+        "workOrders": {
+          "title": "DK Work Orders",
+          "sub": "Schedule service"
+        },
+        "assetRegistry": {
+          "title": "DK Asset Registry",
+          "sub": "Asset registry"
+        },
+        "maintenanceSchedule": {
+          "title": "DK Maintenance Schedule",
+          "sub": "Preventive maintenance"
+        }
       },
       "thirdParty": {
-        "routeWise": { "title": "RouteWise", "sub": "Meridian Labs" },
-        "fleetPulse": { "title": "FleetPulse", "sub": "Orbit Communications" },
-        "partsBin": { "title": "PartsBin", "sub": "Ironclad Systems" }
+        "routeWise": {
+          "title": "RouteWise",
+          "sub": "Meridian Labs"
+        },
+        "fleetPulse": {
+          "title": "FleetPulse",
+          "sub": "Orbit Communications"
+        },
+        "partsBin": {
+          "title": "PartsBin",
+          "sub": "Ironclad Systems"
+        }
       }
+    },
+    "errors": {
+      "leadTrend": "Failed to load lead trend.",
+      "customerTrend": "Failed to load customer trend.",
+      "leadMetrics": "Failed to load lead metrics."
     }
   },
   "customer360": {
@@ -2490,7 +2771,9 @@
         "label": "Invoices",
         "description": "Invoice generation, payment tracking, and revenue reporting"
       }
-    }
+    },
+    "formatCsv": "CSV (.csv)",
+    "formatExcel": "Excel (.xlsx)"
   },
   "routes": {
     "dashboard": "Dashboard",
@@ -2580,5 +2863,22 @@
       "title": "Unpair device",
       "message": "Remove device \"{{deviceId}}\" from {{name}}? It will stop sending automated hour-meter updates until re-paired."
     }
+  },
+  "changePassword": {
+    "title": "Change Password",
+    "subtitle": "Update your password to keep your account secure.",
+    "currentPassword": "Current Password",
+    "currentPasswordPlaceholder": "Enter your current password",
+    "newPassword": "New Password",
+    "newPasswordPlaceholder": "At least 8 characters",
+    "confirmPassword": "Confirm New Password",
+    "confirmPasswordPlaceholder": "Re-enter the new password",
+    "submit": "Change Password",
+    "submitting": "Changing Password…",
+    "mismatchError": "New password and confirmation do not match.",
+    "tooShortError": "Password must be at least 8 characters.",
+    "successToast": "Password changed successfully.",
+    "incorrectCurrentError": "Current password is incorrect.",
+    "genericError": "Failed to change password. Please try again."
   }
 }

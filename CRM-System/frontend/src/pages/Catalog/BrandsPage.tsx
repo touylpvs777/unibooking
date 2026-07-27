@@ -5,6 +5,7 @@ import { useBrands } from '@/hooks/useBrands'
 import Modal from '@/components/ui/Modal'
 import ConfirmDialog from '@/components/ui/ConfirmDialog'
 import type { Brand, BrandCreate, BrandRole, BrandUpdate } from '@/types/catalog'
+import PageHeader from '@/components/layout/PageHeader'
 import './BrandsPage.css'
 import '@/styles/shared.css'
 
@@ -121,15 +122,11 @@ export default function BrandsPage() {
 
   return (
     <div>
-      <div className="page-header">
-        <div>
-          <h1>{t('catalog.brands.title')}</h1>
-          <p className="page-header-sub">{t('catalog.brands.subtitle', { count: brands.length })}</p>
-        </div>
+      <PageHeader title={t('catalog.brands.title')} subtitle={t('catalog.brands.subtitle', { count: brands.length })}>
         <button className="btn btn-primary" onClick={() => { setEditTarget(null); setFormOpen(true) }}>
           <Plus size={15} /> {t('catalog.brands.newBrand')}
         </button>
-      </div>
+      </PageHeader>
 
       {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}
 

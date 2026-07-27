@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { AlertCircle, Wrench, ClipboardList, AlertTriangle, CheckCircle, DollarSign, Clock } from 'lucide-react'
 import { getDashboard } from '@/api/maintenance'
 import type { DashboardSummary } from '@/types/maintenance'
+import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 
 function fmtAmount(n: number) { return n.toLocaleString(undefined, { maximumFractionDigits: 0 }) }
@@ -39,16 +40,12 @@ export default function MaintenanceDashboardPage() {
 
   return (
     <div>
-      <div className="page-header">
-        <div>
-          <h1>{t('maintenance.dashboard.title')}</h1>
-          <p className="page-header-sub">{t('maintenance.dashboard.subtitle')}</p>
-        </div>
+      <PageHeader title={t('maintenance.dashboard.title')} subtitle={t('maintenance.dashboard.subtitle')}>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="btn btn-secondary" onClick={() => navigate('/maintenance/schedules')}>{t('maintenance.dashboard.pmSchedulesButton')}</button>
           <button className="btn btn-primary" onClick={() => navigate('/maintenance/work-orders')}>{t('maintenance.dashboard.workOrdersButton')}</button>
         </div>
-      </div>
+      </PageHeader>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12, marginTop: 16 }}>
         {cards.map((c) => (

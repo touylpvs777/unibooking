@@ -15,6 +15,34 @@
 .page-header h1 { font-size: 20px; font-weight: 700; color: var(--color-text); }
 .page-header-sub { font-size: 13px; color: var(--color-text-muted); margin-top: 2px; }
 
+/* ── Page header banner (module-category colored variant) ─── */
+.page-header-banner {
+  padding: 16px 20px;
+  border-radius: 12px;
+  color: white;
+}
+.page-header-banner h1 { color: white; }
+.page-header-banner .page-header-sub { color: rgba(255, 255, 255, 0.78); }
+/* A few detail pages (invoice/payment) use styles/detail.css's own subtitle
+   classes instead of .page-header-sub — cover those too. */
+.page-header-banner .detail-subtitle,
+.page-header-banner .detail-rev { color: rgba(255, 255, 255, 0.78); }
+/* .btn-primary keeps its own solid color (already high-contrast on any background);
+   ghost/secondary buttons default to a near-invisible light-gray border/text that
+   only works on a white page background, so give them a translucent-white treatment
+   here instead. */
+.page-header-banner .btn-ghost,
+.page-header-banner .btn-secondary {
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+.page-header-banner .btn-ghost:hover:not(:disabled),
+.page-header-banner .btn-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.22);
+  color: white;
+}
+
 /* ── Toolbar ────────────────────────────────────────────── */
 .toolbar {
   display: flex;

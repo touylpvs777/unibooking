@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   getCategoryTree,
   getCategoriesFlat,
@@ -19,6 +20,7 @@ function flattenTree(nodes: ProductCategory[], depth = 0): ProductCategory[] {
 }
 
 export function useCategories() {
+  const { t } = useTranslation()
   const [tree, setTree]           = useState<ProductCategory[]>([])
   const [flat, setFlat]           = useState<ProductCategory[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -32,11 +34,11 @@ export function useCategories() {
       setTree(treeRes.data)
       setFlat(flatRes.data)
     } catch {
-      setError('Failed to load categories.')
+      setError(t('catalog.categories.toast.loadError'))
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [t])
 
   useEffect(() => { load() }, [load])
 
@@ -46,10 +48,10 @@ export function useCategories() {
     try {
       await apiCreate(data)
       await load()
-      toast.success('Category created successfully.')
+      toast.success(t('catalog.categories.toast.createSuccess'))
       return true
     } catch {
-      toast.error('Failed to create category.')
+      toast.error(t('catalog.categories.toast.createError'))
       return false
     }
   }
@@ -58,10 +60,10 @@ export function useCategories() {
     try {
       await apiUpdate(id, data)
       await load()
-      toast.success('Category updated successfully.')
+      toast.success(t('catalog.categories.toast.updateSuccess'))
       return true
     } catch {
-      toast.error('Failed to update category.')
+      toast.error(t('catalog.categories.toast.updateError'))
       return false
     }
   }
@@ -70,10 +72,10 @@ export function useCategories() {
     try {
       await apiDelete(id)
       await load()
-      toast.success('Category deleted.')
+      toast.success(t('catalog.categories.toast.deleteSuccess'))
       return true
     } catch {
-      toast.error('Failed to delete category.')
+      toast.error(t('catalog.categories.toast.deleteError'))
       return false
     }
   }

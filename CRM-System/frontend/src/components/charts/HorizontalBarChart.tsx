@@ -15,7 +15,7 @@ export interface HorizontalBarChartProps {
   data: BarItem[]
   colorMap?: Record<string, string>
   defaultColor?: string
-  label?: string
+  label: string
   /** Width reserved for Y-axis labels */
   labelWidth?: number
   height?: number
@@ -32,7 +32,7 @@ export default function HorizontalBarChart({
   data,
   colorMap = {},
   defaultColor = '#94a3b8',
-  label = 'Count',
+  label,
   labelWidth = 84,
   height = 200,
 }: HorizontalBarChartProps) {

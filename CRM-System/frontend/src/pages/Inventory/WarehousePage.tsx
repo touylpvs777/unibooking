@@ -7,6 +7,7 @@ import { WarehouseGrid, WarehouseGridSkeleton } from '@/modules/inventory'
 import Modal from '@/components/ui/Modal'
 import { toast } from '@/store/toastStore'
 import type { Warehouse as WH } from '@/types/inventory'
+import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 
 export default function WarehousePage() {
@@ -28,11 +29,7 @@ export default function WarehousePage() {
 
   return (
     <div>
-      <div className="page-header">
-        <div>
-          <h1>{t('inventory.warehouse.title')}</h1>
-          <p className="page-header-sub">{t('inventory.warehouse.list.subtitle', { count: items.length })}</p>
-        </div>
+      <PageHeader title={t('inventory.warehouse.title')} subtitle={t('inventory.warehouse.list.subtitle', { count: items.length })}>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="btn btn-ghost" onClick={load} disabled={isLoading}>
             <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('inventory.common.refresh')}
@@ -41,7 +38,7 @@ export default function WarehousePage() {
             <Plus size={15} /> {t('inventory.warehouse.list.addWarehouse')}
           </button>
         </div>
-      </div>
+      </PageHeader>
 
       {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}
 

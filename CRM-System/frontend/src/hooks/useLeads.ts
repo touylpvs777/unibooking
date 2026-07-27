@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   getLeads,
   createLead  as apiCreate,
@@ -9,6 +10,7 @@ import { toast } from '@/store/toastStore'
 import type { Lead, LeadCreate, LeadUpdate } from '@/types/lead'
 
 export function useLeads() {
+  const { t } = useTranslation()
   const [leads, setLeads]       = useState<Lead[]>([])
   const [isLoading, setLoading] = useState(true)
   const [error, setError]       = useState<string | null>(null)
@@ -20,11 +22,11 @@ export function useLeads() {
       const { data } = await getLeads({ limit: 500 })
       setLeads(data)
     } catch {
-      setError('Failed to load leads.')
+      setError(t('leads.list.toast.loadError'))
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [t])
 
   useEffect(() => { load() }, [load])
 
@@ -32,10 +34,10 @@ export function useLeads() {
     try {
       await apiCreate(data)
       await load()
-      toast.success('Lead created.')
+      toast.success(t('leads.list.toast.createSuccess'))
       return true
     } catch {
-      toast.error('Failed to create lead.')
+      toast.error(t('leads.list.toast.createError'))
       return false
     }
   }
@@ -44,14 +46,14 @@ export function useLeads() {
     try {
       await apiUpdate(id, data)
       await load()
-      toast.success('Lead updated.')
+      toast.success(t('leads.list.toast.updateSuccess'))
       return true
     } catch (err: unknown) {
       // Surface backend validation message (e.g. invalid status transition)
       const detail =
         (err as { response?: { data?: { detail?: string } } })
           ?.response?.data?.detail
-      toast.error(detail ?? 'Failed to update lead.')
+      toast.error(detail ?? t('leads.list.toast.updateError'))
       return false
     }
   }
@@ -60,10 +62,10 @@ export function useLeads() {
     try {
       await apiDelete(id)
       await load()
-      toast.success('Lead deleted.')
+      toast.success(t('leads.list.toast.deleteSuccess'))
       return true
     } catch {
-      toast.error('Failed to delete lead.')
+      toast.error(t('leads.list.toast.deleteError'))
       return false
     }
   }

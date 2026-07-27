@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   getForklifts,
   createForklift as apiCreate,
@@ -17,6 +18,7 @@ const DEFAULT_PARAMS: ForkliftListParams = {
 }
 
 export function useForklifts(initialParams: ForkliftListParams = DEFAULT_PARAMS) {
+  const { t } = useTranslation()
   const [response, setResponse]   = useState<ForkliftListResponse | null>(null)
   const [params, setParams]       = useState<ForkliftListParams>(initialParams)
   const [isLoading, setIsLoading] = useState(true)
@@ -29,11 +31,11 @@ export function useForklifts(initialParams: ForkliftListParams = DEFAULT_PARAMS)
       const { data } = await getForklifts(p)
       setResponse(data)
     } catch {
-      setError('Failed to load forklifts.')
+      setError(t('equipment.registry.toast.loadError'))
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [t])
 
   useEffect(() => { load(params) }, [load, params])
 
@@ -44,11 +46,11 @@ export function useForklifts(initialParams: ForkliftListParams = DEFAULT_PARAMS)
     try {
       await apiCreate(data)
       await load(params)
-      toast.success('Forklift registered successfully.')
+      toast.success(t('equipment.registry.toast.createSuccess'))
       return true
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail
-      toast.error(msg ?? 'Failed to register forklift.')
+      toast.error(msg ?? t('equipment.registry.toast.createError'))
       return false
     }
   }
@@ -57,11 +59,11 @@ export function useForklifts(initialParams: ForkliftListParams = DEFAULT_PARAMS)
     try {
       await apiUpdate(id, data)
       await load(params)
-      toast.success('Forklift updated successfully.')
+      toast.success(t('equipment.registry.toast.updateSuccess'))
       return true
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail
-      toast.error(msg ?? 'Failed to update forklift.')
+      toast.error(msg ?? t('equipment.registry.toast.updateError'))
       return false
     }
   }
@@ -73,10 +75,10 @@ export function useForklifts(initialParams: ForkliftListParams = DEFAULT_PARAMS)
         ? params.page! - 1
         : params.page
       await load({ ...params, page: newPage })
-      toast.success('Forklift deleted.')
+      toast.success(t('equipment.registry.toast.deleteSuccess'))
       return true
     } catch {
-      toast.error('Failed to delete forklift.')
+      toast.error(t('equipment.registry.toast.deleteError'))
       return false
     }
   }

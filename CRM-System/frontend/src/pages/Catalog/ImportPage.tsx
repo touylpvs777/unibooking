@@ -4,6 +4,7 @@ import { Upload, FileSpreadsheet, CheckCircle2, AlertCircle, Loader2 } from 'luc
 import { importNow } from '@/api/catalog'
 import type { ImportExecuteResponse } from '@/types/catalog'
 import { toast } from '@/store/toastStore'
+import PageHeader from '@/components/layout/PageHeader'
 import './ImportPage.css'
 import '@/styles/shared.css'
 
@@ -66,12 +67,7 @@ export default function ImportPage() {
   return (
     <div className="import-page">
       {/* Header */}
-      <div className="page-header">
-        <div>
-          <h1>{t('catalog.import.title')}</h1>
-          <p className="page-header-sub">{t('catalog.import.subtitle')}</p>
-        </div>
-      </div>
+      <PageHeader title={t('catalog.import.title')} subtitle={t('catalog.import.subtitle')} />
 
       {result ? (
         <div className="import-section">

@@ -47,8 +47,8 @@ export default function LanguageToggle() {
         className={`lang-toggle-more${isMoreActive ? ' active' : ''}`}
         value={isMoreActive ? current : ''}
         onChange={(e) => { if (e.target.value) i18n.changeLanguage(e.target.value) }}
-        title="More languages"
-        aria-label="More languages"
+        title={t('common.moreLanguages')}
+        aria-label={t('common.moreLanguages')}
       >
         <option value="" disabled>···</option>
         {MORE_LANGUAGES.map((lng) => (

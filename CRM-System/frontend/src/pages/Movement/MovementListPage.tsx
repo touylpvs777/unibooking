@@ -9,6 +9,7 @@ import { getMovements } from '@/api/movement'
 import { MovementStatusBadge, MovementTypeBadge, MovementPriorityBadge } from '@/components/movement/MovementStatusBadge'
 import MovementCard from '@/components/movement/MovementCard'
 import type { Movement, MovementListParams, MovementStatus, MovementType as MType } from '@/types/movement'
+import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 
 function fmtDate(iso: string) {
@@ -54,11 +55,7 @@ export default function MovementListPage() {
 
   return (
     <div>
-      <div className="page-header">
-        <div>
-          <h1>{t('movement.list.title')}</h1>
-          <p className="page-header-sub">{t('movement.list.totalCount', { count: total })}</p>
-        </div>
+      <PageHeader title={t('movement.list.title')} subtitle={t('movement.list.totalCount', { count: total })}>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="btn btn-ghost" onClick={load} disabled={isLoading} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('movement.list.refresh')}
@@ -67,7 +64,7 @@ export default function MovementListPage() {
             <Plus size={15} /> {t('movement.list.newMovement')}
           </button>
         </div>
-      </div>
+      </PageHeader>
 
       {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}
 
