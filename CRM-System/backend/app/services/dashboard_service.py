@@ -1,11 +1,35 @@
 from datetime import date, datetime
-from sqlalchemy import case, func, select
+from sqlalchemy import case, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.models.customer import Customer, CustomerStatus
+from app.models.inventory_balance import InventoryBalance
+from app.models.inventory_transaction import InventoryTransaction, TransactionType
+from app.models.invoice import Invoice, InvoiceStatus, ReferenceType
+from app.models.invoice_item import InvoiceItem
 from app.models.lead import Lead, LeadStatus
-from app.schemas.dashboard import DashboardSummary, LeadMetrics, TrendPoint
+from app.models.maintenance_cost import MaintenanceCost, MaintenanceCostType
+from app.models.purchase_order import POStatus, PurchaseOrder
+from app.models.spare_part import SparePart
+from app.models.work_order import WorkOrder, WorkOrderStatus
+from app.schemas.dashboard import (
+    CostMetrics,
+    CreditMetrics,
+    DashboardSummary,
+    ErpDashboardSummary,
+    InventoryOpsMetrics,
+    LeadMetrics,
+    ProfitMetrics,
+    ProfitTrendPoint,
+    RevenueBreakdown,
+    SalesMetrics,
+    ServiceMetrics,
+    TrendPoint,
+)
+
+_OPEN_INVOICE_STATUSES = (InvoiceStatus.CANCELLED.value, InvoiceStatus.VOIDED.value)
+_SERVICE_COST_TYPES_OTHER = (MaintenanceCostType.EXTERNAL_SERVICE.value, MaintenanceCostType.OTHER.value)
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
@@ -188,3 +212,259 @@ class DashboardService:
             },
             by_source={(row.source or "unknown"): row.cnt for row in source_rows},
         )
+
+    # ── ERP financial & operational summary ─────────────────────────────────
+    #
+    # `import_fees`, `shipping_fees` (Costs) and `discount` (Service) have no
+    # backing column anywhere in the schema yet — they're returned as 0.0
+    # placeholders until a table/field is added to track them. Every other
+    # figure below is a real aggregate query, not mocked.
+
+    async def _sales_totals(self, since: datetime | None = None) -> dict:
+        stmt = select(
+            func.coalesce(func.sum(Invoice.subtotal), 0.0).label("total_sales"),
+            func.coalesce(func.sum(Invoice.discount_amount), 0.0).label("total_discount"),
+            func.coalesce(func.sum(Invoice.tax_amount), 0.0).label("total_tax"),
+            func.coalesce(func.sum(Invoice.total_amount), 0.0).label("net_sales"),
+            func.coalesce(func.sum(Invoice.amount_paid), 0.0).label("amount_received"),
+            func.count(Invoice.id).label("invoice_count"),
+        ).where(Invoice.status.notin_(_OPEN_INVOICE_STATUSES))
+        if since is not None:
+            stmt = stmt.where(Invoice.created_at >= since)
+        return dict((await self.db.execute(stmt)).one()._mapping)
+
+    async def _po_cost_total(self, since: datetime | None = None) -> float:
+        stmt = select(
+            func.coalesce(func.sum(PurchaseOrder.total_amount), 0.0)
+        ).where(PurchaseOrder.status != POStatus.CANCELLED.value)
+        if since is not None:
+            stmt = stmt.where(PurchaseOrder.created_at >= since)
+        return (await self.db.execute(stmt)).scalar_one()
+
+    async def _service_cost_total(self, since: datetime | None = None) -> float:
+        stmt = (
+            select(func.coalesce(func.sum(MaintenanceCost.amount), 0.0))
+            .select_from(MaintenanceCost)
+            .join(WorkOrder, MaintenanceCost.work_order_id == WorkOrder.id)
+            .where(WorkOrder.status != WorkOrderStatus.CANCELLED.value)
+        )
+        if since is not None:
+            stmt = stmt.where(MaintenanceCost.created_at >= since)
+        return (await self.db.execute(stmt)).scalar_one()
+
+    async def get_erp_summary(self) -> ErpDashboardSummary:
+        today_start = datetime.combine(date.today(), datetime.min.time())
+        month_start = _cutoff_from_months(1)
+
+        sales_all = await self._sales_totals()
+        sales_today = await self._sales_totals(since=today_start)
+        sales_month = await self._sales_totals(since=month_start)
+
+        po_cost_all = await self._po_cost_total()
+        po_cost_today = await self._po_cost_total(since=today_start)
+        po_cost_month = await self._po_cost_total(since=month_start)
+
+        service_cost_all = await self._service_cost_total()
+        service_cost_today = await self._service_cost_total(since=today_start)
+        service_cost_month = await self._service_cost_total(since=month_start)
+
+        net_profit_all = sales_all["net_sales"] - po_cost_all - service_cost_all
+        net_profit_today = sales_today["net_sales"] - po_cost_today - service_cost_today
+        net_profit_month = sales_month["net_sales"] - po_cost_month - service_cost_month
+
+        item_qty_row = (
+            await self.db.execute(
+                select(func.coalesce(func.sum(InvoiceItem.quantity), 0.0))
+                .select_from(InvoiceItem)
+                .join(Invoice, InvoiceItem.invoice_id == Invoice.id)
+                .where(Invoice.status.notin_(_OPEN_INVOICE_STATUSES))
+            )
+        ).scalar_one()
+
+        sales = SalesMetrics(
+            total_sales=sales_all["total_sales"],
+            total_discount=sales_all["total_discount"],
+            total_tax=sales_all["total_tax"],
+            net_sales=sales_all["net_sales"],
+            amount_received=sales_all["amount_received"],
+            invoice_count=sales_all["invoice_count"],
+        )
+
+        costs = CostMetrics(
+            purchase_price=po_cost_all,
+            import_fees=0.0,
+            shipping_fees=0.0,
+            total_cost=po_cost_all,
+        )
+
+        profit = ProfitMetrics(
+            profit_per_item=round(net_profit_all / item_qty_row, 2) if item_qty_row else 0.0,
+            profit_per_invoice=(
+                round(net_profit_all / sales_all["invoice_count"], 2)
+                if sales_all["invoice_count"] else 0.0
+            ),
+            daily_profit=round(net_profit_today, 2),
+            monthly_profit=round(net_profit_month, 2),
+        )
+
+        stock_in_row = (
+            await self.db.execute(
+                select(func.coalesce(func.sum(InventoryTransaction.quantity), 0.0))
+                .where(
+                    InventoryTransaction.transaction_type.in_(
+                        (TransactionType.RECEIVE.value, TransactionType.RETURN.value)
+                    ),
+                    InventoryTransaction.created_at >= month_start,
+                )
+            )
+        ).scalar_one()
+        stock_out_row = (
+            await self.db.execute(
+                select(func.coalesce(func.sum(InventoryTransaction.quantity), 0.0))
+                .where(
+                    InventoryTransaction.transaction_type.in_(
+                        (TransactionType.ISSUE.value, TransactionType.CONSUME.value)
+                    ),
+                    InventoryTransaction.created_at >= month_start,
+                )
+            )
+        ).scalar_one()
+        current_balance = (
+            await self.db.execute(select(func.coalesce(func.sum(InventoryBalance.quantity_on_hand), 0.0)))
+        ).scalar_one()
+        low_stock_alerts = (
+            await self.db.execute(
+                select(func.count())
+                .select_from(InventoryBalance)
+                .join(SparePart, InventoryBalance.spare_part_id == SparePart.id)
+                .where(InventoryBalance.quantity_available <= SparePart.min_stock_level)
+            )
+        ).scalar_one()
+
+        inventory = InventoryOpsMetrics(
+            stock_in=stock_in_row,
+            stock_out=stock_out_row,
+            current_balance=current_balance,
+            low_stock_alerts=low_stock_alerts,
+        )
+
+        service_row = (
+            await self.db.execute(
+                select(
+                    func.coalesce(
+                        func.sum(case((MaintenanceCost.cost_type == MaintenanceCostType.LABOR.value, MaintenanceCost.amount))), 0.0
+                    ).label("labor"),
+                    func.coalesce(
+                        func.sum(case((MaintenanceCost.cost_type == MaintenanceCostType.PARTS.value, MaintenanceCost.amount))), 0.0
+                    ).label("parts"),
+                    func.coalesce(
+                        func.sum(case((MaintenanceCost.cost_type.in_(_SERVICE_COST_TYPES_OTHER), MaintenanceCost.amount))), 0.0
+                    ).label("other"),
+                )
+                .select_from(MaintenanceCost)
+                .join(WorkOrder, MaintenanceCost.work_order_id == WorkOrder.id)
+                .where(WorkOrder.status != WorkOrderStatus.CANCELLED.value)
+            )
+        ).one()
+
+        service = ServiceMetrics(
+            labor_cost=service_row.labor,
+            parts_cost=service_row.parts,
+            other_services=service_row.other,
+            discount=0.0,
+            grand_total=round(service_row.labor + service_row.parts + service_row.other, 2),
+        )
+
+        credit_row = (
+            await self.db.execute(
+                select(
+                    func.coalesce(func.sum(Invoice.amount_paid), 0.0).label("paid"),
+                    func.coalesce(func.sum(Invoice.balance_due), 0.0).label("outstanding"),
+                ).where(Invoice.status.notin_(_OPEN_INVOICE_STATUSES))
+            )
+        ).one()
+        credit = CreditMetrics(
+            total_customer_debt=round(credit_row.paid + credit_row.outstanding, 2),
+            total_paid=credit_row.paid,
+            outstanding_balance=credit_row.outstanding,
+        )
+
+        bucket_expr = case(
+            (Invoice.reference_type == ReferenceType.WORK_ORDER.value, "service"),
+            (
+                or_(Invoice.contract_id.isnot(None), Invoice.reference_type == ReferenceType.RENTAL.value),
+                "vehicle",
+            ),
+            (Invoice.reference_type == ReferenceType.SALES.value, "parts"),
+            else_="other",
+        )
+        bucket_rows = (
+            await self.db.execute(
+                select(bucket_expr.label("bucket"), func.coalesce(func.sum(Invoice.total_amount), 0.0).label("amt"))
+                .where(Invoice.status.notin_(_OPEN_INVOICE_STATUSES))
+                .group_by(bucket_expr)
+            )
+        ).all()
+        buckets = {row.bucket: row.amt for row in bucket_rows}
+        revenue_breakdown = RevenueBreakdown(
+            parts_revenue=buckets.get("parts", 0.0),
+            vehicle_revenue=buckets.get("vehicle", 0.0),
+            service_revenue=buckets.get("service", 0.0),
+            other_revenue=buckets.get("other", 0.0),
+        )
+
+        return ErpDashboardSummary(
+            sales=sales,
+            costs=costs,
+            profit=profit,
+            inventory=inventory,
+            service=service,
+            credit=credit,
+            revenue_breakdown=revenue_breakdown,
+            net_profit=round(net_profit_all, 2),
+        )
+
+    async def get_profit_trend(self, months: int = 6) -> list[ProfitTrendPoint]:
+        cutoff = _cutoff_from_months(months)
+
+        sales_month_col = _month_expr(Invoice.created_at)
+        sales_rows = (
+            await self.db.execute(
+                select(sales_month_col.label("month"), func.coalesce(func.sum(Invoice.total_amount), 0.0).label("amt"))
+                .where(Invoice.status.notin_(_OPEN_INVOICE_STATUSES), Invoice.created_at >= cutoff)
+                .group_by(sales_month_col)
+            )
+        ).all()
+        sales_by_month = {row.month: row.amt for row in sales_rows}
+
+        po_month_col = _month_expr(PurchaseOrder.created_at)
+        po_rows = (
+            await self.db.execute(
+                select(po_month_col.label("month"), func.coalesce(func.sum(PurchaseOrder.total_amount), 0.0).label("amt"))
+                .where(PurchaseOrder.status != POStatus.CANCELLED.value, PurchaseOrder.created_at >= cutoff)
+                .group_by(po_month_col)
+            )
+        ).all()
+        cost_by_month = {row.month: row.amt for row in po_rows}
+
+        service_month_col = _month_expr(MaintenanceCost.created_at)
+        service_rows = (
+            await self.db.execute(
+                select(service_month_col.label("month"), func.coalesce(func.sum(MaintenanceCost.amount), 0.0).label("amt"))
+                .select_from(MaintenanceCost)
+                .join(WorkOrder, MaintenanceCost.work_order_id == WorkOrder.id)
+                .where(WorkOrder.status != WorkOrderStatus.CANCELLED.value, MaintenanceCost.created_at >= cutoff)
+                .group_by(service_month_col)
+            )
+        ).all()
+        service_cost_by_month = {row.month: row.amt for row in service_rows}
+
+        return [
+            ProfitTrendPoint(
+                month=m,
+                profit=round(
+                    sales_by_month.get(m, 0.0) - cost_by_month.get(m, 0.0) - service_cost_by_month.get(m, 0.0), 2
+                ),
+            )
+            for m in _month_range(months)
+        ]

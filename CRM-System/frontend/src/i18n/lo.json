@@ -461,6 +461,109 @@
       },
       "brandsWeService": "ຍີ່ຫໍ້ທີ່ພວກເຮົາໃຫ້ບໍລິການ"
     },
+    "erp": {
+      "eyebrow": "ພາບລວມທຸລະກິດ",
+      "title": "ແດັດບອດການເງິນ ແລະ ການດຳເນີນງານ",
+      "loadError": "ໂຫຼດຂໍ້ມູນແດັດບອດບໍ່ສຳເລັດ.",
+      "viewDetails": "ເບິ່ງລາຍລະອຽດ",
+      "rollupCaption": "ຂໍ້ມູນລວມມາຈາກ:",
+      "sources": {
+        "invoices": "ໃບແຈ້ງໜີ້",
+        "purchaseOrders": "ໃບສັ່ງຊື້",
+        "workOrders": "ໃບງານສ້ອມແປງ",
+        "payments": "ການຊຳລະເງິນ",
+        "inventory": "ສາງ"
+      },
+      "tabs": {
+        "financial": "ພາບລວມການເງິນ",
+        "operations": "ສາງ ແລະ ການດຳເນີນງານ",
+        "service": "ບໍລິການ ແລະ ສ້ອມແປງ"
+      },
+      "hero": {
+        "netSales": "ຍອດຂາຍສຸດທິ",
+        "totalCost": "ຕົ້ນທຶນລວມ",
+        "netProfit": "ກຳໄລສຸດທິ",
+        "outstandingBalance": "ຍອດຄ້າງຊຳລະ"
+      },
+      "sales": {
+        "title": "ການຂາຍ",
+        "totalSales": "ຍອດຂາຍລວມ",
+        "totalDiscount": "ສ່ວນຫຼຸດລວມ",
+        "totalTax": "ພາສີລວມ",
+        "netSales": "ຍອດຂາຍສຸດທິ",
+        "amountReceived": "ຍອດຮັບເງິນ",
+        "invoiceCount": "{{count}} ໃບແຈ້ງໜີ້"
+      },
+      "costs": {
+        "title": "ຕົ້ນທຶນ",
+        "purchasePrice": "ລາຄາຊື້",
+        "importFees": "ຄ່າທຳນຽມນຳເຂົ້າ",
+        "shippingFees": "ຄ່າຂົນສົ່ງ",
+        "totalCost": "ຕົ້ນທຶນລວມ",
+        "notTracked": "ຍັງບໍ່ໄດ້ບັນທຶກ"
+      },
+      "profit": {
+        "title": "ກຳໄລ",
+        "profitPerItem": "ກຳໄລຕໍ່ລາຍການ",
+        "profitPerInvoice": "ກຳໄລຕໍ່ໃບແຈ້ງໜີ້",
+        "dailyProfit": "ກຳໄລລາຍວັນ",
+        "monthlyProfit": "ກຳໄລລາຍເດືອນ"
+      },
+      "credit": {
+        "title": "ສິນເຊື່ອ ແລະ ໜີ້ສິນ",
+        "totalCustomerDebt": "ໜີ້ສິນລູກຄ້າລວມ",
+        "totalPaid": "ຍອດຊຳລະລວມ",
+        "outstandingBalance": "ຍອດຄ້າງຊຳລະ"
+      },
+      "revenue": {
+        "title": "ແຫຼ່ງລາຍໄດ້",
+        "partsRevenue": "ລາຍໄດ້ອາໄຫຼ່",
+        "vehicleRevenue": "ລາຍໄດ້ຍານພາຫະນະ",
+        "serviceRevenue": "ລາຍໄດ້ບໍລິການ",
+        "otherRevenue": "ລາຍໄດ້ອື່ນໆ"
+      },
+      "inventory": {
+        "title": "ສາງ",
+        "stockIn": "ນຳເຂົ້າສາງ",
+        "stockOut": "ອອກສາງ",
+        "currentBalance": "ຍອດຄົງເຫຼືອ",
+        "lowStockAlerts": "ແຈ້ງເຕືອນສາງໜ້ອຍ",
+        "thisMonth": "ເດືອນນີ້",
+        "unitsSuffix": "ໜ່ວຍ"
+      },
+      "service": {
+        "title": "ບໍລິການ ແລະ ສ້ອມແປງ",
+        "laborCost": "ຄ່າແຮງງານ",
+        "partsCost": "ຄ່າອາໄຫຼ່",
+        "otherServices": "ບໍລິການອື່ນໆ",
+        "discount": "ສ່ວນຫຼຸດ",
+        "grandTotal": "ລວມທັງໝົດ"
+      },
+      "chart": {
+        "profitTrend": "ແນວໂນ້ມກຳໄລສຸດທິ",
+        "last6Months": "6 ເດືອນຫຼ້າສຸດ",
+        "profitSeries": "ກຳໄລ",
+        "revenueBreakdown": "ການແບ່ງລາຍໄດ້",
+        "revenueBreakdownSub": "ຕາມແຫຼ່ງລາຍໄດ້",
+        "chartType": "ປະເພດແຜນຮູບ",
+        "line": "ເສັ້ນ",
+        "bar": "ແທ່ງ",
+        "area": "ພື້ນທີ່",
+        "sampleBadge": "ຂໍ້ມູນຕົວຢ່າງ",
+        "salesOpsTrend": "ແນວໂນ້ມການເງິນ ແລະ ການດຳເນີນງານ",
+        "salesOpsTrendSub": "ແນວໂນ້ມຕົວຢ່າງລາຍເດືອນ — ຂໍ້ມູນສາທິດ",
+        "salesSeries": "ຍອດຂາຍ",
+        "costsSeries": "ຕົ້ນທຶນ"
+      }
+    },
+    "iot": {
+      "title": "ຂໍ້ມູນໂທລະມາດ IoT ແລະ ສະຖານະອຸປະກອນ",
+      "live": "ສົດ",
+      "viewAll": "ເບິ່ງການຈັດການ IoT",
+      "gps": "GPS",
+      "engineTemp": "ອຸນຫະພູມເຄື່ອງຈັກ",
+      "hours": "ຊົ່ວໂມງໃຊ້ງານ"
+    },
     "kpi": {
       "totalRevenue": "ລາຍຮັບລວມ",
       "activeRentals": "ສັນຍາເຊົ່າທີ່ໃຊ້ງານ",

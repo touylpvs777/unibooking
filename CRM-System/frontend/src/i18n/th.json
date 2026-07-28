@@ -461,6 +461,109 @@
       },
       "brandsWeService": "แบรนด์ที่เราให้บริการ"
     },
+    "erp": {
+      "eyebrow": "ภาพรวมธุรกิจ",
+      "title": "แดชบอร์ดการเงินและการดำเนินงาน",
+      "loadError": "โหลดข้อมูลแดชบอร์ดไม่สำเร็จ",
+      "viewDetails": "ดูรายละเอียด",
+      "rollupCaption": "ข้อมูลรวมมาจาก:",
+      "sources": {
+        "invoices": "ใบแจ้งหนี้",
+        "purchaseOrders": "ใบสั่งซื้อ",
+        "workOrders": "ใบสั่งงานซ่อม",
+        "payments": "การชำระเงิน",
+        "inventory": "คลังสินค้า"
+      },
+      "tabs": {
+        "financial": "ภาพรวมการเงิน",
+        "operations": "คลังสินค้าและการดำเนินงาน",
+        "service": "บริการและซ่อมบำรุง"
+      },
+      "hero": {
+        "netSales": "ยอดขายสุทธิ",
+        "totalCost": "ต้นทุนรวม",
+        "netProfit": "กำไรสุทธิ",
+        "outstandingBalance": "ยอดค้างชำระ"
+      },
+      "sales": {
+        "title": "ยอดขาย",
+        "totalSales": "ยอดขายรวม",
+        "totalDiscount": "ส่วนลดรวม",
+        "totalTax": "ภาษีรวม",
+        "netSales": "ยอดขายสุทธิ",
+        "amountReceived": "ยอดรับชำระ",
+        "invoiceCount": "{{count}} ใบแจ้งหนี้"
+      },
+      "costs": {
+        "title": "ต้นทุน",
+        "purchasePrice": "ราคาซื้อ",
+        "importFees": "ค่าธรรมเนียมนำเข้า",
+        "shippingFees": "ค่าขนส่ง",
+        "totalCost": "ต้นทุนรวม",
+        "notTracked": "ยังไม่มีการบันทึก"
+      },
+      "profit": {
+        "title": "กำไร",
+        "profitPerItem": "กำไรต่อรายการ",
+        "profitPerInvoice": "กำไรต่อใบแจ้งหนี้",
+        "dailyProfit": "กำไรรายวัน",
+        "monthlyProfit": "กำไรรายเดือน"
+      },
+      "credit": {
+        "title": "เครดิตและหนี้สิน",
+        "totalCustomerDebt": "หนี้สินลูกค้ารวม",
+        "totalPaid": "ยอดชำระรวม",
+        "outstandingBalance": "ยอดค้างชำระ"
+      },
+      "revenue": {
+        "title": "แหล่งรายได้",
+        "partsRevenue": "รายได้จากอะไหล่",
+        "vehicleRevenue": "รายได้จากยานพาหนะ",
+        "serviceRevenue": "รายได้จากบริการ",
+        "otherRevenue": "รายได้อื่นๆ"
+      },
+      "inventory": {
+        "title": "คลังสินค้า",
+        "stockIn": "รับเข้าสต็อก",
+        "stockOut": "เบิกออกสต็อก",
+        "currentBalance": "ยอดคงเหลือ",
+        "lowStockAlerts": "แจ้งเตือนสต็อกต่ำ",
+        "thisMonth": "เดือนนี้",
+        "unitsSuffix": "หน่วย"
+      },
+      "service": {
+        "title": "บริการและซ่อมบำรุง",
+        "laborCost": "ค่าแรง",
+        "partsCost": "ค่าอะไหล่",
+        "otherServices": "บริการอื่นๆ",
+        "discount": "ส่วนลด",
+        "grandTotal": "ยอดรวมทั้งสิ้น"
+      },
+      "chart": {
+        "profitTrend": "แนวโน้มกำไรสุทธิ",
+        "last6Months": "6 เดือนล่าสุด",
+        "profitSeries": "กำไร",
+        "revenueBreakdown": "สัดส่วนรายได้",
+        "revenueBreakdownSub": "แยกตามแหล่งรายได้",
+        "chartType": "ประเภทกราฟ",
+        "line": "เส้น",
+        "bar": "แท่ง",
+        "area": "พื้นที่",
+        "sampleBadge": "ข้อมูลตัวอย่าง",
+        "salesOpsTrend": "แนวโน้มการเงินและการดำเนินงาน",
+        "salesOpsTrendSub": "แนวโน้มรายเดือนตัวอย่าง — ข้อมูลสาธิต",
+        "salesSeries": "ยอดขาย",
+        "costsSeries": "ต้นทุน"
+      }
+    },
+    "iot": {
+      "title": "ข้อมูลโทรมาตร IoT และสถานะอุปกรณ์",
+      "live": "สด",
+      "viewAll": "ดูการจัดการ IoT",
+      "gps": "GPS",
+      "engineTemp": "อุณหภูมิเครื่องยนต์",
+      "hours": "ชั่วโมงการทำงาน"
+    },
     "kpi": {
       "totalRevenue": "รายได้รวม",
       "activeRentals": "สัญญาเช่าที่ใช้งานอยู่",

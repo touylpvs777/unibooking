@@ -2411,6 +2411,109 @@
       },
       "brandsWeService": "Brands We Service"
     },
+    "erp": {
+      "eyebrow": "Business Overview",
+      "title": "Financial & Operational Dashboard",
+      "loadError": "Failed to load dashboard data.",
+      "viewDetails": "View details",
+      "rollupCaption": "Live rollup from:",
+      "sources": {
+        "invoices": "Invoices",
+        "purchaseOrders": "Purchase Orders",
+        "workOrders": "Work Orders",
+        "payments": "Payments",
+        "inventory": "Inventory"
+      },
+      "tabs": {
+        "financial": "Financial Overview",
+        "operations": "Inventory & Operations",
+        "service": "Services & Repairs"
+      },
+      "hero": {
+        "netSales": "Net Sales",
+        "totalCost": "Total Cost",
+        "netProfit": "Net Profit",
+        "outstandingBalance": "Outstanding Balance"
+      },
+      "sales": {
+        "title": "Sales",
+        "totalSales": "Total Sales",
+        "totalDiscount": "Total Discount",
+        "totalTax": "Total Tax",
+        "netSales": "Net Sales",
+        "amountReceived": "Amount Received",
+        "invoiceCount": "{{count}} invoices"
+      },
+      "costs": {
+        "title": "Costs",
+        "purchasePrice": "Purchase Price",
+        "importFees": "Import Fees",
+        "shippingFees": "Shipping Fees",
+        "totalCost": "Total Cost",
+        "notTracked": "Not tracked yet"
+      },
+      "profit": {
+        "title": "Profit",
+        "profitPerItem": "Profit per Item",
+        "profitPerInvoice": "Profit per Invoice",
+        "dailyProfit": "Daily Profit",
+        "monthlyProfit": "Monthly Profit"
+      },
+      "credit": {
+        "title": "Credit & Debt",
+        "totalCustomerDebt": "Total Customer Debt",
+        "totalPaid": "Total Paid",
+        "outstandingBalance": "Outstanding Balance"
+      },
+      "revenue": {
+        "title": "Revenue Streams",
+        "partsRevenue": "Parts Revenue",
+        "vehicleRevenue": "Vehicle Revenue",
+        "serviceRevenue": "Service Revenue",
+        "otherRevenue": "Other Revenue"
+      },
+      "inventory": {
+        "title": "Inventory",
+        "stockIn": "Stock In",
+        "stockOut": "Stock Out",
+        "currentBalance": "Current Balance",
+        "lowStockAlerts": "Low Stock Alerts",
+        "thisMonth": "This month",
+        "unitsSuffix": "units"
+      },
+      "service": {
+        "title": "Service & Repair",
+        "laborCost": "Labor Cost",
+        "partsCost": "Parts Cost",
+        "otherServices": "Other Services",
+        "discount": "Discount",
+        "grandTotal": "Grand Total"
+      },
+      "chart": {
+        "profitTrend": "Net Profit Trend",
+        "last6Months": "Last 6 months",
+        "profitSeries": "Profit",
+        "revenueBreakdown": "Revenue Breakdown",
+        "revenueBreakdownSub": "By income stream",
+        "chartType": "Chart Type",
+        "line": "Line",
+        "bar": "Bar",
+        "area": "Area",
+        "sampleBadge": "Sample Data",
+        "salesOpsTrend": "Financial & Operational Trends",
+        "salesOpsTrendSub": "Illustrative monthly trend — sample data for demonstration",
+        "salesSeries": "Sales",
+        "costsSeries": "Costs"
+      }
+    },
+    "iot": {
+      "title": "IoT Telemetry & Equipment Status",
+      "live": "LIVE",
+      "viewAll": "View IoT Management",
+      "gps": "GPS",
+      "engineTemp": "Engine Temp",
+      "hours": "Operating Hours"
+    },
     "kpi": {
       "totalRevenue": "Total Revenue",
       "activeRentals": "Active Rentals",

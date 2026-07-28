@@ -1,287 +1,391 @@
+import { useEffect, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import type { LucideIcon } from 'lucide-react'
-import { Forklift, Truck, Percent, TrendingUp, TrendingDown, Wrench, Banknote, PackageX } from 'lucide-react'
+import {
+  DollarSign, ShoppingCart, TrendingUp, CreditCard, AlertCircle, ArrowRight,
+  ArrowDownToLine, ArrowUpFromLine, Boxes, PackageX, Wrench, Cog, Layers, Receipt,
+} from 'lucide-react'
 import { useCustomUI, type FontSizeTier } from '@/config/customLanguageStore'
 import UICustomizerBar from '@/components/ui/UICustomizerBar'
-import { MOCK_CONTRACTS, MOCK_CUSTOMERS, MOCK_FORKLIFTS, MOCK_MAINTENANCE_JOBS } from '@/mock/rentalMvpData'
-import { MOCK_LOW_STOCK_PARTS, MOCK_TOTAL_STOCK_VALUE_LAK } from '@/mock/inventoryMvpData'
-import type { RentalContract, RentalContractStatus } from '@/types/rentalMvp'
-import DashboardCharts from './DashboardCharts'
-import BrandShowcaseBanner from '@/modules/dashboard/components/BrandShowcaseBanner'
+import { getErpSummary, getProfitTrend } from '@/api/dashboard'
+import type { ErpDashboardSummary, ProfitTrendPoint } from '@/types/dashboard'
+import { ProfitTrendChart, RevenueBreakdownChart, ServiceCostChart, SampleTrendChart } from './ErpCharts'
+import IoTWidget from './IoTWidget'
 
 const lakFormatter = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 })
-const formatLak = (v: number) => `₭ ${lakFormatter.format(v)}`
+const formatLak = (v: number) => `₭ ${lakFormatter.format(Math.round(v))}`
 
-const customerById = (id: string) => MOCK_CUSTOMERS.find((c) => c.id === id)
-const forkliftById = (id: string) => MOCK_FORKLIFTS.find((f) => f.id === id)
-
-// Maps the font-size store's 3 tiers onto the exact Tailwind classes requested.
 const FONT_SIZE_CLASS: Record<FontSizeTier, string> = {
   small: 'text-xs',
   medium: 'text-sm',
   large: 'text-base',
 }
 
-const STATUS_STYLES: Record<RentalContractStatus, string> = {
-  Booked: 'bg-sky-500/20 text-sky-400',
-  'On Rent': 'bg-green-500/20 text-green-400',
-  'Expiring Soon': 'bg-amber-500/20 text-amber-400',
-  Overdue: 'bg-red-500/20 text-red-400',
-  Returned: 'bg-white/10 text-gray-300',
-  Cancelled: 'bg-white/10 text-gray-400',
-}
-
-const STATUS_KEYS: Record<RentalContractStatus, string> = {
-  Booked: 'dashboard.exec.status.booked',
-  'On Rent': 'dashboard.exec.status.onRent',
-  'Expiring Soon': 'dashboard.exec.status.expiringSoon',
-  Overdue: 'dashboard.exec.status.overdue',
-  Returned: 'dashboard.exec.status.returned',
-  Cancelled: 'dashboard.exec.status.cancelled',
-}
-
-function StatusBadge({ status }: { status: RentalContractStatus }) {
-  const { t } = useTranslation()
-  return (
-    <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_STYLES[status]}`}>
-      {t(STATUS_KEYS[status])}
-    </span>
-  )
-}
-
-const formatDate = (iso: string) =>
-  new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+type Tab = 'financial' | 'operations' | 'service'
 
 interface KpiCardProps {
-  labelKey: string
+  label: string
   value: string
-  sublabel: string
+  sublabel?: string
   icon: LucideIcon
   accent: string
-  trend?: 'up' | 'down'
-  onClick?: () => void
+  to?: string
 }
 
-function KpiCard({ labelKey, value, sublabel, icon: Icon, accent, trend, onClick }: KpiCardProps) {
+function KpiCard({ label, value, sublabel, icon: Icon, accent, to }: KpiCardProps) {
   const { t } = useTranslation()
   const fontSize = useCustomUI((s) => s.fontSize)
   const sizeClass = FONT_SIZE_CLASS[fontSize]
 
-  return (
-    <div
-      onClick={onClick}
-      role={onClick ? 'button' : undefined}
-      tabIndex={onClick ? 0 : undefined}
-      onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') onClick() } : undefined}
-      className={`rounded-2xl border border-white/8 bg-[#1c1c1e] p-5 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset] transition-all duration-200 ${onClick ? 'cursor-pointer hover:scale-[1.015] hover:border-white/20 hover:bg-gray-800/50' : ''}`}
-    >
+  const content = (
+    <>
       <div className="flex items-start justify-between">
-        <div>
-          <p className={`${sizeClass} text-gray-400`}>{t(labelKey)}</p>
-          <div className="mt-2 flex items-center gap-2">
-            <p className="text-3xl font-bold tracking-tight text-white">{value}</p>
-            {trend && (
-              trend === 'up'
-                ? <TrendingUp size={15} className="text-emerald-400" />
-                : <TrendingDown size={15} className="text-red-400" />
-            )}
-          </div>
-          <p className={`mt-1 ${sizeClass} text-gray-400`}>{sublabel}</p>
+        <div className="min-w-0">
+          <p className={`${sizeClass} text-gray-400`}>{label}</p>
+          <p className="mt-2 truncate text-2xl font-bold tracking-tight text-white">{value}</p>
+          {sublabel && <p className={`mt-1 ${sizeClass} text-gray-400`}>{sublabel}</p>}
         </div>
         <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${accent}`}>
           <Icon size={20} className="text-white" strokeWidth={2} />
         </div>
       </div>
+      {to && (
+        <p className="mt-3 flex items-center gap-1 text-xs font-semibold text-blue-400 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+          {t('dashboard.erp.viewDetails')} <ArrowRight size={12} />
+        </p>
+      )}
+    </>
+  )
+
+  const className = `group rounded-2xl border border-blue-900/50 bg-blue-800/30 p-5 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset] transition-all duration-300 hover:bg-blue-900/40 hover:border-blue-500/50 hover:shadow-[0_0_15px_rgba(59,130,246,0.15)] ${
+    to ? 'cursor-pointer hover:scale-[1.03]' : ''
+  }`
+
+  return to ? (
+    <Link to={to} className={className}>{content}</Link>
+  ) : (
+    <div className={className}>{content}</div>
+  )
+}
+
+function KpiCardSkeleton() {
+  return <div className="h-[104px] animate-pulse rounded-2xl border border-blue-900/50 bg-blue-800/30" />
+}
+
+function MetricRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between border-b border-white/5 py-2.5 text-sm last:border-0">
+      <span className="text-gray-400">{label}</span>
+      <span className="font-semibold text-gray-100">{value}</span>
     </div>
   )
 }
 
+function MetricPanel({
+  title, icon: Icon, accent, rows, to,
+}: {
+  title: string
+  icon: LucideIcon
+  accent: string
+  rows: { label: string; value: string }[]
+  to?: string
+}) {
+  const { t } = useTranslation()
+
+  const content = (
+    <>
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2.5">
+          <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${accent}`}>
+            <Icon size={16} className="text-white" strokeWidth={2} />
+          </div>
+          <h3 className="text-sm font-semibold text-gray-100">{title}</h3>
+        </div>
+        {to && (
+          <span className="flex shrink-0 items-center gap-1 text-xs font-semibold text-blue-400 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+            {t('dashboard.erp.viewDetails')} <ArrowRight size={12} />
+          </span>
+        )}
+      </div>
+      <div>
+        {rows.map((r) => <MetricRow key={r.label} label={r.label} value={r.value} />)}
+      </div>
+    </>
+  )
+
+  const className = `group block rounded-2xl border border-blue-900/50 bg-blue-800/30 p-5 transition-all duration-300 hover:bg-blue-900/40 hover:border-blue-500/50 hover:shadow-[0_0_15px_rgba(59,130,246,0.15)] ${
+    to ? 'cursor-pointer hover:scale-[1.015]' : ''
+  }`
+
+  return to ? (
+    <Link to={to} className={className}>{content}</Link>
+  ) : (
+    <div className={className}>{content}</div>
+  )
+}
+
+function TabButton({ active, onClick, children }: { active: boolean; onClick: () => void; children: ReactNode }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+        active
+          ? 'border border-blue-500 bg-blue-600 text-white shadow-md'
+          : 'border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700'
+      }`}
+    >
+      {children}
+    </button>
+  )
+}
+
+const ROLLUP_SOURCES: { key: string; to: string }[] = [
+  { key: 'invoices', to: '/billing/invoices' },
+  { key: 'purchaseOrders', to: '/inventory/purchase-orders' },
+  { key: 'workOrders', to: '/maintenance/work-orders' },
+  { key: 'payments', to: '/billing/payments' },
+  { key: 'inventory', to: '/inventory/parts' },
+]
+
 export default function DashboardPage() {
   const { t } = useTranslation()
-  const navigate = useNavigate()
   const fontSize = useCustomUI((s) => s.fontSize)
   const sizeClass = FONT_SIZE_CLASS[fontSize]
 
-  const totalFleet = MOCK_FORKLIFTS.length
-  const activeRented = MOCK_FORKLIFTS.filter((f) => f.status === 'On Rent').length
-  const utilizationRate = Math.round((activeRented / totalFleet) * 100)
-  const pendingMaintenance = MOCK_MAINTENANCE_JOBS.filter((j) => j.status !== 'Completed').length
-  const criticalMaintenance = MOCK_MAINTENANCE_JOBS.filter((j) => j.status === 'In Progress').length
+  const [tab, setTab] = useState<Tab>('financial')
+  const [data, setData] = useState<ErpDashboardSummary | null>(null)
+  const [trend, setTrend] = useState<ProfitTrendPoint[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const maintenanceAccent = criticalMaintenance > 0
-    ? 'bg-gradient-to-br from-red-500 to-red-700'
-    : pendingMaintenance > 0
-      ? 'bg-gradient-to-br from-amber-500 to-amber-700'
-      : 'bg-gradient-to-br from-slate-500 to-slate-700'
-
-  const lowStockCount = MOCK_LOW_STOCK_PARTS.length
-  const criticalLowStock = MOCK_LOW_STOCK_PARTS.filter((p) => p.quantityAvailable <= p.minStockLevel / 2).length
-  const lowStockAccent = criticalLowStock > 0
-    ? 'bg-gradient-to-br from-red-500 to-red-700'
-    : lowStockCount > 0
-      ? 'bg-gradient-to-br from-amber-500 to-amber-700'
-      : 'bg-gradient-to-br from-slate-500 to-slate-700'
-
-  const contracts: RentalContract[] = MOCK_CONTRACTS
-  const totalMonthlyRevenueLak = MOCK_CONTRACTS.reduce((sum, c) => sum + c.monthlyRateLak, 0)
-  const totalMaintenanceCostLak = MOCK_MAINTENANCE_JOBS.reduce((sum, j) => sum + (j.estimatedCostLak ?? 0), 0)
+  useEffect(() => {
+    let cancelled = false
+    const load = async () => {
+      setIsLoading(true); setError(null)
+      try {
+        const [summaryRes, trendRes] = await Promise.all([getErpSummary(), getProfitTrend(6)])
+        if (cancelled) return
+        setData(summaryRes.data)
+        setTrend(trendRes.data)
+      } catch {
+        if (!cancelled) setError(t('dashboard.erp.loadError'))
+      } finally {
+        if (!cancelled) setIsLoading(false)
+      }
+    }
+    load()
+    return () => { cancelled = true }
+    // Fetch once on mount — `t` is intentionally excluded since react-i18next
+    // returns a new function reference on every render, which would otherwise
+    // cancel and restart this fetch forever without it ever resolving.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div className="min-h-full bg-[#151515] px-6 py-8 text-white lg:px-10">
-      <header className="mb-8 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <p className={`${sizeClass} font-semibold uppercase tracking-wider text-gray-400`}>{t('dashboard.exec.eyebrow')}</p>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-gray-100">{t('dashboard.exec.title')}</h1>
+      {/* Header: dark blue premium banner */}
+      <header className="mb-8 overflow-hidden rounded-2xl border border-blue-800/40 bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-900 px-6 py-6 shadow-lg shadow-blue-950/30 sm:px-8">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <p className={`${sizeClass} font-semibold uppercase tracking-wider text-blue-300`}>{t('dashboard.erp.eyebrow')}</p>
+            <h1 className="mt-1 text-2xl font-bold tracking-tight text-white sm:text-3xl">{t('dashboard.erp.title')}</h1>
+            <div className="mt-3 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-blue-200/70">
+              <span className="font-medium">{t('dashboard.erp.rollupCaption')}</span>
+              {ROLLUP_SOURCES.map((src, i) => (
+                <span key={src.key} className="flex items-center gap-1.5">
+                  <Link to={src.to} className="font-semibold text-blue-200 underline-offset-2 transition-colors hover:text-white hover:underline">
+                    {t(`dashboard.erp.sources.${src.key}`)}
+                  </Link>
+                  {i < ROLLUP_SOURCES.length - 1 && <span className="text-blue-400/40">·</span>}
+                </span>
+              ))}
+            </div>
+          </div>
+          <UICustomizerBar />
         </div>
-        <UICustomizerBar />
       </header>
 
-      {/* KPI Cards (drill-down) */}
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <KpiCard
-          labelKey="dashboard.exec.kpi.totalFleet"
-          value={String(totalFleet)}
-          sublabel={t('dashboard.exec.kpi.totalFleetSub')}
-          icon={Forklift}
-          accent="bg-gradient-to-br from-blue-500 to-blue-700"
-          onClick={() => navigate('/equipment')}
-        />
-        <KpiCard
-          labelKey="dashboard.exec.kpi.activeRented"
-          value={String(activeRented)}
-          sublabel={t('dashboard.exec.kpi.activeRentedSub')}
-          icon={Truck}
-          accent="bg-gradient-to-br from-emerald-500 to-emerald-700"
-          onClick={() => navigate('/rental-contracts')}
-        />
-        <KpiCard
-          labelKey="dashboard.exec.kpi.utilizationRate"
-          value={`${utilizationRate}%`}
-          sublabel={t('dashboard.exec.kpi.utilizationRateSub')}
-          icon={Percent}
-          accent="bg-gradient-to-br from-violet-500 to-violet-700"
-          trend={utilizationRate >= 50 ? 'up' : 'down'}
-          onClick={() => navigate('/equipment')}
-        />
-        <KpiCard
-          labelKey="dashboard.exec.kpi.pendingMaintenance"
-          value={String(pendingMaintenance)}
-          sublabel={criticalMaintenance > 0 ? t('dashboard.exec.kpi.pendingMaintenanceCritical', { count: criticalMaintenance }) : t('dashboard.exec.kpi.pendingMaintenanceSub')}
-          icon={Wrench}
-          accent={maintenanceAccent}
-          onClick={() => navigate('/maintenance')}
-        />
-        <KpiCard
-          labelKey="dashboard.exec.kpi.totalStockValue"
-          value={formatLak(MOCK_TOTAL_STOCK_VALUE_LAK)}
-          sublabel={t('dashboard.exec.kpi.totalStockValueSub')}
-          icon={Banknote}
-          accent="bg-gradient-to-br from-cyan-500 to-cyan-700"
-          onClick={() => navigate('/inventory')}
-        />
-        <KpiCard
-          labelKey="dashboard.exec.kpi.lowStockAlerts"
-          value={t('dashboard.exec.kpi.lowStockAlertsItems', { count: lowStockCount })}
-          sublabel={criticalLowStock > 0 ? t('dashboard.exec.kpi.lowStockAlertsCritical', { count: criticalLowStock }) : t('dashboard.exec.kpi.lowStockAlertsSub')}
-          icon={PackageX}
-          accent={lowStockAccent}
-          onClick={() => navigate('/inventory/parts')}
-        />
+      {error && (
+        <div className="mb-6 flex items-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400">
+          <AlertCircle size={16} /> {error}
+        </div>
+      )}
+
+      {/* Headline KPIs (always visible) — top-level rollup numbers */}
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {isLoading || !data ? (
+          <>
+            <KpiCardSkeleton /><KpiCardSkeleton /><KpiCardSkeleton /><KpiCardSkeleton />
+          </>
+        ) : (
+          <>
+            <KpiCard
+              label={t('dashboard.erp.hero.netSales')}
+              value={formatLak(data.sales.net_sales)}
+              sublabel={t('dashboard.erp.sales.invoiceCount', { count: data.sales.invoice_count })}
+              icon={DollarSign}
+              accent="bg-gradient-to-br from-blue-500 to-blue-700"
+              to="/billing/invoices"
+            />
+            <KpiCard
+              label={t('dashboard.erp.hero.totalCost')}
+              value={formatLak(data.costs.total_cost)}
+              icon={ShoppingCart}
+              accent="bg-gradient-to-br from-amber-500 to-amber-700"
+              to="/inventory/purchase-orders"
+            />
+            <KpiCard
+              label={t('dashboard.erp.hero.netProfit')}
+              value={formatLak(data.net_profit)}
+              icon={TrendingUp}
+              accent={data.net_profit >= 0 ? 'bg-gradient-to-br from-emerald-500 to-emerald-700' : 'bg-gradient-to-br from-red-500 to-red-700'}
+              to="/billing/finance"
+            />
+            <KpiCard
+              label={t('dashboard.erp.hero.outstandingBalance')}
+              value={formatLak(data.credit.outstanding_balance)}
+              icon={CreditCard}
+              accent="bg-gradient-to-br from-violet-500 to-violet-700"
+              to="/billing/statements"
+            />
+          </>
+        )}
       </section>
 
-      {/* Fleet Utilization Trend / Revenue vs. Maintenance Cost */}
-      <DashboardCharts
-        utilizationRate={utilizationRate}
-        currentRevenueLak={totalMonthlyRevenueLak}
-        currentMaintenanceCostLak={totalMaintenanceCostLak}
-      />
+      {/* Tabs */}
+      <div className="mt-8 flex gap-3">
+        <TabButton active={tab === 'financial'} onClick={() => setTab('financial')}>{t('dashboard.erp.tabs.financial')}</TabButton>
+        <TabButton active={tab === 'operations'} onClick={() => setTab('operations')}>{t('dashboard.erp.tabs.operations')}</TabButton>
+        <TabButton active={tab === 'service'} onClick={() => setTab('service')}>{t('dashboard.erp.tabs.service')}</TabButton>
+      </div>
 
-      {/* Active Rental Contracts + Critical Low Stock */}
-      <section className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-[2fr_1fr] lg:items-start">
-        <div className="rounded-2xl border border-white/8 bg-[#1c1c1e] p-5">
-          <h2 className="mb-4 text-base font-semibold text-gray-100">{t('dashboard.exec.contracts.title')}</h2>
+      {!isLoading && data && (
+        <div className="mt-6">
+          {tab === 'financial' && (
+            <div className="flex flex-col gap-4">
+              <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+                <MetricPanel
+                  title={t('dashboard.erp.sales.title')}
+                  icon={DollarSign}
+                  accent="bg-gradient-to-br from-blue-500 to-blue-700"
+                  to="/billing/invoices"
+                  rows={[
+                    { label: t('dashboard.erp.sales.totalSales'), value: formatLak(data.sales.total_sales) },
+                    { label: t('dashboard.erp.sales.totalDiscount'), value: formatLak(data.sales.total_discount) },
+                    { label: t('dashboard.erp.sales.totalTax'), value: formatLak(data.sales.total_tax) },
+                    { label: t('dashboard.erp.sales.netSales'), value: formatLak(data.sales.net_sales) },
+                    { label: t('dashboard.erp.sales.amountReceived'), value: formatLak(data.sales.amount_received) },
+                  ]}
+                />
+                <MetricPanel
+                  title={t('dashboard.erp.costs.title')}
+                  icon={ShoppingCart}
+                  accent="bg-gradient-to-br from-amber-500 to-amber-700"
+                  to="/inventory/purchase-orders"
+                  rows={[
+                    { label: t('dashboard.erp.costs.purchasePrice'), value: formatLak(data.costs.purchase_price) },
+                    { label: t('dashboard.erp.costs.importFees'), value: `${formatLak(data.costs.import_fees)} (${t('dashboard.erp.costs.notTracked')})` },
+                    { label: t('dashboard.erp.costs.shippingFees'), value: `${formatLak(data.costs.shipping_fees)} (${t('dashboard.erp.costs.notTracked')})` },
+                    { label: t('dashboard.erp.costs.totalCost'), value: formatLak(data.costs.total_cost) },
+                  ]}
+                />
+                <MetricPanel
+                  title={t('dashboard.erp.profit.title')}
+                  icon={TrendingUp}
+                  accent="bg-gradient-to-br from-emerald-500 to-emerald-700"
+                  to="/billing/finance"
+                  rows={[
+                    { label: t('dashboard.erp.profit.profitPerItem'), value: formatLak(data.profit.profit_per_item) },
+                    { label: t('dashboard.erp.profit.profitPerInvoice'), value: formatLak(data.profit.profit_per_invoice) },
+                    { label: t('dashboard.erp.profit.dailyProfit'), value: formatLak(data.profit.daily_profit) },
+                    { label: t('dashboard.erp.profit.monthlyProfit'), value: formatLak(data.profit.monthly_profit) },
+                  ]}
+                />
+              </div>
 
-          <div className="overflow-x-auto">
-            <table className={`w-full min-w-[640px] border-collapse ${sizeClass}`}>
-              <thead>
-                <tr className="border-b border-white/8 text-left text-xs uppercase tracking-wide text-gray-400">
-                  <th className="py-2.5 pr-4 font-medium">{t('dashboard.exec.contracts.columnContractId')}</th>
-                  <th className="py-2.5 pr-4 font-medium">{t('dashboard.exec.contracts.columnCustomerName')}</th>
-                  <th className="py-2.5 pr-4 font-medium">{t('dashboard.exec.contracts.columnForkliftModel')}</th>
-                  <th className="py-2.5 pr-4 font-medium">{t('dashboard.exec.contracts.columnEndDate')}</th>
-                  <th className="py-2.5 pr-4 font-medium">{t('dashboard.exec.contracts.columnStatus')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {contracts.map((contract) => {
-                  const customer = customerById(contract.customerId)
-                  const forklift = forkliftById(contract.forkliftAssetId)
-                  return (
-                    <tr
-                      key={contract.id}
-                      onClick={() => navigate('/rental-contracts')}
-                      className="cursor-pointer border-b border-white/5 last:border-0 transition-colors hover:bg-white/[0.06]"
-                    >
-                      <td className="py-3 pr-4 font-medium text-gray-100">{contract.contractNumber}</td>
-                      <td className="py-3 pr-4 text-gray-100">{customer?.companyName ?? '—'}</td>
-                      <td className="py-3 pr-4 text-gray-100">
-                        {forklift ? `${forklift.brand} ${forklift.model}` : '—'}
-                        <span className="ml-1.5 text-xs text-gray-400">{forklift?.assetCode}</span>
-                      </td>
-                      <td className="py-3 pr-4 text-gray-100">{formatDate(contract.endDate)}</td>
-                      <td className="py-3 pr-4">
-                        <StatusBadge status={contract.status} />
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
+              <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_2fr] lg:items-start">
+                <MetricPanel
+                  title={t('dashboard.erp.credit.title')}
+                  icon={CreditCard}
+                  accent="bg-gradient-to-br from-violet-500 to-violet-700"
+                  to="/billing/statements"
+                  rows={[
+                    { label: t('dashboard.erp.credit.totalCustomerDebt'), value: formatLak(data.credit.total_customer_debt) },
+                    { label: t('dashboard.erp.credit.totalPaid'), value: formatLak(data.credit.total_paid) },
+                    { label: t('dashboard.erp.credit.outstandingBalance'), value: formatLak(data.credit.outstanding_balance) },
+                  ]}
+                />
+                <RevenueBreakdownChart data={data.revenue_breakdown} to="/reports" />
+              </div>
+
+              <SampleTrendChart to="/reports" />
+              <ProfitTrendChart data={trend} to="/reports" />
+            </div>
+          )}
+
+          {tab === 'operations' && (
+            <div className="flex flex-col gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <KpiCard
+                  label={t('dashboard.erp.inventory.stockIn')}
+                  value={`${lakFormatter.format(data.inventory.stock_in)} ${t('dashboard.erp.inventory.unitsSuffix')}`}
+                  sublabel={t('dashboard.erp.inventory.thisMonth')}
+                  icon={ArrowDownToLine}
+                  accent="bg-gradient-to-br from-emerald-500 to-emerald-700"
+                  to="/movements"
+                />
+                <KpiCard
+                  label={t('dashboard.erp.inventory.stockOut')}
+                  value={`${lakFormatter.format(data.inventory.stock_out)} ${t('dashboard.erp.inventory.unitsSuffix')}`}
+                  sublabel={t('dashboard.erp.inventory.thisMonth')}
+                  icon={ArrowUpFromLine}
+                  accent="bg-gradient-to-br from-amber-500 to-amber-700"
+                  to="/movements"
+                />
+                <KpiCard
+                  label={t('dashboard.erp.inventory.currentBalance')}
+                  value={`${lakFormatter.format(data.inventory.current_balance)} ${t('dashboard.erp.inventory.unitsSuffix')}`}
+                  icon={Boxes}
+                  accent="bg-gradient-to-br from-cyan-500 to-cyan-700"
+                  to="/inventory/parts"
+                />
+                <KpiCard
+                  label={t('dashboard.erp.inventory.lowStockAlerts')}
+                  value={String(data.inventory.low_stock_alerts)}
+                  icon={PackageX}
+                  accent={data.inventory.low_stock_alerts > 0 ? 'bg-gradient-to-br from-red-500 to-red-700' : 'bg-gradient-to-br from-slate-500 to-slate-700'}
+                  to="/inventory/parts"
+                />
+              </div>
+
+              <IoTWidget />
+            </div>
+          )}
+
+          {tab === 'service' && (
+            <div className="flex flex-col gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+                <KpiCard label={t('dashboard.erp.service.laborCost')} value={formatLak(data.service.labor_cost)} icon={Wrench} accent="bg-gradient-to-br from-orange-500 to-orange-700" to="/maintenance/work-orders" />
+                <KpiCard label={t('dashboard.erp.service.partsCost')} value={formatLak(data.service.parts_cost)} icon={Cog} accent="bg-gradient-to-br from-cyan-500 to-cyan-700" to="/maintenance/work-orders" />
+                <KpiCard label={t('dashboard.erp.service.otherServices')} value={formatLak(data.service.other_services)} icon={Layers} accent="bg-gradient-to-br from-violet-500 to-violet-700" to="/maintenance/work-orders" />
+                <KpiCard
+                  label={t('dashboard.erp.service.discount')}
+                  value={formatLak(data.service.discount)}
+                  sublabel={t('dashboard.erp.costs.notTracked')}
+                  icon={Receipt}
+                  accent="bg-gradient-to-br from-slate-500 to-slate-700"
+                  to="/maintenance/work-orders"
+                />
+                <KpiCard label={t('dashboard.erp.service.grandTotal')} value={formatLak(data.service.grand_total)} icon={TrendingUp} accent="bg-gradient-to-br from-emerald-500 to-emerald-700" to="/maintenance/work-orders" />
+              </div>
+
+              <ServiceCostChart labor={data.service.labor_cost} parts={data.service.parts_cost} other={data.service.other_services} to="/maintenance/work-orders" />
+            </div>
+          )}
         </div>
-
-        <div className="rounded-2xl border border-white/8 bg-[#1c1c1e] p-5">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-base font-semibold text-gray-100">{t('dashboard.exec.lowStock.title')}</h2>
-            <span className="inline-flex items-center rounded-full bg-red-500/20 px-2 py-0.5 text-[11px] font-semibold text-red-400">
-              {t('dashboard.exec.kpi.lowStockAlertsItems', { count: lowStockCount })}
-            </span>
-          </div>
-
-          <div className="flex flex-col gap-3">
-            {MOCK_LOW_STOCK_PARTS.slice(0, 3).map((part) => {
-              const ratio = Math.min(100, Math.round((part.quantityAvailable / part.minStockLevel) * 100))
-              const isCritical = part.quantityAvailable <= part.minStockLevel / 2
-              return (
-                <div
-                  key={part.id}
-                  onClick={() => navigate('/inventory/parts')}
-                  className="cursor-pointer rounded-xl border border-white/5 bg-white/[0.02] p-3 transition-colors hover:border-white/15 hover:bg-white/[0.06]"
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <p className={`truncate ${sizeClass} font-medium text-gray-100`}>{part.name}</p>
-                      <p className="text-xs text-gray-400">{part.partNumber}</p>
-                    </div>
-                    <span className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold ${isCritical ? 'bg-red-500/20 text-red-400' : 'bg-amber-500/20 text-amber-400'}`}>
-                      {part.quantityAvailable} / {part.minStockLevel} {t('dashboard.exec.lowStock.minSuffix')}
-                    </span>
-                  </div>
-                  <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-                    <div
-                      className={`h-full rounded-full ${isCritical ? 'bg-red-500' : 'bg-amber-500'}`}
-                      style={{ width: `${ratio}%` }}
-                    />
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      </section>
-
-      <BrandShowcaseBanner />
+      )}
     </div>
   )
 }

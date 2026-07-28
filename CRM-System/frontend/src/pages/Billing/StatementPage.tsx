@@ -35,7 +35,7 @@ export default function StatementPage() {
   return (
     <div>
       {/* Hero */}
-      <div className="mp-hero" style={{ background: 'linear-gradient(135deg, #4c1d95 0%, #1e1b4b 100%)' }}>
+      <div className="mp-hero" style={{ background: 'linear-gradient(to right, #1e3a8a 0%, #312e81 100%)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16 }}>
           <div>
             <div className="mp-hero-title">{t('billing.statement.title')}</div>
