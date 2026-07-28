@@ -78,9 +78,24 @@ class Quotation(Base):
     discount_amount: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     total_amount: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     currency: Mapped[str] = mapped_column(String(3), default="LAK", nullable=False)
+    # Rate to convert `currency` into the org's base currency (LAK) — 1.0 when
+    # currency is already LAK.
+    exchange_rate: Mapped[float] = mapped_column(Float, default=1.0, nullable=False)
+    # Freeform per-quotation bank details (staff-entered, printed on the PDF).
+    bank_details: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     valid_from: Mapped[date | None] = mapped_column(Date, nullable=True)
     valid_until: Mapped[date | None] = mapped_column(Date, nullable=True, index=True)
+
+    # Free-text details of the customer-owned vehicle/equipment this quote is
+    # for — not linked to the internal Forklift fleet model (see Invoice for
+    # the identical rationale).
+    vehicle_make: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    vehicle_model: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    vehicle_vin: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    vehicle_engine_no: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    vehicle_reg_no: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    job_number: Mapped[str | None] = mapped_column(String(50), nullable=True)
 
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     internal_notes: Mapped[str | None] = mapped_column(Text, nullable=True)

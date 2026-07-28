@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { AlertCircle, RefreshCw } from 'lucide-react'
+import { AlertCircle, Plus, RefreshCw } from 'lucide-react'
 import { getPurchaseOrders } from '@/api/inventory'
 import { PurchaseOrderTable } from '@/modules/inventory'
 import type { POListItem } from '@/types/inventory'
@@ -9,6 +10,7 @@ import '@/styles/shared.css'
 
 export default function PurchaseOrderPage() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const STATUS_OPTS = [
     { value: '', label: t('inventory.purchaseOrder.status.all') },
     { value: 'draft', label: t('inventory.purchaseOrder.status.draft') },
@@ -42,6 +44,9 @@ export default function PurchaseOrderPage() {
         <button className="btn btn-ghost" onClick={load} disabled={isLoading}>
           <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('inventory.common.refresh')}
         </button>
+        <button className="btn btn-primary" onClick={() => navigate('/inventory/purchase-orders/new')}>
+          <Plus size={14} /> {t('inventory.purchaseOrder.newPO')}
+        </button>
       </PageHeader>
 
       {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}
@@ -60,6 +65,7 @@ export default function PurchaseOrderPage() {
         pages={pages}
         isLoading={isLoading}
         onPageChange={setPage}
+        onRowClick={(id) => navigate(`/inventory/purchase-orders/${id}`)}
       />
     </div>
   )

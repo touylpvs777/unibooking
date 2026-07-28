@@ -85,7 +85,11 @@
     "themeDark": "Tối",
     "themeSystem": "Theo hệ thống",
     "scrollLeft": "Cuộn sang trái",
-    "scrollRight": "Cuộn sang phải"
+    "scrollRight": "Cuộn sang phải",
+    "itemCode": "Mã hàng",
+    "unit": "Đơn vị",
+    "exportPdf": "Xuất PDF",
+    "clear": "Xóa"
   },
   "leads": {
     "status": {
@@ -177,7 +181,8 @@
       "analytics": "Phân tích kinh doanh",
       "iotTelemetry": "Hệ thống IoT",
       "settings": "Cài đặt",
-      "warehouseProjects": "Dự án kho bãi"
+      "warehouseProjects": "Dự án kho bãi",
+      "purchaseOrders": "Đơn Mua Hàng"
     },
     "expandSidebar": "Mở rộng panel điều hướng",
     "collapseSidebar": "Thu gọn panel điều hướng"
@@ -872,6 +877,49 @@
         "partial": "Nhận một phần",
         "received": "Đã nhận hàng",
         "cancelled": "Đã hủy"
+      },
+      "newPO": "Đơn Mua Hàng Mới",
+      "form": {
+        "title": "Đơn Mua Hàng Mới",
+        "backToList": "Quay Lại Đơn Mua Hàng",
+        "vendor": "Nhà Cung Cấp",
+        "vendorRequired": "Vui lòng nhập nhà cung cấp",
+        "warehouse": "Nhà Kho",
+        "warehouseRequired": "Vui lòng chọn nhà kho",
+        "vendorAddress": "Địa Chỉ Nhà Cung Cấp",
+        "vendorContact": "Liên Hệ Nhà Cung Cấp",
+        "orderDate": "Ngày Đặt Hàng",
+        "expectedDate": "Ngày Dự Kiến Nhận",
+        "taxRate": "Thuế Suất (%)",
+        "lineItems": "Danh Sách Hàng Hóa",
+        "itemCode": "Mã Hàng",
+        "description": "Mô Tả",
+        "descriptionPlaceholder": "Mô tả hàng hóa",
+        "qty": "SL",
+        "unit": "Đơn Vị",
+        "unitCost": "Đơn Giá",
+        "linkCatalogPart": "Liên Kết Phụ Tùng",
+        "linkCatalogPartPlaceholder": "Tìm phụ tùng…",
+        "noPartsFound": "Không tìm thấy phụ tùng",
+        "addRow": "Thêm Dòng",
+        "itemRequired": "Cần ít nhất một dòng hàng hóa",
+        "created": "Đã tạo đơn mua hàng {{number}}",
+        "createFailed": "Tạo đơn mua hàng thất bại",
+        "creating": "Đang tạo...",
+        "createPO": "Tạo Đơn Mua Hàng"
+      },
+      "detail": {
+        "loadError": "Không thể tải đơn mua hàng",
+        "notFound": "Không tìm thấy đơn mua hàng",
+        "actionFailed": "{{action}} thất bại",
+        "submitted": "Đã gửi đơn mua hàng",
+        "submit": "Gửi",
+        "receiveItems": "Nhận Hàng",
+        "receiveModalTitle": "Nhận Hàng",
+        "received": "Đã nhận hàng",
+        "receivedDate": "Ngày Nhận Hàng",
+        "qtyOrdered": "SL Đặt",
+        "qtyReceived": "SL Đã Nhận"
       }
     },
     "spareParts": {
@@ -1269,6 +1317,13 @@
         "nameLabel": "Tên Hiển Thị Thanh Bên",
         "logoLabel": "Logo Thanh Bên",
         "logoHint": "Chỉ lưu trên trình duyệt này"
+      },
+      "bankDetails": {
+        "title": "Thông Tin Ngân Hàng",
+        "bankName": "Tên Ngân Hàng",
+        "accountName": "Tên Tài Khoản",
+        "accountNumber": "Số Tài Khoản",
+        "swift": "Mã SWIFT / BIC"
       }
     },
     "financial": {
@@ -1652,7 +1707,17 @@
         "errors": {
           "customerRequired": "Vui lòng chọn khách hàng.",
           "itemRequired": "Cần ít nhất một hạng mục có mô tả."
-        }
+        },
+        "itemCode": "Mã hàng",
+        "itemCodePlaceholder": "VD: SKU-1000",
+        "unit": "Đơn vị",
+        "currency": "Tiền Tệ",
+        "exchangeRate": "Tỷ Giá",
+        "bankDetails": "Thông Tin Ngân Hàng",
+        "bankDetailsPlaceholder": "Tên ngân hàng, tên tài khoản, số tài khoản, SWIFT/BIC...",
+        "grandTotalInLAK": "Tổng Cộng Quy Đổi LAK (Tiền Tệ Cơ Sở)",
+        "previewTitle": "Xem Trước Chứng Từ",
+        "previewPendingNumber": "(Chưa Có Số)"
       },
       "pagination": {
         "info": "Trang {{page}}/{{pages}} (tổng {{total}})"
@@ -1704,6 +1769,15 @@
       "card": {
         "due": "Đến hạn {{date}}",
         "balance": "Số dư: {{amount}} {{currency}}"
+      },
+      "vehicleInfo": {
+        "title": "Thông Tin Xe",
+        "make": "Hãng Xe",
+        "model": "Mẫu Xe",
+        "vin": "Số Khung (VIN)",
+        "engineNo": "Số Máy",
+        "regNo": "Biển Số",
+        "jobNumber": "Số Công Việc"
       }
     },
     "deposit": {
@@ -2443,7 +2517,19 @@
         "sales": "Báo Giá Bán Hàng",
         "service": "Báo Giá Dịch Vụ",
         "spareParts": "Báo Giá Phụ Tùng"
-      }
+      },
+      "vehicleInfo": {
+        "title": "Thông Tin Xe",
+        "make": "Hãng Xe",
+        "model": "Mẫu Xe",
+        "vin": "Số Khung (VIN)",
+        "engineNo": "Số Máy",
+        "regNo": "Biển Số",
+        "jobNumber": "Số Công Việc"
+      },
+      "exchangeRateLabel": "Tỷ Giá",
+      "bankDetails": "Thông Tin Ngân Hàng",
+      "bankDetailsPlaceholder": "Tên ngân hàng, tên tài khoản, số tài khoản, SWIFT/BIC..."
     },
     "detail": {
       "backToQuotations": "Quay Lại Báo Giá",
@@ -2513,9 +2599,11 @@
         "descriptionRequired": "Mô tả là bắt buộc.",
         "unitPriceRequired": "Đơn giá là bắt buộc.",
         "itemAdded": "Đã thêm hạng mục.",
-        "addFailed": "Không thể thêm hạng mục."
+        "addFailed": "Không thể thêm hạng mục.",
+        "itemCode": "Mã hàng"
       },
-      "revisionNeededReason": "Cần sửa đổi"
+      "revisionNeededReason": "Cần sửa đổi",
+      "colItemCode": "Mã hàng"
     }
   },
   "imageUpload": {
@@ -2531,6 +2619,7 @@
   },
   "login": {
     "subtitle": "Đăng nhập để tiếp tục",
+    "powerSwitch": "Công tắc nguồn",
     "username": "Tên Đăng Nhập",
     "usernamePlaceholder": "Nhập tên đăng nhập của bạn",
     "password": "Mật Khẩu",
@@ -2880,5 +2969,32 @@
     "successToast": "Đã đổi mật khẩu thành công.",
     "incorrectCurrentError": "Mật khẩu hiện tại không đúng.",
     "genericError": "Không thể đổi mật khẩu. Vui lòng thử lại."
+  },
+  "documentPreview": {
+    "docTitle": {
+      "invoice": "HÓA ĐƠN",
+      "quotation": "BÁO GIÁ",
+      "purchaseOrder": "ĐƠN MUA HÀNG"
+    },
+    "customerDetails": "Thông Tin Khách Hàng",
+    "vendorDetails": "Thông Tin Nhà Cung Cấp",
+    "vehicleInformation": "Thông Tin Xe",
+    "vehicle": {
+      "make": "Hãng Xe",
+      "model": "Mẫu Xe",
+      "vin": "Số Khung (VIN)",
+      "engineNo": "Số Máy",
+      "regNo": "Biển Số",
+      "jobNumber": "Số Công Việc"
+    },
+    "dateLabel": "Ngày",
+    "docNumberLabel": "Số Chứng Từ",
+    "unitPrice": "Đơn Giá",
+    "bankDetails": "Thông Tin Ngân Hàng",
+    "subtotal": "Tạm Tính",
+    "vatLabel": "Thuế VAT ({{rate}}%)",
+    "grandTotal": "Tổng Cộng",
+    "issuedBy": "Người Lập",
+    "approvedBy": "Người Duyệt"
   }
 }

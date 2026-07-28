@@ -13,9 +13,10 @@ interface Props {
   pages: number
   isLoading: boolean
   onPageChange: (p: number) => void
+  onRowClick?: (id: number) => void
 }
 
-export default function PurchaseOrderTable({ items, total, page, pages, isLoading, onPageChange }: Props) {
+export default function PurchaseOrderTable({ items, total, page, pages, isLoading, onPageChange, onRowClick }: Props) {
   const { t } = useTranslation()
   return (
     <div className="table-card">
@@ -46,7 +47,7 @@ export default function PurchaseOrderTable({ items, total, page, pages, isLoadin
                 <div className="table-empty"><ShoppingCart size={36} /><p>{t('inventory.purchaseOrderTable.empty')}</p></div>
               </td></tr>
             ) : items.map((po) => (
-              <tr key={po.id}>
+              <tr key={po.id} onClick={() => onRowClick?.(po.id)} style={onRowClick ? { cursor: 'pointer' } : undefined}>
                 <td className="cell-desc">{po.po_number}</td>
                 <td><div className="cell-desc">{po.vendor}</div></td>
                 <td><POStatusBadge status={po.status} /></td>

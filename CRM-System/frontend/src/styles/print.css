@@ -4,9 +4,28 @@
    logo/name header (see PrintHeader.tsx) fixed to the top-right of every
    printed page. */
 
+/* Universal document preview (invoice/quotation/PO) — hidden on screen,
+   swapped in for the whole page under @media print below. See
+   src/components/DocumentPreview.tsx. */
+.doc-preview {
+  display: none;
+}
+
 @media print {
   @page {
     margin: 16mm 14mm;
+  }
+
+  /* Document-preview pages hide the normal on-screen content and show only
+     the A4 template. */
+  .doc-preview-hide-on-print {
+    display: none !important;
+  }
+  .doc-preview {
+    display: block !important;
+  }
+  .print-header {
+    display: none !important;
   }
 
   html, body {

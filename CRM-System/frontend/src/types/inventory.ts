@@ -38,14 +38,16 @@ export interface InventoryTransaction {
 }
 
 export interface POItem {
-  id: number; spare_part: SparePartBrief
+  id: number; spare_part: SparePartBrief | null
+  item_code: string | null; description: string | null; unit: string | null
   quantity_ordered: number; quantity_received: number
   unit_cost: number; line_total: number; notes: string | null
 }
 export interface PurchaseOrder {
   id: number; po_number: string; status: POStatus; vendor: string
+  vendor_address: string | null; vendor_contact: string | null
   warehouse: WarehouseBrief; order_date: string; expected_date: string | null; received_date: string | null
-  subtotal: number; tax_amount: number; total_amount: number; currency: string
+  subtotal: number; tax_rate: number; tax_amount: number; total_amount: number; currency: string
   notes: string | null; is_active: boolean; created_at: string; updated_at: string | null
   items: POItem[]
 }
@@ -56,6 +58,18 @@ export interface POListItem {
   is_active: boolean; created_at: string
 }
 export interface POListResponse { items: POListItem[]; total: number; page: number; page_size: number; pages: number }
+
+export interface POItemCreate {
+  spare_part_id?: number
+  item_code?: string; description?: string; unit?: string
+  quantity_ordered: number; unit_cost: number; notes?: string
+}
+export interface POCreate {
+  vendor: string; vendor_address?: string; vendor_contact?: string
+  warehouse_id: number; order_date: string; expected_date?: string
+  tax_rate: number; notes?: string; items: POItemCreate[]
+}
+export interface ReceiveItemAction { item_id: number; quantity_received: number }
 
 export interface ReorderAlert {
   spare_part_id: number; part_number: string; name: string

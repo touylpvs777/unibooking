@@ -85,7 +85,11 @@
     "themeDark": "Тёмная",
     "themeSystem": "Системная",
     "scrollLeft": "Прокрутить влево",
-    "scrollRight": "Прокрутить вправо"
+    "scrollRight": "Прокрутить вправо",
+    "itemCode": "Код товара",
+    "unit": "Ед. изм.",
+    "exportPdf": "Экспорт в PDF",
+    "clear": "Очистить"
   },
   "leads": {
     "status": {
@@ -177,7 +181,8 @@
       "analytics": "Бизнес-аналитика",
       "iotTelemetry": "IoT-телеметрия",
       "settings": "Настройки",
-      "warehouseProjects": "Складские проекты"
+      "warehouseProjects": "Складские проекты",
+      "purchaseOrders": "Заказы на закупку"
     },
     "expandSidebar": "Развернуть панель навигации",
     "collapseSidebar": "Свернуть панель навигации"
@@ -872,6 +877,49 @@
         "partial": "Частично получено",
         "received": "Получено",
         "cancelled": "Отменено"
+      },
+      "newPO": "Новый заказ на закупку",
+      "form": {
+        "title": "Новый заказ на закупку",
+        "backToList": "Назад к заказам на закупку",
+        "vendor": "Поставщик",
+        "vendorRequired": "Укажите поставщика",
+        "warehouse": "Склад",
+        "warehouseRequired": "Выберите склад",
+        "vendorAddress": "Адрес поставщика",
+        "vendorContact": "Контакт поставщика",
+        "orderDate": "Дата заказа",
+        "expectedDate": "Ожидаемая дата",
+        "taxRate": "Налоговая ставка (%)",
+        "lineItems": "Позиции заказа",
+        "itemCode": "Код товара",
+        "description": "Описание",
+        "descriptionPlaceholder": "Описание товара",
+        "qty": "Кол-во",
+        "unit": "Ед. изм.",
+        "unitCost": "Цена за единицу",
+        "linkCatalogPart": "Связать с запчастью",
+        "linkCatalogPartPlaceholder": "Поиск запчастей…",
+        "noPartsFound": "Запчасти не найдены",
+        "addRow": "Добавить строку",
+        "itemRequired": "Требуется хотя бы одна позиция",
+        "created": "Заказ на закупку {{number}} создан",
+        "createFailed": "Не удалось создать заказ на закупку",
+        "creating": "Создание...",
+        "createPO": "Создать заказ на закупку"
+      },
+      "detail": {
+        "loadError": "Не удалось загрузить заказ на закупку",
+        "notFound": "Заказ на закупку не найден",
+        "actionFailed": "Ошибка: {{action}}",
+        "submitted": "Заказ на закупку отправлен",
+        "submit": "Отправить",
+        "receiveItems": "Приёмка товара",
+        "receiveModalTitle": "Приёмка товара",
+        "received": "Товар получен",
+        "receivedDate": "Дата получения",
+        "qtyOrdered": "Кол-во заказано",
+        "qtyReceived": "Кол-во получено"
       }
     },
     "spareParts": {
@@ -1269,6 +1317,13 @@
         "nameLabel": "Отображаемое имя в боковой панели",
         "logoLabel": "Логотип боковой панели",
         "logoHint": "Сохраняется только в этом браузере"
+      },
+      "bankDetails": {
+        "title": "Банковские реквизиты",
+        "bankName": "Название банка",
+        "accountName": "Имя владельца счёта",
+        "accountNumber": "Номер счёта",
+        "swift": "Код SWIFT / BIC"
       }
     },
     "financial": {
@@ -1652,7 +1707,17 @@
         "errors": {
           "customerRequired": "Пожалуйста, выберите клиента.",
           "itemRequired": "Требуется хотя бы одна позиция с описанием."
-        }
+        },
+        "itemCode": "Код товара",
+        "itemCodePlaceholder": "напр. SKU-1000",
+        "unit": "Ед. изм.",
+        "currency": "Валюта",
+        "exchangeRate": "Обменный курс",
+        "bankDetails": "Банковские реквизиты",
+        "bankDetailsPlaceholder": "Название банка, имя владельца, номер счёта, SWIFT/BIC...",
+        "grandTotalInLAK": "Итого в LAK (базовая валюта)",
+        "previewTitle": "Предпросмотр документа",
+        "previewPendingNumber": "(Ожидается)"
       },
       "pagination": {
         "info": "Страница {{page}} из {{pages}} (всего {{total}})"
@@ -1704,6 +1769,15 @@
       "card": {
         "due": "Срок оплаты: {{date}}",
         "balance": "Баланс: {{amount}} {{currency}}"
+      },
+      "vehicleInfo": {
+        "title": "Информация о транспортном средстве",
+        "make": "Марка",
+        "model": "Модель",
+        "vin": "VIN",
+        "engineNo": "Номер двигателя",
+        "regNo": "Регистрационный номер",
+        "jobNumber": "Номер заказа"
       }
     },
     "deposit": {
@@ -2443,7 +2517,19 @@
         "sales": "Предложение по продаже",
         "service": "Предложение по сервису",
         "spareParts": "Предложение по запчастям"
-      }
+      },
+      "vehicleInfo": {
+        "title": "Информация о транспортном средстве",
+        "make": "Марка",
+        "model": "Модель",
+        "vin": "VIN",
+        "engineNo": "Номер двигателя",
+        "regNo": "Регистрационный номер",
+        "jobNumber": "Номер заказа"
+      },
+      "exchangeRateLabel": "Обменный курс",
+      "bankDetails": "Банковские реквизиты",
+      "bankDetailsPlaceholder": "Название банка, имя владельца, номер счёта, SWIFT/BIC..."
     },
     "detail": {
       "backToQuotations": "Назад к предложениям",
@@ -2513,9 +2599,11 @@
         "descriptionRequired": "Описание обязательно.",
         "unitPriceRequired": "Цена за единицу обязательна.",
         "itemAdded": "Позиция добавлена.",
-        "addFailed": "Не удалось добавить позицию."
+        "addFailed": "Не удалось добавить позицию.",
+        "itemCode": "Код товара"
       },
-      "revisionNeededReason": "Требуется доработка"
+      "revisionNeededReason": "Требуется доработка",
+      "colItemCode": "Код товара"
     }
   },
   "imageUpload": {
@@ -2531,6 +2619,7 @@
   },
   "login": {
     "subtitle": "Войдите, чтобы продолжить",
+    "powerSwitch": "Переключатель питания",
     "username": "Имя пользователя",
     "usernamePlaceholder": "Введите имя пользователя",
     "password": "Пароль",
@@ -2880,5 +2969,32 @@
     "successToast": "Пароль успешно изменён.",
     "incorrectCurrentError": "Текущий пароль неверен.",
     "genericError": "Не удалось изменить пароль. Попробуйте снова."
+  },
+  "documentPreview": {
+    "docTitle": {
+      "invoice": "СЧЁТ-ФАКТУРА",
+      "quotation": "КОММЕРЧЕСКОЕ ПРЕДЛОЖЕНИЕ",
+      "purchaseOrder": "ЗАКАЗ НА ЗАКУПКУ"
+    },
+    "customerDetails": "Данные клиента",
+    "vendorDetails": "Данные поставщика",
+    "vehicleInformation": "Информация о транспортном средстве",
+    "vehicle": {
+      "make": "Марка",
+      "model": "Модель",
+      "vin": "VIN",
+      "engineNo": "Номер двигателя",
+      "regNo": "Рег. номер",
+      "jobNumber": "Номер заказа"
+    },
+    "dateLabel": "Дата",
+    "docNumberLabel": "Номер документа",
+    "unitPrice": "Цена за единицу",
+    "bankDetails": "Банковские реквизиты",
+    "subtotal": "Промежуточный итог",
+    "vatLabel": "НДС ({{rate}}%)",
+    "grandTotal": "Итого к оплате",
+    "issuedBy": "Выдал",
+    "approvedBy": "Утвердил"
   }
 }

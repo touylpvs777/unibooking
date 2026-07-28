@@ -52,6 +52,8 @@ const SparePartDetailPage = lazy(() => import('@/pages/Inventory/SparePartDetail
 const WarehousePage = lazy(() => import('@/pages/Inventory/WarehousePage'))
 const WarehouseDetailPage = lazy(() => import('@/pages/Inventory/WarehouseDetailPage'))
 const PurchaseOrderPage = lazy(() => import('@/pages/Inventory/PurchaseOrderPage'))
+const PurchaseOrderFormPage = lazy(() => import('@/pages/Inventory/PurchaseOrderFormPage'))
+const PurchaseOrderDetailPage = lazy(() => import('@/pages/Inventory/PurchaseOrderDetailPage'))
 const ExecutiveDashboardPage = lazy(() => import('@/pages/Executive/ExecutiveDashboardPage'))
 const IoTManagementPage = lazy(() => import('@/pages/IoT/IoTManagementPage'))
 const ProjectListPage = lazy(() => import('@/pages/Projects/ProjectListPage'))
@@ -142,6 +144,8 @@ export default function App() {
             <Route path="/inventory/warehouses"           element={<Suspense fallback={<PageLoader />}><WarehousePage /></Suspense>} />
             <Route path="/inventory/warehouses/:id"        element={<Suspense fallback={<PageLoader />}><WarehouseDetailPage /></Suspense>} />
             <Route path="/inventory/purchase-orders"      element={<Suspense fallback={<PageLoader />}><PurchaseOrderPage /></Suspense>} />
+            <Route path="/inventory/purchase-orders/new"  element={<Suspense fallback={<PageLoader />}><PurchaseOrderFormPage /></Suspense>} />
+            <Route path="/inventory/purchase-orders/:id"  element={<Suspense fallback={<PageLoader />}><PurchaseOrderDetailPage /></Suspense>} />
 
             <Route path="/executive"                     element={<Suspense fallback={<PageLoader />}><ExecutiveDashboardPage /></Suspense>} />
             <Route path="/iot-management"                element={<Suspense fallback={<PageLoader />}><IoTManagementPage /></Suspense>} />

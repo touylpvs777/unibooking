@@ -46,6 +46,7 @@ export interface QuotationItemOut {
   item_type: string
   forklift: { id: number; serial_number: string; name_en: string; status: string } | null
   product: { id: number; sku: string; name_en: string } | null
+  item_code: string | null
   description: string
   quantity: number
   unit: string
@@ -109,6 +110,14 @@ export interface QuotationDetail extends Quotation {
   tax_rate: number
   tax_amount: number
   discount_amount: number
+  exchange_rate: number
+  bank_details: string | null
+  vehicle_make: string | null
+  vehicle_model: string | null
+  vehicle_vin: string | null
+  vehicle_engine_no: string | null
+  vehicle_reg_no: string | null
+  job_number: string | null
   notes: string | null
   internal_notes: string | null
   converted_to_type: string | null
@@ -140,8 +149,16 @@ export interface QuotationCreate {
   contact_phone?: string
   tax_rate?: number
   currency?: string
+  exchange_rate?: number
+  bank_details?: string
   valid_from?: string | null
   valid_until?: string | null
+  vehicle_make?: string
+  vehicle_model?: string
+  vehicle_vin?: string
+  vehicle_engine_no?: string
+  vehicle_reg_no?: string
+  job_number?: string
   notes?: string
   internal_notes?: string
 }
@@ -157,6 +174,8 @@ export interface QuotationUpdate {
   tax_rate?: number
   discount_amount?: number
   currency?: string
+  exchange_rate?: number
+  bank_details?: string
   valid_from?: string | null
   valid_until?: string | null
   notes?: string
@@ -167,6 +186,7 @@ export interface QuotationItemCreate {
   item_type: ItemType
   forklift_id?: number | null
   product_id?: number | null
+  item_code?: string
   description: string
   quantity?: number
   unit?: string
@@ -179,6 +199,7 @@ export interface QuotationItemCreate {
 }
 
 export interface QuotationItemUpdate {
+  item_code?: string
   description?: string
   quantity?: number
   unit?: string

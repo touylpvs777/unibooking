@@ -40,7 +40,9 @@ class InvoiceItemOut(BaseModel):
     invoice_id: int
     billing_cycle_id: int | None = None
     line_number: int
+    item_code: str | None = None
     description: str
+    unit: str | None = None
     quantity: float
     unit_rate: float
     amount: float
@@ -52,7 +54,9 @@ class InvoiceItemOut(BaseModel):
 
 
 class InvoiceItemCreate(BaseModel):
+    item_code: str | None = Field(default=None, max_length=100)
     description: str = Field(..., min_length=1, max_length=500)
+    unit: str | None = Field(default=None, max_length=50)
     quantity: float = Field(default=1.0, gt=0)
     unit_rate: float = Field(..., ge=0)
 
@@ -69,6 +73,14 @@ class InvoiceCreate(BaseModel):
     tax_rate: float = Field(default=0.0, ge=0, le=100)
     discount_amount: float = Field(default=0.0, ge=0)
     currency: str = Field(default="LAK", max_length=3)
+    exchange_rate: float = Field(default=1.0, gt=0)
+    bank_details: str | None = None
+    vehicle_make: str | None = Field(default=None, max_length=100)
+    vehicle_model: str | None = Field(default=None, max_length=100)
+    vehicle_vin: str | None = Field(default=None, max_length=100)
+    vehicle_engine_no: str | None = Field(default=None, max_length=100)
+    vehicle_reg_no: str | None = Field(default=None, max_length=50)
+    job_number: str | None = Field(default=None, max_length=50)
     notes: str | None = None
     internal_notes: str | None = None
     billing_cycle_ids: list[int] = Field(default_factory=list)
@@ -79,6 +91,8 @@ class InvoiceUpdate(BaseModel):
     due_date: date | None = None
     tax_rate: float | None = Field(default=None, ge=0, le=100)
     discount_amount: float | None = Field(default=None, ge=0)
+    exchange_rate: float | None = Field(default=None, gt=0)
+    bank_details: str | None = None
     notes: str | None = None
     internal_notes: str | None = None
 
@@ -121,6 +135,14 @@ class InvoiceDetail(InvoiceOut):
     sent_at: datetime | None = None
     cancelled_at: datetime | None = None
     cancellation_reason: str | None = None
+    vehicle_make: str | None = None
+    vehicle_model: str | None = None
+    vehicle_vin: str | None = None
+    vehicle_engine_no: str | None = None
+    vehicle_reg_no: str | None = None
+    job_number: str | None = None
+    exchange_rate: float
+    bank_details: str | None = None
 
 
 class InvoiceListResponse(BaseModel):

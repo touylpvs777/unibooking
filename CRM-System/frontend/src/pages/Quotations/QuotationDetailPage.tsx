@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   ChevronLeft, AlertCircle, Plus, Trash2, Send, Check,
-  X, RotateCcw, FileText, Clock,
+  X, RotateCcw, FileText, Clock, FileDown,
 } from 'lucide-react'
 import {
   getQuotation,
@@ -15,7 +15,9 @@ import {
 import { QuotationStatusBadge, QuotationTypeBadge } from '@/components/quotation/QuotationStatusBadge'
 import Modal from '@/components/ui/Modal'
 import PrintButton from '@/components/ui/PrintButton'
+import DocumentPreview from '@/components/DocumentPreview'
 import { toast } from '@/store/toastStore'
+import { useCompanyStore } from '@/store/companyStore'
 import type { QuotationDetail, ItemType } from '@/types/quotation'
 import '@/pages/Catalog/ProductDetailPage.css'
 import '@/styles/detail.css'
@@ -47,6 +49,10 @@ export default function QuotationDetailPage() {
   const [error, setError]         = useState<string | null>(null)
   const [actionLoading, setAL]    = useState(false)
   const [itemFormOpen, setIFO]    = useState(false)
+
+  const companyProfile = useCompanyStore((s) => s.profile)
+  const fetchCompanyProfile = useCompanyStore((s) => s.fetch)
+  useEffect(() => { fetchCompanyProfile() }, [fetchCompanyProfile])
 
   const load = useCallback(async () => {
     if (!id) return
@@ -117,7 +123,8 @@ export default function QuotationDetailPage() {
   const isDraft = qt.status === 'draft'
 
   return (
-    <div className="product-detail">
+    <div>
+    <div className="doc-preview-hide-on-print product-detail">
       <button className="detail-back" onClick={() => navigate('/quotations')}>
         <ChevronLeft size={16} /> {t('quotations.detail.backToQuotations')}
       </button>
@@ -138,6 +145,9 @@ export default function QuotationDetailPage() {
 
         <div className="detail-actions">
           <PrintButton />
+          <button className="btn btn-primary" onClick={() => window.print()}>
+            <FileDown size={14} /> {t('common.exportPdf')}
+          </button>
           {actions.includes('submit') && (
             <button className="btn btn-primary" disabled={actionLoading}
               onClick={() => doAction(t('quotations.detail.toasts.submitted'), () => submitQuotation(qt.id))}>
@@ -279,6 +289,7 @@ export default function QuotationDetailPage() {
                     <td className="cell-muted">{item.line_number}</td>
                     <td>
                       <div className="cell-desc">{item.description}</div>
+                      {item.item_code && <div className="cell-muted cell-sub">{t('quotations.detail.colItemCode')}: {item.item_code}</div>}
                       {item.forklift && <div className="cell-muted cell-sub">{t('quotations.detail.serialNumber', { serial: item.forklift.serial_number })}</div>}
                       {item.product && <div className="cell-muted cell-sub">{t('quotations.detail.sku', { sku: item.product.sku })}</div>}
                       {item.rental_duration_days && <div className="cell-muted cell-sub">{t('quotations.detail.durationDays', { count: item.rental_duration_days, period: item.rental_rate_period })}</div>}
@@ -383,6 +394,37 @@ export default function QuotationDetailPage() {
         onSuccess={load}
       />
     </div>
+
+      <div className="doc-preview">
+        <DocumentPreview
+          docType="quotation"
+          documentNumber={qt.quotation_number}
+          date={fmtDate(qt.valid_from ?? qt.created_at)}
+          companyName={companyProfile?.company_name}
+          companyAddress={companyProfile?.address}
+          companyPhone={companyProfile?.phone}
+          partyLabel={t('documentPreview.customerDetails')}
+          partyName={qt.customer ? `${qt.customer.first_name} ${qt.customer.last_name}${qt.customer.company ? ` — ${qt.customer.company}` : ''}` : (qt.contact_name || '—')}
+          partyContact={qt.contact_phone ?? qt.contact_email ?? undefined}
+          vehicle={{
+            make: qt.vehicle_make ?? undefined, model: qt.vehicle_model ?? undefined, vin: qt.vehicle_vin ?? undefined,
+            engineNo: qt.vehicle_engine_no ?? undefined, regNo: qt.vehicle_reg_no ?? undefined, jobNumber: qt.job_number ?? undefined,
+          }}
+          items={qt.items.map((it) => ({
+            itemCode: it.item_code ?? undefined, description: it.description, unit: it.unit ?? undefined,
+            qty: it.quantity, unitPrice: it.unit_price, total: it.line_total,
+          }))}
+          subtotal={qt.subtotal}
+          taxRate={qt.tax_rate}
+          taxAmount={qt.tax_amount}
+          grandTotal={qt.total_amount}
+          currency={qt.currency}
+          showBankDetails
+          bankDetailsText={qt.bank_details ?? undefined}
+          grandTotalInBaseCurrency={qt.currency !== 'LAK' ? { amount: qt.total_amount * qt.exchange_rate, currency: 'LAK' } : undefined}
+        />
+      </div>
+    </div>
   )
 }
 
@@ -411,6 +453,7 @@ function AddItemModal({
 
   const [form, setForm] = useState({
     item_type: 'custom' as string,
+    item_code: '',
     description: '',
     quantity: '1',
     unit: 'unit',
@@ -425,7 +468,7 @@ function AddItemModal({
 
   useEffect(() => {
     if (isOpen) {
-      setForm({ item_type: 'custom', description: '', quantity: '1', unit: 'unit', unit_price: '', discount_percent: '0', rental_duration_days: '', rental_rate_period: '', notes: '' })
+      setForm({ item_type: 'custom', item_code: '', description: '', quantity: '1', unit: 'unit', unit_price: '', discount_percent: '0', rental_duration_days: '', rental_rate_period: '', notes: '' })
       setErr(null)
     }
   }, [isOpen])
@@ -441,6 +484,7 @@ function AddItemModal({
     try {
       await addItem(quotationId, {
         item_type: form.item_type as ItemType,
+        item_code: form.item_code.trim() || undefined,
         description: form.description.trim(),
         quantity: Number(form.quantity) || 1,
         unit: form.unit,
@@ -476,14 +520,19 @@ function AddItemModal({
             </select>
           </div>
           <div className="form-group">
-            <label>{t('quotations.detail.addItemModal.unit')}</label>
-            <input value={form.unit} onChange={(e) => set('unit', e.target.value)} />
+            <label>{t('quotations.detail.addItemModal.itemCode')}</label>
+            <input value={form.item_code} onChange={(e) => set('item_code', e.target.value)} />
           </div>
         </div>
 
         <div className="form-group">
           <label>{t('common.description')} <span className="required">*</span></label>
           <input value={form.description} onChange={(e) => set('description', e.target.value)} placeholder={t('quotations.detail.addItemModal.descriptionPlaceholder')} required />
+        </div>
+
+        <div className="form-group">
+          <label>{t('quotations.detail.addItemModal.unit')}</label>
+          <input value={form.unit} onChange={(e) => set('unit', e.target.value)} />
         </div>
 
         <div className="form-row-2">

@@ -85,7 +85,11 @@
     "themeDark": "Dark",
     "themeSystem": "System",
     "scrollLeft": "Scroll left",
-    "scrollRight": "Scroll right"
+    "scrollRight": "Scroll right",
+    "itemCode": "Item Code",
+    "unit": "Unit",
+    "exportPdf": "Export to PDF",
+    "clear": "Clear"
   },
   "settings": {
     "title": "Global Settings",
@@ -119,6 +123,13 @@
         "nameLabel": "Sidebar Display Name",
         "logoLabel": "Sidebar Logo",
         "logoHint": "Saved to this browser only"
+      },
+      "bankDetails": {
+        "title": "Bank Details",
+        "bankName": "Bank Name",
+        "accountName": "Account Name",
+        "accountNumber": "Account Number",
+        "swift": "SWIFT / BIC Code"
       }
     },
     "financial": {
@@ -289,6 +300,49 @@
         "partial": "Partial",
         "received": "Received",
         "cancelled": "Cancelled"
+      },
+      "newPO": "New Purchase Order",
+      "form": {
+        "title": "New Purchase Order",
+        "backToList": "Back to Purchase Orders",
+        "vendor": "Vendor",
+        "vendorRequired": "Vendor is required",
+        "warehouse": "Warehouse",
+        "warehouseRequired": "Warehouse is required",
+        "vendorAddress": "Vendor Address",
+        "vendorContact": "Vendor Contact",
+        "orderDate": "Order Date",
+        "expectedDate": "Expected Date",
+        "taxRate": "Tax Rate (%)",
+        "lineItems": "Line Items",
+        "itemCode": "Item Code",
+        "description": "Description",
+        "descriptionPlaceholder": "Item description",
+        "qty": "Qty",
+        "unit": "Unit",
+        "unitCost": "Unit Cost",
+        "linkCatalogPart": "Link Catalog Part",
+        "linkCatalogPartPlaceholder": "Search spare parts…",
+        "noPartsFound": "No parts found",
+        "addRow": "Add Row",
+        "itemRequired": "At least one line item is required",
+        "created": "Purchase order {{number}} created",
+        "createFailed": "Failed to create purchase order",
+        "creating": "Creating...",
+        "createPO": "Create Purchase Order"
+      },
+      "detail": {
+        "loadError": "Failed to load purchase order",
+        "notFound": "Purchase order not found",
+        "actionFailed": "{{action}} failed",
+        "submitted": "Purchase order submitted",
+        "submit": "Submit",
+        "receiveItems": "Receive Items",
+        "receiveModalTitle": "Receive Items",
+        "received": "Items received",
+        "receivedDate": "Received Date",
+        "qtyOrdered": "Qty Ordered",
+        "qtyReceived": "Qty Received"
       }
     },
     "spareParts": {
@@ -755,7 +809,17 @@
         "errors": {
           "customerRequired": "Please select a customer.",
           "itemRequired": "At least one line item with a description is required."
-        }
+        },
+        "itemCode": "Item Code",
+        "itemCodePlaceholder": "e.g. SKU-1000",
+        "unit": "Unit",
+        "currency": "Currency",
+        "exchangeRate": "Exchange Rate",
+        "bankDetails": "Bank Details",
+        "bankDetailsPlaceholder": "Bank name, account name, account number, SWIFT/BIC...",
+        "grandTotalInLAK": "Grand Total in LAK (Base Currency)",
+        "previewTitle": "Document Preview",
+        "previewPendingNumber": "(Pending)"
       },
       "pagination": {
         "info": "Page {{page}} of {{pages}} ({{total}} total)"
@@ -807,6 +871,15 @@
       "card": {
         "due": "Due {{date}}",
         "balance": "Balance: {{amount}} {{currency}}"
+      },
+      "vehicleInfo": {
+        "title": "Vehicle Information",
+        "make": "Make",
+        "model": "Model",
+        "vin": "VIN",
+        "engineNo": "Engine No.",
+        "regNo": "Registration No.",
+        "jobNumber": "Job Number"
       }
     },
     "deposit": {
@@ -1866,7 +1939,19 @@
         "sales": "Sales Quotation",
         "service": "Service Quotation",
         "spareParts": "Spare Parts Quotation"
-      }
+      },
+      "vehicleInfo": {
+        "title": "Vehicle Information",
+        "make": "Make",
+        "model": "Model",
+        "vin": "VIN",
+        "engineNo": "Engine No.",
+        "regNo": "Registration No.",
+        "jobNumber": "Job Number"
+      },
+      "exchangeRateLabel": "Exchange Rate",
+      "bankDetails": "Bank Details",
+      "bankDetailsPlaceholder": "Bank name, account name, account number, SWIFT/BIC..."
     },
     "detail": {
       "backToQuotations": "Back to Quotations",
@@ -1936,9 +2021,11 @@
         "descriptionRequired": "Description is required.",
         "unitPriceRequired": "Unit price is required.",
         "itemAdded": "Item added.",
-        "addFailed": "Failed to add item."
+        "addFailed": "Failed to add item.",
+        "itemCode": "Item Code"
       },
-      "revisionNeededReason": "Revision needed"
+      "revisionNeededReason": "Revision needed",
+      "colItemCode": "Item Code"
     }
   },
   "rental": {
@@ -2181,7 +2268,8 @@
       "analytics": "Business Analytics",
       "iotTelemetry": "IoT Telemetry",
       "settings": "Settings",
-      "warehouseProjects": "Warehouse Projects"
+      "warehouseProjects": "Warehouse Projects",
+      "purchaseOrders": "Purchase Orders"
     },
     "expandSidebar": "Expand navigation pane",
     "collapseSidebar": "Collapse navigation pane"
@@ -2227,6 +2315,7 @@
   },
   "login": {
     "subtitle": "Sign in to continue",
+    "powerSwitch": "Power switch",
     "username": "Username",
     "usernamePlaceholder": "Enter your username",
     "password": "Password",
@@ -2880,5 +2969,32 @@
     "successToast": "Password changed successfully.",
     "incorrectCurrentError": "Current password is incorrect.",
     "genericError": "Failed to change password. Please try again."
+  },
+  "documentPreview": {
+    "docTitle": {
+      "invoice": "INVOICE",
+      "quotation": "QUOTATION",
+      "purchaseOrder": "PURCHASE ORDER"
+    },
+    "customerDetails": "Customer Details",
+    "vendorDetails": "Vendor Details",
+    "vehicleInformation": "Vehicle Information",
+    "vehicle": {
+      "make": "Make",
+      "model": "Model",
+      "vin": "VIN",
+      "engineNo": "Engine No.",
+      "regNo": "Reg. No.",
+      "jobNumber": "Job No."
+    },
+    "dateLabel": "Date",
+    "docNumberLabel": "Document No.",
+    "unitPrice": "Unit Price",
+    "bankDetails": "Bank Details",
+    "subtotal": "Subtotal",
+    "vatLabel": "VAT ({{rate}}%)",
+    "grandTotal": "Grand Total",
+    "issuedBy": "Issued By",
+    "approvedBy": "Approved By"
   }
 }

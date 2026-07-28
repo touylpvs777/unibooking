@@ -71,9 +71,25 @@ class Invoice(Base):
     amount_paid: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     balance_due: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     currency: Mapped[str] = mapped_column(String(3), default="LAK", nullable=False)
+    # Rate to convert `currency` into the org's base currency (LAK) at time of
+    # issue — 1.0 when currency is already LAK.
+    exchange_rate: Mapped[float] = mapped_column(Float, default=1.0, nullable=False)
+    # Freeform per-invoice bank details (staff-entered, printed on the PDF) —
+    # distinct from the org-wide bank details in Settings.
+    bank_details: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     billing_period_start: Mapped[date | None] = mapped_column(Date, nullable=True)
     billing_period_end: Mapped[date | None] = mapped_column(Date, nullable=True)
+
+    # Free-text details of the customer-owned vehicle/equipment this invoice
+    # is for (e.g. a repair job) — not linked to the internal Forklift fleet
+    # model, since the vehicle may not be one of DK's own assets.
+    vehicle_make: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    vehicle_model: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    vehicle_vin: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    vehicle_engine_no: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    vehicle_reg_no: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    job_number: Mapped[str | None] = mapped_column(String(50), nullable=True)
 
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     internal_notes: Mapped[str | None] = mapped_column(Text, nullable=True)

@@ -23,6 +23,8 @@ class PurchaseOrder(Base):
     po_number: Mapped[str] = mapped_column(String(50), nullable=False, unique=True, index=True)
     status: Mapped[str] = mapped_column(String(25), default=POStatus.DRAFT.value, nullable=False, index=True)
     vendor: Mapped[str] = mapped_column(String(200), nullable=False)
+    vendor_address: Mapped[str | None] = mapped_column(Text, nullable=True)
+    vendor_contact: Mapped[str | None] = mapped_column(String(200), nullable=True)
     warehouse_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("warehouses.id", ondelete="RESTRICT"), nullable=False, index=True,
     )
@@ -30,6 +32,7 @@ class PurchaseOrder(Base):
     expected_date: Mapped[date | None] = mapped_column(Date, nullable=True)
     received_date: Mapped[date | None] = mapped_column(Date, nullable=True)
     subtotal: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
+    tax_rate: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     tax_amount: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     total_amount: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     currency: Mapped[str] = mapped_column(String(3), default="LAK", nullable=False)

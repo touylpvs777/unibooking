@@ -1,7 +1,9 @@
 import { useTranslation } from 'react-i18next'
+import { useLocation } from 'react-router-dom'
 import { Forklift, Percent, Wrench, TrendingUp, TrendingDown } from 'lucide-react'
 import { MOCK_CONTRACTS, MOCK_CUSTOMERS, MOCK_FORKLIFTS, MOCK_MAINTENANCE_JOBS } from '@/mock/rentalMvpData'
 import type { RentalContract, RentalContractStatus } from '@/types/rentalMvp'
+import { getHeaderColorClass } from '@/utils/routeHeaderColor'
 
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
@@ -72,6 +74,7 @@ function KpiCard({ label, value, sublabel, icon: Icon, accent, trend }: KpiCardP
 
 export default function RentalDashboard() {
   const { t } = useTranslation()
+  const headerColorClass = getHeaderColorClass(useLocation().pathname)
   const totalFleet = MOCK_FORKLIFTS.length
   const activeRented = MOCK_FORKLIFTS.filter((f) => f.status === 'On Rent').length
   const utilizationRate = Math.round((activeRented / totalFleet) * 100)
@@ -88,9 +91,9 @@ export default function RentalDashboard() {
 
   return (
     <div className="min-h-full bg-[#151515] px-6 py-8 text-white lg:px-10">
-      <header className="mb-8">
-        <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">{t('dashboard.exec.rentalMvpEyebrow')}</p>
-        <h1 className="mt-1 text-2xl font-bold tracking-tight">{t('dashboard.exec.rentalMvpTitle')}</h1>
+      <header className={`mb-8 rounded-2xl px-6 py-5 ${headerColorClass}`}>
+        <p className="text-xs font-semibold uppercase tracking-wider text-white/70">{t('dashboard.exec.rentalMvpEyebrow')}</p>
+        <h1 className="mt-1 text-2xl font-bold tracking-tight text-white">{t('dashboard.exec.rentalMvpTitle')}</h1>
       </header>
 
       {/* Top Row: Executive KPI Cards */}

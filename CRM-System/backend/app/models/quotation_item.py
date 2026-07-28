@@ -24,6 +24,7 @@ class QuotationItem(Base):
         Integer, ForeignKey("products.id", ondelete="SET NULL"), nullable=True, index=True,
     )
 
+    item_code: Mapped[str | None] = mapped_column(String(100), nullable=True)
     description: Mapped[str] = mapped_column(String(1000), nullable=False)
     quantity: Mapped[float] = mapped_column(Float, default=1.0, nullable=False)
     unit: Mapped[str] = mapped_column(String(50), default="unit", nullable=False)

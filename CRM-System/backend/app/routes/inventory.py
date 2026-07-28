@@ -168,16 +168,31 @@ async def get_po(po_id: int, db: AsyncSession = Depends(get_db), _: User = requi
 @router.post("/purchase-orders", response_model=POOut, status_code=status.HTTP_201_CREATED)
 async def create_po(data: POCreate, db: AsyncSession = Depends(get_db), current_user: User = require_permission(PermissionName.MANAGE_CATALOG)):
     po = await InventoryService(db).create_po(data, user_id=current_user.id)
+    await ActivityLogService(db).log(
+        user_id=current_user.id, action=ActionType.PURCHASE_ORDER_CREATED,
+        entity_type=EntityType.PURCHASE_ORDER, entity_id=po.id,
+        details={"po_number": po.po_number, "vendor": po.vendor},
+    )
     return POOut.model_validate(po)
 
 @router.post("/purchase-orders/{po_id}/submit", response_model=POOut)
-async def submit_po(po_id: int, db: AsyncSession = Depends(get_db), _: User = require_permission(PermissionName.MANAGE_CATALOG)):
+async def submit_po(po_id: int, db: AsyncSession = Depends(get_db), current_user: User = require_permission(PermissionName.MANAGE_CATALOG)):
     po = await InventoryService(db).submit_po(po_id)
+    await ActivityLogService(db).log(
+        user_id=current_user.id, action=ActionType.PURCHASE_ORDER_SUBMITTED,
+        entity_type=EntityType.PURCHASE_ORDER, entity_id=po.id,
+        details={"po_number": po.po_number},
+    )
     return POOut.model_validate(po)
 
 @router.post("/purchase-orders/{po_id}/receive", response_model=POOut)
 async def receive_po(po_id: int, items: list[ReceiveItemAction], db: AsyncSession = Depends(get_db), current_user: User = require_permission(PermissionName.MANAGE_CATALOG)):
     po = await InventoryService(db).receive_po_items(po_id, items, user_id=current_user.id)
+    await ActivityLogService(db).log(
+        user_id=current_user.id, action=ActionType.PURCHASE_ORDER_RECEIVED,
+        entity_type=EntityType.PURCHASE_ORDER, entity_id=po.id,
+        details={"po_number": po.po_number, "status": po.status},
+    )
     return POOut.model_validate(po)
 
 

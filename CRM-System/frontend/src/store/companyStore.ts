@@ -7,6 +7,10 @@ export interface CompanyProfile {
   address?: string
   phone?: string
   logo_url?: string
+  bank_name?: string
+  bank_account_name?: string
+  bank_account_number?: string
+  bank_swift?: string
 }
 
 interface SettingRecord {

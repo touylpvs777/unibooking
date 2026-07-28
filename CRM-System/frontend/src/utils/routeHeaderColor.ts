@@ -19,8 +19,7 @@ const CATEGORY_RULES: Array<{ prefix: string; className: string }> = [
   { prefix: '/maintenance', className: 'bg-blue-800' },
   { prefix: '/activities', className: 'bg-blue-800' },
   { prefix: '/activity', className: 'bg-blue-800' },
-  { prefix: '/rental-contracts', className: 'bg-blue-800' },
-  { prefix: '/rental-mvp', className: 'bg-blue-800' },
+  { prefix: '/rental', className: 'bg-blue-800' },
   { prefix: '/projects', className: 'bg-blue-800' },
 
   // Finance & Billing (invoices, payments, deposits, billing)

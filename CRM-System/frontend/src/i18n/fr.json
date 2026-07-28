@@ -85,7 +85,11 @@
     "themeDark": "Sombre",
     "themeSystem": "Système",
     "scrollLeft": "Défiler vers la gauche",
-    "scrollRight": "Défiler vers la droite"
+    "scrollRight": "Défiler vers la droite",
+    "itemCode": "Code article",
+    "unit": "Unité",
+    "exportPdf": "Exporter en PDF",
+    "clear": "Effacer"
   },
   "leads": {
     "status": {
@@ -177,7 +181,8 @@
       "analytics": "Analytique commerciale",
       "iotTelemetry": "Télémétrie IoT",
       "settings": "Paramètres",
-      "warehouseProjects": "Projets d’entrepôt"
+      "warehouseProjects": "Projets d’entrepôt",
+      "purchaseOrders": "Bons de commande"
     },
     "expandSidebar": "Développer le panneau de navigation",
     "collapseSidebar": "Réduire le panneau de navigation"
@@ -872,6 +877,49 @@
         "partial": "Partiellement reçu",
         "received": "Reçu",
         "cancelled": "Annulé"
+      },
+      "newPO": "Nouveau bon de commande",
+      "form": {
+        "title": "Nouveau bon de commande",
+        "backToList": "Retour aux bons de commande",
+        "vendor": "Fournisseur",
+        "vendorRequired": "Le fournisseur est requis",
+        "warehouse": "Entrepôt",
+        "warehouseRequired": "L'entrepôt est requis",
+        "vendorAddress": "Adresse du fournisseur",
+        "vendorContact": "Contact du fournisseur",
+        "orderDate": "Date de commande",
+        "expectedDate": "Date prévue",
+        "taxRate": "Taux de taxe (%)",
+        "lineItems": "Lignes de commande",
+        "itemCode": "Code article",
+        "description": "Description",
+        "descriptionPlaceholder": "Description de l'article",
+        "qty": "Qté",
+        "unit": "Unité",
+        "unitCost": "Coût unitaire",
+        "linkCatalogPart": "Lier une pièce du catalogue",
+        "linkCatalogPartPlaceholder": "Rechercher une pièce…",
+        "noPartsFound": "Aucune pièce trouvée",
+        "addRow": "Ajouter une ligne",
+        "itemRequired": "Au moins une ligne est requise",
+        "created": "Bon de commande {{number}} créé",
+        "createFailed": "Échec de la création du bon de commande",
+        "creating": "Création...",
+        "createPO": "Créer le bon de commande"
+      },
+      "detail": {
+        "loadError": "Échec du chargement du bon de commande",
+        "notFound": "Bon de commande introuvable",
+        "actionFailed": "Échec : {{action}}",
+        "submitted": "Bon de commande soumis",
+        "submit": "Soumettre",
+        "receiveItems": "Réceptionner",
+        "receiveModalTitle": "Réceptionner les articles",
+        "received": "Articles réceptionnés",
+        "receivedDate": "Date de réception",
+        "qtyOrdered": "Qté commandée",
+        "qtyReceived": "Qté reçue"
       }
     },
     "spareParts": {
@@ -1269,6 +1317,13 @@
         "nameLabel": "Nom affiché dans la barre latérale",
         "logoLabel": "Logo de la barre latérale",
         "logoHint": "Enregistré uniquement sur ce navigateur"
+      },
+      "bankDetails": {
+        "title": "Coordonnées bancaires",
+        "bankName": "Nom de la banque",
+        "accountName": "Nom du titulaire",
+        "accountNumber": "Numéro de compte",
+        "swift": "Code SWIFT / BIC"
       }
     },
     "financial": {
@@ -1652,7 +1707,17 @@
         "errors": {
           "customerRequired": "Veuillez sélectionner un client.",
           "itemRequired": "Au moins une ligne avec une description est requise."
-        }
+        },
+        "itemCode": "Code article",
+        "itemCodePlaceholder": "ex. SKU-1000",
+        "unit": "Unité",
+        "currency": "Devise",
+        "exchangeRate": "Taux de change",
+        "bankDetails": "Coordonnées bancaires",
+        "bankDetailsPlaceholder": "Nom de la banque, nom du titulaire, numéro de compte, SWIFT/BIC...",
+        "grandTotalInLAK": "Total général en LAK (devise de base)",
+        "previewTitle": "Aperçu du document",
+        "previewPendingNumber": "(En attente)"
       },
       "pagination": {
         "info": "Page {{page}} sur {{pages}} ({{total}} au total)"
@@ -1704,6 +1769,15 @@
       "card": {
         "due": "Échéance {{date}}",
         "balance": "Solde : {{amount}} {{currency}}"
+      },
+      "vehicleInfo": {
+        "title": "Informations sur le véhicule",
+        "make": "Marque",
+        "model": "Modèle",
+        "vin": "VIN",
+        "engineNo": "N° de moteur",
+        "regNo": "N° d'immatriculation",
+        "jobNumber": "N° de tâche"
       }
     },
     "deposit": {
@@ -2443,7 +2517,19 @@
         "sales": "Devis de vente",
         "service": "Devis de service",
         "spareParts": "Devis de pièces détachées"
-      }
+      },
+      "vehicleInfo": {
+        "title": "Informations sur le véhicule",
+        "make": "Marque",
+        "model": "Modèle",
+        "vin": "VIN",
+        "engineNo": "N° de moteur",
+        "regNo": "N° d'immatriculation",
+        "jobNumber": "N° de tâche"
+      },
+      "exchangeRateLabel": "Taux de change",
+      "bankDetails": "Coordonnées bancaires",
+      "bankDetailsPlaceholder": "Nom de la banque, nom du titulaire, numéro de compte, SWIFT/BIC..."
     },
     "detail": {
       "backToQuotations": "Retour aux devis",
@@ -2513,9 +2599,11 @@
         "descriptionRequired": "La description est obligatoire.",
         "unitPriceRequired": "Le prix unitaire est obligatoire.",
         "itemAdded": "Article ajouté.",
-        "addFailed": "Échec de l'ajout de l'article."
+        "addFailed": "Échec de l'ajout de l'article.",
+        "itemCode": "Code article"
       },
-      "revisionNeededReason": "Révision nécessaire"
+      "revisionNeededReason": "Révision nécessaire",
+      "colItemCode": "Code article"
     }
   },
   "imageUpload": {
@@ -2531,6 +2619,7 @@
   },
   "login": {
     "subtitle": "Connectez-vous pour continuer",
+    "powerSwitch": "Interrupteur d'alimentation",
     "username": "Nom d'utilisateur",
     "usernamePlaceholder": "Saisissez votre nom d'utilisateur",
     "password": "Mot de passe",
@@ -2880,5 +2969,32 @@
     "successToast": "Mot de passe changé avec succès.",
     "incorrectCurrentError": "Le mot de passe actuel est incorrect.",
     "genericError": "Échec du changement de mot de passe. Veuillez réessayer."
+  },
+  "documentPreview": {
+    "docTitle": {
+      "invoice": "FACTURE",
+      "quotation": "DEVIS",
+      "purchaseOrder": "BON DE COMMANDE"
+    },
+    "customerDetails": "Coordonnées du client",
+    "vendorDetails": "Coordonnées du fournisseur",
+    "vehicleInformation": "Informations sur le véhicule",
+    "vehicle": {
+      "make": "Marque",
+      "model": "Modèle",
+      "vin": "VIN",
+      "engineNo": "N° de moteur",
+      "regNo": "N° d'immatriculation",
+      "jobNumber": "N° de tâche"
+    },
+    "dateLabel": "Date",
+    "docNumberLabel": "N° de document",
+    "unitPrice": "Prix unitaire",
+    "bankDetails": "Coordonnées bancaires",
+    "subtotal": "Sous-total",
+    "vatLabel": "TVA ({{rate}}%)",
+    "grandTotal": "Total général",
+    "issuedBy": "Émis par",
+    "approvedBy": "Approuvé par"
   }
 }

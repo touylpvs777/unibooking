@@ -21,7 +21,9 @@ class InvoiceItem(Base):
     )
 
     line_number: Mapped[int] = mapped_column(Integer, nullable=False)
+    item_code: Mapped[str | None] = mapped_column(String(100), nullable=True)
     description: Mapped[str] = mapped_column(String(500), nullable=False)
+    unit: Mapped[str | None] = mapped_column(String(50), nullable=True)
 
     quantity: Mapped[float] = mapped_column(Float, default=1.0, nullable=False)
     unit_rate: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)

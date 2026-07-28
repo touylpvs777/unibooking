@@ -85,7 +85,11 @@
     "themeDark": "深色",
     "themeSystem": "跟随系统",
     "scrollLeft": "向左滚动",
-    "scrollRight": "向右滚动"
+    "scrollRight": "向右滚动",
+    "itemCode": "货号",
+    "unit": "单位",
+    "exportPdf": "导出为PDF",
+    "clear": "清除"
   },
   "leads": {
     "status": {
@@ -177,7 +181,8 @@
       "analytics": "业务分析",
       "iotTelemetry": "IoT 遥测",
       "settings": "设置",
-      "warehouseProjects": "仓储项目"
+      "warehouseProjects": "仓储项目",
+      "purchaseOrders": "采购订单"
     },
     "expandSidebar": "展开导航面板",
     "collapseSidebar": "收起导航面板"
@@ -872,6 +877,49 @@
         "partial": "部分到货",
         "received": "已收货",
         "cancelled": "已取消"
+      },
+      "newPO": "新建采购订单",
+      "form": {
+        "title": "新建采购订单",
+        "backToList": "返回采购订单",
+        "vendor": "供应商",
+        "vendorRequired": "请填写供应商",
+        "warehouse": "仓库",
+        "warehouseRequired": "请选择仓库",
+        "vendorAddress": "供应商地址",
+        "vendorContact": "供应商联系方式",
+        "orderDate": "下单日期",
+        "expectedDate": "预计到货日期",
+        "taxRate": "税率 (%)",
+        "lineItems": "订单明细",
+        "itemCode": "货号",
+        "description": "描述",
+        "descriptionPlaceholder": "商品描述",
+        "qty": "数量",
+        "unit": "单位",
+        "unitCost": "单价",
+        "linkCatalogPart": "关联库存备件",
+        "linkCatalogPartPlaceholder": "搜索备件…",
+        "noPartsFound": "未找到备件",
+        "addRow": "添加行",
+        "itemRequired": "至少需要一项明细",
+        "created": "采购订单 {{number}} 已创建",
+        "createFailed": "创建采购订单失败",
+        "creating": "创建中...",
+        "createPO": "创建采购订单"
+      },
+      "detail": {
+        "loadError": "加载采购订单失败",
+        "notFound": "未找到采购订单",
+        "actionFailed": "{{action}}失败",
+        "submitted": "采购订单已提交",
+        "submit": "提交",
+        "receiveItems": "收货",
+        "receiveModalTitle": "收货",
+        "received": "收货完成",
+        "receivedDate": "收货日期",
+        "qtyOrdered": "订购数量",
+        "qtyReceived": "已收数量"
       }
     },
     "spareParts": {
@@ -1269,6 +1317,13 @@
         "nameLabel": "侧边栏显示名称",
         "logoLabel": "侧边栏 Logo",
         "logoHint": "仅保存在此浏览器中"
+      },
+      "bankDetails": {
+        "title": "银行信息",
+        "bankName": "银行名称",
+        "accountName": "账户名称",
+        "accountNumber": "账号",
+        "swift": "SWIFT/BIC代码"
       }
     },
     "financial": {
@@ -1652,7 +1707,17 @@
         "errors": {
           "customerRequired": "请选择客户。",
           "itemRequired": "至少需要一个包含描述的明细项目。"
-        }
+        },
+        "itemCode": "货号",
+        "itemCodePlaceholder": "例如 SKU-1000",
+        "unit": "单位",
+        "currency": "货币",
+        "exchangeRate": "汇率",
+        "bankDetails": "银行信息",
+        "bankDetailsPlaceholder": "银行名称、账户名称、账号、SWIFT/BIC……",
+        "grandTotalInLAK": "折合基准货币(LAK)总计",
+        "previewTitle": "单据预览",
+        "previewPendingNumber": "(待生成)"
       },
       "pagination": {
         "info": "第 {{page}} 页，共 {{pages}} 页（共 {{total}} 条）"
@@ -1704,6 +1769,15 @@
       "card": {
         "due": "到期日 {{date}}",
         "balance": "结余：{{amount}} {{currency}}"
+      },
+      "vehicleInfo": {
+        "title": "车辆信息",
+        "make": "品牌",
+        "model": "型号",
+        "vin": "车架号(VIN)",
+        "engineNo": "发动机号",
+        "regNo": "车牌号",
+        "jobNumber": "工单编号"
       }
     },
     "deposit": {
@@ -2443,7 +2517,19 @@
         "sales": "销售报价单",
         "service": "服务报价单",
         "spareParts": "备件报价单"
-      }
+      },
+      "vehicleInfo": {
+        "title": "车辆信息",
+        "make": "品牌",
+        "model": "型号",
+        "vin": "车架号(VIN)",
+        "engineNo": "发动机号",
+        "regNo": "车牌号",
+        "jobNumber": "工单编号"
+      },
+      "exchangeRateLabel": "汇率",
+      "bankDetails": "银行信息",
+      "bankDetailsPlaceholder": "银行名称、账户名称、账号、SWIFT/BIC……"
     },
     "detail": {
       "backToQuotations": "返回报价单列表",
@@ -2513,9 +2599,11 @@
         "descriptionRequired": "描述为必填项。",
         "unitPriceRequired": "单价为必填项。",
         "itemAdded": "项目已添加。",
-        "addFailed": "添加项目失败。"
+        "addFailed": "添加项目失败。",
+        "itemCode": "货号"
       },
-      "revisionNeededReason": "需要修订"
+      "revisionNeededReason": "需要修订",
+      "colItemCode": "货号"
     }
   },
   "imageUpload": {
@@ -2531,6 +2619,7 @@
   },
   "login": {
     "subtitle": "登录以继续",
+    "powerSwitch": "电源开关",
     "username": "用户名",
     "usernamePlaceholder": "请输入用户名",
     "password": "密码",
@@ -2880,5 +2969,32 @@
     "successToast": "密码修改成功。",
     "incorrectCurrentError": "当前密码不正确。",
     "genericError": "修改密码失败，请重试。"
+  },
+  "documentPreview": {
+    "docTitle": {
+      "invoice": "发票",
+      "quotation": "报价单",
+      "purchaseOrder": "采购订单"
+    },
+    "customerDetails": "客户信息",
+    "vendorDetails": "供应商信息",
+    "vehicleInformation": "车辆信息",
+    "vehicle": {
+      "make": "品牌",
+      "model": "型号",
+      "vin": "车架号(VIN)",
+      "engineNo": "发动机号",
+      "regNo": "车牌号",
+      "jobNumber": "工单号"
+    },
+    "dateLabel": "日期",
+    "docNumberLabel": "单据编号",
+    "unitPrice": "单价",
+    "bankDetails": "银行信息",
+    "subtotal": "小计",
+    "vatLabel": "增值税 ({{rate}}%)",
+    "grandTotal": "总计",
+    "issuedBy": "开单人",
+    "approvedBy": "审批人"
   }
 }

@@ -85,7 +85,11 @@
     "themeDark": "ໂໝດມືດ",
     "themeSystem": "ຕາມລະບົບ",
     "scrollLeft": "ເລື່ອນຊ້າຍ",
-    "scrollRight": "ເລື່ອນຂວາ"
+    "scrollRight": "ເລື່ອນຂວາ",
+    "itemCode": "ລະຫັດສິນຄ້າ",
+    "unit": "ໜ່ວຍ",
+    "exportPdf": "ສົ່ງອອກເປັນ PDF",
+    "clear": "ລຶບລ້າງ"
   },
   "settings": {
     "title": "ການຕັ້ງຄ່າລະບົບລວມ",
@@ -119,6 +123,13 @@
         "nameLabel": "ຊື່ສະແດງຢູ່ແຖບເມນູ",
         "logoLabel": "ໂລໂກ້ແຖບເມນູ",
         "logoHint": "ບັນທຶກໃນບຣາວເຊີນີ້ເທົ່ານັ້ນ"
+      },
+      "bankDetails": {
+        "title": "ຂໍ້ມູນທະນາຄານ",
+        "bankName": "ຊື່ທະນາຄານ",
+        "accountName": "ຊື່ບັນຊີ",
+        "accountNumber": "ເລກບັນຊີ",
+        "swift": "ລະຫັດ SWIFT / BIC"
       }
     },
     "financial": {
@@ -307,7 +318,8 @@
       "analytics": "ການວິເຄາະທຸລະກິດ",
       "iotTelemetry": "ລະບົບ IoT",
       "settings": "ຕັ້ງຄ່າ",
-      "warehouseProjects": "ໂຄງການຄັງສິນຄ້າ"
+      "warehouseProjects": "ໂຄງການຄັງສິນຄ້າ",
+      "purchaseOrders": "ໃບສັ່ງຊື້"
     },
     "expandSidebar": "ຂະຫຍາຍກະດານການນຳທາງ",
     "collapseSidebar": "ຫຍໍ້ກະດານການນຳທາງ"
@@ -353,6 +365,7 @@
   },
   "login": {
     "subtitle": "ເຂົ້າສູ່ລະບົບເພື່ອດຳເນີນການຕໍ່",
+    "powerSwitch": "ສະວິດເປີດ-ປິດ",
     "username": "ຊື່ຜູ້ໃຊ້",
     "usernamePlaceholder": "ປ້ອນຊື່ຜູ້ໃຊ້ຂອງທ່ານ",
     "password": "ລະຫັດຜ່ານ",
@@ -980,6 +993,49 @@
         "partial": "ໄດ້ຮັບບາງສ່ວນ",
         "received": "ໄດ້ຮັບແລ້ວ",
         "cancelled": "ຍົກເລີກແລ້ວ"
+      },
+      "newPO": "ໃບສັ່ງຊື້ໃໝ່",
+      "form": {
+        "title": "ໃບສັ່ງຊື້ໃໝ່",
+        "backToList": "ກັບໄປໃບສັ່ງຊື້",
+        "vendor": "ຜູ້ສະໜອງ",
+        "vendorRequired": "ກະລຸນາລະບຸຜູ້ສະໜອງ",
+        "warehouse": "ສາງ",
+        "warehouseRequired": "ກະລຸນາເລືອກສາງ",
+        "vendorAddress": "ທີ່ຢູ່ຜູ້ສະໜອງ",
+        "vendorContact": "ຕິດຕໍ່ຜູ້ສະໜອງ",
+        "orderDate": "ວັນທີສັ່ງຊື້",
+        "expectedDate": "ວັນທີຄາດວ່າຈະໄດ້ຮັບ",
+        "taxRate": "ອັດຕາພາສີ (%)",
+        "lineItems": "ລາຍການສິນຄ້າ",
+        "itemCode": "ລະຫັດສິນຄ້າ",
+        "description": "ລາຍລະອຽດ",
+        "descriptionPlaceholder": "ລາຍລະອຽດສິນຄ້າ",
+        "qty": "ຈຳນວນ",
+        "unit": "ໜ່ວຍ",
+        "unitCost": "ລາຄາຕໍ່ໜ່ວຍ",
+        "linkCatalogPart": "ເຊື່ອມໂຍງກັບອາໄຫຼ່",
+        "linkCatalogPartPlaceholder": "ຄົ້ນຫາອາໄຫຼ່…",
+        "noPartsFound": "ບໍ່ພົບອາໄຫຼ່",
+        "addRow": "ເພີ່ມແຖວ",
+        "itemRequired": "ຕ້ອງມີລາຍການຢ່າງໜ້ອຍໜຶ່ງລາຍການ",
+        "created": "ສ້າງໃບສັ່ງຊື້ {{number}} ສຳເລັດແລ້ວ",
+        "createFailed": "ບໍ່ສາມາດສ້າງໃບສັ່ງຊື້ໄດ້",
+        "creating": "ກຳລັງສ້າງ...",
+        "createPO": "ສ້າງໃບສັ່ງຊື້"
+      },
+      "detail": {
+        "loadError": "ບໍ່ສາມາດໂຫຼດໃບສັ່ງຊື້ໄດ້",
+        "notFound": "ບໍ່ພົບໃບສັ່ງຊື້",
+        "actionFailed": "{{action}} ບໍ່ສຳເລັດ",
+        "submitted": "ສົ່ງໃບສັ່ງຊື້ແລ້ວ",
+        "submit": "ສົ່ງ",
+        "receiveItems": "ຮັບສິນຄ້າ",
+        "receiveModalTitle": "ຮັບສິນຄ້າ",
+        "received": "ຮັບສິນຄ້າແລ້ວ",
+        "receivedDate": "ວັນທີຮັບເຄື່ອງ",
+        "qtyOrdered": "ຈຳນວນສັ່ງ",
+        "qtyReceived": "ຈຳນວນທີ່ຮັບ"
       }
     },
     "spareParts": {
@@ -1322,7 +1378,17 @@
         "subtotal": "ຍອດລວມຍ່ອຍ",
         "taxRate": "ອັດຕາພາສີ (%)",
         "title": "ໃບແຈ້ງໜີ້ໃໝ່",
-        "unitPrice": "ລາຄາຕໍ່ໜ່ວຍ"
+        "unitPrice": "ລາຄາຕໍ່ໜ່ວຍ",
+        "itemCode": "ລະຫັດສິນຄ້າ",
+        "itemCodePlaceholder": "ຕົວຢ່າງ: SKU-1000",
+        "unit": "ໜ່ວຍ",
+        "currency": "ສະກຸນເງິນ",
+        "exchangeRate": "ອັດຕາແລກປ່ຽນ",
+        "bankDetails": "ຂໍ້ມູນທະນາຄານ",
+        "bankDetailsPlaceholder": "ຊື່ທະນາຄານ, ຊື່ບັນຊີ, ເລກບັນຊີ, SWIFT/BIC...",
+        "grandTotalInLAK": "ຍອດລວມທັງໝົດເປັນ LAK (ສະກຸນເງິນຫຼັກ)",
+        "previewTitle": "ຕົວຢ່າງເອກະສານ",
+        "previewPendingNumber": "(ລໍຖ້າ)"
       },
       "lineItems": {
         "empty": "ບໍ່ມີລາຍການ",
@@ -1391,6 +1457,15 @@
         "issued": "ອອກໃບແຈ້ງໜີ້ແລ້ວ",
         "sent": "ສົ່ງໃບແຈ້ງໜີ້ແລ້ວ",
         "voided": "ຍົກເລີກໃຊ້ງານໃບແຈ້ງໜີ້ແລ້ວ"
+      },
+      "vehicleInfo": {
+        "title": "ຂໍ້ມູນຍານພາຫະນະ",
+        "make": "ຍີ່ຫໍ້",
+        "model": "ຮຸ່ນ",
+        "vin": "ເລກຕົວແຊັດຊີ (VIN)",
+        "engineNo": "ເລກເຄື່ອງຈັກ",
+        "regNo": "ເລກທະບຽນ",
+        "jobNumber": "ເລກວຽກ"
       }
     },
     "payment": {
@@ -2495,7 +2570,8 @@
         "unit": "ໜ່ວຍ",
         "unitPrice": "ລາຄາຕໍ່ໜ່ວຍ",
         "unitPriceRequired": "ຕ້ອງລະບຸລາຄາຕໍ່ໜ່ວຍ.",
-        "weekly": "ລາຍອາທິດ"
+        "weekly": "ລາຍອາທິດ",
+        "itemCode": "ລະຫັດສິນຄ້າ"
       },
       "addItemsHint": "ເພີ່ມລາຍການເພື່ອສ້າງໃບສະເໜີລາຄາ.",
       "approvalHistory": "ປະຫວັດການອະນຸມັດ",
@@ -2545,7 +2621,8 @@
       },
       "validFrom": "ຖືກຕ້ອງຈາກ",
       "validUntil": "ຖືກຕ້ອງຫາ",
-      "revisionNeededReason": "ຕ້ອງການແກ້ໄຂ"
+      "revisionNeededReason": "ຕ້ອງການແກ້ໄຂ",
+      "colItemCode": "ລະຫັດສິນຄ້າ"
     },
     "form": {
       "backToQuotations": "ກັບໄປໃບສະເໜີລາຄາ",
@@ -2577,7 +2654,19 @@
         "spareParts": "ໃບສະເໜີລາຄາອາໄຫຼ່"
       },
       "validFromLabel": "ຖືກຕ້ອງຈາກ",
-      "validUntilLabel": "ຖືກຕ້ອງຫາ"
+      "validUntilLabel": "ຖືກຕ້ອງຫາ",
+      "vehicleInfo": {
+        "title": "ຂໍ້ມູນຍານພາຫະນະ",
+        "make": "ຍີ່ຫໍ້",
+        "model": "ຮຸ່ນ",
+        "vin": "ເລກຕົວແຊັດຊີ (VIN)",
+        "engineNo": "ເລກເຄື່ອງຈັກ",
+        "regNo": "ເລກທະບຽນ",
+        "jobNumber": "ເລກວຽກ"
+      },
+      "exchangeRateLabel": "ອັດຕາແລກປ່ຽນ",
+      "bankDetails": "ຂໍ້ມູນທະນາຄານ",
+      "bankDetailsPlaceholder": "ຊື່ທະນາຄານ, ຊື່ບັນຊີ, ເລກບັນຊີ, SWIFT/BIC..."
     },
     "itemType": {
       "custom": "ກຳນົດເອງ",
@@ -2880,5 +2969,32 @@
     "successToast": "ປ່ຽນລະຫັດຜ່ານສຳເລັດແລ້ວ.",
     "incorrectCurrentError": "ລະຫັດຜ່ານປັດຈຸບັນບໍ່ຖືກຕ້ອງ.",
     "genericError": "ປ່ຽນລະຫັດຜ່ານບໍ່ສຳເລັດ. ກະລຸນາລອງໃໝ່ອີກຄັ້ງ."
+  },
+  "documentPreview": {
+    "docTitle": {
+      "invoice": "ໃບແຈ້ງໜີ້",
+      "quotation": "ໃບສະເໜີລາຄາ",
+      "purchaseOrder": "ໃບສັ່ງຊື້"
+    },
+    "customerDetails": "ຂໍ້ມູນລູກຄ້າ",
+    "vendorDetails": "ຂໍ້ມູນຜູ້ສະໜອງ",
+    "vehicleInformation": "ຂໍ້ມູນຍານພາຫະນະ",
+    "vehicle": {
+      "make": "ຍີ່ຫໍ້",
+      "model": "ຮຸ່ນ",
+      "vin": "ເລກຕົວແຊັດຊີ (VIN)",
+      "engineNo": "ເລກເຄື່ອງຈັກ",
+      "regNo": "ເລກທະບຽນ",
+      "jobNumber": "ເລກວຽກ"
+    },
+    "dateLabel": "ວັນທີ",
+    "docNumberLabel": "ເລກທີເອກະສານ",
+    "unitPrice": "ລາຄາຕໍ່ໜ່ວຍ",
+    "bankDetails": "ຂໍ້ມູນທະນາຄານ",
+    "subtotal": "ຍອດລວມຍ່ອຍ",
+    "vatLabel": "ພາສີ ({{rate}}%)",
+    "grandTotal": "ຍອດລວມທັງໝົດ",
+    "issuedBy": "ອອກໂດຍ",
+    "approvedBy": "ອະນຸມັດໂດຍ"
   }
 }

@@ -13,7 +13,7 @@ export interface ContractBrief { id: number; contract_number: string; status: st
 
 export interface InvoiceItemOut {
   id: number; invoice_id: number; billing_cycle_id: number | null
-  line_number: number; description: string
+  line_number: number; item_code: string | null; description: string; unit: string | null
   quantity: number; unit_rate: number; amount: number; tax_amount: number; line_total: number
   sort_order: number; created_at: string; updated_at: string | null
 }
@@ -39,6 +39,9 @@ export interface InvoiceDetail extends InvoiceOut {
   allocations: PaymentAllocationOut[]
   notes: string | null; internal_notes: string | null
   sent_at: string | null; cancelled_at: string | null; cancellation_reason: string | null
+  vehicle_make: string | null; vehicle_model: string | null; vehicle_vin: string | null
+  vehicle_engine_no: string | null; vehicle_reg_no: string | null; job_number: string | null
+  exchange_rate: number; bank_details: string | null
 }
 
 export interface InvoiceListResponse { items: InvoiceOut[]; total: number; page: number; page_size: number; pages: number }
@@ -87,7 +90,7 @@ export interface BillingDashboardSummary {
   total_overdue: number; invoice_count: number; payment_count: number; currency: string
 }
 
-export interface InvoiceItemCreate { description: string; quantity: number; unit_rate: number }
+export interface InvoiceItemCreate { item_code?: string; description: string; unit?: string; quantity: number; unit_rate: number }
 
 export interface InvoiceCreate {
   contract_id?: number; customer_id: number
@@ -95,10 +98,13 @@ export interface InvoiceCreate {
   issue_date?: string; due_date?: string
   billing_period_start?: string; billing_period_end?: string
   tax_rate?: number; discount_amount?: number; currency?: string
+  exchange_rate?: number; bank_details?: string
+  vehicle_make?: string; vehicle_model?: string; vehicle_vin?: string
+  vehicle_engine_no?: string; vehicle_reg_no?: string; job_number?: string
   notes?: string; internal_notes?: string
   billing_cycle_ids?: number[]; items?: InvoiceItemCreate[]
 }
-export interface InvoiceUpdate { due_date?: string; tax_rate?: number; discount_amount?: number; notes?: string; internal_notes?: string }
+export interface InvoiceUpdate { due_date?: string; tax_rate?: number; discount_amount?: number; exchange_rate?: number; bank_details?: string; notes?: string; internal_notes?: string }
 export interface InvoiceFromCyclesRequest { contract_id: number; billing_cycle_ids: number[]; tax_rate?: number; discount_amount?: number; currency?: string; notes?: string }
 export interface PaymentCreate { customer_id: number; contract_id?: number; payment_method: PaymentMethod; amount: number; currency?: string; payment_date: string; received_date?: string; reference_number?: string; notes?: string }
 export interface DepositCreate { contract_id: number; customer_id: number; deposit_type: DepositType; amount: number; currency?: string; notes?: string }

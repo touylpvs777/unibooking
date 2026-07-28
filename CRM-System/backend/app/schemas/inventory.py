@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from app.models.spare_part import PartCategory
 from app.models.inventory_transaction import TransactionType
@@ -117,31 +117,45 @@ class TransactionOut(BaseModel):
 # ── Purchase Order ───────────────────────────────────────────────────────────
 
 class POItemCreate(BaseModel):
-    spare_part_id: int
+    spare_part_id: int | None = None
+    item_code: str | None = Field(default=None, max_length=100)
+    description: str | None = Field(default=None, max_length=500)
+    unit: str | None = Field(default=None, max_length=50)
     quantity_ordered: float = Field(..., gt=0)
     unit_cost: float = Field(..., ge=0)
     notes: str | None = Field(default=None, max_length=500)
 
+    @model_validator(mode="after")
+    def _require_identity(self):
+        if self.spare_part_id is None and not (self.description or "").strip():
+            raise ValueError("Each line needs either spare_part_id or a description.")
+        return self
+
 class POCreate(BaseModel):
     vendor: str = Field(..., min_length=1, max_length=200)
+    vendor_address: str | None = None
+    vendor_contact: str | None = Field(default=None, max_length=200)
     warehouse_id: int
     order_date: date
     expected_date: date | None = None
+    tax_rate: float = Field(default=0.0, ge=0, le=100)
     notes: str | None = None
     items: list[POItemCreate] = Field(..., min_length=1)
 
 class POItemOut(BaseModel):
     model_config = {"from_attributes": True}
-    id: int; spare_part: SparePartBrief
+    id: int; spare_part: SparePartBrief | None = None
+    item_code: str | None = None; description: str | None = None; unit: str | None = None
     quantity_ordered: float; quantity_received: float
     unit_cost: float; line_total: float; notes: str | None = None
 
 class POOut(BaseModel):
     model_config = {"from_attributes": True}
     id: int; po_number: str; status: str; vendor: str
+    vendor_address: str | None = None; vendor_contact: str | None = None
     warehouse: WarehouseBrief; order_date: date
     expected_date: date | None = None; received_date: date | None = None
-    subtotal: float; tax_amount: float; total_amount: float; currency: str
+    subtotal: float; tax_rate: float; tax_amount: float; total_amount: float; currency: str
     notes: str | None = None; is_active: bool
     created_at: datetime; updated_at: datetime | None = None
     items: list[POItemOut] = []

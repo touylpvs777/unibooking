@@ -235,10 +235,14 @@ class InventoryService:
 
         number = await self._gen_number("PO")
         subtotal = sum(round(i.quantity_ordered * i.unit_cost, 2) for i in data.items)
+        tax_amount = round(subtotal * data.tax_rate / 100, 2)
         po = PurchaseOrder(
-            po_number=number, vendor=data.vendor.strip(), warehouse_id=data.warehouse_id,
+            po_number=number, vendor=data.vendor.strip(),
+            vendor_address=data.vendor_address, vendor_contact=data.vendor_contact,
+            warehouse_id=data.warehouse_id,
             order_date=data.order_date, expected_date=data.expected_date,
-            subtotal=subtotal, total_amount=subtotal, notes=data.notes, created_by=user_id,
+            subtotal=subtotal, tax_rate=data.tax_rate, tax_amount=tax_amount,
+            total_amount=round(subtotal + tax_amount, 2), notes=data.notes, created_by=user_id,
         )
         try:
             po = await self._repo.create_po(po)
@@ -247,10 +251,15 @@ class InventoryService:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="PO number conflict")
 
         for item_data in data.items:
-            await self.get_part(item_data.spare_part_id)
+            part = None
+            if item_data.spare_part_id is not None:
+                part = await self.get_part(item_data.spare_part_id)
             line_total = round(item_data.quantity_ordered * item_data.unit_cost, 2)
             poi = PurchaseOrderItem(
                 purchase_order_id=po.id, spare_part_id=item_data.spare_part_id,
+                item_code=item_data.item_code or (part.part_number if part else None),
+                description=item_data.description or (part.name if part else None),
+                unit=item_data.unit or (part.unit if part else None),
                 quantity_ordered=item_data.quantity_ordered, unit_cost=item_data.unit_cost,
                 line_total=line_total, notes=item_data.notes,
             )
@@ -281,17 +290,21 @@ class InventoryService:
                 raise HTTPException(status_code=422, detail=f"Cannot receive more than ordered for item {r.item_id}")
             await self._repo.update_po_item(item, {"quantity_received": new_received})
 
-            number = await self._gen_number("IT")
-            txn = InventoryTransaction(
-                transaction_number=number, transaction_type=TransactionType.RECEIVE.value,
-                spare_part_id=item.spare_part_id, warehouse_id=po.warehouse_id,
-                quantity=r.quantity_received, unit_cost=item.unit_cost,
-                total_cost=round(r.quantity_received * item.unit_cost, 2),
-                reference_type="purchase_order", reference_id=po.id,
-                notes=f"Received from PO {po.po_number}", created_by=user_id,
-            )
-            await self._repo.create_transaction(txn)
-            await self._apply_balance(item.spare_part_id, po.warehouse_id, TransactionType.RECEIVE.value, r.quantity_received)
+            # Free-text lines (no catalog spare_part_id) only track received
+            # quantity on the PO itself — they never touch stock balances,
+            # since there's no catalog item to move stock for.
+            if item.spare_part_id is not None:
+                number = await self._gen_number("IT")
+                txn = InventoryTransaction(
+                    transaction_number=number, transaction_type=TransactionType.RECEIVE.value,
+                    spare_part_id=item.spare_part_id, warehouse_id=po.warehouse_id,
+                    quantity=r.quantity_received, unit_cost=item.unit_cost,
+                    total_cost=round(r.quantity_received * item.unit_cost, 2),
+                    reference_type="purchase_order", reference_id=po.id,
+                    notes=f"Received from PO {po.po_number}", created_by=user_id,
+                )
+                await self._repo.create_transaction(txn)
+                await self._apply_balance(item.spare_part_id, po.warehouse_id, TransactionType.RECEIVE.value, r.quantity_received)
 
         po_reloaded = await self._repo.get_po_by_id(po_id)
         all_received = all(i.quantity_received >= i.quantity_ordered for i in po_reloaded.items)

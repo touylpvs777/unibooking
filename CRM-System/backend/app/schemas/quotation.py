@@ -56,8 +56,16 @@ class QuotationCreate(BaseModel):
     contact_phone: str | None = Field(default=None, max_length=50)
     tax_rate: float = Field(default=0.0, ge=0, le=100)
     currency: str = Field(default="LAK", max_length=3)
+    exchange_rate: float = Field(default=1.0, gt=0)
+    bank_details: str | None = None
     valid_from: date | None = None
     valid_until: date | None = None
+    vehicle_make: str | None = Field(default=None, max_length=100)
+    vehicle_model: str | None = Field(default=None, max_length=100)
+    vehicle_vin: str | None = Field(default=None, max_length=100)
+    vehicle_engine_no: str | None = Field(default=None, max_length=100)
+    vehicle_reg_no: str | None = Field(default=None, max_length=50)
+    job_number: str | None = Field(default=None, max_length=50)
     notes: str | None = None
     internal_notes: str | None = None
 
@@ -80,8 +88,16 @@ class QuotationUpdate(BaseModel):
     tax_rate: float | None = Field(default=None, ge=0, le=100)
     discount_amount: float | None = Field(default=None, ge=0)
     currency: str | None = Field(default=None, max_length=3)
+    exchange_rate: float | None = Field(default=None, gt=0)
+    bank_details: str | None = None
     valid_from: date | None = None
     valid_until: date | None = None
+    vehicle_make: str | None = None
+    vehicle_model: str | None = None
+    vehicle_vin: str | None = None
+    vehicle_engine_no: str | None = None
+    vehicle_reg_no: str | None = None
+    job_number: str | None = None
     notes: str | None = None
     internal_notes: str | None = None
 
@@ -117,6 +133,14 @@ class QuotationDetail(QuotationOut):
     tax_rate: float
     tax_amount: float
     discount_amount: float
+    exchange_rate: float
+    bank_details: str | None = None
+    vehicle_make: str | None = None
+    vehicle_model: str | None = None
+    vehicle_vin: str | None = None
+    vehicle_engine_no: str | None = None
+    vehicle_reg_no: str | None = None
+    job_number: str | None = None
     notes: str | None = None
     internal_notes: str | None = None
     converted_to_type: str | None = None
@@ -143,6 +167,7 @@ class QuotationItemCreate(BaseModel):
     item_type: ItemType
     forklift_id: int | None = None
     product_id: int | None = None
+    item_code: str | None = Field(default=None, max_length=100)
     description: str = Field(..., min_length=1, max_length=1000)
     quantity: float = Field(default=1.0, gt=0)
     unit: str = Field(default="unit", max_length=50)
@@ -155,6 +180,7 @@ class QuotationItemCreate(BaseModel):
 
 
 class QuotationItemUpdate(BaseModel):
+    item_code: str | None = Field(default=None, max_length=100)
     description: str | None = Field(default=None, min_length=1, max_length=1000)
     quantity: float | None = Field(default=None, gt=0)
     unit: str | None = Field(default=None, max_length=50)
@@ -175,6 +201,7 @@ class QuotationItemOut(BaseModel):
     item_type: str
     forklift: ForkliftBrief | None = None
     product: ProductBrief | None = None
+    item_code: str | None = None
     description: str
     quantity: float
     unit: str

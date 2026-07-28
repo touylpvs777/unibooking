@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { AlertCircle, ChevronLeft, Send, XCircle, CheckCircle, Ban } from 'lucide-react'
+import { AlertCircle, ChevronLeft, Send, XCircle, CheckCircle, Ban, FileDown } from 'lucide-react'
 import { getInvoice, issueInvoice, sendInvoice, cancelInvoice, voidInvoice } from '@/api/billing'
 import { Badge, type BadgeVariant } from '@/components/ui/Badge'
 import Modal from '@/components/ui/Modal'
 import PrintButton from '@/components/ui/PrintButton'
+import DocumentPreview from '@/components/DocumentPreview'
 import { toast } from '@/store/toastStore'
+import { useCompanyStore } from '@/store/companyStore'
 import type { InvoiceDetail } from '@/types/billing'
 import { getHeaderColorClass } from '@/utils/routeHeaderColor'
 import '@/styles/shared.css'
@@ -38,6 +40,10 @@ export default function InvoiceDetailPage() {
   const [cancelOpen, setCancelOpen] = useState(false)
   const [cancelReason, setCancelReason] = useState('')
 
+  const companyProfile = useCompanyStore((s) => s.profile)
+  const fetchCompanyProfile = useCompanyStore((s) => s.fetch)
+  useEffect(() => { fetchCompanyProfile() }, [fetchCompanyProfile])
+
   function InvBadge({ status }: { status: string }) {
     const variant = STATUS_VARIANT[status] ?? ('gray' as BadgeVariant)
     const label = STATUS_LABEL_KEYS[status] ? t(STATUS_LABEL_KEYS[status]) : status
@@ -66,6 +72,7 @@ export default function InvoiceDetailPage() {
 
   return (
     <div>
+    <div className="doc-preview-hide-on-print">
       {/* Header */}
       <div className={`page-header page-header-banner ${headerColorClass}`}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -85,6 +92,9 @@ export default function InvoiceDetailPage() {
         </div>
         <div className="detail-actions">
           <PrintButton />
+          <button className="btn btn-primary" onClick={() => window.print()}>
+            <FileDown size={14} /> {t('common.exportPdf')}
+          </button>
           {s === 'draft' && <button className="btn btn-primary" disabled={busy} onClick={() => run(t('billing.invoice.toast.issued'), () => issueInvoice(inv.id))}><CheckCircle size={14} /> {t('billing.invoice.actions.issue')}</button>}
           {s === 'issued' && <button className="btn btn-primary" disabled={busy} onClick={() => run(t('billing.invoice.toast.sent'), () => sendInvoice(inv.id))}><Send size={14} /> {t('billing.invoice.actions.send')}</button>}
           {(s === 'issued' || s === 'sent') && <button className="btn btn-ghost" disabled={busy} onClick={() => run(t('billing.invoice.toast.voided'), () => voidInvoice(inv.id))}><Ban size={14} /> {t('billing.invoice.actions.void')}</button>}
@@ -226,6 +236,36 @@ export default function InvoiceDetailPage() {
           </div>
         </div>
       </Modal>
+    </div>
+
+      <div className="doc-preview">
+        <DocumentPreview
+          docType="invoice"
+          documentNumber={inv.invoice_number}
+          date={fmtDate(inv.issue_date ?? inv.created_at)}
+          companyName={companyProfile?.company_name}
+          companyAddress={companyProfile?.address}
+          companyPhone={companyProfile?.phone}
+          partyLabel={t('documentPreview.customerDetails')}
+          partyName={`${inv.customer.first_name} ${inv.customer.last_name}${inv.customer.company ? ` — ${inv.customer.company}` : ''}`}
+          vehicle={{
+            make: inv.vehicle_make ?? undefined, model: inv.vehicle_model ?? undefined, vin: inv.vehicle_vin ?? undefined,
+            engineNo: inv.vehicle_engine_no ?? undefined, regNo: inv.vehicle_reg_no ?? undefined, jobNumber: inv.job_number ?? undefined,
+          }}
+          items={inv.items.map((it) => ({
+            itemCode: it.item_code ?? undefined, description: it.description, unit: it.unit ?? undefined,
+            qty: it.quantity, unitPrice: it.unit_rate, total: it.line_total,
+          }))}
+          subtotal={inv.subtotal}
+          taxRate={inv.tax_rate}
+          taxAmount={inv.tax_amount}
+          grandTotal={inv.total_amount}
+          currency={inv.currency}
+          showBankDetails
+          bankDetailsText={inv.bank_details ?? undefined}
+          grandTotalInBaseCurrency={inv.currency !== 'LAK' ? { amount: inv.total_amount * inv.exchange_rate, currency: 'LAK' } : undefined}
+        />
+      </div>
     </div>
   )
 }

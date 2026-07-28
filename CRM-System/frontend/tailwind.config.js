@@ -21,6 +21,24 @@ export default {
       fontFamily: {
         sans: ['"Noto Sans Lao"', 'sans-serif'],
       },
+      keyframes: {
+        'headlight-on': {
+          '0%': { opacity: 0, filter: 'brightness(1)' },
+          '35%': { opacity: 1, filter: 'brightness(2)' },
+          '55%': { opacity: 0.75, filter: 'brightness(1)' },
+          '100%': { opacity: 1, filter: 'brightness(1.15)' },
+        },
+        'beam-on': {
+          '0%': { opacity: 0 },
+          '35%': { opacity: 0.9 },
+          '55%': { opacity: 0.5 },
+          '100%': { opacity: 1 },
+        },
+      },
+      animation: {
+        'headlight-on': 'headlight-on 0.7s ease-out forwards',
+        'beam-on': 'beam-on 0.8s ease-out forwards',
+      },
     },
   },
   plugins: [],

@@ -85,7 +85,11 @@
     "themeDark": "โหมดมืด",
     "themeSystem": "ตามระบบ",
     "scrollLeft": "เลื่อนไปทางซ้าย",
-    "scrollRight": "เลื่อนไปทางขวา"
+    "scrollRight": "เลื่อนไปทางขวา",
+    "itemCode": "รหัสสินค้า",
+    "unit": "หน่วย",
+    "exportPdf": "ส่งออกเป็น PDF",
+    "clear": "ล้าง"
   },
   "settings": {
     "title": "การตั้งค่าทั่วโลก",
@@ -119,6 +123,13 @@
         "nameLabel": "ชื่อที่แสดงในแถบเมนู",
         "logoLabel": "โลโก้แถบเมนู",
         "logoHint": "บันทึกไว้ในเบราว์เซอร์นี้เท่านั้น"
+      },
+      "bankDetails": {
+        "title": "ข้อมูลธนาคาร",
+        "bankName": "ชื่อธนาคาร",
+        "accountName": "ชื่อบัญชี",
+        "accountNumber": "เลขที่บัญชี",
+        "swift": "รหัส SWIFT / BIC"
       }
     },
     "financial": {
@@ -307,7 +318,8 @@
       "analytics": "การวิเคราะห์เชิงธุรกิจ",
       "iotTelemetry": "ระบบ IoT",
       "settings": "ตั้งค่า",
-      "warehouseProjects": "โครงการคลังสินค้า"
+      "warehouseProjects": "โครงการคลังสินค้า",
+      "purchaseOrders": "ใบสั่งซื้อ"
     },
     "expandSidebar": "ขยายแผงนำทาง",
     "collapseSidebar": "ย่อแผงนำทาง"
@@ -353,6 +365,7 @@
   },
   "login": {
     "subtitle": "เข้าสู่ระบบเพื่อดำเนินการต่อ",
+    "powerSwitch": "สวิตช์เปิดปิด",
     "username": "ชื่อผู้ใช้",
     "usernamePlaceholder": "กรอกชื่อผู้ใช้ของท่าน",
     "password": "รหัสผ่าน",
@@ -980,6 +993,49 @@
         "partial": "ได้รับบางส่วน",
         "received": "ได้รับแล้ว",
         "cancelled": "ยกเลิกแล้ว"
+      },
+      "newPO": "ใบสั่งซื้อใหม่",
+      "form": {
+        "title": "ใบสั่งซื้อใหม่",
+        "backToList": "กลับไปที่ใบสั่งซื้อ",
+        "vendor": "ผู้ขาย",
+        "vendorRequired": "กรุณาระบุผู้ขาย",
+        "warehouse": "คลังสินค้า",
+        "warehouseRequired": "กรุณาเลือกคลังสินค้า",
+        "vendorAddress": "ที่อยู่ผู้ขาย",
+        "vendorContact": "ข้อมูลติดต่อผู้ขาย",
+        "orderDate": "วันที่สั่งซื้อ",
+        "expectedDate": "วันที่คาดว่าจะได้รับ",
+        "taxRate": "อัตราภาษี (%)",
+        "lineItems": "รายการสินค้า",
+        "itemCode": "รหัสสินค้า",
+        "description": "รายละเอียด",
+        "descriptionPlaceholder": "รายละเอียดสินค้า",
+        "qty": "จำนวน",
+        "unit": "หน่วย",
+        "unitCost": "ราคาต่อหน่วย",
+        "linkCatalogPart": "เชื่อมโยงกับอะไหล่",
+        "linkCatalogPartPlaceholder": "ค้นหาอะไหล่…",
+        "noPartsFound": "ไม่พบอะไหล่",
+        "addRow": "เพิ่มแถว",
+        "itemRequired": "ต้องมีรายการอย่างน้อยหนึ่งรายการ",
+        "created": "สร้างใบสั่งซื้อ {{number}} สำเร็จแล้ว",
+        "createFailed": "ไม่สามารถสร้างใบสั่งซื้อได้",
+        "creating": "กำลังสร้าง...",
+        "createPO": "สร้างใบสั่งซื้อ"
+      },
+      "detail": {
+        "loadError": "ไม่สามารถโหลดใบสั่งซื้อได้",
+        "notFound": "ไม่พบใบสั่งซื้อ",
+        "actionFailed": "{{action}} ไม่สำเร็จ",
+        "submitted": "ส่งใบสั่งซื้อแล้ว",
+        "submit": "ส่ง",
+        "receiveItems": "รับสินค้า",
+        "receiveModalTitle": "รับสินค้า",
+        "received": "รับสินค้าแล้ว",
+        "receivedDate": "วันที่รับสินค้า",
+        "qtyOrdered": "จำนวนที่สั่ง",
+        "qtyReceived": "จำนวนที่รับ"
       }
     },
     "spareParts": {
@@ -1419,7 +1475,17 @@
         "errors": {
           "customerRequired": "กรุณาเลือกลูกค้า",
           "itemRequired": "ต้องมีอย่างน้อยหนึ่งรายการที่มีรายละเอียด"
-        }
+        },
+        "itemCode": "รหัสสินค้า",
+        "itemCodePlaceholder": "เช่น SKU-1000",
+        "unit": "หน่วย",
+        "currency": "สกุลเงิน",
+        "exchangeRate": "อัตราแลกเปลี่ยน",
+        "bankDetails": "ข้อมูลธนาคาร",
+        "bankDetailsPlaceholder": "ชื่อธนาคาร, ชื่อบัญชี, เลขที่บัญชี, SWIFT/BIC...",
+        "grandTotalInLAK": "ยอดรวมทั้งหมดเป็น LAK (สกุลเงินหลัก)",
+        "previewTitle": "ตัวอย่างเอกสาร",
+        "previewPendingNumber": "(รอดำเนินการ)"
       },
       "modal": {
         "cancel": {
@@ -1437,6 +1503,15 @@
       "card": {
         "due": "ครบกำหนด {{date}}",
         "balance": "ยอดคงเหลือ: {{amount}} {{currency}}"
+      },
+      "vehicleInfo": {
+        "title": "ข้อมูลยานพาหนะ",
+        "make": "ยี่ห้อ",
+        "model": "รุ่น",
+        "vin": "หมายเลขตัวถัง (VIN)",
+        "engineNo": "หมายเลขเครื่องยนต์",
+        "regNo": "ทะเบียนรถ",
+        "jobNumber": "หมายเลขงาน"
       }
     },
     "deposit": {
@@ -2496,7 +2571,19 @@
         "sales": "ใบเสนอราคาขาย",
         "service": "ใบเสนอราคาบริการ",
         "spareParts": "ใบเสนอราคาอะไหล่"
-      }
+      },
+      "vehicleInfo": {
+        "title": "ข้อมูลยานพาหนะ",
+        "make": "ยี่ห้อ",
+        "model": "รุ่น",
+        "vin": "หมายเลขตัวถัง (VIN)",
+        "engineNo": "หมายเลขเครื่องยนต์",
+        "regNo": "ทะเบียนรถ",
+        "jobNumber": "หมายเลขงาน"
+      },
+      "exchangeRateLabel": "อัตราแลกเปลี่ยน",
+      "bankDetails": "ข้อมูลธนาคาร",
+      "bankDetailsPlaceholder": "ชื่อธนาคาร, ชื่อบัญชี, เลขที่บัญชี, SWIFT/BIC..."
     },
     "detail": {
       "backToQuotations": "กลับไปยังใบเสนอราคา",
@@ -2566,9 +2653,11 @@
         "descriptionRequired": "ต้องระบุคำอธิบาย",
         "unitPriceRequired": "ต้องระบุราคาต่อหน่วย",
         "itemAdded": "เพิ่มรายการแล้ว",
-        "addFailed": "ไม่สามารถเพิ่มรายการได้"
+        "addFailed": "ไม่สามารถเพิ่มรายการได้",
+        "itemCode": "รหัสสินค้า"
       },
-      "revisionNeededReason": "ต้องการแก้ไข"
+      "revisionNeededReason": "ต้องการแก้ไข",
+      "colItemCode": "รหัสสินค้า"
     }
   },
   "rental": {
@@ -2880,5 +2969,32 @@
     "successToast": "เปลี่ยนรหัสผ่านสำเร็จแล้ว",
     "incorrectCurrentError": "รหัสผ่านปัจจุบันไม่ถูกต้อง",
     "genericError": "เปลี่ยนรหัสผ่านไม่สำเร็จ กรุณาลองใหม่อีกครั้ง"
+  },
+  "documentPreview": {
+    "docTitle": {
+      "invoice": "ใบแจ้งหนี้",
+      "quotation": "ใบเสนอราคา",
+      "purchaseOrder": "ใบสั่งซื้อ"
+    },
+    "customerDetails": "ข้อมูลลูกค้า",
+    "vendorDetails": "ข้อมูลผู้ขาย",
+    "vehicleInformation": "ข้อมูลยานพาหนะ",
+    "vehicle": {
+      "make": "ยี่ห้อ",
+      "model": "รุ่น",
+      "vin": "หมายเลขตัวถัง (VIN)",
+      "engineNo": "หมายเลขเครื่องยนต์",
+      "regNo": "ทะเบียนรถ",
+      "jobNumber": "หมายเลขงาน"
+    },
+    "dateLabel": "วันที่",
+    "docNumberLabel": "เลขที่เอกสาร",
+    "unitPrice": "ราคาต่อหน่วย",
+    "bankDetails": "ข้อมูลธนาคาร",
+    "subtotal": "ยอดรวมย่อย",
+    "vatLabel": "ภาษี ({{rate}}%)",
+    "grandTotal": "ยอดรวมทั้งหมด",
+    "issuedBy": "ผู้ออกเอกสาร",
+    "approvedBy": "ผู้อนุมัติ"
   }
 }

@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Users, TrendingUp, Activity, BarChart2, Settings,
   Package, Truck, FileText, ClipboardList,
   Building2, ArrowRightLeft, Wrench, Radio,
-  Box, Receipt, CreditCard, Landmark, FileSpreadsheet, Warehouse, LogOut,
+  Box, Receipt, CreditCard, Landmark, FileSpreadsheet, Warehouse, LogOut, ShoppingCart,
   UserCircle, KeyRound, PanelLeftClose, PanelLeftOpen,
 } from 'lucide-react'
 import ThemeToggle from '@/components/ui/ThemeToggle'
@@ -65,6 +65,7 @@ const NAV_GROUPS: NavGroup[] = [
     labelKey: 'nav.groups.inventory',
     items: [
       { to: '/inventory', labelKey: 'nav.items.inventory', icon: Box },
+      { to: '/inventory/purchase-orders', labelKey: 'nav.items.purchaseOrders', icon: ShoppingCart },
       { to: '/catalog', labelKey: 'nav.items.products', icon: Package },
     ],
   },
