@@ -7,6 +7,7 @@ import SparePartSelect from '@/components/inventory/SparePartSelect'
 import { toast } from '@/store/toastStore'
 import type { Warehouse, SparePart } from '@/types/inventory'
 import PageHeader from '@/components/layout/PageHeader'
+import BankDetailsForm, { EMPTY_BANK_DETAILS, type DocumentBankDetails } from '@/components/BankDetailsForm'
 import '@/styles/shared.css'
 
 interface LineItemRow {
@@ -40,6 +41,9 @@ export default function PurchaseOrderFormPage() {
   const [taxRate, setTaxRate] = useState('10')
   const [notes, setNotes] = useState('')
   const [rows, setRows] = useState<LineItemRow[]>([emptyRow()])
+  // Captured client-side only — the backend purchase-order record has no
+  // bank_details column yet, so this doesn't survive submission today.
+  const [bankData, setBankData] = useState<DocumentBankDetails>(EMPTY_BANK_DETAILS)
 
   const [isSaving, setIsSaving] = useState(false)
   const [err, setErr] = useState<string | null>(null)
@@ -255,6 +259,8 @@ export default function PurchaseOrderFormPage() {
             <label>{t('common.notes')}</label>
             <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} />
           </div>
+
+          <BankDetailsForm bankData={bankData} onChange={setBankData} />
 
           {/* Totals */}
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>

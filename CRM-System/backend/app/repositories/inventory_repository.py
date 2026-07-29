@@ -205,10 +205,39 @@ class InventoryRepository:
     async def get_po_by_id(self, po_id: int) -> PurchaseOrder | None:
         result = await self.db.execute(
             select(PurchaseOrder)
-            .options(selectinload(PurchaseOrder.warehouse), selectinload(PurchaseOrder.items).selectinload(PurchaseOrderItem.spare_part))
+            .options(
+                selectinload(PurchaseOrder.warehouse),
+                selectinload(PurchaseOrder.partner),
+                selectinload(PurchaseOrder.items).selectinload(PurchaseOrderItem.spare_part),
+            )
             .where(PurchaseOrder.id == po_id)
         )
         return result.scalar_one_or_none()
+
+    async def get_po_by_number(self, po_number: str) -> PurchaseOrder | None:
+        result = await self.db.execute(
+            select(PurchaseOrder)
+            .options(
+                selectinload(PurchaseOrder.warehouse),
+                selectinload(PurchaseOrder.partner),
+                selectinload(PurchaseOrder.items).selectinload(PurchaseOrderItem.spare_part),
+            )
+            .where(PurchaseOrder.po_number == po_number)
+        )
+        return result.scalar_one_or_none()
+
+    async def replace_po_items(self, po: PurchaseOrder, items: list[PurchaseOrderItem]) -> None:
+        """Delete every existing line item on `po` and insert `items` in their
+        place — the bulk-replace used by both the grid PUT and Excel import,
+        since an edited grid/sheet describes the PO's full new item set
+        rather than a diff against the old one."""
+        for existing in list(po.items):
+            await self.db.delete(existing)
+        await self.db.flush()
+        for item in items:
+            item.purchase_order_id = po.id
+            self.db.add(item)
+        await self.db.flush()
 
     async def get_pos(self, status: str | None = None, page: int = 1, page_size: int = 20) -> tuple[list[PurchaseOrder], int]:
         stmt = select(PurchaseOrder).options(selectinload(PurchaseOrder.warehouse)).where(PurchaseOrder.is_active == True)  # noqa: E712

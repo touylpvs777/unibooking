@@ -111,6 +111,10 @@ class ActionType(str, enum.Enum):
     PURCHASE_ORDER_CREATED = "purchase_order_created"
     PURCHASE_ORDER_SUBMITTED = "purchase_order_submitted"
     PURCHASE_ORDER_RECEIVED = "purchase_order_received"
+    PURCHASE_ORDER_UPDATED = "purchase_order_updated"
+    PURCHASE_ORDER_APPROVALS_UPDATED = "purchase_order_approvals_updated"
+    PURCHASE_ORDER_EXCEL_EXPORTED = "purchase_order_excel_exported"
+    PURCHASE_ORDER_EXCEL_IMPORTED = "purchase_order_excel_imported"
     # ── Notification Preferences ────────────────────────────────────
     NOTIFICATION_PREFERENCE_CREATED = "notification_preference_created"
     NOTIFICATION_PREFERENCE_UPDATED = "notification_preference_updated"
@@ -139,6 +143,7 @@ class EntityType(str, enum.Enum):
     INVENTORY_IMPORT = "inventory_import"
     NOTIFICATION_PREFERENCE = "notification_preference"
     PURCHASE_ORDER = "purchase_order"
+    PARTNER = "partner"
 
 
 class ActivityLog(Base):

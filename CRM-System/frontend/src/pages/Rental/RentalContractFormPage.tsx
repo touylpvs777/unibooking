@@ -6,6 +6,7 @@ import { createRentalContract } from '@/api/rental'
 import { toast } from '@/store/toastStore'
 import type { ContractType } from '@/types/rental'
 import PageHeader from '@/components/layout/PageHeader'
+import BankDetailsForm, { EMPTY_BANK_DETAILS, type DocumentBankDetails } from '@/components/BankDetailsForm'
 import '@/styles/shared.css'
 
 const EMPTY = {
@@ -27,6 +28,9 @@ export default function RentalContractFormPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [form, setForm]         = useState({ ...EMPTY })
+  // Captured client-side only — the backend rental-contract record has no
+  // bank_details column yet, so this doesn't survive submission today.
+  const [bankData, setBankData] = useState<DocumentBankDetails>(EMPTY_BANK_DETAILS)
   const [isSaving, setIsSaving] = useState(false)
   const [err, setErr]           = useState<string | null>(null)
 
@@ -160,6 +164,8 @@ export default function RentalContractFormPage() {
             <label>{t('rental.form.internalNotesLabel')}</label>
             <textarea value={form.internal_notes} onChange={(e) => set('internal_notes', e.target.value)} rows={2} placeholder={t('rental.form.internalNotesPlaceholder')} />
           </div>
+
+          <BankDetailsForm bankData={bankData} onChange={setBankData} />
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 8 }}>
             <button type="button" className="btn btn-secondary" onClick={() => navigate('/rental-contracts')} disabled={isSaving}>

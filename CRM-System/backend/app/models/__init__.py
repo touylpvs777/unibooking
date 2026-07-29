@@ -48,6 +48,8 @@ from app.models.lead import Lead
 from app.models.lead_note import LeadNote
 from app.models.notification import Notification
 from app.models.notification_preference import NotificationPreference
+from app.models.partner import Partner
+from app.models.document_approval import DocumentApproval
 from app.models.product import Product, ProductCompatBrand, ProductImage, ProductSpec
 from app.models.revenue_recognition import RevenueRecognition
 from app.models.revoked_token import RevokedToken
@@ -76,4 +78,5 @@ __all__ = [
     "SparePart", "Warehouse", "InventoryBalance", "InventoryTransaction",
     "PurchaseOrder", "PurchaseOrderItem", "PartConsumption",
     "Project", "ProjectMilestone", "BOQItem",
+    "Partner", "DocumentApproval",
 ]

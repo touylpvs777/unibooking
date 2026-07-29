@@ -1,12 +1,13 @@
 import logging
 
-from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
+from fastapi import APIRouter, Depends, File, HTTPException, Query, Response, UploadFile, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.permissions import PermissionName, require_permission
 from app.database.session import get_db
 from app.models.activity_log import ActionType, EntityType
 from app.models.user import User
+from app.schemas.document_approval import DocumentApprovalOut, DocumentApprovalSetRequest
 from app.schemas.inventory import (
     BalanceOut, ConsumeAction, ConsumptionOut, InventoryDashboardSummary,
     POCreate, POListResponse, POOut, ReceiveItemAction,
@@ -14,7 +15,9 @@ from app.schemas.inventory import (
     TransactionCreate, TransactionOut, WarehouseCreate, WarehouseOut,
 )
 from app.schemas.inventory_import import InventoryImportResult
+from app.schemas.po_excel import POExcelImportResult, POGridData, POGridUpdateRequest
 from app.services.activity_log_service import ActivityLogService
+from app.services.document_approval_service import DocumentApprovalService
 from app.services.inventory_import_service import InventoryImportService
 from app.services.inventory_service import InventoryService
 
@@ -192,6 +195,92 @@ async def receive_po(po_id: int, items: list[ReceiveItemAction], db: AsyncSessio
         user_id=current_user.id, action=ActionType.PURCHASE_ORDER_RECEIVED,
         entity_type=EntityType.PURCHASE_ORDER, entity_id=po.id,
         details={"po_number": po.po_number, "status": po.status},
+    )
+    return POOut.model_validate(po)
+
+
+# ── Purchase Orders: Approvals (Issued/Reviewed/Approved By signatures) ──────
+
+@router.get("/purchase-orders/{po_id}/approvals", response_model=list[DocumentApprovalOut])
+async def get_po_approvals(po_id: int, db: AsyncSession = Depends(get_db), _: User = require_permission(PermissionName.MANAGE_CATALOG)):
+    await InventoryService(db).get_po(po_id)  # 404s if the PO doesn't exist
+    approvals = await DocumentApprovalService(db).get_for_document(purchase_order_id=po_id)
+    return [DocumentApprovalOut.model_validate(a) for a in approvals]
+
+
+@router.put("/purchase-orders/{po_id}/approvals", response_model=list[DocumentApprovalOut])
+async def set_po_approvals(
+    po_id: int, data: DocumentApprovalSetRequest,
+    db: AsyncSession = Depends(get_db), current_user: User = require_permission(PermissionName.MANAGE_CATALOG),
+):
+    po = await InventoryService(db).get_po(po_id)  # 404s if the PO doesn't exist
+    approvals = await DocumentApprovalService(db).set_approvals(data, purchase_order_id=po_id)
+    await ActivityLogService(db).log(
+        user_id=current_user.id, action=ActionType.PURCHASE_ORDER_APPROVALS_UPDATED,
+        entity_type=EntityType.PURCHASE_ORDER, entity_id=po.id,
+        details={"po_number": po.po_number, "roles": [a.role for a in data.approvals]},
+    )
+    return [DocumentApprovalOut.model_validate(a) for a in approvals]
+
+
+# ── Purchase Orders: Excel export/import ──────────────────────────────────────
+
+@router.get("/purchase-orders/{po_id}/export-excel")
+async def export_po_excel(po_id: int, db: AsyncSession = Depends(get_db), current_user: User = require_permission(PermissionName.MANAGE_CATALOG)):
+    service = InventoryService(db)
+    po = await service.get_po(po_id)
+    content = await service.export_po_excel(po_id)
+    await ActivityLogService(db).log(
+        user_id=current_user.id, action=ActionType.PURCHASE_ORDER_EXCEL_EXPORTED,
+        entity_type=EntityType.PURCHASE_ORDER, entity_id=po.id,
+        details={"po_number": po.po_number},
+    )
+    return Response(
+        content=content,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f'attachment; filename="{po.po_number}.xlsx"'},
+    )
+
+
+@router.post("/purchase-orders/import-excel", response_model=POExcelImportResult)
+async def import_po_excel(
+    file: UploadFile = File(..., description="A .xlsx file previously exported via /purchase-orders/{id}/export-excel, edited freely and re-uploaded"),
+    db: AsyncSession = Depends(get_db),
+    current_user: User = require_permission(PermissionName.MANAGE_CATALOG),
+):
+    content = await file.read()
+    try:
+        result = await InventoryService(db).import_po_excel(content)
+    except HTTPException:
+        raise
+    except Exception as exc:  # final safety net — the endpoint must never 500
+        logger.exception("Unhandled failure during PO Excel import")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Import failed: {exc}")
+    await ActivityLogService(db).log(
+        user_id=current_user.id, action=ActionType.PURCHASE_ORDER_EXCEL_IMPORTED,
+        entity_type=EntityType.PURCHASE_ORDER, entity_id=result.po_id,
+        details={"po_number": result.po_number, "items_replaced": result.items_replaced, "error_count": len(result.errors)},
+    )
+    return result
+
+
+# ── Purchase Orders: editable grid (ag-Grid / Handsontable) ──────────────────
+
+@router.get("/purchase-orders/{po_id}/grid", response_model=POGridData)
+async def get_po_grid(po_id: int, db: AsyncSession = Depends(get_db), _: User = require_permission(PermissionName.MANAGE_CATALOG)):
+    return await InventoryService(db).get_po_grid(po_id)
+
+
+@router.put("/purchase-orders/{po_id}/grid", response_model=POOut)
+async def update_po_grid(
+    po_id: int, data: POGridUpdateRequest,
+    db: AsyncSession = Depends(get_db), current_user: User = require_permission(PermissionName.MANAGE_CATALOG),
+):
+    po = await InventoryService(db).replace_po_items_bulk(po_id, data.rows)
+    await ActivityLogService(db).log(
+        user_id=current_user.id, action=ActionType.PURCHASE_ORDER_UPDATED,
+        entity_type=EntityType.PURCHASE_ORDER, entity_id=po.id,
+        details={"po_number": po.po_number, "item_count": len(po.items)},
     )
     return POOut.model_validate(po)
 

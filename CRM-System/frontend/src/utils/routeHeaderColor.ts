@@ -1,10 +1,10 @@
 /**
- * Every module's page header banner shares the same premium blue-to-indigo
- * gradient (matches the Dashboard's main banner) instead of the old
- * per-category solid colors.
+ * Every module's page header banner shares the same solid DK Blue background
+ * (brand color, matches the sidebar and the Dashboard's main banner) instead
+ * of the old per-category solid colors or gradients.
  */
-const HEADER_GRADIENT_CLASS = 'bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-900'
+const HEADER_BANNER_CLASS = 'bg-[#003366]'
 
 export function getHeaderColorClass(_pathname: string): string {
-  return HEADER_GRADIENT_CLASS
+  return HEADER_BANNER_CLASS
 }

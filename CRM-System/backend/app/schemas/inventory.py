@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.models.spare_part import PartCategory
 from app.models.inventory_transaction import TransactionType
 from app.models.purchase_order import POStatus
+from app.schemas.partner import PartnerBrief
 
 
 # ── Brief models ─────────────────────────────────────────────────────────────
@@ -135,6 +136,7 @@ class POCreate(BaseModel):
     vendor: str = Field(..., min_length=1, max_length=200)
     vendor_address: str | None = None
     vendor_contact: str | None = Field(default=None, max_length=200)
+    partner_id: int | None = None
     warehouse_id: int
     order_date: date
     expected_date: date | None = None
@@ -153,6 +155,7 @@ class POOut(BaseModel):
     model_config = {"from_attributes": True}
     id: int; po_number: str; status: str; vendor: str
     vendor_address: str | None = None; vendor_contact: str | None = None
+    partner: PartnerBrief | None = None
     warehouse: WarehouseBrief; order_date: date
     expected_date: date | None = None; received_date: date | None = None
     subtotal: float; tax_rate: float; tax_amount: float; total_amount: float; currency: str

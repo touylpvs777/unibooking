@@ -45,17 +45,17 @@ export default function InventoryDashboardPage() {
   return (
     <div>
       {/* Hero */}
-      <div className="mp-hero" style={{ background: 'linear-gradient(135deg, #0f4c75 0%, #1b262c 100%)' }}>
+      <div className="mp-hero">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16 }}>
           <div>
             <div className="mp-hero-title">{t('inventory.dashboard.title')}</div>
             <div className="mp-hero-sub">{t('inventory.dashboard.subtitle')}</div>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
-            <button className="btn btn-ghost" style={{ background: 'var(--color-hero-btn-bg)', borderColor: 'var(--color-hero-btn-border)', color: 'var(--color-on-hero)' }} onClick={() => navigate('/inventory/warehouses')}>
+            <button className="btn btn-ghost" onClick={() => navigate('/inventory/warehouses')}>
               <Warehouse size={14} /> {t('inventory.warehouse.title')}
             </button>
-            <button className="btn btn-ghost" style={{ background: 'var(--color-hero-btn-bg)', borderColor: 'var(--color-hero-btn-border)', color: 'var(--color-on-hero)' }} onClick={() => navigate('/inventory/purchase-orders')}>
+            <button className="btn btn-ghost" onClick={() => navigate('/inventory/purchase-orders')}>
               <ShoppingCart size={14} /> {t('inventory.dashboard.purchaseOrdersButton')}
             </button>
             <button className="btn btn-primary" onClick={() => navigate('/inventory/parts')}>

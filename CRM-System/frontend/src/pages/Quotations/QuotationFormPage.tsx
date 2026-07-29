@@ -6,6 +6,7 @@ import { createQuotation } from '@/api/quotation'
 import type { QuotationType } from '@/types/quotation'
 import { toast } from '@/store/toastStore'
 import PageHeader from '@/components/layout/PageHeader'
+import BankDetailsForm, { EMPTY_BANK_DETAILS, serializeBankDetails, type DocumentBankDetails } from '@/components/BankDetailsForm'
 import '@/styles/shared.css'
 
 const CURRENCY_OPTIONS = ['LAK', 'THB', 'USD', 'CNY']
@@ -19,7 +20,6 @@ const EMPTY = {
   tax_rate: '0',
   currency: 'LAK',
   exchange_rate: '1',
-  bank_details: '',
   valid_from: '',
   valid_until: '',
   vehicle_make: '',
@@ -36,6 +36,7 @@ export default function QuotationFormPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [form, setForm]         = useState({ ...EMPTY })
+  const [bankData, setBankData] = useState<DocumentBankDetails>(EMPTY_BANK_DETAILS)
   const [isSaving, setIsSaving] = useState(false)
   const [err, setErr]           = useState<string | null>(null)
 
@@ -66,7 +67,7 @@ export default function QuotationFormPage() {
         tax_rate: form.tax_rate ? Number(form.tax_rate) : 0,
         currency: form.currency,
         exchange_rate: form.exchange_rate ? Number(form.exchange_rate) : 1,
-        bank_details: form.bank_details.trim() || undefined,
+        bank_details: serializeBankDetails(bankData) || undefined,
         valid_from: form.valid_from || undefined,
         valid_until: form.valid_until || undefined,
         vehicle_make: form.vehicle_make.trim() || undefined,
@@ -197,15 +198,7 @@ export default function QuotationFormPage() {
             </div>
           </div>
 
-          <div className="form-group">
-            <label>{t('quotations.form.bankDetails')}</label>
-            <textarea
-              value={form.bank_details}
-              onChange={(e) => set('bank_details', e.target.value)}
-              rows={3}
-              placeholder={t('quotations.form.bankDetailsPlaceholder')}
-            />
-          </div>
+          <BankDetailsForm bankData={bankData} onChange={setBankData} />
 
           <div className="form-row-2">
             <div className="form-group">

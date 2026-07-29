@@ -8,8 +8,8 @@ import {
 import type { ProfitTrendPoint, RevenueBreakdown } from '@/types/dashboard'
 
 const TOOLTIP_STYLE = {
-  contentStyle: { background: '#1c1c1e', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10, fontSize: 12, padding: '8px 12px' },
-  labelStyle: { color: 'rgba(255,255,255,0.6)', marginBottom: 4, fontWeight: 600 },
+  contentStyle: { background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 10, fontSize: 12, padding: '8px 12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' },
+  labelStyle: { color: '#475569', marginBottom: 4, fontWeight: 600 },
   itemStyle: { padding: 0 },
 }
 
@@ -18,7 +18,7 @@ const lakShort = (v: number) =>
 
 function SectionTitle({ title, sub, to }: { title: string; sub?: string; to?: string }) {
   const heading = (
-    <h2 className={`flex items-center gap-1.5 text-base font-semibold text-gray-100 ${to ? 'group-hover:text-blue-400' : ''}`}>
+    <h2 className={`flex items-center gap-1.5 text-base font-semibold text-slate-800 ${to ? 'group-hover:text-blue-700' : ''}`}>
       {title}
       {to && <ArrowRight size={14} className="opacity-0 transition-opacity group-hover:opacity-100" />}
     </h2>
@@ -26,7 +26,7 @@ function SectionTitle({ title, sub, to }: { title: string; sub?: string; to?: st
   return (
     <div className="mb-4">
       {to ? <Link to={to} className="group inline-flex">{heading}</Link> : heading}
-      {sub && <p className="mt-0.5 text-xs text-gray-400">{sub}</p>}
+      {sub && <p className="mt-0.5 text-xs text-slate-500">{sub}</p>}
     </div>
   )
 }
@@ -40,13 +40,13 @@ export function ChartTypeToggle({ value, onChange, labels }: { value: ChartMode;
     { key: 'area', label: labels.area },
   ]
   return (
-    <div className="flex items-center gap-1 rounded-lg border border-white/10 bg-white/[0.03] p-0.5">
+    <div className="flex items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 p-0.5">
       {options.map((o) => (
         <button
           key={o.key}
           type="button"
           onClick={() => onChange(o.key)}
-          className={`rounded-md px-2.5 py-1 text-xs font-semibold transition-colors ${value === o.key ? 'bg-blue-500/20 text-blue-300' : 'text-gray-400 hover:text-gray-100'}`}
+          className={`rounded-md px-2.5 py-1 text-xs font-semibold transition-colors ${value === o.key ? 'bg-blue-100 text-blue-700' : 'text-slate-500 hover:text-slate-800'}`}
         >
           {o.label}
         </button>
@@ -68,7 +68,7 @@ export function ProfitTrendChart({ data, to }: ProfitTrendChartProps) {
   const tooltipFormatter = (value: unknown) => [`₭ ${lakShort(Number(value))}`, seriesName] as [string, string]
 
   return (
-    <section className="rounded-2xl border border-blue-900/50 bg-blue-800/30 p-5 transition-all duration-300 hover:bg-blue-900/40 hover:border-blue-500/50 hover:shadow-[0_0_15px_rgba(59,130,246,0.15)]">
+    <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-md">
       <div className="mb-2 flex flex-wrap items-start justify-between gap-3">
         <SectionTitle title={t('dashboard.erp.chart.profitTrend')} sub={t('dashboard.erp.chart.last6Months')} to={to} />
         <ChartTypeToggle value={mode} onChange={setMode} labels={toggleLabels} />
@@ -77,18 +77,18 @@ export function ProfitTrendChart({ data, to }: ProfitTrendChartProps) {
         <ResponsiveContainer width="100%" height="100%">
           {mode === 'bar' ? (
             <BarChart data={data} margin={{ top: 12, right: 8, left: -8, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
-              <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} width={38} tickFormatter={lakShort} />
-              <Tooltip {...TOOLTIP_STYLE} formatter={tooltipFormatter} cursor={{ fill: 'rgba(255,255,255,0.04)' }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" vertical={false} />
+              <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} width={85} tickFormatter={lakShort} />
+              <Tooltip {...TOOLTIP_STYLE} formatter={tooltipFormatter} cursor={{ fill: 'rgba(0,0,0,0.04)' }} />
               <Bar dataKey="profit" name={seriesName} fill="#34d399" radius={[4, 4, 0, 0]} />
             </BarChart>
           ) : mode === 'line' ? (
             <LineChart data={data} margin={{ top: 12, right: 8, left: -8, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
-              <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} width={38} tickFormatter={lakShort} />
-              <Tooltip {...TOOLTIP_STYLE} formatter={tooltipFormatter} cursor={{ stroke: 'rgba(255,255,255,0.15)' }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" vertical={false} />
+              <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} width={85} tickFormatter={lakShort} />
+              <Tooltip {...TOOLTIP_STYLE} formatter={tooltipFormatter} cursor={{ stroke: 'rgba(0,0,0,0.15)' }} />
               <Line type="monotone" dataKey="profit" name={seriesName} stroke="#34d399" strokeWidth={2.5} dot={{ r: 3, fill: '#34d399', strokeWidth: 0 }} activeDot={{ r: 5 }} />
             </LineChart>
           ) : (
@@ -99,10 +99,10 @@ export function ProfitTrendChart({ data, to }: ProfitTrendChartProps) {
                   <stop offset="100%" stopColor="#34d399" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
-              <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} width={38} tickFormatter={lakShort} />
-              <Tooltip {...TOOLTIP_STYLE} formatter={tooltipFormatter} cursor={{ stroke: 'rgba(255,255,255,0.15)' }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" vertical={false} />
+              <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} width={85} tickFormatter={lakShort} />
+              <Tooltip {...TOOLTIP_STYLE} formatter={tooltipFormatter} cursor={{ stroke: 'rgba(0,0,0,0.15)' }} />
               <Area
                 type="monotone"
                 dataKey="profit"
@@ -142,12 +142,12 @@ export function SampleTrendChart({ to }: { to?: string }) {
   const profitName = t('dashboard.erp.chart.profitSeries')
 
   return (
-    <section className="rounded-2xl border border-blue-900/50 bg-blue-800/30 p-5 transition-all duration-300 hover:bg-blue-900/40 hover:border-blue-500/50 hover:shadow-[0_0_15px_rgba(59,130,246,0.15)]">
+    <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-md">
       <div className="mb-2 flex flex-wrap items-start justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
             <SectionTitle title={t('dashboard.erp.chart.salesOpsTrend')} sub={t('dashboard.erp.chart.salesOpsTrendSub')} to={to} />
-            <span className="mb-4 inline-flex h-fit items-center rounded-full bg-blue-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-blue-300">
+            <span className="mb-4 inline-flex h-fit items-center rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-blue-700">
               {t('dashboard.erp.chart.sampleBadge')}
             </span>
           </div>
@@ -158,22 +158,22 @@ export function SampleTrendChart({ to }: { to?: string }) {
         <ResponsiveContainer width="100%" height="100%">
           {mode === 'bar' ? (
             <BarChart data={SAMPLE_TREND_DATA} margin={{ top: 12, right: 8, left: -8, bottom: 0 }} barGap={4}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
-              <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} width={38} tickFormatter={lakShort} />
-              <Tooltip {...TOOLTIP_STYLE} formatter={(value) => `₭ ${lakShort(Number(value))}`} cursor={{ fill: 'rgba(255,255,255,0.04)' }} />
-              <Legend wrapperStyle={{ fontSize: 12, color: '#9ca3af' }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" vertical={false} />
+              <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} width={85} tickFormatter={lakShort} />
+              <Tooltip {...TOOLTIP_STYLE} formatter={(value) => `₭ ${lakShort(Number(value))}`} cursor={{ fill: 'rgba(0,0,0,0.04)' }} />
+              <Legend wrapperStyle={{ fontSize: 12, color: '#64748b' }} />
               <Bar dataKey="sales" name={salesName} fill="#60a5fa" radius={[4, 4, 0, 0]} />
               <Bar dataKey="costs" name={costsName} fill="#fbbf24" radius={[4, 4, 0, 0]} />
               <Bar dataKey="profit" name={profitName} fill="#34d399" radius={[4, 4, 0, 0]} />
             </BarChart>
           ) : mode === 'line' ? (
             <LineChart data={SAMPLE_TREND_DATA} margin={{ top: 12, right: 8, left: -8, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
-              <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} width={38} tickFormatter={lakShort} />
-              <Tooltip {...TOOLTIP_STYLE} formatter={(value) => `₭ ${lakShort(Number(value))}`} cursor={{ stroke: 'rgba(255,255,255,0.15)' }} />
-              <Legend wrapperStyle={{ fontSize: 12, color: '#9ca3af' }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" vertical={false} />
+              <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} width={85} tickFormatter={lakShort} />
+              <Tooltip {...TOOLTIP_STYLE} formatter={(value) => `₭ ${lakShort(Number(value))}`} cursor={{ stroke: 'rgba(0,0,0,0.15)' }} />
+              <Legend wrapperStyle={{ fontSize: 12, color: '#64748b' }} />
               <Line type="monotone" dataKey="sales" name={salesName} stroke="#60a5fa" strokeWidth={2.5} dot={{ r: 3 }} />
               <Line type="monotone" dataKey="costs" name={costsName} stroke="#fbbf24" strokeWidth={2.5} dot={{ r: 3 }} />
               <Line type="monotone" dataKey="profit" name={profitName} stroke="#34d399" strokeWidth={2.5} dot={{ r: 3 }} />
@@ -194,11 +194,11 @@ export function SampleTrendChart({ to }: { to?: string }) {
                   <stop offset="100%" stopColor="#34d399" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
-              <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} width={38} tickFormatter={lakShort} />
-              <Tooltip {...TOOLTIP_STYLE} formatter={(value) => `₭ ${lakShort(Number(value))}`} cursor={{ stroke: 'rgba(255,255,255,0.15)' }} />
-              <Legend wrapperStyle={{ fontSize: 12, color: '#9ca3af' }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" vertical={false} />
+              <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} width={85} tickFormatter={lakShort} />
+              <Tooltip {...TOOLTIP_STYLE} formatter={(value) => `₭ ${lakShort(Number(value))}`} cursor={{ stroke: 'rgba(0,0,0,0.15)' }} />
+              <Legend wrapperStyle={{ fontSize: 12, color: '#64748b' }} />
               <Area type="monotone" dataKey="sales" name={salesName} stroke="#60a5fa" strokeWidth={2} fill="url(#sampleSalesFill)" />
               <Area type="monotone" dataKey="costs" name={costsName} stroke="#fbbf24" strokeWidth={2} fill="url(#sampleCostsFill)" />
               <Area type="monotone" dataKey="profit" name={profitName} stroke="#34d399" strokeWidth={2} fill="url(#sampleProfitFill)" />
@@ -227,15 +227,15 @@ export function RevenueBreakdownChart({ data, to }: RevenueBreakdownChartProps) 
   ]
 
   return (
-    <section className="rounded-2xl border border-blue-900/50 bg-blue-800/30 p-5 transition-all duration-300 hover:bg-blue-900/40 hover:border-blue-500/50 hover:shadow-[0_0_15px_rgba(59,130,246,0.15)]">
+    <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-md">
       <SectionTitle title={t('dashboard.erp.chart.revenueBreakdown')} sub={t('dashboard.erp.chart.revenueBreakdownSub')} to={to} />
       <div style={{ height: 260 }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} margin={{ top: 12, right: 8, left: -8, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
-            <XAxis dataKey="key" tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} width={38} tickFormatter={lakShort} />
-            <Tooltip {...TOOLTIP_STYLE} formatter={(value) => `₭ ${lakShort(Number(value))}`} cursor={{ fill: 'rgba(255,255,255,0.04)' }} />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" vertical={false} />
+            <XAxis dataKey="key" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} width={85} tickFormatter={lakShort} />
+            <Tooltip {...TOOLTIP_STYLE} formatter={(value) => `₭ ${lakShort(Number(value))}`} cursor={{ fill: 'rgba(0,0,0,0.04)' }} />
             <Bar dataKey="value" radius={[4, 4, 0, 0]}>
               {chartData.map((entry, i) => (
                 <Cell key={entry.key} fill={REVENUE_COLORS[i % REVENUE_COLORS.length]} />
@@ -264,15 +264,15 @@ export function ServiceCostChart({ labor, parts, other, to }: ServiceCostChartPr
   ]
 
   return (
-    <section className="rounded-2xl border border-blue-900/50 bg-blue-800/30 p-5 transition-all duration-300 hover:bg-blue-900/40 hover:border-blue-500/50 hover:shadow-[0_0_15px_rgba(59,130,246,0.15)]">
+    <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-md">
       <SectionTitle title={t('dashboard.erp.service.title')} to={to} />
       <div style={{ height: 220 }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} margin={{ top: 12, right: 8, left: -8, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
-            <XAxis dataKey="key" tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} width={38} tickFormatter={lakShort} />
-            <Tooltip {...TOOLTIP_STYLE} formatter={(value) => `₭ ${lakShort(Number(value))}`} cursor={{ fill: 'rgba(255,255,255,0.04)' }} />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" vertical={false} />
+            <XAxis dataKey="key" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} width={85} tickFormatter={lakShort} />
+            <Tooltip {...TOOLTIP_STYLE} formatter={(value) => `₭ ${lakShort(Number(value))}`} cursor={{ fill: 'rgba(0,0,0,0.04)' }} />
             <Bar dataKey="value" fill="#f97316" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>

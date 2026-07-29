@@ -389,7 +389,7 @@
 /* ─── Hero Banner (Feature area) ───────────────────────────────────────── */
 
 .mp-hero {
-  background: linear-gradient(135deg, var(--color-primary-600) 0%, var(--color-primary-900) 100%);
+  background: #003366;
   border-radius: var(--radius-xl);
   padding: 28px 32px;
   margin-bottom: 24px;
@@ -399,8 +399,22 @@
 }
 
 [data-theme="dark"] .mp-hero {
-  background: linear-gradient(135deg, var(--color-primary-900) 0%, var(--color-gray-900) 100%);
+  background: #003366;
   border: 1px solid var(--color-border);
+}
+
+/* Secondary (ghost) buttons on the DK Blue hero banner need a translucent-white
+   treatment — the default .btn-ghost border/text is near-invisible on this bg. */
+.mp-hero .btn-ghost,
+.mp-hero .btn-secondary {
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+.mp-hero .btn-ghost:hover:not(:disabled),
+.mp-hero .btn-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.22);
+  color: white;
 }
 
 .mp-hero::after {

@@ -128,13 +128,13 @@
   --duration-slow:   300ms;
   --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* ── Sidebar Colors ───────────────────────────────────── */
-  --sidebar-bg:         #0f172a;
-  --sidebar-text:       #94a3b8;
-  --sidebar-text-hover: #e2e8f0;
-  --sidebar-text-active:#60a5fa;
-  --sidebar-border:     rgba(255,255,255,0.06);
-  --sidebar-active-bg:  rgba(37,99,235,0.18);
+  /* ── Sidebar Colors (DK Blue enterprise) ─────────────────── */
+  --sidebar-bg:         #003366;
+  --sidebar-text:       #bfdbfe;
+  --sidebar-text-hover: #ffffff;
+  --sidebar-text-active:#ffffff;
+  --sidebar-border:     rgba(255,255,255,0.12);
+  --sidebar-active-bg:  rgba(255,255,255,0.14);
 }
 
 /* ── Semantic Color Aliases (light) ─────────────────────── */

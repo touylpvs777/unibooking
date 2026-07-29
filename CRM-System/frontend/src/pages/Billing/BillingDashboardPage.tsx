@@ -35,17 +35,17 @@ export default function BillingDashboardPage() {
   return (
     <div>
       {/* Hero */}
-      <div className="mp-hero" style={{ background: 'linear-gradient(to right, #1e3a8a 0%, #312e81 100%)' }}>
+      <div className="mp-hero">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16 }}>
           <div>
             <div className="mp-hero-title">{t('billing.dashboard.title')}</div>
             <div className="mp-hero-sub">{t('billing.dashboard.subtitle')}</div>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
-            <button className="btn btn-ghost" style={{ background: 'var(--color-hero-btn-bg)', borderColor: 'var(--color-hero-btn-border)', color: 'var(--color-on-hero)' }} onClick={handleMarkOverdue}>
+            <button className="btn btn-ghost" onClick={handleMarkOverdue}>
               <AlertTriangle size={14} /> {t('billing.common.markOverdue')}
             </button>
-            <button className="btn btn-ghost" style={{ background: 'var(--color-hero-btn-bg)', borderColor: 'var(--color-hero-btn-border)', color: 'var(--color-on-hero)' }} onClick={load} disabled={isLoading}>
+            <button className="btn btn-ghost" onClick={load} disabled={isLoading}>
               <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('billing.common.refresh')}
             </button>
           </div>

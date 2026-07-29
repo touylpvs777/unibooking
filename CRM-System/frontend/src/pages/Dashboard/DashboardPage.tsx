@@ -33,6 +33,11 @@ interface KpiCardProps {
   to?: string
 }
 
+// The `accent` prop already encodes red for critical/alert states (e.g. negative
+// net profit, low stock) via its existing gradient class — reuse that signal to
+// pick the top-border color instead of introducing a new prop.
+const topBorderClass = (accent: string) => (accent.includes('red') ? 'border-t-4 border-t-red-600' : 'border-t-4 border-t-blue-600')
+
 function KpiCard({ label, value, sublabel, icon: Icon, accent, to }: KpiCardProps) {
   const { t } = useTranslation()
   const fontSize = useCustomUI((s) => s.fontSize)
@@ -42,24 +47,24 @@ function KpiCard({ label, value, sublabel, icon: Icon, accent, to }: KpiCardProp
     <>
       <div className="flex items-start justify-between">
         <div className="min-w-0">
-          <p className={`${sizeClass} text-gray-400`}>{label}</p>
-          <p className="mt-2 truncate text-2xl font-bold tracking-tight text-white">{value}</p>
-          {sublabel && <p className={`mt-1 ${sizeClass} text-gray-400`}>{sublabel}</p>}
+          <p className={`${sizeClass} text-slate-500`}>{label}</p>
+          <p className="mt-2 truncate text-2xl font-bold tracking-tight text-slate-800">{value}</p>
+          {sublabel && <p className={`mt-1 ${sizeClass} text-slate-500`}>{sublabel}</p>}
         </div>
         <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${accent}`}>
           <Icon size={20} className="text-white" strokeWidth={2} />
         </div>
       </div>
       {to && (
-        <p className="mt-3 flex items-center gap-1 text-xs font-semibold text-blue-400 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+        <p className="mt-3 flex items-center gap-1 text-xs font-semibold text-blue-700 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
           {t('dashboard.erp.viewDetails')} <ArrowRight size={12} />
         </p>
       )}
     </>
   )
 
-  const className = `group rounded-2xl border border-blue-900/50 bg-blue-800/30 p-5 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset] transition-all duration-300 hover:bg-blue-900/40 hover:border-blue-500/50 hover:shadow-[0_0_15px_rgba(59,130,246,0.15)] ${
-    to ? 'cursor-pointer hover:scale-[1.03]' : ''
+  const className = `group rounded-xl border border-slate-200 bg-white ${topBorderClass(accent)} p-5 shadow-sm transition-all duration-200 hover:shadow-md ${
+    to ? 'cursor-pointer' : ''
   }`
 
   return to ? (
@@ -70,14 +75,14 @@ function KpiCard({ label, value, sublabel, icon: Icon, accent, to }: KpiCardProp
 }
 
 function KpiCardSkeleton() {
-  return <div className="h-[104px] animate-pulse rounded-2xl border border-blue-900/50 bg-blue-800/30" />
+  return <div className="h-[104px] animate-pulse rounded-xl border border-slate-200 bg-slate-100" />
 }
 
 function MetricRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between border-b border-white/5 py-2.5 text-sm last:border-0">
-      <span className="text-gray-400">{label}</span>
-      <span className="font-semibold text-gray-100">{value}</span>
+    <div className="flex items-center justify-between border-b border-slate-100 py-2.5 text-sm last:border-0">
+      <span className="text-slate-500">{label}</span>
+      <span className="font-semibold text-slate-800">{value}</span>
     </div>
   )
 }
@@ -100,10 +105,10 @@ function MetricPanel({
           <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${accent}`}>
             <Icon size={16} className="text-white" strokeWidth={2} />
           </div>
-          <h3 className="text-sm font-semibold text-gray-100">{title}</h3>
+          <h3 className="text-sm font-semibold text-slate-800">{title}</h3>
         </div>
         {to && (
-          <span className="flex shrink-0 items-center gap-1 text-xs font-semibold text-blue-400 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+          <span className="flex shrink-0 items-center gap-1 text-xs font-semibold text-blue-700 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
             {t('dashboard.erp.viewDetails')} <ArrowRight size={12} />
           </span>
         )}
@@ -114,8 +119,8 @@ function MetricPanel({
     </>
   )
 
-  const className = `group block rounded-2xl border border-blue-900/50 bg-blue-800/30 p-5 transition-all duration-300 hover:bg-blue-900/40 hover:border-blue-500/50 hover:shadow-[0_0_15px_rgba(59,130,246,0.15)] ${
-    to ? 'cursor-pointer hover:scale-[1.015]' : ''
+  const className = `group block rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-md ${
+    to ? 'cursor-pointer' : ''
   }`
 
   return to ? (
@@ -132,8 +137,8 @@ function TabButton({ active, onClick, children }: { active: boolean; onClick: ()
       onClick={onClick}
       className={`whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium transition-colors ${
         active
-          ? 'border border-blue-500 bg-blue-600 text-white shadow-md'
-          : 'border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700'
+          ? 'border border-blue-700 bg-blue-700 text-white shadow-sm'
+          : 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-100'
       }`}
     >
       {children}
@@ -184,21 +189,21 @@ export default function DashboardPage() {
   }, [])
 
   return (
-    <div className="min-h-full bg-[#151515] px-6 py-8 text-white lg:px-10">
-      {/* Header: dark blue premium banner */}
-      <header className="mb-8 overflow-hidden rounded-2xl border border-blue-800/40 bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-900 px-6 py-6 shadow-lg shadow-blue-950/30 sm:px-8">
+    <div className="min-h-full bg-slate-50 px-6 py-8 text-slate-800 lg:px-10">
+      {/* Header: premium DK Blue enterprise banner */}
+      <header className="mb-8 rounded-2xl border border-blue-800 bg-[#003366] px-6 py-6 shadow-sm sm:px-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className={`${sizeClass} font-semibold uppercase tracking-wider text-blue-300`}>{t('dashboard.erp.eyebrow')}</p>
+            <p className={`${sizeClass} font-semibold uppercase tracking-wider text-blue-200`}>{t('dashboard.erp.eyebrow')}</p>
             <h1 className="mt-1 text-2xl font-bold tracking-tight text-white sm:text-3xl">{t('dashboard.erp.title')}</h1>
-            <div className="mt-3 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-blue-200/70">
+            <div className="mt-3 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-blue-200">
               <span className="font-medium">{t('dashboard.erp.rollupCaption')}</span>
               {ROLLUP_SOURCES.map((src, i) => (
                 <span key={src.key} className="flex items-center gap-1.5">
-                  <Link to={src.to} className="font-semibold text-blue-200 underline-offset-2 transition-colors hover:text-white hover:underline">
+                  <Link to={src.to} className="font-semibold text-blue-100 underline-offset-2 transition-colors hover:text-white hover:underline">
                     {t(`dashboard.erp.sources.${src.key}`)}
                   </Link>
-                  {i < ROLLUP_SOURCES.length - 1 && <span className="text-blue-400/40">·</span>}
+                  {i < ROLLUP_SOURCES.length - 1 && <span className="text-blue-400/50">·</span>}
                 </span>
               ))}
             </div>
@@ -208,7 +213,7 @@ export default function DashboardPage() {
       </header>
 
       {error && (
-        <div className="mb-6 flex items-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400">
+        <div className="mb-6 flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-600">
           <AlertCircle size={16} /> {error}
         </div>
       )}

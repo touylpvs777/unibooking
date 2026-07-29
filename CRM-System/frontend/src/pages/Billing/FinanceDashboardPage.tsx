@@ -60,10 +60,10 @@ export default function FinanceDashboardPage() {
             <div className="mp-hero-sub">{t('billing.finance.subtitle')}</div>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
-            <button className="btn btn-ghost" style={{ background: 'var(--color-hero-btn-bg)', borderColor: 'var(--color-hero-btn-border)', color: 'var(--color-on-hero)' }} onClick={handleMarkOverdue}>
+            <button className="btn btn-ghost" onClick={handleMarkOverdue}>
               <AlertTriangle size={14} /> {t('billing.common.markOverdue')}
             </button>
-            <button className="btn btn-ghost" style={{ background: 'var(--color-hero-btn-bg)', borderColor: 'var(--color-hero-btn-border)', color: 'var(--color-on-hero)' }} onClick={load} disabled={isLoading}>
+            <button className="btn btn-ghost" onClick={load} disabled={isLoading}>
               <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('billing.common.refresh')}
             </button>
           </div>

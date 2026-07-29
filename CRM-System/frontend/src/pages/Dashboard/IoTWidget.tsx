@@ -25,19 +25,19 @@ export default function IoTWidget() {
   const { t } = useTranslation()
 
   return (
-    <section className="rounded-2xl border border-emerald-500/15 bg-[#1c1c1e] p-5">
+    <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <Radio size={18} className="text-emerald-400" />
-          <h2 className="text-base font-semibold text-gray-100">{t('dashboard.iot.title')}</h2>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-emerald-400">
+          <Radio size={18} className="text-blue-700" />
+          <h2 className="text-base font-semibold text-slate-800">{t('dashboard.iot.title')}</h2>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-emerald-700">
             <PulsingDot />
             {t('dashboard.iot.live')}
           </span>
         </div>
         <Link
           to="/iot-management"
-          className="group flex items-center gap-1 text-xs font-semibold text-blue-400 transition-colors hover:text-blue-300"
+          className="group flex items-center gap-1 text-xs font-semibold text-blue-700 transition-colors hover:text-blue-900"
         >
           {t('dashboard.iot.viewAll')}
           <ArrowRight size={12} className="transition-transform group-hover:translate-x-0.5" />
@@ -49,21 +49,21 @@ export default function IoTWidget() {
           <Link
             key={unit.unit}
             to="/iot-management"
-            className="flex flex-col gap-2 rounded-xl border border-white/5 bg-white/[0.02] p-3.5 transition-all duration-200 hover:scale-[1.02] hover:border-blue-500 hover:bg-white/[0.05]"
+            className="flex flex-col gap-2 rounded-xl border border-slate-200 bg-slate-50 p-3.5 transition-colors duration-200 hover:border-blue-600 hover:bg-blue-50/40"
           >
             <div className="flex items-center gap-2">
               <PulsingDot />
-              <span className="text-sm font-semibold text-gray-100">{unit.unit}</span>
+              <span className="text-sm font-semibold text-slate-800">{unit.unit}</span>
             </div>
-            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-400">
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
               <span className="flex items-center gap-1">
-                <Satellite size={12} className="text-cyan-400" /> {t('dashboard.iot.gps')}: <span className="font-medium text-gray-200">{unit.gps}</span>
+                <Satellite size={12} className="text-cyan-600" /> {t('dashboard.iot.gps')}: <span className="font-medium text-slate-700">{unit.gps}</span>
               </span>
               <span className="flex items-center gap-1">
-                <Thermometer size={12} className="text-amber-400" /> {t('dashboard.iot.engineTemp')}: <span className="font-medium text-gray-200">{unit.engineTemp}</span>
+                <Thermometer size={12} className="text-amber-600" /> {t('dashboard.iot.engineTemp')}: <span className="font-medium text-slate-700">{unit.engineTemp}</span>
               </span>
               <span className="flex items-center gap-1">
-                <Clock size={12} className="text-violet-400" /> {t('dashboard.iot.hours')}: <span className="font-medium text-gray-200">{unit.hours}</span>
+                <Clock size={12} className="text-violet-600" /> {t('dashboard.iot.hours')}: <span className="font-medium text-slate-700">{unit.hours}</span>
               </span>
             </div>
           </Link>

@@ -22,6 +22,12 @@ class PurchaseOrder(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     po_number: Mapped[str] = mapped_column(String(50), nullable=False, unique=True, index=True)
     status: Mapped[str] = mapped_column(String(25), default=POStatus.DRAFT.value, nullable=False, index=True)
+    # `vendor`/`vendor_address`/`vendor_contact` remain the source of truth for
+    # older POs entered as free text; `partner_id` optionally links to a
+    # structured Partner record for new POs without a backfill migration.
+    partner_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("partners.id", ondelete="SET NULL"), nullable=True, index=True,
+    )
     vendor: Mapped[str] = mapped_column(String(200), nullable=False)
     vendor_address: Mapped[str | None] = mapped_column(Text, nullable=True)
     vendor_contact: Mapped[str | None] = mapped_column(String(200), nullable=True)
@@ -44,6 +50,7 @@ class PurchaseOrder(Base):
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
 
     warehouse: Mapped["Warehouse"] = relationship("Warehouse")
+    partner: Mapped["Partner | None"] = relationship("Partner")
     items: Mapped[list["PurchaseOrderItem"]] = relationship(
         "PurchaseOrderItem", back_populates="purchase_order", cascade="all, delete-orphan",
     )

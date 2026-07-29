@@ -13,7 +13,9 @@ from app.models.purchase_order import POStatus, PurchaseOrder
 from app.models.purchase_order_item import PurchaseOrderItem
 from app.models.part_consumption import PartConsumption
 from app.repositories.inventory_repository import InventoryRepository, PartFilter
+from app.repositories.partner_repository import PartnerRepository
 from app.services.notification_service import ADMIN_ROLE, NotificationService, resolve_actor_name
+from app.services.po_excel_service import POExcelService
 from app.schemas.inventory import (
     BalanceOut, ConsumeAction, ConsumptionOut, InventoryDashboardSummary,
     POCreate, POListResponse, POListOut, POOut,
@@ -21,6 +23,7 @@ from app.schemas.inventory import (
     SparePartUpdate, TransactionCreate, TransactionOut, WarehouseCreate, WarehouseOut,
     ReceiveItemAction,
 )
+from app.schemas.po_excel import GridColumn, POExcelImportResult, POGridData, POGridRow
 
 logger = logging.getLogger(__name__)
 
@@ -232,6 +235,9 @@ class InventoryService:
     async def create_po(self, data: POCreate, user_id: int) -> PurchaseOrder:
         wh = await self._repo.get_warehouse_by_id(data.warehouse_id)
         if wh is None: raise HTTPException(status_code=404, detail="Warehouse not found")
+        if data.partner_id is not None:
+            partner = await PartnerRepository(self.db).get_partner_by_id(data.partner_id)
+            if partner is None: raise HTTPException(status_code=404, detail="Partner not found")
 
         number = await self._gen_number("PO")
         subtotal = sum(round(i.quantity_ordered * i.unit_cost, 2) for i in data.items)
@@ -239,6 +245,7 @@ class InventoryService:
         po = PurchaseOrder(
             po_number=number, vendor=data.vendor.strip(),
             vendor_address=data.vendor_address, vendor_contact=data.vendor_contact,
+            partner_id=data.partner_id,
             warehouse_id=data.warehouse_id,
             order_date=data.order_date, expected_date=data.expected_date,
             subtotal=subtotal, tax_rate=data.tax_rate, tax_amount=tax_amount,
@@ -316,6 +323,83 @@ class InventoryService:
             await self._repo.update_po(po_reloaded, {"status": new_status})
         await self.db.commit()
         return await self._repo.get_po_by_id(po_id)
+
+    # ── Purchase Order: item grid (bulk replace) ──────────────────────────────
+
+    def _recalculate_po_totals(self, po: PurchaseOrder, items: list[PurchaseOrderItem]) -> None:
+        subtotal = round(sum(i.line_total for i in items), 2)
+        tax_amount = round(subtotal * po.tax_rate / 100, 2)
+        po.subtotal = subtotal
+        po.tax_amount = tax_amount
+        po.total_amount = round(subtotal + tax_amount, 2)
+
+    async def get_po_grid(self, po_id: int) -> POGridData:
+        po = await self.get_po(po_id)
+        columns = [
+            GridColumn(field="item_code", header_name="Part No", type="text"),
+            GridColumn(field="description", header_name="Description", type="text"),
+            GridColumn(field="unit", header_name="U/M", type="text"),
+            GridColumn(field="quantity_ordered", header_name="Quantity", type="number"),
+            GridColumn(field="unit_cost", header_name="Unit Price", type="number"),
+            GridColumn(field="line_total", header_name="Total", editable=False, type="number"),
+        ]
+        rows = [
+            POGridRow(
+                id=i.id, item_code=i.item_code, description=i.description, unit=i.unit,
+                quantity_ordered=i.quantity_ordered, unit_cost=i.unit_cost, line_total=i.line_total,
+            )
+            for i in po.items
+        ]
+        return POGridData(columns=columns, rows=rows)
+
+    async def replace_po_items_bulk(self, po_id: int, rows: list) -> PurchaseOrder:
+        """Accepts either `POGridRow` objects (from the grid PUT endpoint) or
+        plain dicts (from the Excel import parser) — both describe the PO's
+        complete new item set."""
+        po = await self.get_po(po_id)
+
+        new_items: list[PurchaseOrderItem] = []
+        for r in rows:
+            data = r.model_dump() if hasattr(r, "model_dump") else r
+            quantity = float(data["quantity_ordered"])
+            unit_cost = float(data["unit_cost"])
+            if quantity <= 0:
+                raise HTTPException(status_code=422, detail=f"Quantity must be greater than 0 for {data.get('description') or 'a line item'}")
+            if unit_cost < 0:
+                raise HTTPException(status_code=422, detail=f"Unit price cannot be negative for {data.get('description') or 'a line item'}")
+            new_items.append(PurchaseOrderItem(
+                item_code=data.get("item_code"), description=data.get("description"), unit=data.get("unit"),
+                quantity_ordered=quantity, unit_cost=unit_cost, line_total=round(quantity * unit_cost, 2),
+            ))
+        if not new_items:
+            raise HTTPException(status_code=422, detail="A purchase order needs at least one line item")
+
+        self._recalculate_po_totals(po, new_items)
+        await self._repo.replace_po_items(po, new_items)
+        await self.db.commit()
+        return await self._repo.get_po_by_id(po_id)
+
+    # ── Purchase Order: Excel export/import ───────────────────────────────────
+
+    async def export_po_excel(self, po_id: int) -> bytes:
+        po = await self.get_po(po_id)
+        return POExcelService().export(po)
+
+    async def import_po_excel(self, content: bytes) -> POExcelImportResult:
+        po_number, item_rows, row_errors = POExcelService().parse(content)
+
+        po = await self._repo.get_po_by_number(po_number)
+        if po is None:
+            raise HTTPException(status_code=404, detail=f"No purchase order found with PO Number '{po_number}'")
+
+        if not item_rows:
+            return POExcelImportResult(success=False, po_id=po.id, po_number=po.po_number, items_replaced=0, errors=row_errors)
+
+        updated_po = await self.replace_po_items_bulk(po.id, item_rows)
+        return POExcelImportResult(
+            success=True, po_id=updated_po.id, po_number=updated_po.po_number,
+            items_replaced=len(updated_po.items), errors=row_errors,
+        )
 
     # ── Consumption ──────────────────────────────────────────────────────────
 

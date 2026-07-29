@@ -32,7 +32,7 @@ from app.core.security import hash_password
 from app.models.role import Role, RoleName
 from app.models.user import User
 from app.models.warehouse import Warehouse
-from app.routes import activity, auth, billing, customers, dashboard, forklifts, inventory, iot_telemetry, leads, maintenance, movements, notifications, projects, quotations, rentals, reports, roles, users, uploads
+from app.routes import activity, auth, billing, customers, dashboard, forklifts, inventory, iot_telemetry, leads, maintenance, movements, notifications, partners, projects, quotations, rentals, reports, roles, users, uploads
 from app.routes.catalog import router as catalog_router
 from app.routes.settings import router as settings_router
 from app.scheduler import shutdown_scheduler, start_scheduler
@@ -362,6 +362,7 @@ app.include_router(rentals.router, prefix="/api/v1")
 app.include_router(movements.router, prefix="/api/v1")
 app.include_router(maintenance.router, prefix="/api/v1")
 app.include_router(inventory.router, prefix="/api/v1")
+app.include_router(partners.router, prefix="/api/v1")
 app.include_router(billing.router, prefix="/api/v1")
 app.include_router(uploads.router, prefix="/api/v1")
 app.include_router(notifications.router, prefix="/api/v1")

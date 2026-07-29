@@ -90,7 +90,7 @@ export default function EquipmentRegistryPage() {
   return (
     <div>
       {/* Hero Banner */}
-      <div className="mp-hero fleet-hero-with-img" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)' }}>
+      <div className="mp-hero fleet-hero-with-img">
         <img
           src="/images/forklift.svg"
           alt=""
@@ -106,8 +106,7 @@ export default function EquipmentRegistryPage() {
             <div className="mp-hero-sub">{t('equipment.registry.subtitle')}</div>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
-            <button className="btn btn-ghost" onClick={refetch} disabled={isLoading}
-              style={{ background: 'var(--color-hero-btn-bg)', borderColor: 'var(--color-hero-btn-border)', color: 'var(--color-on-hero)' }}>
+            <button className="btn btn-ghost" onClick={refetch} disabled={isLoading}>
               <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('equipment.registry.refresh')}
             </button>
             <button className="btn btn-primary" onClick={openCreate}>

@@ -14,9 +14,9 @@ export default function UICustomizerBar() {
   const { fontSize, setFontSize } = useCustomUI()
 
   return (
-    <div className="flex items-center gap-2 rounded-xl border border-white/8 bg-[#1c1c1e] px-3 py-2">
-      <span className="text-xs font-medium text-gray-400">{t('dashboard.exec.customizer.fontSize')}</span>
-      <div className="flex rounded-lg border border-white/10 bg-white/[0.03] p-0.5">
+    <div className="flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-3 py-2">
+      <span className="text-xs font-medium text-blue-100">{t('dashboard.exec.customizer.fontSize')}</span>
+      <div className="flex gap-1">
         {FONT_SIZE_OPTIONS.map((opt) => (
           <button
             key={opt.tier}
@@ -24,8 +24,8 @@ export default function UICustomizerBar() {
             onClick={() => setFontSize(opt.tier)}
             aria-pressed={fontSize === opt.tier}
             title={t(opt.titleKey)}
-            className={`w-7 rounded-md py-1 text-xs font-semibold transition-colors ${
-              fontSize === opt.tier ? 'bg-violet-500/20 text-violet-300' : 'text-gray-400 hover:text-gray-100'
+            className={`w-7 rounded-md border py-1 text-xs font-semibold transition-colors ${
+              fontSize === opt.tier ? 'border-white bg-white text-blue-900' : 'border-white/30 text-white hover:bg-white/10'
             }`}
           >
             {opt.label}

@@ -35,13 +35,13 @@ export default function StatementPage() {
   return (
     <div>
       {/* Hero */}
-      <div className="mp-hero" style={{ background: 'linear-gradient(to right, #1e3a8a 0%, #312e81 100%)' }}>
+      <div className="mp-hero">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16 }}>
           <div>
             <div className="mp-hero-title">{t('billing.statement.title')}</div>
             <div className="mp-hero-sub">{t('billing.statement.subtitle')}</div>
           </div>
-          <button className="btn btn-ghost" style={{ background: 'var(--color-hero-btn-bg)', borderColor: 'var(--color-hero-btn-border)', color: 'var(--color-on-hero)' }} onClick={load} disabled={isLoading}>
+          <button className="btn btn-ghost" onClick={load} disabled={isLoading}>
             <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('billing.common.refresh')}
           </button>
         </div>

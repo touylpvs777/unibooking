@@ -4,20 +4,14 @@
   left: var(--sidebar-width, 280px);
   right: 0;
   height: var(--topbar-height);
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
+  background: #8b0000;
   display: flex;
   align-items: center;
   padding: 0 24px;
   gap: 16px;
   z-index: var(--z-header);
   transition: left var(--duration-slow) var(--ease-default);
-  backdrop-filter: blur(8px);
-  background: rgba(255,255,255,0.85);
-}
-
-[data-theme="dark"] .header {
-  background: rgba(21, 21, 21, 0.78);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .header-left {
@@ -50,13 +44,13 @@
   border: none;
   background: transparent;
   border-radius: var(--radius-md);
-  color: var(--color-text-muted);
+  color: rgba(255, 255, 255, 0.85);
   transition: background var(--duration-fast), color var(--duration-fast);
   flex-shrink: 0;
 }
 .header-menu-btn:hover {
-  background: var(--color-bg-subtle);
-  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
 }
 
 @media (max-width: 768px) {
@@ -65,3 +59,80 @@
     padding: 0 16px;
   }
 }
+
+/* ── DK Red premium header: contrast overrides ──────────────────────────
+   Breadcrumb, SearchBar, LanguageToggle, NotificationCenter and
+   UserProfileDropdown are shared components whose base styles assume a
+   light page background (LanguageToggle is also reused on the Login page).
+   Scope the "blood red" contrast treatment to their header instance only,
+   rather than changing their shared/base CSS. ───────────────────────────── */
+
+/* Page title / breadcrumb */
+.header .breadcrumb-title,
+.header .breadcrumb-current { color: #ffffff; }
+.header .breadcrumb-link { color: rgba(255, 255, 255, 0.7); }
+.header .breadcrumb-link:hover { color: #ffffff; }
+.header .breadcrumb-sep { color: rgba(255, 255, 255, 0.5); }
+
+/* Search trigger pill */
+.header .search-trigger {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.75);
+}
+.header .search-trigger:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.header .search-trigger-kbd {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Language toggle pills + overflow dropdown */
+.header .lang-toggle,
+.header .lang-toggle-more {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.85);
+}
+.header .lang-toggle-btn { color: rgba(255, 255, 255, 0.85); }
+.header .lang-toggle-btn:hover:not(.active) {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.14);
+}
+.header .lang-toggle-btn.active {
+  background: #ffffff;
+  color: #8b0000;
+}
+.header .lang-toggle-more:hover { color: #ffffff; }
+.header .lang-toggle-more.active {
+  background: #ffffff;
+  color: #8b0000;
+}
+.header .lang-toggle-more option { background: #ffffff; color: #1e293b; }
+
+/* Notification bell */
+.header .notification-trigger { color: rgba(255, 255, 255, 0.85); }
+.header .notification-trigger:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+.header .notification-badge {
+  background: #ffffff;
+  color: #8b0000;
+  box-shadow: 0 0 0 2px #8b0000;
+}
+
+/* Profile dropdown trigger */
+.header .user-dropdown-trigger {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+}
+.header .user-dropdown-trigger:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.14);
+}
+.header .user-dropdown-name { color: #ffffff; }
+.header .user-dropdown-chevron { color: rgba(255, 255, 255, 0.75); }

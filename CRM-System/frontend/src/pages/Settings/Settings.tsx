@@ -114,10 +114,6 @@ interface CompanyProfile {
   address: string
   phone: string
   logo_url: string
-  bank_name: string
-  bank_account_name: string
-  bank_account_number: string
-  bank_swift: string
 }
 
 interface FinancialDefaults {
@@ -136,10 +132,6 @@ const defaultCompanyProfile: CompanyProfile = {
   address: 'Vientiane, Laos',
   phone: '+856 20 000 000',
   logo_url: 'https://example.com/logo.png',
-  bank_name: '',
-  bank_account_name: '',
-  bank_account_number: '',
-  bank_swift: '',
 }
 
 const defaultFinancialDefaults: FinancialDefaults = {
@@ -407,23 +399,6 @@ export default function SettingsPage() {
                   <input className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pb-2 text-sm text-slate-800 shadow-sm outline-none transition focus:border-slate-400 dark:border-slate-600 dark:bg-slate-900 dark:text-white" value={companyProfile.phone} onChange={(event) => setCompanyProfile({ ...companyProfile, phone: event.target.value })} style={inputStyle} />
                 </label>
 
-                <div className="text-sm font-semibold text-slate-700 dark:text-slate-300" style={{ marginTop: 8 }}>{t('settings.company.bankDetails.title')}</div>
-                <label className="grid gap-2 text-slate-700 dark:text-slate-300" style={{ display: 'grid', gap: 6 }}>
-                  <span className="leading-relaxed">{t('settings.company.bankDetails.bankName')}</span>
-                  <input className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pb-2 text-sm text-slate-800 shadow-sm outline-none transition focus:border-slate-400 dark:border-slate-600 dark:bg-slate-900 dark:text-white" value={companyProfile.bank_name} onChange={(event) => setCompanyProfile({ ...companyProfile, bank_name: event.target.value })} style={inputStyle} />
-                </label>
-                <label className="grid gap-2 text-slate-700 dark:text-slate-300" style={{ display: 'grid', gap: 6 }}>
-                  <span className="leading-relaxed">{t('settings.company.bankDetails.accountName')}</span>
-                  <input className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pb-2 text-sm text-slate-800 shadow-sm outline-none transition focus:border-slate-400 dark:border-slate-600 dark:bg-slate-900 dark:text-white" value={companyProfile.bank_account_name} onChange={(event) => setCompanyProfile({ ...companyProfile, bank_account_name: event.target.value })} style={inputStyle} />
-                </label>
-                <label className="grid gap-2 text-slate-700 dark:text-slate-300" style={{ display: 'grid', gap: 6 }}>
-                  <span className="leading-relaxed">{t('settings.company.bankDetails.accountNumber')}</span>
-                  <input className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pb-2 text-sm text-slate-800 shadow-sm outline-none transition focus:border-slate-400 dark:border-slate-600 dark:bg-slate-900 dark:text-white" value={companyProfile.bank_account_number} onChange={(event) => setCompanyProfile({ ...companyProfile, bank_account_number: event.target.value })} style={inputStyle} />
-                </label>
-                <label className="grid gap-2 text-slate-700 dark:text-slate-300" style={{ display: 'grid', gap: 6 }}>
-                  <span className="leading-relaxed">{t('settings.company.bankDetails.swift')}</span>
-                  <input className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pb-2 text-sm text-slate-800 shadow-sm outline-none transition focus:border-slate-400 dark:border-slate-600 dark:bg-slate-900 dark:text-white" value={companyProfile.bank_swift} onChange={(event) => setCompanyProfile({ ...companyProfile, bank_swift: event.target.value })} style={inputStyle} />
-                </label>
                 <div className="grid gap-2 text-slate-700 dark:text-slate-300" style={{ display: 'grid', gap: 6 }}>
                   <span className="leading-relaxed">{t('settings.company.logoUrl')}</span>
                   <input

@@ -10,6 +10,7 @@ import { useCompanyStore } from '@/store/companyStore'
 import type { ReferenceType } from '@/types/billing'
 import type { Customer } from '@/types/customer'
 import PageHeader from '@/components/layout/PageHeader'
+import BankDetailsForm, { EMPTY_BANK_DETAILS, serializeBankDetails, type DocumentBankDetails } from '@/components/BankDetailsForm'
 import '@/styles/shared.css'
 
 const CURRENCY_OPTIONS = ['LAK', 'THB', 'USD', 'CNY']
@@ -49,7 +50,7 @@ export default function InvoiceFormPage() {
 
   const [currency, setCurrency] = useState('LAK')
   const [exchangeRate, setExchangeRate] = useState('1')
-  const [bankDetails, setBankDetails] = useState('')
+  const [bankData, setBankData] = useState<DocumentBankDetails>(EMPTY_BANK_DETAILS)
 
   const [vehicleMake, setVehicleMake] = useState('')
   const [vehicleModel, setVehicleModel] = useState('')
@@ -99,7 +100,7 @@ export default function InvoiceFormPage() {
         tax_rate: Number(taxRate) || 0,
         currency,
         exchange_rate: Number(exchangeRate) || 1,
-        bank_details: bankDetails.trim() || undefined,
+        bank_details: serializeBankDetails(bankData) || undefined,
         vehicle_make: vehicleMake.trim() || undefined,
         vehicle_model: vehicleModel.trim() || undefined,
         vehicle_vin: vehicleVin.trim() || undefined,
@@ -222,15 +223,7 @@ export default function InvoiceFormPage() {
           </div>
 
           {/* Bank Details */}
-          <div className="form-group">
-            <label>{t('billing.invoice.form.bankDetails')}</label>
-            <textarea
-              value={bankDetails}
-              onChange={(e) => setBankDetails(e.target.value)}
-              rows={3}
-              placeholder={t('billing.invoice.form.bankDetailsPlaceholder')}
-            />
-          </div>
+          <BankDetailsForm bankData={bankData} onChange={setBankData} />
 
           {/* Line items */}
           <div className="form-group">
@@ -370,7 +363,7 @@ export default function InvoiceFormPage() {
             grandTotal={grandTotal}
             currency={currency}
             showBankDetails
-            bankDetailsText={bankDetails}
+            bankDetails={bankData}
             grandTotalInBaseCurrency={currency !== 'LAK' ? { amount: grandTotalInLAK, currency: 'LAK' } : undefined}
           />
         </div>
