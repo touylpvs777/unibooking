@@ -13,6 +13,7 @@ from app.schemas.quotation import (
     ConvertAction,
     QuotationCreate,
     QuotationDetail,
+    QuotationItemBulkItem,
     QuotationItemCreate,
     QuotationItemOut,
     QuotationItemUpdate,
@@ -180,6 +181,28 @@ async def add_item(
 ):
     item = await QuotationService(db).add_item(quotation_id, data)
     return QuotationItemOut.model_validate(item)
+
+
+@router.put(
+    "/{quotation_id}/items/bulk",
+    response_model=list[QuotationItemOut],
+    summary="Replace all line items in one transaction (Excel-grid editor save)",
+)
+async def bulk_replace_items(
+    quotation_id: int,
+    data: list[QuotationItemBulkItem],
+    db: AsyncSession = Depends(get_db),
+    current_user: User = require_permission(PermissionName.QUOTATION_UPDATE),
+):
+    items = await QuotationService(db).bulk_replace_items(quotation_id, data)
+    await ActivityLogService(db).log(
+        user_id=current_user.id,
+        action=ActionType.QUOTATION_UPDATED,
+        entity_type=EntityType.QUOTATION,
+        entity_id=quotation_id,
+        details={"bulk_items_replaced": len(items)},
+    )
+    return [QuotationItemOut.model_validate(i) for i in items]
 
 
 @router.put(

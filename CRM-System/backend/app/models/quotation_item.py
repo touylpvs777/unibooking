@@ -30,6 +30,7 @@ class QuotationItem(Base):
     unit: Mapped[str] = mapped_column(String(50), default="unit", nullable=False)
     unit_price: Mapped[float] = mapped_column(Float, nullable=False)
     discount_percent: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
+    tax_percent: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     line_total: Mapped[float] = mapped_column(Float, nullable=False)
 
     rental_duration_days: Mapped[int | None] = mapped_column(Integer, nullable=True)

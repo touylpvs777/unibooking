@@ -76,6 +76,7 @@ class Quotation(Base):
     tax_rate: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     tax_amount: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     discount_amount: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
+    round_amount: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     total_amount: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     currency: Mapped[str] = mapped_column(String(3), default="LAK", nullable=False)
     # Rate to convert `currency` into the org's base currency (LAK) — 1.0 when
@@ -86,6 +87,9 @@ class Quotation(Base):
 
     valid_from: Mapped[date | None] = mapped_column(Date, nullable=True)
     valid_until: Mapped[date | None] = mapped_column(Date, nullable=True, index=True)
+    # Customer's own PO/reference number for this quotation — distinct from
+    # our internal quotation_number, shown as "Reference" on the document header.
+    customer_reference: Mapped[str | None] = mapped_column(String(100), nullable=True)
 
     # Free-text details of the customer-owned vehicle/equipment this quote is
     # for — not linked to the internal Forklift fleet model (see Invoice for
@@ -96,9 +100,13 @@ class Quotation(Base):
     vehicle_engine_no: Mapped[str | None] = mapped_column(String(100), nullable=True)
     vehicle_reg_no: Mapped[str | None] = mapped_column(String(50), nullable=True)
     job_number: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    machine_type: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    hour_meter: Mapped[float | None] = mapped_column(Float, nullable=True)
+    location: Mapped[str | None] = mapped_column(String(200), nullable=True)
 
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     internal_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    terms_conditions: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     converted_to_type: Mapped[str | None] = mapped_column(String(30), nullable=True)
     converted_to_id: Mapped[int | None] = mapped_column(Integer, nullable=True)

@@ -52,7 +52,11 @@ export interface QuotationItemOut {
   unit: string
   unit_price: number
   discount_percent: number
+  tax_percent: number
   line_total: number
+  discount_amount: number
+  tax_amount: number
+  total: number
   rental_duration_days: number | null
   rental_rate_period: string | null
   notes: string | null
@@ -110,16 +114,22 @@ export interface QuotationDetail extends Quotation {
   tax_rate: number
   tax_amount: number
   discount_amount: number
+  round_amount: number
   exchange_rate: number
   bank_details: string | null
+  customer_reference: string | null
   vehicle_make: string | null
   vehicle_model: string | null
   vehicle_vin: string | null
   vehicle_engine_no: string | null
   vehicle_reg_no: string | null
   job_number: string | null
+  machine_type: string | null
+  hour_meter: number | null
+  location: string | null
   notes: string | null
   internal_notes: string | null
+  terms_conditions: string | null
   converted_to_type: string | null
   converted_to_id: number | null
   created_by: number | null
@@ -153,12 +163,18 @@ export interface QuotationCreate {
   bank_details?: string
   valid_from?: string | null
   valid_until?: string | null
+  customer_reference?: string
   vehicle_make?: string
   vehicle_model?: string
   vehicle_vin?: string
   vehicle_engine_no?: string
   vehicle_reg_no?: string
   job_number?: string
+  machine_type?: string
+  hour_meter?: number | null
+  location?: string
+  round_amount?: number
+  terms_conditions?: string
   notes?: string
   internal_notes?: string
 }
@@ -178,6 +194,18 @@ export interface QuotationUpdate {
   bank_details?: string
   valid_from?: string | null
   valid_until?: string | null
+  customer_reference?: string
+  vehicle_make?: string
+  vehicle_model?: string
+  vehicle_vin?: string
+  vehicle_engine_no?: string
+  vehicle_reg_no?: string
+  job_number?: string
+  machine_type?: string
+  hour_meter?: number | null
+  location?: string
+  round_amount?: number
+  terms_conditions?: string
   notes?: string
   internal_notes?: string
 }
@@ -192,10 +220,15 @@ export interface QuotationItemCreate {
   unit?: string
   unit_price: number
   discount_percent?: number
+  tax_percent?: number
   rental_duration_days?: number | null
   rental_rate_period?: string | null
   notes?: string
   sort_order?: number
+}
+
+export interface QuotationItemBulkItem extends QuotationItemCreate {
+  id?: number | null
 }
 
 export interface QuotationItemUpdate {
@@ -205,6 +238,7 @@ export interface QuotationItemUpdate {
   unit?: string
   unit_price?: number
   discount_percent?: number
+  tax_percent?: number
   rental_duration_days?: number | null
   rental_rate_period?: string | null
   notes?: string

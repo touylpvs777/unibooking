@@ -137,6 +137,40 @@ async def _apply_sqlite_migrations(conn) -> None:
         await conn.execute(text("ALTER TABLE invoices ADD COLUMN reference_id INTEGER"))
     except OperationalError:
         pass  # column already exists
+
+    # ── quotations equipment fields + quotation_items.tax_percent (Document Editor) ──
+    try:
+        await conn.execute(text("ALTER TABLE quotations ADD COLUMN machine_type VARCHAR(100)"))
+    except OperationalError:
+        pass  # column already exists
+    try:
+        await conn.execute(text("ALTER TABLE quotations ADD COLUMN hour_meter FLOAT"))
+    except OperationalError:
+        pass  # column already exists
+    try:
+        await conn.execute(text("ALTER TABLE quotations ADD COLUMN location VARCHAR(200)"))
+    except OperationalError:
+        pass  # column already exists
+    try:
+        await conn.execute(text("ALTER TABLE quotations ADD COLUMN customer_reference VARCHAR(100)"))
+    except OperationalError:
+        pass  # column already exists
+    try:
+        await conn.execute(text(
+            "ALTER TABLE quotations ADD COLUMN round_amount FLOAT NOT NULL DEFAULT 0"
+        ))
+    except OperationalError:
+        pass  # column already exists
+    try:
+        await conn.execute(text("ALTER TABLE quotations ADD COLUMN terms_conditions TEXT"))
+    except OperationalError:
+        pass  # column already exists
+    try:
+        await conn.execute(text(
+            "ALTER TABLE quotation_items ADD COLUMN tax_percent FLOAT NOT NULL DEFAULT 0"
+        ))
+    except OperationalError:
+        pass  # column already exists
     # NOTE: invoices.contract_id also became nullable in this change (work-order
     # and sales invoices have no rental contract). SQLite can't drop a NOT NULL
     # constraint via ALTER TABLE without a full table rebuild, and every other
@@ -283,6 +317,13 @@ async def _apply_postgres_migrations(conn) -> None:
         "ALTER TABLE forklifts ADD COLUMN IF NOT EXISTS iot_device_id VARCHAR(100)",
         "ALTER TABLE forklifts ADD COLUMN IF NOT EXISTS last_telemetry_ping TIMESTAMPTZ",
         "CREATE UNIQUE INDEX IF NOT EXISTS ix_forklifts_iot_device_id ON forklifts (iot_device_id)",
+        "ALTER TABLE quotations ADD COLUMN IF NOT EXISTS machine_type VARCHAR(100)",
+        "ALTER TABLE quotations ADD COLUMN IF NOT EXISTS hour_meter DOUBLE PRECISION",
+        "ALTER TABLE quotations ADD COLUMN IF NOT EXISTS location VARCHAR(200)",
+        "ALTER TABLE quotations ADD COLUMN IF NOT EXISTS customer_reference VARCHAR(100)",
+        "ALTER TABLE quotations ADD COLUMN IF NOT EXISTS round_amount DOUBLE PRECISION NOT NULL DEFAULT 0",
+        "ALTER TABLE quotations ADD COLUMN IF NOT EXISTS terms_conditions TEXT",
+        "ALTER TABLE quotation_items ADD COLUMN IF NOT EXISTS tax_percent DOUBLE PRECISION NOT NULL DEFAULT 0",
     ):
         await conn.execute(text(statement))
 

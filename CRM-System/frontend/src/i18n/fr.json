@@ -1,6 +1,7 @@
 {
   "common": {
     "brandName": "DK Service",
+    "unassigned": "Non assigné",
     "brandTagline": "Plateforme d'Entreprise",
     "language": "Langue",
     "noDataYet": "Aucune donnée pour le moment",
@@ -151,6 +152,8 @@
     "groups": {
       "dashboard": "Tableau de bord de direction",
       "crm": "CRM",
+      "sales": "Ventes",
+      "purchasing": "Achats",
       "equipment": "Parc d’équipements",
       "rental": "Opérations de location",
       "maintenance": "Service & maintenance",
@@ -182,7 +185,14 @@
       "iotTelemetry": "Télémétrie IoT",
       "settings": "Paramètres",
       "warehouseProjects": "Projets d’entrepôt",
-      "purchaseOrders": "Bons de commande"
+      "purchaseOrders": "Bons de commande",
+      "salesOrders": "Commandes Clients",
+      "taxInvoices": "Factures Fiscales",
+      "creditNotes": "Avoirs",
+      "paymentVouchers": "Bons de Paiement",
+      "deliveryNotes": "Bons de Livraison",
+      "goodsReceive": "Réceptions de Marchandises",
+      "goodsIssue": "Sorties de Marchandises"
     },
     "expandSidebar": "Développer le panneau de navigation",
     "collapseSidebar": "Réduire le panneau de navigation"
@@ -1305,19 +1315,15 @@
       "companyName": "Nom de l'entreprise",
       "address": "Adresse",
       "phone": "Téléphone",
+      "fax": "Fax",
+      "website": "Site Web",
+      "email": "E-mail",
       "logoUrl": "URL du logo",
       "logoInvalidType": "Veuillez sélectionner un fichier image.",
       "logoUploadError": "Impossible de téléverser le logo pour le moment.",
       "logoUploading": "Téléversement du logo…",
       "logoDropzoneText": "Cliquez ou glissez-déposez pour téléverser un logo",
       "logoDropzoneHint": "PNG, JPG ou WebP",
-      "sidebarBranding": {
-        "title": "Personnalisation de la barre latérale (cet appareil)",
-        "description": "Personnalisez le logo et le nom affichés dans la barre latérale sur ce navigateur. Ceci est distinct du profil de l'entreprise ci-dessus, qui est utilisé sur les factures et les documents.",
-        "nameLabel": "Nom affiché dans la barre latérale",
-        "logoLabel": "Logo de la barre latérale",
-        "logoHint": "Enregistré uniquement sur ce navigateur"
-      },
       "bankDetails": {
         "title": "Coordonnées bancaires",
         "bankName": "Nom de la banque",
@@ -2996,5 +3002,12 @@
     "grandTotal": "Total général",
     "issuedBy": "Émis par",
     "approvedBy": "Approuvé par"
+  },
+  "modulePlaceholder": {
+    "badge": "Bientôt disponible",
+    "emptyHint": "Ce module est ébauché — le flux de travail complet arrive bientôt."
+  },
+  "documentFlow": {
+    "title": "Flux du document :"
   }
 }

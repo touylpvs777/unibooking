@@ -20,8 +20,8 @@ const ImportPage = lazy(() => import('@/pages/Catalog/ImportPage'))
 const EquipmentRegistryPage = lazy(() => import('@/pages/Equipment/EquipmentRegistryPage'))
 const ForkliftDetailPage = lazy(() => import('@/pages/Equipment/ForkliftDetailPage'))
 const QuotationListPage = lazy(() => import('@/pages/Quotations/QuotationListPage'))
-const QuotationDetailPage = lazy(() => import('@/pages/Quotations/QuotationDetailPage'))
-const QuotationFormPage = lazy(() => import('@/pages/Quotations/QuotationFormPage'))
+const QuotationEditorPage = lazy(() => import('@/pages/Quotations/QuotationEditorPage'))
+const SalesOrderListPage = lazy(() => import('@/pages/Sales/SalesOrderListPage'))
 const RentalContractListPage = lazy(() => import('@/pages/Rental/RentalContractListPage'))
 const RentalContractDetailPage = lazy(() => import('@/pages/Rental/RentalContractDetailPage'))
 const RentalContractFormPage = lazy(() => import('@/pages/Rental/RentalContractFormPage'))
@@ -39,6 +39,9 @@ const InvoiceFormPage = lazy(() => import('@/pages/Billing/InvoiceFormPage'))
 const InvoiceDetailPage = lazy(() => import('@/pages/Billing/InvoiceDetailPage'))
 const PaymentListPage = lazy(() => import('@/pages/Billing/PaymentListPage'))
 const PaymentDetailPage = lazy(() => import('@/pages/Billing/PaymentDetailPage'))
+const TaxInvoiceListPage = lazy(() => import('@/pages/Billing/TaxInvoiceListPage'))
+const CreditNoteListPage = lazy(() => import('@/pages/Billing/CreditNoteListPage'))
+const PaymentVoucherListPage = lazy(() => import('@/pages/Billing/PaymentVoucherListPage'))
 const DepositListPage = lazy(() => import('@/pages/Billing/DepositListPage'))
 const DepositDetailPage = lazy(() => import('@/pages/Billing/DepositDetailPage'))
 const RevenueRecognitionPage = lazy(() => import('@/pages/Billing/RevenueRecognitionPage'))
@@ -54,6 +57,9 @@ const WarehouseDetailPage = lazy(() => import('@/pages/Inventory/WarehouseDetail
 const PurchaseOrderPage = lazy(() => import('@/pages/Inventory/PurchaseOrderPage'))
 const PurchaseOrderFormPage = lazy(() => import('@/pages/Inventory/PurchaseOrderFormPage'))
 const PurchaseOrderDetailPage = lazy(() => import('@/pages/Inventory/PurchaseOrderDetailPage'))
+const DeliveryNoteListPage = lazy(() => import('@/pages/Inventory/DeliveryNoteListPage'))
+const GoodsReceiveListPage = lazy(() => import('@/pages/Inventory/GoodsReceiveListPage'))
+const GoodsIssueListPage = lazy(() => import('@/pages/Inventory/GoodsIssueListPage'))
 const ExecutiveDashboardPage = lazy(() => import('@/pages/Executive/ExecutiveDashboardPage'))
 const IoTManagementPage = lazy(() => import('@/pages/IoT/IoTManagementPage'))
 const ProjectListPage = lazy(() => import('@/pages/Projects/ProjectListPage'))
@@ -105,8 +111,10 @@ export default function App() {
             <Route path="/equipment/:id"          element={<Suspense fallback={<PageLoader />}><ForkliftDetailPage /></Suspense>} />
 
             <Route path="/quotations"             element={<Suspense fallback={<PageLoader />}><QuotationListPage /></Suspense>} />
-            <Route path="/quotations/new"         element={<Suspense fallback={<PageLoader />}><QuotationFormPage /></Suspense>} />
-            <Route path="/quotations/:id"         element={<Suspense fallback={<PageLoader />}><QuotationDetailPage /></Suspense>} />
+            <Route path="/quotations/new"         element={<Suspense fallback={<PageLoader />}><QuotationEditorPage /></Suspense>} />
+            <Route path="/quotations/:id"         element={<Suspense fallback={<PageLoader />}><QuotationEditorPage /></Suspense>} />
+
+            <Route path="/sales-orders"           element={<Suspense fallback={<PageLoader />}><SalesOrderListPage /></Suspense>} />
 
             <Route path="/rental-contracts"       element={<Suspense fallback={<PageLoader />}><RentalContractListPage /></Suspense>} />
             <Route path="/rental-contracts/new"   element={<Suspense fallback={<PageLoader />}><RentalContractFormPage /></Suspense>} />
@@ -121,8 +129,11 @@ export default function App() {
             <Route path="/billing/invoices"                element={<Suspense fallback={<PageLoader />}><InvoiceListPage /></Suspense>} />
             <Route path="/billing/invoices/new"            element={<Suspense fallback={<PageLoader />}><InvoiceFormPage /></Suspense>} />
             <Route path="/billing/invoices/:id"            element={<Suspense fallback={<PageLoader />}><InvoiceDetailPage /></Suspense>} />
+            <Route path="/billing/tax-invoices"            element={<Suspense fallback={<PageLoader />}><TaxInvoiceListPage /></Suspense>} />
+            <Route path="/billing/credit-notes"            element={<Suspense fallback={<PageLoader />}><CreditNoteListPage /></Suspense>} />
             <Route path="/billing/payments"                element={<Suspense fallback={<PageLoader />}><PaymentListPage /></Suspense>} />
             <Route path="/billing/payments/:id"            element={<Suspense fallback={<PageLoader />}><PaymentDetailPage /></Suspense>} />
+            <Route path="/billing/payment-vouchers"        element={<Suspense fallback={<PageLoader />}><PaymentVoucherListPage /></Suspense>} />
             <Route path="/billing/deposits"                element={<Suspense fallback={<PageLoader />}><DepositListPage /></Suspense>} />
             <Route path="/billing/deposits/:id"            element={<Suspense fallback={<PageLoader />}><DepositDetailPage /></Suspense>} />
             <Route path="/billing/revenue-recognitions"    element={<Suspense fallback={<PageLoader />}><RevenueRecognitionPage /></Suspense>} />
@@ -146,6 +157,9 @@ export default function App() {
             <Route path="/inventory/purchase-orders"      element={<Suspense fallback={<PageLoader />}><PurchaseOrderPage /></Suspense>} />
             <Route path="/inventory/purchase-orders/new"  element={<Suspense fallback={<PageLoader />}><PurchaseOrderFormPage /></Suspense>} />
             <Route path="/inventory/purchase-orders/:id"  element={<Suspense fallback={<PageLoader />}><PurchaseOrderDetailPage /></Suspense>} />
+            <Route path="/inventory/goods-receive"        element={<Suspense fallback={<PageLoader />}><GoodsReceiveListPage /></Suspense>} />
+            <Route path="/inventory/goods-issue"          element={<Suspense fallback={<PageLoader />}><GoodsIssueListPage /></Suspense>} />
+            <Route path="/inventory/delivery-notes"       element={<Suspense fallback={<PageLoader />}><DeliveryNoteListPage /></Suspense>} />
 
             <Route path="/executive"                     element={<Suspense fallback={<PageLoader />}><ExecutiveDashboardPage /></Suspense>} />
             <Route path="/iot-management"                element={<Suspense fallback={<PageLoader />}><IoTManagementPage /></Suspense>} />

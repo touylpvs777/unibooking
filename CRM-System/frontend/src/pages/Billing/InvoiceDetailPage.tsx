@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate, useLocation } from 'react-router-dom'
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { AlertCircle, ChevronLeft, Send, XCircle, CheckCircle, Ban, FileDown } from 'lucide-react'
 import { getInvoice, issueInvoice, sendInvoice, cancelInvoice, voidInvoice } from '@/api/billing'
+import { getCustomer } from '@/api/customers'
 import { Badge, type BadgeVariant } from '@/components/ui/Badge'
 import Modal from '@/components/ui/Modal'
 import PrintButton from '@/components/ui/PrintButton'
-import DocumentPreview from '@/components/DocumentPreview'
+import InvoicePrintTemplate from '@/components/print/InvoicePrintTemplate'
 import { toast } from '@/store/toastStore'
 import { useCompanyStore } from '@/store/companyStore'
 import type { InvoiceDetail } from '@/types/billing'
@@ -16,6 +17,23 @@ import '@/styles/detail.css'
 
 function fmtDate(iso: string | null) { return iso ? new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—' }
 function fmtAmt(n: number, cur = '') { return `${n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}${cur ? ' ' + cur : ''}` }
+
+// Where each polymorphic reference_type resolves to today — rental has its own
+// dedicated `contract` relation/detail page, so only the generic fallbacks need this.
+const REFERENCE_LIST_ROUTE: Record<string, string> = {
+  work_order: '/maintenance/work-orders',
+  sales: '/sales-orders',
+}
+
+function fmtRef(referenceType: string | null, referenceId: number | null): string | undefined {
+  if (!referenceType || !referenceId) return undefined
+  const label = referenceType.split('_').map((w) => w[0].toUpperCase() + w.slice(1)).join(' ')
+  return `${label} #${referenceId}`
+}
+
+function fmtTerms(dueDate: string | null): string {
+  return dueDate ? `Due ${fmtDate(dueDate)}` : 'Due on Receipt'
+}
 
 const STATUS_LABEL_KEYS: Record<string, string> = {
   draft: 'billing.invoice.status.draft', issued: 'billing.invoice.status.issued',
@@ -39,6 +57,7 @@ export default function InvoiceDetailPage() {
   const [busy, setBusy] = useState(false)
   const [cancelOpen, setCancelOpen] = useState(false)
   const [cancelReason, setCancelReason] = useState('')
+  const [customerPhone, setCustomerPhone] = useState<string | null>(null)
 
   const companyProfile = useCompanyStore((s) => s.profile)
   const fetchCompanyProfile = useCompanyStore((s) => s.fetch)
@@ -57,6 +76,11 @@ export default function InvoiceDetailPage() {
     finally { setIsLoading(false) }
   }
   useEffect(() => { load() }, [id])
+
+  useEffect(() => {
+    if (!inv?.customer_id) return
+    getCustomer(inv.customer_id).then(({ data }) => setCustomerPhone(data.phone)).catch(() => setCustomerPhone(null))
+  }, [inv?.customer_id])
 
   const run = async (label: string, fn: () => Promise<unknown>) => {
     setBusy(true)
@@ -135,6 +159,15 @@ export default function InvoiceDetailPage() {
                 <span style={{ cursor: 'pointer', color: 'var(--color-primary-600)' }} onClick={() => navigate(`/rental-contracts/${inv.contract_id}`)}>
                   {inv.contract.contract_number}
                 </span>
+              </dd>
+            </>
+          ) : inv.reference_type && REFERENCE_LIST_ROUTE[inv.reference_type] ? (
+            <>
+              <dt>{t('billing.invoice.meta.referenceType')}</dt>
+              <dd>
+                <Link to={REFERENCE_LIST_ROUTE[inv.reference_type]} style={{ color: 'var(--color-primary-600)' }}>
+                  {inv.reference_type}{inv.reference_id ? ` #${inv.reference_id}` : ''}
+                </Link>
               </dd>
             </>
           ) : (
@@ -239,31 +272,43 @@ export default function InvoiceDetailPage() {
     </div>
 
       <div className="doc-preview">
-        <DocumentPreview
-          docType="invoice"
-          documentNumber={inv.invoice_number}
+        <InvoicePrintTemplate
+          invoiceNumber={inv.invoice_number}
           date={fmtDate(inv.issue_date ?? inv.created_at)}
-          companyName={companyProfile?.company_name}
-          companyAddress={companyProfile?.address}
-          companyPhone={companyProfile?.phone}
-          partyLabel={t('documentPreview.customerDetails')}
-          partyName={`${inv.customer.first_name} ${inv.customer.last_name}${inv.customer.company ? ` — ${inv.customer.company}` : ''}`}
-          vehicle={{
-            make: inv.vehicle_make ?? undefined, model: inv.vehicle_model ?? undefined, vin: inv.vehicle_vin ?? undefined,
-            engineNo: inv.vehicle_engine_no ?? undefined, regNo: inv.vehicle_reg_no ?? undefined, jobNumber: inv.job_number ?? undefined,
+          refLabel={fmtRef(inv.reference_type, inv.reference_id)}
+          company={{
+            name: companyProfile?.company_name || 'DK LAO TRADING SOLE CO., LTD',
+            address: companyProfile?.address,
+            tel: companyProfile?.phone,
+            fax: companyProfile?.fax,
+            website: companyProfile?.website,
+            email: companyProfile?.email,
+            logoUrl: companyProfile?.logo_url,
+          }}
+          customer={{
+            name: `${inv.customer.first_name} ${inv.customer.last_name}${inv.customer.company ? ` — ${inv.customer.company}` : ''}`,
+            tel: customerPhone ?? undefined,
+          }}
+          equipment={{
+            jobNumber: inv.job_number ?? undefined,
+            make: inv.vehicle_make ?? undefined,
+            model: inv.vehicle_model ?? undefined,
+            engineNo: inv.vehicle_engine_no ?? undefined,
+            vinSerial: inv.vehicle_vin ?? undefined,
+            regNo: inv.vehicle_reg_no ?? undefined,
+            terms: fmtTerms(inv.due_date),
           }}
           items={inv.items.map((it) => ({
             itemCode: it.item_code ?? undefined, description: it.description, unit: it.unit ?? undefined,
-            qty: it.quantity, unitPrice: it.unit_rate, total: it.line_total,
+            qty: it.quantity, price: it.unit_rate, amount: it.line_total,
           }))}
           subtotal={inv.subtotal}
-          taxRate={inv.tax_rate}
-          taxAmount={inv.tax_amount}
-          grandTotal={inv.total_amount}
+          vatRate={inv.tax_rate}
+          vatAmount={inv.tax_amount}
+          total={inv.total_amount}
           currency={inv.currency}
-          showBankDetails
-          bankDetailsText={inv.bank_details ?? undefined}
-          grandTotalInBaseCurrency={inv.currency !== 'LAK' ? { amount: inv.total_amount * inv.exchange_rate, currency: 'LAK' } : undefined}
+          totalInBaseCurrency={inv.currency !== 'LAK' ? { amount: inv.total_amount * inv.exchange_rate, currency: 'LAK' } : undefined}
+          bankDetailsText={inv.bank_details}
         />
       </div>
     </div>

@@ -113,6 +113,9 @@ interface CompanyProfile {
   company_name: string
   address: string
   phone: string
+  fax: string
+  website: string
+  email: string
   logo_url: string
 }
 
@@ -131,6 +134,9 @@ const defaultCompanyProfile: CompanyProfile = {
   company_name: 'DK Service',
   address: 'Vientiane, Laos',
   phone: '+856 20 000 000',
+  fax: '',
+  website: '',
+  email: '',
   logo_url: 'https://example.com/logo.png',
 }
 
@@ -199,11 +205,6 @@ export default function SettingsPage() {
   const [isDraggingLogo, setDraggingLogo] = useState(false)
   const logoInputRef = useRef<HTMLInputElement>(null)
   const setCompanyStoreProfile = useCompanyStore((s) => s.setProfile)
-
-  const setBranding = useCompanyStore((s) => s.setBranding)
-  const [brandingNameDraft, setBrandingNameDraft] = useState(() => useCompanyStore.getState().companyName ?? '')
-  const [brandingLogoDraft, setBrandingLogoDraft] = useState<string | null>(() => useCompanyStore.getState().logoUrl)
-  const brandingLogoInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -320,27 +321,6 @@ export default function SettingsPage() {
     if (f) handleLogoFile(f)
   }
 
-  const handleBrandingLogoFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    if (!file.type.startsWith('image/')) {
-      toast.error(t('settings.company.logoInvalidType'))
-      return
-    }
-    const reader = new FileReader()
-    reader.onload = () => {
-      const result = reader.result
-      if (typeof result === 'string') setBrandingLogoDraft(result)
-    }
-    reader.readAsDataURL(file)
-    e.target.value = ''
-  }
-
-  const handleSaveBranding = () => {
-    setBranding(brandingNameDraft.trim() || t('common.brandName'), brandingLogoDraft)
-    toast.success(t('settings.saveSuccess'))
-  }
-
   const tabs: Array<{ key: TabKey; label: string; icon: typeof Building2 }> = [
     { key: 'company', label: t('settings.tabs.company'), icon: Building2 },
     { key: 'financial', label: t('settings.tabs.financial'), icon: CircleDollarSign },
@@ -397,6 +377,18 @@ export default function SettingsPage() {
                 <label className="grid gap-2 text-slate-700 dark:text-slate-300" style={{ display: 'grid', gap: 6 }}>
                   <span className="leading-relaxed">{t('settings.company.phone')}</span>
                   <input className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pb-2 text-sm text-slate-800 shadow-sm outline-none transition focus:border-slate-400 dark:border-slate-600 dark:bg-slate-900 dark:text-white" value={companyProfile.phone} onChange={(event) => setCompanyProfile({ ...companyProfile, phone: event.target.value })} style={inputStyle} />
+                </label>
+                <label className="grid gap-2 text-slate-700 dark:text-slate-300" style={{ display: 'grid', gap: 6 }}>
+                  <span className="leading-relaxed">{t('settings.company.fax')}</span>
+                  <input className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pb-2 text-sm text-slate-800 shadow-sm outline-none transition focus:border-slate-400 dark:border-slate-600 dark:bg-slate-900 dark:text-white" value={companyProfile.fax} onChange={(event) => setCompanyProfile({ ...companyProfile, fax: event.target.value })} style={inputStyle} />
+                </label>
+                <label className="grid gap-2 text-slate-700 dark:text-slate-300" style={{ display: 'grid', gap: 6 }}>
+                  <span className="leading-relaxed">{t('settings.company.website')}</span>
+                  <input className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pb-2 text-sm text-slate-800 shadow-sm outline-none transition focus:border-slate-400 dark:border-slate-600 dark:bg-slate-900 dark:text-white" value={companyProfile.website} onChange={(event) => setCompanyProfile({ ...companyProfile, website: event.target.value })} style={inputStyle} />
+                </label>
+                <label className="grid gap-2 text-slate-700 dark:text-slate-300" style={{ display: 'grid', gap: 6 }}>
+                  <span className="leading-relaxed">{t('settings.company.email')}</span>
+                  <input type="email" className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pb-2 text-sm text-slate-800 shadow-sm outline-none transition focus:border-slate-400 dark:border-slate-600 dark:bg-slate-900 dark:text-white" value={companyProfile.email} onChange={(event) => setCompanyProfile({ ...companyProfile, email: event.target.value })} style={inputStyle} />
                 </label>
 
                 <div className="grid gap-2 text-slate-700 dark:text-slate-300" style={{ display: 'grid', gap: 6 }}>
@@ -455,71 +447,6 @@ export default function SettingsPage() {
                 {saving.company ? <Loader2 size={16} className="spin" /> : <Save size={16} />}
                 {saving.company ? t('settings.saving') : t('settings.save')}
               </button>
-
-              <div style={{ borderTop: '1px solid var(--color-border)', marginTop: 4, paddingTop: 16, display: 'grid', gap: 16 }}>
-                <div>
-                  <h3 className="leading-relaxed" style={{ margin: 0, fontSize: 16 }}>{t('settings.company.sidebarBranding.title')}</h3>
-                  <p className="leading-relaxed" style={{ margin: '4px 0 0', fontSize: 13, color: 'var(--color-text-muted)' }}>{t('settings.company.sidebarBranding.description')}</p>
-                </div>
-                <div style={{ display: 'grid', gap: 12 }}>
-                  <label className="grid gap-2 text-slate-700 dark:text-slate-300" style={{ display: 'grid', gap: 6 }}>
-                    <span className="leading-relaxed">{t('settings.company.sidebarBranding.nameLabel')}</span>
-                    <input
-                      className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pb-2 text-sm text-slate-800 shadow-sm outline-none transition focus:border-slate-400 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
-                      value={brandingNameDraft}
-                      onChange={(event) => setBrandingNameDraft(event.target.value)}
-                      placeholder={t('common.brandName')}
-                      style={inputStyle}
-                    />
-                  </label>
-                  <div className="grid gap-2 text-slate-700 dark:text-slate-300" style={{ display: 'grid', gap: 6 }}>
-                    <span className="leading-relaxed">{t('settings.company.sidebarBranding.logoLabel')}</span>
-                    <input
-                      ref={brandingLogoInputRef}
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleBrandingLogoFile}
-                    />
-                    <div
-                      onClick={() => brandingLogoInputRef.current?.click()}
-                      className="pb-1 flex cursor-pointer items-center gap-4 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-3.5 transition hover:border-slate-400 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800 dark:hover:border-slate-500 dark:hover:bg-slate-700"
-                    >
-                      {brandingLogoDraft ? (
-                        <img
-                          src={brandingLogoDraft}
-                          alt=""
-                          className="h-12 w-12 shrink-0 rounded-lg border border-slate-200 object-contain bg-white dark:border-slate-600"
-                        />
-                      ) : (
-                        <ImageUp size={28} className="shrink-0 text-slate-400 dark:text-slate-500" />
-                      )}
-                      <div className="min-w-0 flex-1">
-                        <div className="leading-relaxed pb-1 text-sm font-medium text-slate-700 dark:text-slate-200">
-                          {t('settings.company.logoDropzoneText')}
-                        </div>
-                        <div className="leading-relaxed pb-1 truncate text-xs text-slate-500 dark:text-slate-400">
-                          {t('settings.company.sidebarBranding.logoHint')}
-                        </div>
-                      </div>
-                      {brandingLogoDraft && (
-                        <button
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); setBrandingLogoDraft(null) }}
-                          className="pb-1 shrink-0 rounded-md p-1.5 text-slate-400 hover:bg-slate-200 hover:text-slate-600 dark:hover:bg-slate-600 dark:hover:text-slate-200"
-                          aria-label={t('inventory.import.clearFile')}
-                        >
-                          <X size={14} />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <button type="button" onClick={handleSaveBranding} className="pb-2" style={buttonStyle}>
-                  <Save size={16} />
-                  {t('settings.save')}
-                </button>
-              </div>
             </div>
           )}
 

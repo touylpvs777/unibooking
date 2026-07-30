@@ -18,6 +18,9 @@ export interface DocumentVehicleInfo {
   engineNo?: string
   regNo?: string
   jobNumber?: string
+  machineType?: string
+  hourMeter?: number | null
+  location?: string
 }
 
 export interface DocumentBankDetails {
@@ -74,6 +77,9 @@ export interface DocumentPreviewProps {
 
   issuedByLabel?: string
   approvedByLabel?: string
+
+  /** A4 orientation for both the screen preview sizing and the print `@page`. */
+  layout?: 'portrait' | 'landscape'
 }
 
 function fmtCurrency(n: number, currency: string): string {
@@ -125,16 +131,22 @@ export default function DocumentPreview({
   grandTotalInBaseCurrency,
   issuedByLabel = 'Issued By',
   approvedByLabel = 'Approved By',
+  layout = 'portrait',
 }: DocumentPreviewProps) {
-  const hasVehicle = !!(vehicle && (vehicle.make || vehicle.model || vehicle.vin || vehicle.engineNo || vehicle.regNo || vehicle.jobNumber))
+  const hasVehicle = !!(vehicle && (
+    vehicle.make || vehicle.model || vehicle.vin || vehicle.engineNo || vehicle.regNo
+    || vehicle.jobNumber || vehicle.machineType || vehicle.hourMeter || vehicle.location
+  ))
+  const isLandscape = layout === 'landscape'
 
   return (
     <div
-      className="
-        mx-auto w-[210mm] min-h-[297mm] bg-white text-gray-900
+      className={`
+        mx-auto bg-white text-gray-900
         p-[14mm_12mm] box-border text-[11.5px] leading-relaxed
         shadow-lg print:shadow-none print:m-0 print:p-[14mm_12mm]
-      "
+        ${isLandscape ? 'w-[297mm] min-h-[210mm] doc-preview-landscape' : 'w-[210mm] min-h-[297mm]'}
+      `}
     >
       {/* Header */}
       <div className="flex items-start justify-between border-b-2 border-gray-900 pb-3 mb-4">
@@ -163,12 +175,15 @@ export default function DocumentPreview({
         <div className="border border-gray-300 rounded px-3 py-2 mb-3">
           <div className="text-[10px] font-bold uppercase tracking-wide text-gray-500 mb-1">Vehicle Information</div>
           <div className="grid grid-cols-3 gap-x-4 gap-y-1">
-            <div><span className="text-gray-500">Make:</span> {vehicle?.make || '—'}</div>
+            <div><span className="text-gray-500">Job No.:</span> {vehicle?.jobNumber || '—'}</div>
+            <div><span className="text-gray-500">Machine:</span> {vehicle?.machineType || '—'}</div>
+            <div><span className="text-gray-500">Brand:</span> {vehicle?.make || '—'}</div>
             <div><span className="text-gray-500">Model:</span> {vehicle?.model || '—'}</div>
             <div><span className="text-gray-500">VIN:</span> {vehicle?.vin || '—'}</div>
             <div><span className="text-gray-500">Engine No.:</span> {vehicle?.engineNo || '—'}</div>
-            <div><span className="text-gray-500">Reg. No.:</span> {vehicle?.regNo || '—'}</div>
-            <div><span className="text-gray-500">Job No.:</span> {vehicle?.jobNumber || '—'}</div>
+            <div><span className="text-gray-500">Hour Meter:</span> {vehicle?.hourMeter != null ? vehicle.hourMeter : '—'}</div>
+            <div><span className="text-gray-500">Plate No.:</span> {vehicle?.regNo || '—'}</div>
+            <div><span className="text-gray-500">Location:</span> {vehicle?.location || '—'}</div>
           </div>
         </div>
       )}

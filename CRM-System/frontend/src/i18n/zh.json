@@ -1,6 +1,7 @@
 {
   "common": {
     "brandName": "DK Service",
+    "unassigned": "未分配",
     "brandTagline": "企业管理平台",
     "language": "语言",
     "noDataYet": "暂无数据",
@@ -151,6 +152,8 @@
     "groups": {
       "dashboard": "经营仪表板",
       "crm": "客户关系管理",
+      "sales": "销售",
+      "purchasing": "采购",
       "equipment": "设备资产",
       "rental": "租赁运营",
       "maintenance": "服务与维护",
@@ -182,7 +185,14 @@
       "iotTelemetry": "IoT 遥测",
       "settings": "设置",
       "warehouseProjects": "仓储项目",
-      "purchaseOrders": "采购订单"
+      "purchaseOrders": "采购订单",
+      "salesOrders": "销售订单",
+      "taxInvoices": "税务发票",
+      "creditNotes": "贷项通知单",
+      "paymentVouchers": "付款凭证",
+      "deliveryNotes": "送货单",
+      "goodsReceive": "收货单",
+      "goodsIssue": "发货单"
     },
     "expandSidebar": "展开导航面板",
     "collapseSidebar": "收起导航面板"
@@ -1305,19 +1315,15 @@
       "companyName": "公司名称",
       "address": "地址",
       "phone": "电话",
+      "fax": "传真",
+      "website": "网站",
+      "email": "电子邮箱",
       "logoUrl": "Logo 网址",
       "logoInvalidType": "请选择图片文件。",
       "logoUploadError": "当前无法上传 Logo。",
       "logoUploading": "正在上传 Logo…",
       "logoDropzoneText": "点击或拖放以上传 Logo",
       "logoDropzoneHint": "PNG、JPG 或 WebP",
-      "sidebarBranding": {
-        "title": "侧边栏品牌标识（本设备）",
-        "description": "自定义此浏览器侧边栏中显示的 Logo 和名称。此设置与上方用于发票和文档的公司档案相互独立。",
-        "nameLabel": "侧边栏显示名称",
-        "logoLabel": "侧边栏 Logo",
-        "logoHint": "仅保存在此浏览器中"
-      },
       "bankDetails": {
         "title": "银行信息",
         "bankName": "银行名称",
@@ -2996,5 +3002,12 @@
     "grandTotal": "总计",
     "issuedBy": "开单人",
     "approvedBy": "审批人"
+  },
+  "modulePlaceholder": {
+    "badge": "即将上线",
+    "emptyHint": "该模块已完成界面搭建 — 完整工作流程即将上线。"
+  },
+  "documentFlow": {
+    "title": "单据流程："
   }
 }

@@ -13,6 +13,7 @@ from app.repositories.quotation_repository import QuotationFilter, QuotationRepo
 from app.schemas.quotation import (
     QuotationCreate,
     QuotationDetail,
+    QuotationItemBulkItem,
     QuotationItemCreate,
     QuotationItemUpdate,
     QuotationListResponse,
@@ -123,12 +124,18 @@ class QuotationService:
             bank_details=data.bank_details,
             valid_from=data.valid_from,
             valid_until=data.valid_until,
+            customer_reference=data.customer_reference,
             vehicle_make=data.vehicle_make,
             vehicle_model=data.vehicle_model,
             vehicle_vin=data.vehicle_vin,
             vehicle_engine_no=data.vehicle_engine_no,
             vehicle_reg_no=data.vehicle_reg_no,
             job_number=data.job_number,
+            machine_type=data.machine_type,
+            hour_meter=data.hour_meter,
+            location=data.location,
+            round_amount=data.round_amount,
+            terms_conditions=data.terms_conditions,
             notes=data.notes,
             internal_notes=data.internal_notes,
             created_by=created_by,
@@ -152,7 +159,12 @@ class QuotationService:
         ))
 
         await self.db.commit()
-        return quotation
+        # A relationship FK (customer_id/lead_id/assigned_to) not already cached
+        # in this session's identity map would need a genuine lazy-load during
+        # serialization, which async SQLAlchemy can't do implicitly outside a
+        # greenlet context — re-fetch with full eager-loading to guarantee it's
+        # always safe to serialize regardless of what's already in the session.
+        return await self._repo.get_by_id(quotation.id)
 
     # ── Update ───────────────────────────────────────────────────────────────
 
@@ -172,7 +184,7 @@ class QuotationService:
                 detail="valid_until must be on or after valid_from.",
             )
 
-        recalc = "tax_rate" in changes or "discount_amount" in changes
+        recalc = "tax_rate" in changes or "discount_amount" in changes or "round_amount" in changes
         changes["updated_by"] = updated_by
 
         try:
@@ -188,7 +200,12 @@ class QuotationService:
             await self._recalculate_totals(quotation)
 
         await self.db.commit()
-        return quotation
+        # `_repo.update()`'s partial `db.refresh(..., attribute_names=[...])`
+        # expires every OTHER attribute/relationship on the object (e.g.
+        # `assigned_user`) — re-fetch with full eager-loading so the route's
+        # `QuotationOut.model_validate(...)` doesn't attempt an implicit
+        # lazy-load outside the async greenlet context (MissingGreenlet).
+        return await self._repo.get_by_id(quotation_id)
 
     # ── Delete ───────────────────────────────────────────────────────────────
 
@@ -225,6 +242,7 @@ class QuotationService:
             unit=data.unit,
             unit_price=data.unit_price,
             discount_percent=data.discount_percent,
+            tax_percent=data.tax_percent,
             line_total=round(line_total, 2),
             rental_duration_days=data.rental_duration_days,
             rental_rate_period=data.rental_rate_period,
@@ -264,16 +282,71 @@ class QuotationService:
         await self._recalculate_totals(quotation)
         await self.db.commit()
 
+    async def bulk_replace_items(
+        self, quotation_id: int, items: list[QuotationItemBulkItem],
+    ) -> list[QuotationItem]:
+        """
+        Replaces the entire line-item set in one transaction/one recalculation —
+        what the Excel-like grid editor's "Save" action calls, instead of one
+        HTTP request per row (which would be both non-atomic and N recalculations
+        instead of one for a multi-row paste).
+        """
+        quotation = await self._require(quotation_id)
+        self._require_draft(quotation)
+
+        existing_by_id = {item.id: item for item in quotation.items}
+        incoming_ids = {i.id for i in items if i.id is not None}
+
+        # Snapshot into a plain list first — iterating `quotation.items` while
+        # deleting from it would mutate the SQLAlchemy relationship collection
+        # mid-iteration.
+        for item in [i for i in quotation.items if i.id not in incoming_ids]:
+            await self._repo.delete_item(item)
+
+        result: list[QuotationItem] = []
+        for line_number, data in enumerate(items, start=1):
+            line_total = round(data.quantity * data.unit_price * (1 - data.discount_percent / 100), 2)
+            if data.id is not None and data.id in existing_by_id:
+                changes = data.model_dump(exclude={"id", "item_type"})
+                changes["line_total"] = line_total
+                changes["line_number"] = line_number
+                item = await self._repo.update_item(existing_by_id[data.id], changes)
+            else:
+                item = await self._repo.add_item(QuotationItem(
+                    quotation_id=quotation_id,
+                    line_number=line_number,
+                    item_type=data.item_type.value,
+                    forklift_id=data.forklift_id,
+                    product_id=data.product_id,
+                    item_code=data.item_code,
+                    description=data.description,
+                    quantity=data.quantity,
+                    unit=data.unit,
+                    unit_price=data.unit_price,
+                    discount_percent=data.discount_percent,
+                    tax_percent=data.tax_percent,
+                    line_total=line_total,
+                    rental_duration_days=data.rental_duration_days,
+                    rental_rate_period=data.rental_rate_period,
+                    notes=data.notes,
+                    sort_order=data.sort_order,
+                ))
+            result.append(item)
+
+        await self._recalculate_totals(quotation)
+        await self.db.commit()
+        return result
+
     # ── Totals recalculation ─────────────────────────────────────────────────
 
     async def _recalculate_totals(self, quotation: Quotation) -> None:
         subtotal = await self._repo.get_items_subtotal(quotation.id)
-        tax_amount = round(subtotal * quotation.tax_rate / 100, 2)
-        total = round(subtotal + tax_amount - quotation.discount_amount, 2)
+        tax_amount = await self._repo.get_items_tax_total(quotation.id)
+        total = round(subtotal + tax_amount - quotation.discount_amount + quotation.round_amount, 2)
 
         await self._repo.update(quotation, {
             "subtotal": round(subtotal, 2),
-            "tax_amount": tax_amount,
+            "tax_amount": round(tax_amount, 2),
             "total_amount": max(total, 0),
         })
 
@@ -330,15 +403,21 @@ def _compute_actions(current_status: str, permissions: set[str] | None = None) -
         QuotationStatus.DRAFT.value: [],
         QuotationStatus.UNDER_REVIEW.value: [],
         QuotationStatus.APPROVED.value: [],
+        QuotationStatus.REVISION.value: [],
         QuotationStatus.SENT.value: [],
         QuotationStatus.ACCEPTED.value: [],
         QuotationStatus.EXPIRED.value: [],
     }
 
+    # "cancel" is relabeled "Void" in the UI — allowed anywhere before the
+    # customer has actually accepted/converted the quotation (see the matching
+    # widened VALID_TRANSITIONS in quotation_workflow_service.py).
     if has_update:
         actions_map[QuotationStatus.DRAFT.value].extend(["submit", "cancel"])
-        actions_map[QuotationStatus.APPROVED.value].append("send")
-        actions_map[QuotationStatus.SENT.value].extend(["accept", "decline"])
+        actions_map[QuotationStatus.UNDER_REVIEW.value].append("cancel")
+        actions_map[QuotationStatus.APPROVED.value].extend(["send", "cancel"])
+        actions_map[QuotationStatus.REVISION.value].append("cancel")
+        actions_map[QuotationStatus.SENT.value].extend(["accept", "decline", "cancel"])
         actions_map[QuotationStatus.EXPIRED.value].append("reactivate")
     if has_approve:
         actions_map[QuotationStatus.UNDER_REVIEW.value].extend(["approve", "reject"])

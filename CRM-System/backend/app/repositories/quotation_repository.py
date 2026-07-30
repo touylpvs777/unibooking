@@ -200,6 +200,15 @@ class QuotationRepository:
         )
         return float(result.scalar_one())
 
+    async def get_items_tax_total(self, quotation_id: int) -> float:
+        result = await self.db.execute(
+            select(func.coalesce(
+                func.sum(QuotationItem.line_total * QuotationItem.tax_percent / 100.0), 0.0,
+            ))
+            .where(QuotationItem.quotation_id == quotation_id)
+        )
+        return float(result.scalar_one())
+
     async def get_item_count(self, quotation_id: int) -> int:
         result = await self.db.execute(
             select(func.count(QuotationItem.id))

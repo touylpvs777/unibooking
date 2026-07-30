@@ -7,12 +7,14 @@ import {
   Package, Truck, FileText, ClipboardList,
   Building2, ArrowRightLeft, Wrench, Radio,
   Box, Receipt, CreditCard, Landmark, FileSpreadsheet, Warehouse, LogOut, ShoppingCart,
-  UserCircle, KeyRound, PanelLeftClose, PanelLeftOpen,
+  UserCircle, KeyRound, PanelLeftClose, PanelLeftOpen, ChevronDown,
+  FileCheck2, ReceiptText, Undo2, Banknote, FileOutput, PackageCheck, PackageMinus,
 } from 'lucide-react'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import { useAuthStore } from '@/store/authStore'
 import { useSidebarStore } from '@/store/sidebarStore'
 import { useCompanyStore } from '@/store/companyStore'
+import { resolveMediaUrl } from '@/utils/media'
 import './Sidebar.css'
 
 interface NavGroup {
@@ -35,7 +37,23 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { to: '/customers', labelKey: 'nav.items.customers', icon: Users },
       { to: '/leads', labelKey: 'nav.items.leads', icon: TrendingUp },
+    ],
+  },
+  {
+    id: 'sales',
+    labelKey: 'nav.groups.sales',
+    items: [
       { to: '/quotations', labelKey: 'nav.items.quotations', icon: FileText },
+      { to: '/sales-orders', labelKey: 'nav.items.salesOrders', icon: FileCheck2 },
+      { to: '/inventory/delivery-notes', labelKey: 'nav.items.deliveryNotes', icon: FileOutput },
+    ],
+  },
+  {
+    id: 'purchasing',
+    labelKey: 'nav.groups.purchasing',
+    items: [
+      { to: '/inventory/purchase-orders', labelKey: 'nav.items.purchaseOrders', icon: ShoppingCart },
+      { to: '/inventory/goods-receive', labelKey: 'nav.items.goodsReceive', icon: PackageCheck },
     ],
   },
   {
@@ -65,7 +83,8 @@ const NAV_GROUPS: NavGroup[] = [
     labelKey: 'nav.groups.inventory',
     items: [
       { to: '/inventory', labelKey: 'nav.items.inventory', icon: Box },
-      { to: '/inventory/purchase-orders', labelKey: 'nav.items.purchaseOrders', icon: ShoppingCart },
+      { to: '/inventory/goods-issue', labelKey: 'nav.items.goodsIssue', icon: PackageMinus },
+      { to: '/inventory/goods-receive', labelKey: 'nav.items.goodsReceive', icon: PackageCheck },
       { to: '/catalog', labelKey: 'nav.items.products', icon: Package },
     ],
   },
@@ -82,7 +101,10 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { to: '/billing', labelKey: 'nav.items.billing', icon: Receipt },
       { to: '/billing/invoices', labelKey: 'nav.items.invoices', icon: FileText },
+      { to: '/billing/tax-invoices', labelKey: 'nav.items.taxInvoices', icon: ReceiptText },
+      { to: '/billing/credit-notes', labelKey: 'nav.items.creditNotes', icon: Undo2 },
       { to: '/billing/payments', labelKey: 'nav.items.payments', icon: CreditCard },
+      { to: '/billing/payment-vouchers', labelKey: 'nav.items.paymentVouchers', icon: Banknote },
       { to: '/billing/deposits', labelKey: 'nav.items.deposits', icon: Landmark },
       { to: '/billing/statements', labelKey: 'nav.items.statements', icon: FileSpreadsheet },
     ],
@@ -108,6 +130,8 @@ export default function Sidebar() {
   const sidebarState = useSidebarStore((s) => s.state)
   const setState = useSidebarStore((s) => s.setState)
   const toggle = useSidebarStore((s) => s.toggle)
+  const collapsedGroups = useSidebarStore((s) => s.collapsedGroups)
+  const toggleGroup = useSidebarStore((s) => s.toggleGroup)
   const isExpanded = sidebarState === 'expanded'
 
   const initials = user
@@ -154,8 +178,13 @@ export default function Sidebar() {
     navigate('/login', { replace: true })
   }
 
-  const brandLogoUrl = useCompanyStore((s) => s.logoUrl)
-  const brandCompanyName = useCompanyStore((s) => s.companyName) || t('common.brandName')
+  const companyProfile = useCompanyStore((s) => s.profile)
+  const fetchCompanyProfile = useCompanyStore((s) => s.fetch)
+  useEffect(() => {
+    fetchCompanyProfile()
+  }, [fetchCompanyProfile])
+  const brandLogoUrl = resolveMediaUrl(companyProfile?.logo_url)
+  const brandCompanyName = companyProfile?.company_name || t('common.brandName')
 
   return (
     <>
@@ -183,29 +212,45 @@ export default function Sidebar() {
 
         {/* Navigation */}
         <nav className="sidebar-nav">
-          {NAV_GROUPS.map((group) => (
-            <div key={group.id} className="sidebar-group">
-              <div className="sidebar-group-items">
-                {group.items
-                  .filter((item) => !item.adminOnly || user?.is_superuser)
-                  .map((item) => (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    end={item.to === '/catalog' || item.to === '/billing'}
-                    className={({ isActive }) =>
-                      `sidebar-nav-item${isActive ? ' active' : ''}`
-                    }
-                    onClick={closeMobile}
-                    title={t(item.labelKey)}
+          {NAV_GROUPS.map((group) => {
+            const isGroupCollapsed = isExpanded && collapsedGroups.includes(group.id)
+            return (
+              <div key={group.id} className="sidebar-group">
+                {isExpanded && (
+                  <button
+                    type="button"
+                    className="sidebar-group-header"
+                    onClick={() => toggleGroup(group.id)}
+                    aria-expanded={!isGroupCollapsed}
                   >
-                    <item.icon className="sidebar-nav-icon" size={16} />
-                    {isExpanded && <span className="sidebar-nav-label">{t(item.labelKey)}</span>}
-                  </NavLink>
-                ))}
+                    <span className="sidebar-group-label">{t(group.labelKey)}</span>
+                    <ChevronDown className="sidebar-group-chevron" size={13} />
+                  </button>
+                )}
+                <div className={`sidebar-group-items-wrap${isGroupCollapsed ? ' is-collapsed' : ''}`}>
+                  <div className="sidebar-group-items">
+                    {group.items
+                      .filter((item) => !item.adminOnly || user?.is_superuser)
+                      .map((item) => (
+                      <NavLink
+                        key={item.to}
+                        to={item.to}
+                        end={item.to === '/catalog' || item.to === '/billing'}
+                        className={({ isActive }) =>
+                          `sidebar-nav-item${isActive ? ' active' : ''}`
+                        }
+                        onClick={closeMobile}
+                        title={t(item.labelKey)}
+                      >
+                        <item.icon className="sidebar-nav-icon" size={16} />
+                        {isExpanded && <span className="sidebar-nav-label">{t(item.labelKey)}</span>}
+                      </NavLink>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
 
           <div className="sidebar-divider" />
           {user?.is_superuser && (

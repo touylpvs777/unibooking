@@ -1,6 +1,7 @@
 {
   "common": {
     "brandName": "DK Service",
+    "unassigned": "ຍັງບໍ່ໄດ້ມອບໝາຍ",
     "brandTagline": "ແພລດຟອມວິສາຫະກິດ",
     "language": "ພາສາ",
     "noDataYet": "ຍັງບໍ່ມີຂໍ້ມູນ",
@@ -111,19 +112,15 @@
       "companyName": "ຊື່ບໍລິສັດ",
       "address": "ທີ່ຢູ່",
       "phone": "ເບີໂທ",
+      "fax": "ແຟັກ",
+      "website": "ເວັບໄຊທ໌",
+      "email": "ອີເມວ",
       "logoUrl": "URL ໂລໂກ",
       "logoInvalidType": "ກະລຸນາເລືອກໄຟລ໌ຮູບພາບ.",
       "logoUploadError": "ບໍ່ສາມາດອັບໂຫຼດໂລໂກໄດ້ໃນຕອນນີ້.",
       "logoUploading": "ກຳລັງອັບໂຫຼດໂລໂກ…",
       "logoDropzoneText": "ກົດ ຫຼື ລາກ ແລະ ວາງເພື່ອອັບໂຫຼດໂລໂກ",
       "logoDropzoneHint": "PNG, JPG, ຫຼື WebP",
-      "sidebarBranding": {
-        "title": "ໂລໂກ້ແຖບເມນູ (ອຸປະກອນນີ້)",
-        "description": "ປັບແຕ່ງໂລໂກ້ ແລະ ຊື່ທີ່ສະແດງຢູ່ແຖບເມນູໃນບຣາວເຊີນີ້. ນີ້ແຍກຕ່າງຫາກຈາກໂປຣໄຟລ໌ບໍລິສັດຂ້າງເທິງ ເຊິ່ງໃຊ້ໃນໃບແຈ້ງໜີ້ ແລະ ເອກະສານ.",
-        "nameLabel": "ຊື່ສະແດງຢູ່ແຖບເມນູ",
-        "logoLabel": "ໂລໂກ້ແຖບເມນູ",
-        "logoHint": "ບັນທຶກໃນບຣາວເຊີນີ້ເທົ່ານັ້ນ"
-      },
       "bankDetails": {
         "title": "ຂໍ້ມູນທະນາຄານ",
         "bankName": "ຊື່ທະນາຄານ",
@@ -288,6 +285,8 @@
     "groups": {
       "dashboard": "ໜ້າປັດຈະຕະການ",
       "crm": "CRM",
+      "sales": "ການຂາຍ",
+      "purchasing": "ການຈັດຊື້",
       "equipment": "ຊັບສິນອຸປະກອນ",
       "rental": "ການດຳເນີນການເຊົ່າ",
       "maintenance": "ບໍລິການ ແລະ ການບໍລິຫານ",
@@ -319,7 +318,14 @@
       "iotTelemetry": "ລະບົບ IoT",
       "settings": "ຕັ້ງຄ່າ",
       "warehouseProjects": "ໂຄງການຄັງສິນຄ້າ",
-      "purchaseOrders": "ໃບສັ່ງຊື້"
+      "purchaseOrders": "ໃບສັ່ງຊື້",
+      "salesOrders": "ໃບສັ່ງຂາຍ",
+      "taxInvoices": "ໃບກຳກັບພາສີ",
+      "creditNotes": "ໃບຫຼຸດໜີ້",
+      "paymentVouchers": "ໃບຈ່າຍເງິນ",
+      "deliveryNotes": "ໃບສົ່ງເຄື່ອງ",
+      "goodsReceive": "ໃບຮັບເຄື່ອງ",
+      "goodsIssue": "ໃບເບີກເຄື່ອງ"
     },
     "expandSidebar": "ຂະຫຍາຍກະດານການນຳທາງ",
     "collapseSidebar": "ຫຍໍ້ກະດານການນຳທາງ"
@@ -2727,6 +2733,39 @@
       "revisionNeededReason": "ຕ້ອງການແກ້ໄຂ",
       "colItemCode": "ລະຫັດສິນຄ້າ"
     },
+    "editor": {
+      "newTitle": "ໃບສະເໜີລາຄາໃໝ່",
+      "printPreview": "ເບິ່ງກ່ອນພິມ",
+      "backToEdit": "ກັບໄປແກ້ໄຂ",
+      "portrait": "ແນວຕັ້ງ",
+      "landscape": "ແນວນອນ",
+      "exportExcel": "ສົ່ງອອກ Excel",
+      "saveDraft": "ບັນທຶກສະບັບຮ່າງ",
+      "saveSuccess": "ບັນທຶກໃບສະເໜີລາຄາແລ້ວ.",
+      "saveFailed": "ບັນທຶກໃບສະເໜີລາຄາບໍ່ສຳເລັດ.",
+      "title": "ໃບສະເໜີລາຄາ",
+      "voidReasonLabel": "ເຫດຜົນໃນການຍົກເລີກ",
+      "actions": {
+        "void": "ຍົກເລີກ (Void)",
+        "voided": "ຍົກເລີກໃບສະເໜີລາຄາແລ້ວ",
+        "approved": "ອະນຸມັດແລ້ວ"
+      },
+      "header": {
+        "quotationNo": "ເລກທີໃບສະເໜີລາຄາ"
+      },
+      "grid": {
+        "title": "ລາຍການສິນຄ້າ",
+        "type": "ປະເພດ",
+        "itemCode": "ລະຫັດສິນຄ້າ",
+        "qty": "ຈຳນວນ",
+        "unit": "ໜ່ວຍ",
+        "unitPrice": "ລາຄາຕໍ່ໜ່ວຍ",
+        "discountPercent": "ສ່ວນຫຼຸດ %",
+        "discountAmount": "ຈຳນວນສ່ວນຫຼຸດ",
+        "taxPercent": "ອາກອນ %",
+        "taxAmount": "ຈຳນວນອາກອນ"
+      }
+    },
     "form": {
       "backToQuotations": "ກັບໄປໃບສະເໜີລາຄາ",
       "contactEmailLabel": "ອີເມວຜູ້ຕິດຕໍ່",
@@ -3099,5 +3138,161 @@
     "grandTotal": "ຍອດລວມທັງໝົດ",
     "issuedBy": "ອອກໂດຍ",
     "approvedBy": "ອະນຸມັດໂດຍ"
+  },
+  "modulePlaceholder": {
+    "badge": "ກຳລັງມາໃນໄວໆນີ້",
+    "emptyHint": "ໂມດູນນີ້ຖືກສ້າງໂຄງຮ່າງໄວ້ແລ້ວ — ຂະບວນການເຮັດວຽກເຕັມຮູບແບບກຳລັງຈະມາໃນໄວໆນີ້."
+  },
+  "documentFlow": {
+    "title": "ຂະບວນການເອກະສານ:"
+  },
+  "salesOrders": {
+    "list": {
+      "title": "ໃບສັ່ງຂາຍ",
+      "subtitle": "ຄຳສັ່ງຊື້ຂອງລູກຄ້າທີ່ຢືນຢັນແລ້ວ ແປງມາຈາກໃບສະເໜີລາຄາ",
+      "empty": "ຍັງບໍ່ມີໃບສັ່ງຂາຍ"
+    },
+    "table": {
+      "number": "ເລກທີໃບສັ່ງຂາຍ",
+      "customer": "ລູກຄ້າ",
+      "quotationRef": "ອ້າງອີງໃບສະເໜີລາຄາ",
+      "orderDate": "ວັນທີສັ່ງຊື້"
+    }
+  },
+  "taxInvoices": {
+    "list": {
+      "title": "ໃບກຳກັບພາສີ",
+      "subtitle": "ໃບກຳກັບພາສີທີ່ອອກໃຫ້ລູກຄ້າຕາມມາດຕະຖານພາສີມູນຄ່າເພີ່ມ",
+      "empty": "ຍັງບໍ່ມີໃບກຳກັບພາສີ"
+    },
+    "table": {
+      "number": "ເລກທີໃບກຳກັບພາສີ",
+      "customer": "ລູກຄ້າ",
+      "invoiceRef": "ອ້າງອີງໃບເກັບເງິນ",
+      "issueDate": "ວັນທີອອກ",
+      "taxId": "ເລກປະຈຳຕົວຜູ້ເສຍພາສີ"
+    }
+  },
+  "creditNotes": {
+    "list": {
+      "title": "ໃບຫຼຸດໜີ້",
+      "subtitle": "ການປັບປຸງ ແລະ ການຄືນເງິນທີ່ອອກໂດຍອີງໃສ່ໃບເກັບເງິນ",
+      "empty": "ຍັງບໍ່ມີໃບຫຼຸດໜີ້"
+    },
+    "table": {
+      "number": "ເລກທີໃບຫຼຸດໜີ້",
+      "customer": "ລູກຄ້າ",
+      "issueDate": "ວັນທີອອກ",
+      "relatedInvoice": "ໃບເກັບເງິນທີ່ກ່ຽວຂ້ອງ"
+    }
+  },
+  "paymentVouchers": {
+    "list": {
+      "title": "ໃບຈ່າຍເງິນ",
+      "subtitle": "ການຈ່າຍເງິນອອກໃຫ້ຜູ້ຂາຍ ແລະ ຜູ້ສະໜອງ",
+      "empty": "ຍັງບໍ່ມີໃບຈ່າຍເງິນ"
+    },
+    "table": {
+      "number": "ເລກທີໃບຈ່າຍເງິນ",
+      "vendor": "ຜູ້ຂາຍ",
+      "poRef": "ອ້າງອີງໃບສັ່ງຊື້ / ໃບຮັບເຄື່ອງ",
+      "paymentDate": "ວັນທີຈ່າຍເງິນ",
+      "method": "ວິທີການຈ່າຍເງິນ"
+    }
+  },
+  "deliveryNotes": {
+    "list": {
+      "title": "ໃບສົ່ງເຄື່ອງ",
+      "subtitle": "ສິນຄ້າທີ່ສົ່ງໃຫ້ລູກຄ້າຕາມໃບສັ່ງຂາຍ",
+      "empty": "ຍັງບໍ່ມີໃບສົ່ງເຄື່ອງ"
+    },
+    "table": {
+      "number": "ເລກທີໃບສົ່ງເຄື່ອງ",
+      "customer": "ລູກຄ້າ",
+      "soRef": "ອ້າງອີງໃບສັ່ງຂາຍ",
+      "deliveryDate": "ວັນທີສົ່ງເຄື່ອງ",
+      "warehouse": "ສາງເກັບເຄື່ອງ"
+    }
+  },
+  "goodsReceive": {
+    "list": {
+      "title": "ໃບຮັບເຄື່ອງ",
+      "subtitle": "ສິນຄ້າທີ່ຮັບຈາກຜູ້ຂາຍຕາມໃບສັ່ງຊື້",
+      "empty": "ຍັງບໍ່ມີໃບຮັບເຄື່ອງ"
+    },
+    "table": {
+      "number": "ເລກທີໃບຮັບເຄື່ອງ",
+      "vendor": "ຜູ້ຂາຍ",
+      "poRef": "ອ້າງອີງໃບສັ່ງຊື້",
+      "receivedDate": "ວັນທີຮັບເຄື່ອງ",
+      "warehouse": "ສາງເກັບເຄື່ອງ"
+    }
+  },
+  "goodsIssue": {
+    "list": {
+      "title": "ໃບເບີກເຄື່ອງ",
+      "subtitle": "ສິນຄ້າທີ່ເບີກອອກຈາກສາງເພື່ອໃຊ້ພາຍໃນ ຫຼື ງານຕ່າງໆ",
+      "empty": "ຍັງບໍ່ມີໃບເບີກເຄື່ອງ"
+    },
+    "table": {
+      "number": "ເລກທີໃບເບີກເຄື່ອງ",
+      "issuedTo": "ເບີກໃຫ້",
+      "dnRef": "ອ້າງອີງໃບສົ່ງເຄື່ອງ",
+      "issueDate": "ວັນທີເບີກ",
+      "warehouse": "ສາງເກັບເຄື່ອງ"
+    }
+  },
+  "documentEditor": {
+    "header": {
+      "telephone": "ເບີໂທ",
+      "customer": "ລູກຄ້າ",
+      "selectCustomer": "ເລືອກລູກຄ້າ...",
+      "address": "ທີ່ຢູ່",
+      "validFrom": "ວັນທີ",
+      "validUntil": "ວັນໝົດອາຍຸ",
+      "reference": "ອ້າງອີງ",
+      "currency": "ສະກຸນເງິນ",
+      "salesPerson": "ພະນັກງານຂາຍ",
+      "autoGenerated": "ຈະສ້າງອັດຕະໂນມັດເມື່ອບັນທຶກ"
+    },
+    "vehicle": {
+      "title": "ຂໍ້ມູນລົດ / ອຸປະກອນ",
+      "jobNumber": "ເລກວຽກ",
+      "machine": "ເຄື່ອງຈັກ",
+      "brand": "ຍີ່ຫໍ້",
+      "model": "ຮຸ່ນ",
+      "vin": "VIN",
+      "engineNo": "ເລກຈັກ",
+      "hourMeter": "ຊົ່ວໂມງນຳໃຊ້",
+      "plateNumber": "ເລກທະບຽນ",
+      "location": "ສະຖານທີ່"
+    },
+    "totals": {
+      "subtotal": "ຍອດລວມຍ່ອຍ",
+      "discount": "ສ່ວນຫຼຸດ",
+      "vat": "ອາກອນ",
+      "defaultTaxRate": "ອັດຕາອາກອນຄ່າເລີ່ມຕົ້ນສຳລັບແຖວໃໝ່:",
+      "roundAmount": "ຈຳນວນປັດເສດ",
+      "grandTotal": "ຍອດລວມທັງໝົດ",
+      "balanceDue": "ຍອດຄ້າງຈ່າຍ"
+    },
+    "footer": {
+      "remark": "ໝາຍເຫດ",
+      "termsConditions": "ເງື່ອນໄຂ ແລະ ຂໍ້ກຳນົດ",
+      "issuedBy": "ອອກໂດຍ",
+      "reviewedBy": "ກວດສອບໂດຍ",
+      "approvedBy": "ອະນຸມັດໂດຍ",
+      "customerSignature": "ລາຍເຊັນລູກຄ້າ"
+    }
+  },
+  "lineItemsGrid": {
+    "filterPlaceholder": "ກັ່ນຕອງຕາມລາຍລະອຽດ...",
+    "no": "ລຳດັບ",
+    "actions": "ຈັດການ",
+    "addRow": "ເພີ່ມແຖວ",
+    "copyRow": "ສຳເນົາແຖວ",
+    "pasteRow": "ວາງແຖວ",
+    "duplicateRow": "ຄັດລອກແຖວ",
+    "deleteRow": "ລຶບແຖວ"
   }
 }

@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.session import get_db
-from app.dependencies import get_current_superuser
+from app.dependencies import get_current_superuser, get_current_user
 from app.models.activity_log import ActionType, EntityType
 from app.models.user import User
 from app.schemas.setting import SettingOut, SettingUpdate
@@ -22,6 +22,28 @@ def _serialize_setting(setting: object) -> dict:
         except json.JSONDecodeError:
             payload["value"] = payload["value"]
     return payload
+
+
+@router.get("/company-profile", response_model=dict)
+async def get_company_profile(
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user),
+):
+    """
+    Public-to-any-logged-in-user read of the company profile (name/logo), so the
+    sidebar and print headers can render branding without requiring superuser
+    access. Editing still goes through the superuser-only PUT /settings/{key}.
+    """
+    setting = await SettingService(db).get_by_key("company_profile")
+    if setting is None:
+        return {}
+    value = setting.value
+    if isinstance(value, str):
+        try:
+            value = json.loads(value)
+        except json.JSONDecodeError:
+            return {}
+    return value if isinstance(value, dict) else {}
 
 
 @router.get("", response_model=list[SettingOut])

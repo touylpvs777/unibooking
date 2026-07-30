@@ -1,6 +1,7 @@
 {
   "common": {
     "brandName": "DK Service",
+    "unassigned": "ยังไม่ได้มอบหมาย",
     "brandTagline": "แพลตฟอร์มองค์กร",
     "language": "ภาษา",
     "noDataYet": "ยังไม่มีข้อมูล",
@@ -111,19 +112,15 @@
       "companyName": "ชื่อบริษัท",
       "address": "ที่อยู่",
       "phone": "โทรศัพท์",
+      "fax": "แฟกซ์",
+      "website": "เว็บไซต์",
+      "email": "อีเมล",
       "logoUrl": "URL โลโก้",
       "logoInvalidType": "กรุณาเลือกไฟล์รูปภาพ",
       "logoUploadError": "ไม่สามารถอัปโหลดโลโก้ได้ในขณะนี้",
       "logoUploading": "กำลังอัปโหลดโลโก้…",
       "logoDropzoneText": "คลิกหรือลากและวางเพื่ออัปโหลดโลโก้",
       "logoDropzoneHint": "PNG, JPG หรือ WebP",
-      "sidebarBranding": {
-        "title": "โลโก้แถบเมนู (อุปกรณ์นี้)",
-        "description": "ปรับแต่งโลโก้และชื่อที่แสดงในแถบเมนูของเบราว์เซอร์นี้ แยกต่างหากจากโปรไฟล์บริษัทด้านบนซึ่งใช้ในใบแจ้งหนี้และเอกสาร",
-        "nameLabel": "ชื่อที่แสดงในแถบเมนู",
-        "logoLabel": "โลโก้แถบเมนู",
-        "logoHint": "บันทึกไว้ในเบราว์เซอร์นี้เท่านั้น"
-      },
       "bankDetails": {
         "title": "ข้อมูลธนาคาร",
         "bankName": "ชื่อธนาคาร",
@@ -288,6 +285,8 @@
     "groups": {
       "dashboard": "แดชบอร์ดบริหาร",
       "crm": "CRM",
+      "sales": "งานขาย",
+      "purchasing": "งานจัดซื้อ",
       "equipment": "สินทรัพย์อุปกรณ์",
       "rental": "การดำเนินงานเช่า",
       "maintenance": "บริการและบำรุงรักษา",
@@ -319,7 +318,14 @@
       "iotTelemetry": "ระบบ IoT",
       "settings": "ตั้งค่า",
       "warehouseProjects": "โครงการคลังสินค้า",
-      "purchaseOrders": "ใบสั่งซื้อ"
+      "purchaseOrders": "ใบสั่งซื้อ",
+      "salesOrders": "ใบสั่งขาย",
+      "taxInvoices": "ใบกำกับภาษี",
+      "creditNotes": "ใบลดหนี้",
+      "paymentVouchers": "ใบสำคัญจ่าย",
+      "deliveryNotes": "ใบส่งของ",
+      "goodsReceive": "ใบรับสินค้า",
+      "goodsIssue": "ใบเบิกสินค้า"
     },
     "expandSidebar": "ขยายแผงนำทาง",
     "collapseSidebar": "ย่อแผงนำทาง"
@@ -2761,6 +2767,39 @@
       },
       "revisionNeededReason": "ต้องการแก้ไข",
       "colItemCode": "รหัสสินค้า"
+    },
+    "editor": {
+      "newTitle": "ใบเสนอราคาใหม่",
+      "printPreview": "ดูตัวอย่างก่อนพิมพ์",
+      "backToEdit": "กลับไปแก้ไข",
+      "portrait": "แนวตั้ง",
+      "landscape": "แนวนอน",
+      "exportExcel": "ส่งออก Excel",
+      "saveDraft": "บันทึกฉบับร่าง",
+      "saveSuccess": "บันทึกใบเสนอราคาแล้ว",
+      "saveFailed": "บันทึกใบเสนอราคาไม่สำเร็จ",
+      "title": "ใบเสนอราคา",
+      "voidReasonLabel": "เหตุผลในการยกเลิก",
+      "actions": {
+        "void": "ยกเลิก (Void)",
+        "voided": "ยกเลิกใบเสนอราคาแล้ว",
+        "approved": "อนุมัติแล้ว"
+      },
+      "header": {
+        "quotationNo": "เลขที่ใบเสนอราคา"
+      },
+      "grid": {
+        "title": "รายการสินค้า",
+        "type": "ประเภท",
+        "itemCode": "รหัสสินค้า",
+        "qty": "จำนวน",
+        "unit": "หน่วย",
+        "unitPrice": "ราคาต่อหน่วย",
+        "discountPercent": "ส่วนลด %",
+        "discountAmount": "จำนวนส่วนลด",
+        "taxPercent": "ภาษี %",
+        "taxAmount": "จำนวนภาษี"
+      }
     }
   },
   "rental": {
@@ -3099,5 +3138,161 @@
     "grandTotal": "ยอดรวมทั้งหมด",
     "issuedBy": "ผู้ออกเอกสาร",
     "approvedBy": "ผู้อนุมัติ"
+  },
+  "modulePlaceholder": {
+    "badge": "เร็วๆ นี้",
+    "emptyHint": "โมดูลนี้ถูกจัดโครงสร้างไว้แล้ว — ระบบการทำงานแบบเต็มรูปแบบจะมาเร็วๆ นี้"
+  },
+  "documentFlow": {
+    "title": "ลำดับเอกสาร:"
+  },
+  "salesOrders": {
+    "list": {
+      "title": "ใบสั่งขาย",
+      "subtitle": "คำสั่งซื้อของลูกค้าที่ยืนยันแล้ว แปลงมาจากใบเสนอราคา",
+      "empty": "ยังไม่มีใบสั่งขาย"
+    },
+    "table": {
+      "number": "เลขที่ใบสั่งขาย",
+      "customer": "ลูกค้า",
+      "quotationRef": "อ้างอิงใบเสนอราคา",
+      "orderDate": "วันที่สั่งซื้อ"
+    }
+  },
+  "taxInvoices": {
+    "list": {
+      "title": "ใบกำกับภาษี",
+      "subtitle": "ใบกำกับภาษีมูลค่าเพิ่มที่ออกให้ลูกค้า",
+      "empty": "ยังไม่มีใบกำกับภาษี"
+    },
+    "table": {
+      "number": "เลขที่ใบกำกับภาษี",
+      "customer": "ลูกค้า",
+      "invoiceRef": "อ้างอิงใบแจ้งหนี้",
+      "issueDate": "วันที่ออก",
+      "taxId": "เลขประจำตัวผู้เสียภาษี"
+    }
+  },
+  "creditNotes": {
+    "list": {
+      "title": "ใบลดหนี้",
+      "subtitle": "การปรับปรุงและการคืนเงินที่ออกอ้างอิงใบแจ้งหนี้",
+      "empty": "ยังไม่มีใบลดหนี้"
+    },
+    "table": {
+      "number": "เลขที่ใบลดหนี้",
+      "customer": "ลูกค้า",
+      "issueDate": "วันที่ออก",
+      "relatedInvoice": "ใบแจ้งหนี้ที่เกี่ยวข้อง"
+    }
+  },
+  "paymentVouchers": {
+    "list": {
+      "title": "ใบสำคัญจ่าย",
+      "subtitle": "การจ่ายเงินให้ผู้ขายและซัพพลายเออร์",
+      "empty": "ยังไม่มีใบสำคัญจ่าย"
+    },
+    "table": {
+      "number": "เลขที่ใบสำคัญจ่าย",
+      "vendor": "ผู้ขาย",
+      "poRef": "อ้างอิงใบสั่งซื้อ / ใบรับสินค้า",
+      "paymentDate": "วันที่จ่ายเงิน",
+      "method": "วิธีการชำระเงิน"
+    }
+  },
+  "deliveryNotes": {
+    "list": {
+      "title": "ใบส่งของ",
+      "subtitle": "สินค้าที่จัดส่งให้ลูกค้าตามใบสั่งขาย",
+      "empty": "ยังไม่มีใบส่งของ"
+    },
+    "table": {
+      "number": "เลขที่ใบส่งของ",
+      "customer": "ลูกค้า",
+      "soRef": "อ้างอิงใบสั่งขาย",
+      "deliveryDate": "วันที่จัดส่ง",
+      "warehouse": "คลังสินค้า"
+    }
+  },
+  "goodsReceive": {
+    "list": {
+      "title": "ใบรับสินค้า",
+      "subtitle": "สินค้าที่รับจากผู้ขายตามใบสั่งซื้อ",
+      "empty": "ยังไม่มีใบรับสินค้า"
+    },
+    "table": {
+      "number": "เลขที่ใบรับสินค้า",
+      "vendor": "ผู้ขาย",
+      "poRef": "อ้างอิงใบสั่งซื้อ",
+      "receivedDate": "วันที่รับสินค้า",
+      "warehouse": "คลังสินค้า"
+    }
+  },
+  "goodsIssue": {
+    "list": {
+      "title": "ใบเบิกสินค้า",
+      "subtitle": "สินค้าที่เบิกออกจากคลังเพื่อใช้ภายในหรืองานต่างๆ",
+      "empty": "ยังไม่มีใบเบิกสินค้า"
+    },
+    "table": {
+      "number": "เลขที่ใบเบิกสินค้า",
+      "issuedTo": "เบิกให้",
+      "dnRef": "อ้างอิงใบส่งของ",
+      "issueDate": "วันที่เบิก",
+      "warehouse": "คลังสินค้า"
+    }
+  },
+  "documentEditor": {
+    "header": {
+      "telephone": "โทรศัพท์",
+      "customer": "ลูกค้า",
+      "selectCustomer": "เลือกลูกค้า...",
+      "address": "ที่อยู่",
+      "validFrom": "วันที่",
+      "validUntil": "วันหมดอายุ",
+      "reference": "อ้างอิง",
+      "currency": "สกุลเงิน",
+      "salesPerson": "พนักงานขาย",
+      "autoGenerated": "จะสร้างอัตโนมัติเมื่อบันทึก"
+    },
+    "vehicle": {
+      "title": "ข้อมูลรถ / อุปกรณ์",
+      "jobNumber": "หมายเลขงาน",
+      "machine": "เครื่องจักร",
+      "brand": "ยี่ห้อ",
+      "model": "รุ่น",
+      "vin": "VIN",
+      "engineNo": "เลขเครื่องยนต์",
+      "hourMeter": "ชั่วโมงการใช้งาน",
+      "plateNumber": "ทะเบียนรถ",
+      "location": "สถานที่"
+    },
+    "totals": {
+      "subtotal": "ยอดรวมย่อย",
+      "discount": "ส่วนลด",
+      "vat": "ภาษี",
+      "defaultTaxRate": "อัตราภาษีเริ่มต้นสำหรับแถวใหม่:",
+      "roundAmount": "จำนวนปัดเศษ",
+      "grandTotal": "ยอดรวมทั้งหมด",
+      "balanceDue": "ยอดค้างชำระ"
+    },
+    "footer": {
+      "remark": "หมายเหตุ",
+      "termsConditions": "ข้อกำหนดและเงื่อนไข",
+      "issuedBy": "ผู้ออกเอกสาร",
+      "reviewedBy": "ผู้ตรวจสอบ",
+      "approvedBy": "ผู้อนุมัติ",
+      "customerSignature": "ลายเซ็นลูกค้า"
+    }
+  },
+  "lineItemsGrid": {
+    "filterPlaceholder": "กรองตามรายละเอียด...",
+    "no": "ลำดับ",
+    "actions": "การจัดการ",
+    "addRow": "เพิ่มแถว",
+    "copyRow": "คัดลอกแถว",
+    "pasteRow": "วางแถว",
+    "duplicateRow": "ทำซ้ำแถว",
+    "deleteRow": "ลบแถว"
   }
 }

@@ -1,6 +1,7 @@
 {
   "common": {
     "brandName": "DK Service",
+    "unassigned": "Chưa Phân Công",
     "brandTagline": "Nền Tảng Doanh Nghiệp",
     "language": "Ngôn Ngữ",
     "noDataYet": "Chưa có dữ liệu",
@@ -151,6 +152,8 @@
     "groups": {
       "dashboard": "Bảng điều khiển điều hành",
       "crm": "CRM",
+      "sales": "Bán Hàng",
+      "purchasing": "Mua Hàng",
       "equipment": "Tài sản thiết bị",
       "rental": "Hoạt động cho thuê",
       "maintenance": "Dịch vụ & bảo trì",
@@ -182,7 +185,14 @@
       "iotTelemetry": "Hệ thống IoT",
       "settings": "Cài đặt",
       "warehouseProjects": "Dự án kho bãi",
-      "purchaseOrders": "Đơn Mua Hàng"
+      "purchaseOrders": "Đơn Mua Hàng",
+      "salesOrders": "Đơn Đặt Hàng Bán",
+      "taxInvoices": "Hóa Đơn Thuế",
+      "creditNotes": "Giấy Báo Có",
+      "paymentVouchers": "Phiếu Chi",
+      "deliveryNotes": "Phiếu Giao Hàng",
+      "goodsReceive": "Phiếu Nhập Kho",
+      "goodsIssue": "Phiếu Xuất Kho"
     },
     "expandSidebar": "Mở rộng panel điều hướng",
     "collapseSidebar": "Thu gọn panel điều hướng"
@@ -1305,19 +1315,15 @@
       "companyName": "Tên Công Ty",
       "address": "Địa Chỉ",
       "phone": "Điện Thoại",
+      "fax": "Fax",
+      "website": "Trang Web",
+      "email": "Email",
       "logoUrl": "URL Logo",
       "logoInvalidType": "Vui lòng chọn một tệp hình ảnh.",
       "logoUploadError": "Hiện không thể tải lên logo.",
       "logoUploading": "Đang tải lên logo…",
       "logoDropzoneText": "Nhấp hoặc kéo & thả để tải lên logo",
       "logoDropzoneHint": "PNG, JPG hoặc WebP",
-      "sidebarBranding": {
-        "title": "Thương Hiệu Thanh Bên (Thiết Bị Này)",
-        "description": "Tùy chỉnh logo và tên hiển thị trên thanh bên của trình duyệt này. Mục này tách biệt với Hồ Sơ Công Ty ở trên, vốn được dùng trên hóa đơn và tài liệu.",
-        "nameLabel": "Tên Hiển Thị Thanh Bên",
-        "logoLabel": "Logo Thanh Bên",
-        "logoHint": "Chỉ lưu trên trình duyệt này"
-      },
       "bankDetails": {
         "title": "Thông Tin Ngân Hàng",
         "bankName": "Tên Ngân Hàng",
@@ -2996,5 +3002,12 @@
     "grandTotal": "Tổng Cộng",
     "issuedBy": "Người Lập",
     "approvedBy": "Người Duyệt"
+  },
+  "modulePlaceholder": {
+    "badge": "Sắp Ra Mắt",
+    "emptyHint": "Mô-đun này đã được dựng khung — quy trình đầy đủ sẽ sớm ra mắt."
+  },
+  "documentFlow": {
+    "title": "Luồng Chứng Từ:"
   }
 }

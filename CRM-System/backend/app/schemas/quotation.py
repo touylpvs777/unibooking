@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, computed_field, field_validator
 
 from app.models.quotation import ItemType, QuotationStatus, QuotationType
 
@@ -60,12 +60,18 @@ class QuotationCreate(BaseModel):
     bank_details: str | None = None
     valid_from: date | None = None
     valid_until: date | None = None
+    customer_reference: str | None = Field(default=None, max_length=100)
     vehicle_make: str | None = Field(default=None, max_length=100)
     vehicle_model: str | None = Field(default=None, max_length=100)
     vehicle_vin: str | None = Field(default=None, max_length=100)
     vehicle_engine_no: str | None = Field(default=None, max_length=100)
     vehicle_reg_no: str | None = Field(default=None, max_length=50)
     job_number: str | None = Field(default=None, max_length=50)
+    machine_type: str | None = Field(default=None, max_length=100)
+    hour_meter: float | None = Field(default=None, ge=0)
+    location: str | None = Field(default=None, max_length=200)
+    round_amount: float = Field(default=0.0)
+    terms_conditions: str | None = None
     notes: str | None = None
     internal_notes: str | None = None
 
@@ -92,12 +98,18 @@ class QuotationUpdate(BaseModel):
     bank_details: str | None = None
     valid_from: date | None = None
     valid_until: date | None = None
+    customer_reference: str | None = None
     vehicle_make: str | None = None
     vehicle_model: str | None = None
     vehicle_vin: str | None = None
     vehicle_engine_no: str | None = None
     vehicle_reg_no: str | None = None
     job_number: str | None = None
+    machine_type: str | None = None
+    hour_meter: float | None = Field(default=None, ge=0)
+    location: str | None = None
+    round_amount: float | None = None
+    terms_conditions: str | None = None
     notes: str | None = None
     internal_notes: str | None = None
 
@@ -133,16 +145,22 @@ class QuotationDetail(QuotationOut):
     tax_rate: float
     tax_amount: float
     discount_amount: float
+    round_amount: float
     exchange_rate: float
     bank_details: str | None = None
+    customer_reference: str | None = None
     vehicle_make: str | None = None
     vehicle_model: str | None = None
     vehicle_vin: str | None = None
     vehicle_engine_no: str | None = None
     vehicle_reg_no: str | None = None
     job_number: str | None = None
+    machine_type: str | None = None
+    hour_meter: float | None = None
+    location: str | None = None
     notes: str | None = None
     internal_notes: str | None = None
+    terms_conditions: str | None = None
     converted_to_type: str | None = None
     converted_to_id: int | None = None
     created_by: int | None = None
@@ -173,6 +191,7 @@ class QuotationItemCreate(BaseModel):
     unit: str = Field(default="unit", max_length=50)
     unit_price: float = Field(..., ge=0)
     discount_percent: float = Field(default=0.0, ge=0, le=100)
+    tax_percent: float = Field(default=0.0, ge=0, le=100)
     rental_duration_days: int | None = Field(default=None, ge=1)
     rental_rate_period: str | None = None
     notes: str | None = Field(default=None, max_length=500)
@@ -186,10 +205,22 @@ class QuotationItemUpdate(BaseModel):
     unit: str | None = Field(default=None, max_length=50)
     unit_price: float | None = Field(default=None, ge=0)
     discount_percent: float | None = Field(default=None, ge=0, le=100)
+    tax_percent: float | None = Field(default=None, ge=0, le=100)
     rental_duration_days: int | None = Field(default=None, ge=1)
     rental_rate_period: str | None = None
     notes: str | None = None
     sort_order: int | None = None
+
+
+class QuotationItemBulkItem(QuotationItemCreate):
+    """One row in a bulk `PUT /quotations/{id}/items/bulk` replace payload.
+
+    `id` matches against an existing line item to update it in place;
+    omitted/`None` means "insert as a new row". Any existing row whose id
+    isn't present in the payload is deleted — the whole item set is
+    replaced in one transaction/one total recalculation.
+    """
+    id: int | None = None
 
 
 class QuotationItemOut(BaseModel):
@@ -207,12 +238,28 @@ class QuotationItemOut(BaseModel):
     unit: str
     unit_price: float
     discount_percent: float
+    tax_percent: float
     line_total: float
     rental_duration_days: int | None = None
     rental_rate_period: str | None = None
     notes: str | None = None
     sort_order: int
     created_at: datetime
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def discount_amount(self) -> float:
+        return round(self.quantity * self.unit_price * self.discount_percent / 100, 2)
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def tax_amount(self) -> float:
+        return round(self.line_total * self.tax_percent / 100, 2)
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def total(self) -> float:
+        return round(self.line_total + self.tax_amount, 2)
 
 
 # ── Status History ───────────────────────────────────────────────────────────

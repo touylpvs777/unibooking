@@ -1,6 +1,7 @@
 {
   "common": {
     "brandName": "DK Service",
+    "unassigned": "Unassigned",
     "brandTagline": "Enterprise Platform",
     "language": "Language",
     "noDataYet": "No data yet",
@@ -111,19 +112,15 @@
       "companyName": "Company Name",
       "address": "Address",
       "phone": "Phone",
+      "fax": "Fax",
+      "website": "Website",
+      "email": "Email",
       "logoUrl": "Logo URL",
       "logoInvalidType": "Please select an image file.",
       "logoUploadError": "Unable to upload the logo right now.",
       "logoUploading": "Uploading logo…",
       "logoDropzoneText": "Click or drag & drop to upload a logo",
       "logoDropzoneHint": "PNG, JPG, or WebP",
-      "sidebarBranding": {
-        "title": "Sidebar Branding (This Device)",
-        "description": "Customize the logo and name shown in the sidebar on this browser. This is separate from the Company Profile above, which is used on invoices and documents.",
-        "nameLabel": "Sidebar Display Name",
-        "logoLabel": "Sidebar Logo",
-        "logoHint": "Saved to this browser only"
-      },
       "bankDetails": {
         "title": "Bank Details",
         "bankName": "Bank Name",
@@ -2026,6 +2023,39 @@
       },
       "revisionNeededReason": "Revision needed",
       "colItemCode": "Item Code"
+    },
+    "editor": {
+      "newTitle": "New Quotation",
+      "printPreview": "Print Preview",
+      "backToEdit": "Back to Edit",
+      "portrait": "Portrait",
+      "landscape": "Landscape",
+      "exportExcel": "Export Excel",
+      "saveDraft": "Save Draft",
+      "saveSuccess": "Quotation saved.",
+      "saveFailed": "Failed to save quotation.",
+      "title": "Quotation",
+      "voidReasonLabel": "Reason for voiding",
+      "actions": {
+        "void": "Void",
+        "voided": "Quotation voided",
+        "approved": "Approved"
+      },
+      "header": {
+        "quotationNo": "Quotation No."
+      },
+      "grid": {
+        "title": "Line Items",
+        "type": "Type",
+        "itemCode": "Item Code",
+        "qty": "Qty",
+        "unit": "Unit",
+        "unitPrice": "Unit Price",
+        "discountPercent": "Discount %",
+        "discountAmount": "Discount Amount",
+        "taxPercent": "Tax %",
+        "taxAmount": "Tax Amount"
+      }
     }
   },
   "rental": {
@@ -2238,6 +2268,8 @@
     "groups": {
       "dashboard": "Executive Dashboard",
       "crm": "CRM",
+      "sales": "Sales",
+      "purchasing": "Purchasing",
       "equipment": "Fleet & Equipment",
       "rental": "Rental Operations",
       "maintenance": "Service & Maintenance",
@@ -2269,7 +2301,14 @@
       "iotTelemetry": "IoT Telemetry",
       "settings": "Settings",
       "warehouseProjects": "Warehouse Projects",
-      "purchaseOrders": "Purchase Orders"
+      "purchaseOrders": "Purchase Orders",
+      "salesOrders": "Sales Orders",
+      "taxInvoices": "Tax Invoices",
+      "creditNotes": "Credit Notes",
+      "paymentVouchers": "Payment Vouchers",
+      "deliveryNotes": "Delivery Notes",
+      "goodsReceive": "Goods Receive",
+      "goodsIssue": "Goods Issue"
     },
     "expandSidebar": "Expand navigation pane",
     "collapseSidebar": "Collapse navigation pane"
@@ -3014,6 +3053,13 @@
     "partDetail": "Part Detail",
     "warehouses": "Warehouses",
     "purchaseOrders": "Purchase Orders",
+    "salesOrders": "Sales Orders",
+    "taxInvoices": "Tax Invoices",
+    "creditNotes": "Credit Notes",
+    "paymentVouchers": "Payment Vouchers",
+    "goodsReceive": "Goods Receive",
+    "goodsIssue": "Goods Issue",
+    "deliveryNotes": "Delivery Notes",
     "executiveDashboard": "Executive Dashboard",
     "projects": "Warehouse Projects",
     "projectDetail": "Project Detail",
@@ -3099,5 +3145,161 @@
     "grandTotal": "Grand Total",
     "issuedBy": "Issued By",
     "approvedBy": "Approved By"
+  },
+  "modulePlaceholder": {
+    "badge": "Coming Soon",
+    "emptyHint": "This module is scaffolded — full workflow coming soon."
+  },
+  "documentFlow": {
+    "title": "Document Flow:"
+  },
+  "salesOrders": {
+    "list": {
+      "title": "Sales Orders",
+      "subtitle": "Confirmed customer orders converted from quotations",
+      "empty": "No sales orders yet"
+    },
+    "table": {
+      "number": "SO Number",
+      "customer": "Customer",
+      "quotationRef": "Quotation Ref.",
+      "orderDate": "Order Date"
+    }
+  },
+  "taxInvoices": {
+    "list": {
+      "title": "Tax Invoices",
+      "subtitle": "VAT-compliant tax invoices issued to customers",
+      "empty": "No tax invoices yet"
+    },
+    "table": {
+      "number": "Tax Invoice No.",
+      "customer": "Customer",
+      "invoiceRef": "Invoice Ref.",
+      "issueDate": "Issue Date",
+      "taxId": "Tax ID"
+    }
+  },
+  "creditNotes": {
+    "list": {
+      "title": "Credit Notes",
+      "subtitle": "Adjustments and refunds issued against invoices",
+      "empty": "No credit notes yet"
+    },
+    "table": {
+      "number": "Credit Note No.",
+      "customer": "Customer",
+      "issueDate": "Issue Date",
+      "relatedInvoice": "Related Invoice"
+    }
+  },
+  "paymentVouchers": {
+    "list": {
+      "title": "Payment Vouchers",
+      "subtitle": "Outgoing payments to vendors and suppliers",
+      "empty": "No payment vouchers yet"
+    },
+    "table": {
+      "number": "Voucher No.",
+      "vendor": "Vendor",
+      "poRef": "PO / GRN Ref.",
+      "paymentDate": "Payment Date",
+      "method": "Method"
+    }
+  },
+  "deliveryNotes": {
+    "list": {
+      "title": "Delivery Notes",
+      "subtitle": "Goods dispatched to customers against sales orders",
+      "empty": "No delivery notes yet"
+    },
+    "table": {
+      "number": "DN Number",
+      "customer": "Customer",
+      "soRef": "Sales Order Ref.",
+      "deliveryDate": "Delivery Date",
+      "warehouse": "Warehouse"
+    }
+  },
+  "goodsReceive": {
+    "list": {
+      "title": "Goods Receive",
+      "subtitle": "Stock received from vendors against purchase orders",
+      "empty": "No goods receive notes yet"
+    },
+    "table": {
+      "number": "GRN Number",
+      "vendor": "Vendor",
+      "poRef": "PO Ref.",
+      "receivedDate": "Received Date",
+      "warehouse": "Warehouse"
+    }
+  },
+  "goodsIssue": {
+    "list": {
+      "title": "Goods Issue",
+      "subtitle": "Stock issued out of the warehouse for internal use or jobs",
+      "empty": "No goods issue notes yet"
+    },
+    "table": {
+      "number": "GI Number",
+      "issuedTo": "Issued To",
+      "dnRef": "Delivery Note Ref.",
+      "issueDate": "Issue Date",
+      "warehouse": "Warehouse"
+    }
+  },
+  "documentEditor": {
+    "header": {
+      "telephone": "Telephone",
+      "customer": "Customer",
+      "selectCustomer": "Select a customer...",
+      "address": "Address",
+      "validFrom": "Date",
+      "validUntil": "Expiry Date",
+      "reference": "Reference",
+      "currency": "Currency",
+      "salesPerson": "Sales Person",
+      "autoGenerated": "Auto-generated on save"
+    },
+    "vehicle": {
+      "title": "Vehicle / Equipment Information",
+      "jobNumber": "Job Number",
+      "machine": "Machine",
+      "brand": "Brand",
+      "model": "Model",
+      "vin": "VIN",
+      "engineNo": "Engine No.",
+      "hourMeter": "Hour Meter",
+      "plateNumber": "Plate Number",
+      "location": "Location"
+    },
+    "totals": {
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "vat": "VAT",
+      "defaultTaxRate": "Default tax rate for new rows:",
+      "roundAmount": "Round Amount",
+      "grandTotal": "Grand Total",
+      "balanceDue": "Balance Due"
+    },
+    "footer": {
+      "remark": "Remark",
+      "termsConditions": "Terms & Conditions",
+      "issuedBy": "Issued By",
+      "reviewedBy": "Reviewed By",
+      "approvedBy": "Approved By",
+      "customerSignature": "Customer Signature"
+    }
+  },
+  "lineItemsGrid": {
+    "filterPlaceholder": "Filter by description...",
+    "no": "No.",
+    "actions": "Actions",
+    "addRow": "Add Row",
+    "copyRow": "Copy Row",
+    "pasteRow": "Paste Row",
+    "duplicateRow": "Duplicate Row",
+    "deleteRow": "Delete Row"
   }
 }

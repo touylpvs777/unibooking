@@ -19,6 +19,20 @@ export default defineConfig({
           if (id.includes('node_modules/recharts') || id.includes('node_modules/d3-')) {
             return 'vendor-charts'
           }
+          if (
+            id.includes('node_modules/@tanstack/react-table')
+            || id.includes('node_modules/react-hook-form')
+            || id.includes('node_modules/zod')
+            || id.includes('node_modules/@hookform/resolvers')
+          ) {
+            return 'vendor-forms'
+          }
+          // xlsx is large and only needed on export-click — kept out of every
+          // other chunk so it's only fetched when exportExcel.ts is dynamically
+          // imported, not bundled into the app's initial load.
+          if (id.includes('node_modules/xlsx')) {
+            return 'vendor-xlsx'
+          }
         },
       },
     },

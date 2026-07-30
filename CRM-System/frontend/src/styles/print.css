@@ -16,6 +16,18 @@
     margin: 16mm 14mm;
   }
 
+  /* Named landscape page — assigned via the `page` property on
+     `.doc-preview-landscape` below. Chromium (incl. "Save as PDF") honors
+     named-page `size`/orientation reliably; Firefox/Safari support varies,
+     acceptable for this internal tool. */
+  @page landscape {
+    size: landscape;
+    margin: 14mm 16mm;
+  }
+  .doc-preview-landscape {
+    page: landscape;
+  }
+
   /* Document-preview pages hide the normal on-screen content and show only
      the A4 template. */
   .doc-preview-hide-on-print {

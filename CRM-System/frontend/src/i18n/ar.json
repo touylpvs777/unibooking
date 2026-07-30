@@ -1,6 +1,7 @@
 {
 	"common": {
 		"brandName": "DK Service",
+		"unassigned": "غير معيّن",
 		"brandTagline": "منصة المؤسسات",
 		"language": "اللغة",
 		"noDataYet": "لا توجد بيانات بعد",
@@ -151,6 +152,8 @@
 		"groups": {
 			"dashboard": "لوحة القيادة التنفيذية",
 			"crm": "إدارة علاقات العملاء",
+			"sales": "المبيعات",
+			"purchasing": "المشتريات",
 			"equipment": "أصول المعدات",
 			"rental": "عمليات التأجير",
 			"maintenance": "الخدمة والصيانة",
@@ -182,7 +185,14 @@
 			"iotTelemetry": "قياس إنترنت الأشياء عن بُعد",
 			"settings": "الإعدادات",
 			"warehouseProjects": "مشاريع المستودعات",
-			"purchaseOrders": "أوامر الشراء"
+			"purchaseOrders": "أوامر الشراء",
+			"salesOrders": "أوامر البيع",
+			"taxInvoices": "الفواتير الضريبية",
+			"creditNotes": "إشعارات دائن",
+			"paymentVouchers": "سندات الصرف",
+			"deliveryNotes": "إشعارات التسليم",
+			"goodsReceive": "إيصالات استلام البضائع",
+			"goodsIssue": "إذونات صرف البضائع"
 		},
 		"expandSidebar": "توسيع لوحة التنقل",
 		"collapseSidebar": "طي لوحة التنقل"
@@ -1305,19 +1315,15 @@
 			"companyName": "اسم الشركة",
 			"address": "العنوان",
 			"phone": "الهاتف",
+			"fax": "الفاكس",
+			"website": "الموقع الإلكتروني",
+			"email": "البريد الإلكتروني",
 			"logoUrl": "رابط الشعار",
 			"logoInvalidType": "يرجى اختيار ملف صورة.",
 			"logoUploadError": "تعذّر رفع الشعار في الوقت الحالي.",
 			"logoUploading": "جارٍ رفع الشعار…",
 			"logoDropzoneText": "انقر أو اسحب وأفلت لرفع الشعار",
 			"logoDropzoneHint": "PNG أو JPG أو WebP",
-			"sidebarBranding": {
-				"title": "هوية الشريط الجانبي (لهذا الجهاز)",
-				"description": "خصّص الشعار والاسم المعروضين في الشريط الجانبي على هذا المتصفح. يختلف هذا عن ملف الشركة أعلاه، الذي يُستخدم في الفواتير والمستندات.",
-				"nameLabel": "اسم العرض في الشريط الجانبي",
-				"logoLabel": "شعار الشريط الجانبي",
-				"logoHint": "يُحفظ في هذا المتصفح فقط"
-			},
 			"bankDetails": {
 				"title": "البيانات المصرفية",
 				"bankName": "اسم البنك",
@@ -2996,5 +3002,12 @@
 		"grandTotal": "الإجمالي الكلي",
 		"issuedBy": "صادر عن",
 		"approvedBy": "اعتمد من"
+	},
+	"modulePlaceholder": {
+		"badge": "قريبًا",
+		"emptyHint": "تم تجهيز هيكل هذه الوحدة — سير العمل الكامل قادم قريبًا."
+	},
+	"documentFlow": {
+		"title": "مسار المستند:"
 	}
 }

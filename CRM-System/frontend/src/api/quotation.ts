@@ -3,6 +3,7 @@ import type {
   Quotation,
   QuotationCreate,
   QuotationDetail,
+  QuotationItemBulkItem,
   QuotationItemCreate,
   QuotationItemOut,
   QuotationItemUpdate,
@@ -38,6 +39,11 @@ export const updateItem = (quotationId: number, itemId: number, data: QuotationI
 
 export const deleteItem = (quotationId: number, itemId: number) =>
   client.delete(`${BASE}/${quotationId}/items/${itemId}`)
+
+/** Replaces the entire line-item set in one transaction — what the Excel-grid
+ *  editor's Save action calls, instead of one request per row. */
+export const bulkReplaceItems = (quotationId: number, items: QuotationItemBulkItem[]) =>
+  client.put<QuotationItemOut[]>(`${BASE}/${quotationId}/items/bulk`, items)
 
 // ── Workflow Actions ────────────────────────────────────────────────────────
 

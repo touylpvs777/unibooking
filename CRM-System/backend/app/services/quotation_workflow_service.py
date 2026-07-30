@@ -20,17 +20,21 @@ VALID_TRANSITIONS: dict[str, set[str]] = {
     QuotationStatus.UNDER_REVIEW.value: {
         QuotationStatus.APPROVED.value,
         QuotationStatus.REVISION.value,
+        QuotationStatus.CANCELLED.value,
     },
     QuotationStatus.APPROVED.value: {
         QuotationStatus.SENT.value,
+        QuotationStatus.CANCELLED.value,
     },
     QuotationStatus.REVISION.value: {
         QuotationStatus.DRAFT.value,
+        QuotationStatus.CANCELLED.value,
     },
     QuotationStatus.SENT.value: {
         QuotationStatus.ACCEPTED.value,
         QuotationStatus.REJECTED.value,
         QuotationStatus.EXPIRED.value,
+        QuotationStatus.CANCELLED.value,
     },
     QuotationStatus.ACCEPTED.value: {
         QuotationStatus.CONVERTED.value,
@@ -111,7 +115,7 @@ class QuotationWorkflowService:
         ))
 
         await self.db.commit()
-        return quotation
+        return await self._repo.get_by_id(quotation_id)
 
     async def send(self, quotation_id: int, reason: str | None, user_id: int) -> Quotation:
         quotation = await self._require(quotation_id)
@@ -187,7 +191,7 @@ class QuotationWorkflowService:
             changed_by=user_id,
         ))
         await self.db.commit()
-        return quotation
+        return await self._repo.get_by_id(quotation_id)
 
     # ── Internal ─────────────────────────────────────────────────────────────
 
@@ -207,7 +211,12 @@ class QuotationWorkflowService:
             changed_by=user_id,
         ))
         await self.db.commit()
-        return quotation
+        # `_repo.update()`'s partial `db.refresh(..., attribute_names=[...])`
+        # expires every OTHER attribute/relationship on the object — re-fetch
+        # with full eager-loading so callers can safely serialize the result
+        # (e.g. `QuotationOut.model_validate(...)`) without an implicit
+        # lazy-load outside the async greenlet context (MissingGreenlet).
+        return await self._repo.get_by_id(quotation.id)
 
     async def _require(self, quotation_id: int) -> Quotation:
         quotation = await self._repo.get_by_id(quotation_id)
