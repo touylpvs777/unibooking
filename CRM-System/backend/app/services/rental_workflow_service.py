@@ -62,7 +62,7 @@ class RentalWorkflowService:
         item_count = await self._repo.get_item_count(contract_id)
         if item_count == 0:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Cannot submit contract with no line items.",
             )
 
@@ -165,7 +165,7 @@ class RentalWorkflowService:
         terminal = {RentalContractStatus.CLOSED.value, RentalContractStatus.CANCELLED.value}
         if contract.status in terminal:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"Cannot cancel a contract in '{contract.status}' status.",
             )
 
@@ -226,7 +226,7 @@ class RentalWorkflowService:
                 ContractItemStatus.CANCELLED.value,
             ):
                 raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                     detail="All items must be settled or cancelled before closing.",
                 )
 
@@ -249,7 +249,7 @@ class RentalWorkflowService:
             RentalContractStatus.OVERDUE.value,
         ):
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Returns can only be created for active or overdue contracts.",
             )
 
@@ -330,7 +330,7 @@ class RentalWorkflowService:
 
         if ret.status not in (ReturnStatus.REQUESTED.value, ReturnStatus.SCHEDULED.value):
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"Return must be in requested or scheduled status (current: {ret.status}).",
             )
 
@@ -355,7 +355,7 @@ class RentalWorkflowService:
 
         if ret.status != ReturnStatus.PICKED_UP.value:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"Return must be in picked_up status (current: {ret.status}).",
             )
 
@@ -440,7 +440,7 @@ class RentalWorkflowService:
 
         if ret.status != ReturnStatus.RECEIVED.value:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"Return must be in received status (current: {ret.status}).",
             )
 
@@ -489,7 +489,7 @@ class RentalWorkflowService:
             RentalContractStatus.SETTLING.value,
         ):
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Damage reports can only be created during inspecting or settling.",
             )
 
@@ -533,7 +533,7 @@ class RentalWorkflowService:
 
         if report.dispute_status != DisputeStatus.NONE.value:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Cannot update a damage report that is disputed or resolved.",
             )
 
@@ -559,7 +559,7 @@ class RentalWorkflowService:
 
         if report.dispute_status != DisputeStatus.NONE.value:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"Report is already in '{report.dispute_status}' dispute status.",
             )
 
@@ -579,7 +579,7 @@ class RentalWorkflowService:
 
         if report.dispute_status != DisputeStatus.DISPUTED.value:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Report must be in disputed status to resolve.",
             )
 
@@ -604,13 +604,13 @@ class RentalWorkflowService:
             RentalContractStatus.OVERDUE.value,
         ):
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Extensions can only be requested for active or overdue contracts.",
             )
 
         if data.new_end_date <= contract.end_date:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="New end date must be after the current contract end date.",
             )
 
@@ -640,7 +640,7 @@ class RentalWorkflowService:
 
         if ext.status != ExtensionStatus.PENDING.value:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"Extension must be pending (current: {ext.status}).",
             )
 
@@ -677,7 +677,7 @@ class RentalWorkflowService:
 
         if ext.status != ExtensionStatus.PENDING.value:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"Extension must be pending (current: {ext.status}).",
             )
 
@@ -739,7 +739,7 @@ class RentalWorkflowService:
         allowed = VALID_TRANSITIONS.get(from_status, set())
         if to_status not in allowed:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"Invalid action: cannot transition from '{from_status}' to '{to_status}'.",
             )
 

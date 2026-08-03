@@ -158,7 +158,7 @@ class InventoryService:
         boundary.
         """
         if quantity < 0:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Quantity cannot be negative")
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail="Quantity cannot be negative")
         number = await self._gen_number("IT")
         txn = InventoryTransaction(
             transaction_number=number, transaction_type=TransactionType.ADJUST.value,
@@ -191,7 +191,7 @@ class InventoryService:
         not commit — the caller controls the transaction boundary.
         """
         if quantity <= 0:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Received quantity must be greater than zero")
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail="Received quantity must be greater than zero")
         number = await self._gen_number("IT")
         txn = InventoryTransaction(
             transaction_number=number, transaction_type=TransactionType.RECEIVE.value,

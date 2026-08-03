@@ -171,6 +171,13 @@ async def _apply_sqlite_migrations(conn) -> None:
         ))
     except OperationalError:
         pass  # column already exists
+
+    # ── purchase_orders.partner_id (Partners) ─────────────────────────────
+    try:
+        await conn.execute(text("ALTER TABLE purchase_orders ADD COLUMN partner_id INTEGER REFERENCES partners (id) ON DELETE SET NULL"))
+    except OperationalError:
+        pass  # column already exists
+
     # NOTE: invoices.contract_id also became nullable in this change (work-order
     # and sales invoices have no rental contract). SQLite can't drop a NOT NULL
     # constraint via ALTER TABLE without a full table rebuild, and every other
@@ -324,6 +331,8 @@ async def _apply_postgres_migrations(conn) -> None:
         "ALTER TABLE quotations ADD COLUMN IF NOT EXISTS round_amount DOUBLE PRECISION NOT NULL DEFAULT 0",
         "ALTER TABLE quotations ADD COLUMN IF NOT EXISTS terms_conditions TEXT",
         "ALTER TABLE quotation_items ADD COLUMN IF NOT EXISTS tax_percent DOUBLE PRECISION NOT NULL DEFAULT 0",
+        "ALTER TABLE purchase_orders ADD COLUMN IF NOT EXISTS partner_id INTEGER REFERENCES partners (id) ON DELETE SET NULL",
+        "CREATE INDEX IF NOT EXISTS ix_purchase_orders_partner_id ON purchase_orders (partner_id)",
     ):
         await conn.execute(text(statement))
 

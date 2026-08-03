@@ -146,7 +146,7 @@ class POExcelService:
         po_number = ws["E3"].value
         if not po_number or not str(po_number).strip():
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Cell E3 (PO Number) is empty — this file isn't a PO export, or the layout was altered.",
             )
         po_number = str(po_number).strip()
@@ -155,7 +155,7 @@ class POExcelService:
         expected = list(_ITEM_HEADER_LABELS)
         if [str(h).strip() if h else "" for h in header] != expected:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"Item table header row ({_ITEM_HEADER_ROW}) doesn't match the expected columns {expected} "
                        "— rows/columns must not be inserted or deleted above the item table.",
             )

@@ -71,7 +71,7 @@ class LeadService:
                 if new_status not in allowed:
                     allowed_values = [s.value for s in allowed]
                     raise HTTPException(
-                        status_code=http_status.HTTP_422_UNPROCESSABLE_ENTITY,
+                        status_code=http_status.HTTP_422_UNPROCESSABLE_CONTENT,
                         detail=(
                             f"Cannot transition from '{lead.status.value}' to '{new_status.value}'. "
                             f"Allowed next statuses: {allowed_values or ['none — terminal state']}."

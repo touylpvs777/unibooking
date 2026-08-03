@@ -48,7 +48,7 @@ class ForkliftDocumentService:
 
         if data.expiry_date is not None and data.expiry_date < date.today():
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Expiry date cannot be in the past.",
             )
 

@@ -75,13 +75,13 @@ class CategoryService:
             parent = await self._repo.get_by_id(data.parent_id)
             if parent is None:
                 raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                     detail=f"Parent category id={data.parent_id} not found",
                 )
             parent_level = parent.level
             if parent_level >= 3:
                 raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                     detail="Maximum category depth is 3 levels",
                 )
 
@@ -139,7 +139,7 @@ class CategoryService:
         if "parent_id" in changes:
             if changes["parent_id"] == category_id:
                 raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                     detail="A category cannot be its own parent.",
                 )
 

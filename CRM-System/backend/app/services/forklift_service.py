@@ -120,7 +120,7 @@ class ForkliftService:
         if data.purchase_date and data.warranty_expiry:
             if data.warranty_expiry < data.purchase_date:
                 raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                     detail="Warranty expiry must be after purchase date.",
                 )
 
@@ -208,7 +208,7 @@ class ForkliftService:
         warranty = changes.get("warranty_expiry", forklift.warranty_expiry)
         if purchase and warranty and warranty < purchase:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Warranty expiry must be after purchase date.",
             )
 
@@ -268,7 +268,7 @@ class ForkliftService:
         allowed = VALID_STATUS_TRANSITIONS.get(from_status, set())
         if to_status not in allowed:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"Invalid status transition: '{from_status}' → '{to_status}'.",
             )
 

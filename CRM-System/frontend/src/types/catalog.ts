@@ -166,7 +166,7 @@ export interface ProductCreate {
   sort_order?: number
 }
 
-export interface ProductUpdate extends Partial<ProductCreate> {}
+export type ProductUpdate = Partial<ProductCreate>
 
 export interface ProductListParams {
   q?: string

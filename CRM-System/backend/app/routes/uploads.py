@@ -29,7 +29,7 @@ DANGEROUS_EXTENSIONS = {
 def _validate_file(file: UploadFile) -> None:
     if file.content_type not in ALLOWED_MIME_TYPES:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=f"File type '{file.content_type}' is not allowed. Accepted: JPEG, PNG, WebP.",
         )
 
@@ -37,12 +37,12 @@ def _validate_file(file: UploadFile) -> None:
     ext = Path(filename).suffix.lower()
     if ext in DANGEROUS_EXTENSIONS:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail="Executable files are not allowed.",
         )
     if ext not in ALLOWED_EXTENSIONS:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=f"Extension '{ext}' is not allowed. Accepted: {', '.join(sorted(ALLOWED_EXTENSIONS))}.",
         )
 

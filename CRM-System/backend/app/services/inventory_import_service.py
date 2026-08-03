@@ -109,7 +109,7 @@ class InventoryImportService:
             ext = "." + filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
             if ext not in _ALLOWED_EXTENSIONS:
                 raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                     detail="Only .csv or .xlsx files are accepted.",
                 )
 

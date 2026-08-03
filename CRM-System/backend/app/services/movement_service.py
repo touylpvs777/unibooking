@@ -101,10 +101,10 @@ class MovementService:
         if forklift is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Forklift not found")
         if not forklift.is_active:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Forklift is not active")
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail="Forklift is not active")
         if forklift.status in (ForkliftStatus.SOLD.value, ForkliftStatus.DECOMMISSIONED.value):
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"Cannot move forklift in '{forklift.status}' status",
             )
 
@@ -147,7 +147,7 @@ class MovementService:
         movement = await self._require(movement_id)
         if movement.status not in (MovementStatus.DRAFT.value, MovementStatus.PREPARING.value):
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Can only edit movements in draft or preparing status",
             )
 
@@ -190,7 +190,7 @@ class MovementService:
 
         if movement.departure_hour_meter is not None and data.arrival_hour_meter < movement.departure_hour_meter:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Arrival hour meter must be >= departure reading",
             )
 
@@ -216,7 +216,7 @@ class MovementService:
         movement = await self._require(movement_id)
         if movement.status in (MovementStatus.COMPLETED.value, MovementStatus.CANCELLED.value):
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"Cannot cancel movement in '{movement.status}' status",
             )
         await self._repo.update(movement, {"cancellation_reason": data.cancellation_reason})
@@ -227,7 +227,7 @@ class MovementService:
         movement = await self._require(movement_id)
         if movement.status in (MovementStatus.COMPLETED.value, MovementStatus.CANCELLED.value):
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Cannot add checkpoints to a completed or cancelled movement",
             )
         checkpoint = MovementHistory(
@@ -257,7 +257,7 @@ class MovementService:
         allowed = VALID_TRANSITIONS.get(current, set())
         if target not in allowed:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"Invalid transition: '{current}' → '{target}'",
             )
 

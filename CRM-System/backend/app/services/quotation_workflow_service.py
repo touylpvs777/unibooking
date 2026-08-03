@@ -60,7 +60,7 @@ class QuotationWorkflowService:
         item_count = await self._repo.get_item_count(quotation_id)
         if item_count == 0:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Cannot submit quotation with no line items.",
             )
 
@@ -123,7 +123,7 @@ class QuotationWorkflowService:
 
         if quotation.customer_id is None:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Customer is required before sending.",
             )
 
@@ -229,6 +229,6 @@ class QuotationWorkflowService:
         allowed = VALID_TRANSITIONS.get(from_status, set())
         if to_status not in allowed:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"Invalid action: cannot transition from '{from_status}' to '{to_status}'.",
             )

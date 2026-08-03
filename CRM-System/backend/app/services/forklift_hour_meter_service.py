@@ -44,7 +44,7 @@ class ForkliftHourMeterService:
 
         if forklift.status in _BLOCKED_STATUSES:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"Cannot log hours for {forklift.status} forklift.",
             )
 

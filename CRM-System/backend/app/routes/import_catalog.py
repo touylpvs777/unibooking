@@ -47,7 +47,7 @@ async def preview_import(
     """
     if not (file.filename or "").endswith(".xlsx"):
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail="Only .xlsx files are accepted.",
         )
     content = await file.read()
@@ -119,7 +119,7 @@ async def import_now(
     """
     if not (file.filename or "").endswith(".xlsx"):
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail="Only .xlsx files are accepted.",
         )
     content = await file.read()

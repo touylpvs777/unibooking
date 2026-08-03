@@ -1316,19 +1316,31 @@ class BillingService:
         await self.db.flush()
 
     @staticmethod
+    def _next_cycle_day(year: int, month: int, billing_cycle_day: int) -> date:
+        import calendar
+        last_day = calendar.monthrange(year, month)[1]
+        return date(year, month, min(billing_cycle_day, last_day))
+
+    @classmethod
     def _calc_period_end(
-        start: date, billing_cycle_day: int, contract_end: date,
+        cls, start: date, billing_cycle_day: int, contract_end: date,
     ) -> date:
         if start.month == 12:
-            next_month = start.replace(year=start.year + 1, month=1, day=billing_cycle_day)
+            next_month = cls._next_cycle_day(start.year + 1, 1, billing_cycle_day)
         else:
-            try:
-                next_month = start.replace(month=start.month + 1, day=billing_cycle_day)
-            except ValueError:
-                import calendar
-                last_day = calendar.monthrange(start.year, start.month + 1)[1]
-                next_month = start.replace(month=start.month + 1, day=min(billing_cycle_day, last_day))
+            next_month = cls._next_cycle_day(start.year, start.month + 1, billing_cycle_day)
         period_end = next_month - timedelta(days=1)
+        if period_end <= start:
+            # `start` fell exactly one day before the billing-cycle boundary,
+            # so the naive calc above produces a degenerate (same-day) period.
+            # Roll forward one more month so every generated cycle is a real
+            # billing period instead of a same-day one immediately followed
+            # by another due period on the very next scan (double-billing).
+            if next_month.month == 12:
+                next_month = cls._next_cycle_day(next_month.year + 1, 1, billing_cycle_day)
+            else:
+                next_month = cls._next_cycle_day(next_month.year, next_month.month + 1, billing_cycle_day)
+            period_end = next_month - timedelta(days=1)
         return min(period_end, contract_end)
 
     @staticmethod

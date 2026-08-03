@@ -101,7 +101,7 @@ class QuotationService:
     async def create_quotation(self, data: QuotationCreate, created_by: int) -> Quotation:
         if data.valid_from and data.valid_until and data.valid_until < data.valid_from:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="valid_until must be on or after valid_from.",
             )
 
@@ -180,7 +180,7 @@ class QuotationService:
         vu = changes.get("valid_until", quotation.valid_until)
         if vf and vu and vu < vf:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="valid_until must be on or after valid_from.",
             )
 
@@ -213,7 +213,7 @@ class QuotationService:
         quotation = await self._require(quotation_id)
         if quotation.status != QuotationStatus.DRAFT.value:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Only draft quotations can be deleted.",
             )
         await self._repo.delete(quotation)
@@ -362,7 +362,7 @@ class QuotationService:
     def _require_draft(quotation: Quotation) -> None:
         if quotation.status != QuotationStatus.DRAFT.value:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=_DRAFT_ONLY_MSG,
             )
 

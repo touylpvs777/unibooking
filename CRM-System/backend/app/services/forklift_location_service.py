@@ -44,14 +44,14 @@ class ForkliftLocationService:
 
         if forklift.status in _BLOCKED_STATUSES:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"Cannot record location for {forklift.status} forklift.",
             )
 
         max_future = date.today() + timedelta(days=30)
         if data.effective_date > max_future:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Effective date cannot be more than 30 days in the future.",
             )
 

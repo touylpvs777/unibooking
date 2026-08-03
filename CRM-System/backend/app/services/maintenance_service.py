@@ -198,7 +198,7 @@ class MaintenanceService:
     async def update_work_order(self, wo_id: int, data: WorkOrderUpdate, updated_by: int) -> WorkOrder:
         wo = await self._require_wo(wo_id)
         if wo.status not in (WorkOrderStatus.SCHEDULED.value, WorkOrderStatus.DUE.value):
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                                 detail="Can only edit scheduled or due work orders")
         changes = data.model_dump(exclude_unset=True)
         if "priority" in changes and changes["priority"]:
@@ -273,7 +273,7 @@ class MaintenanceService:
     async def cancel_work_order(self, wo_id: int, data: CancelAction, user_id: int) -> WorkOrder:
         wo = await self._require_wo(wo_id)
         if wo.status in (WorkOrderStatus.COMPLETED.value, WorkOrderStatus.VERIFIED.value, WorkOrderStatus.CANCELLED.value):
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                                 detail=f"Cannot cancel work order in '{wo.status}' status")
         await self._repo.update_work_order(wo, {
             "status": WorkOrderStatus.CANCELLED.value,
@@ -288,7 +288,7 @@ class MaintenanceService:
     async def add_cost(self, wo_id: int, data: CostCreate) -> MaintenanceCost:
         wo = await self._require_wo(wo_id)
         if wo.status in (WorkOrderStatus.VERIFIED.value, WorkOrderStatus.CANCELLED.value):
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                                 detail="Cannot add costs to verified or cancelled work orders")
         amount = round(data.quantity * data.unit_rate, 2)
         cost = MaintenanceCost(
@@ -341,7 +341,7 @@ class MaintenanceService:
     @staticmethod
     def _validate(current: str, target: str) -> None:
         if target not in VALID_WO_TRANSITIONS.get(current, set()):
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                                 detail=f"Invalid transition: '{current}' → '{target}'")
 
     async def _advance_schedule(self, schedule_id: int, forklift_id: int) -> None:

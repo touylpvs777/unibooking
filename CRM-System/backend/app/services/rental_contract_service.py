@@ -122,7 +122,7 @@ class RentalContractService:
     ) -> RentalContract:
         if data.end_date <= data.start_date:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="end_date must be after start_date.",
             )
 
@@ -189,7 +189,7 @@ class RentalContractService:
         ed = changes.get("end_date", contract.end_date)
         if sd and ed and ed <= sd:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="end_date must be after start_date.",
             )
 
@@ -220,7 +220,7 @@ class RentalContractService:
             RentalContractStatus.DRAFT.value,
         ):
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Only reservation or draft contracts can be deleted.",
             )
 
@@ -259,12 +259,12 @@ class RentalContractService:
             )
         if not forklift.is_active:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Forklift is not active.",
             )
         if forklift.status != ForkliftStatus.IN_STOCK.value:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail=f"Forklift is not available (current status: {forklift.status}).",
             )
 
@@ -405,12 +405,12 @@ class RentalContractService:
                 RentalContractStatus.ACTIVE.value,
             ):
                 raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                     detail="Contract must be in delivering or active status to record departure hours.",
                 )
             if item.departure_hour_meter is not None:
                 raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                     detail="Departure hour meter has already been recorded.",
                 )
             item = await self._repo.update_item(item, {
@@ -423,17 +423,17 @@ class RentalContractService:
                 RentalContractStatus.INSPECTING.value,
             ):
                 raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                     detail="Contract must be in returning or inspecting status to record return hours.",
                 )
             if item.departure_hour_meter is None:
                 raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                     detail="Departure hour meter must be recorded first.",
                 )
             if data.reading < item.departure_hour_meter:
                 raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                     detail="Return reading must be >= departure reading.",
                 )
             hours_used = data.reading - item.departure_hour_meter
@@ -444,7 +444,7 @@ class RentalContractService:
 
         else:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="reading_type must be 'departure' or 'return'.",
             )
 
@@ -469,12 +469,12 @@ class RentalContractService:
             )
         if quotation.status != QuotationStatus.ACCEPTED.value:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Quotation must be in accepted status to convert.",
             )
         if quotation.quotation_type != "rental":
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Only rental quotations can be converted to rental contracts.",
             )
         if quotation.converted_to_id is not None:
@@ -489,7 +489,7 @@ class RentalContractService:
         end_date = data.override_end_date or quotation.valid_until
         if not start_date or not end_date:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Start and end dates are required. Provide overrides or ensure quotation has valid_from/valid_until.",
             )
 
@@ -652,7 +652,7 @@ class RentalContractService:
     def _require_editable(contract: RentalContract) -> None:
         if contract.status not in _EDITABLE_STATUSES:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="Contract can only be edited in reservation, draft, or revision status.",
             )
 
