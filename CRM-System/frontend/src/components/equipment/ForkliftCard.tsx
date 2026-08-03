@@ -85,7 +85,9 @@ export default function ForkliftCard({ forklift, onClick, onEdit }: ForkliftCard
           <span className="forklift-card-hours-value">
             {t('equipment.card.hoursValue', { count: forklift.current_hour_meter.toLocaleString(undefined, { maximumFractionDigits: 1 }) })}
             {forklift.last_telemetry_ping && (
-              <Zap size={10} title={t('equipment.card.iotAutoSynced')} />
+              <span title={t('equipment.card.iotAutoSynced')}>
+                <Zap size={10} />
+              </span>
             )}
           </span>
           {forklift.iot_device_id && (

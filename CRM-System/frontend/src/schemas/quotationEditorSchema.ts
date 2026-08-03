@@ -32,6 +32,7 @@ export const quotationHeaderSchema = z.object({
   // Footer
   notes: z.string().optional(),
   internal_notes: z.string().optional(),
+  terms_conditions: z.string().optional(),
 })
 
 export type QuotationEditorFormValues = z.infer<typeof quotationHeaderSchema>
@@ -64,4 +65,5 @@ export const QUOTATION_EDITOR_DEFAULTS: QuotationEditorFormValues = {
   location: '',
   notes: '',
   internal_notes: '',
+  terms_conditions: '',
 }
