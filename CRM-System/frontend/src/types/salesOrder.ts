@@ -183,6 +183,49 @@ export interface SalesOrderItemBulkItem extends SalesOrderItemCreate {
   id?: number | null
 }
 
+// Payload handed from QuotationEditorPage -> SalesOrderEditorPage (via router
+// navigation state) when converting an approved Quotation into a new Sales
+// Order, so the editor can be pre-filled without an extra round trip.
+export interface SalesOrderConversionPrefill {
+  quotationBrief: QuotationBrief
+  header: {
+    title: string
+    customer_id: number | null
+    assigned_to: number | null
+    contact_name: string
+    contact_email: string
+    contact_phone: string
+    tax_rate: number
+    discount_amount: number
+    round_amount: number
+    currency: string
+    exchange_rate: number
+    customer_reference: string
+    bank_details: string
+    job_number: string
+    machine_type: string
+    vehicle_make: string
+    vehicle_model: string
+    vehicle_vin: string
+    vehicle_engine_no: string
+    hour_meter: number | null
+    vehicle_reg_no: string
+    location: string
+    notes: string
+    internal_notes: string
+    terms_conditions: string
+  }
+  items: {
+    item_code: string
+    description: string
+    quantity: number
+    unit: string
+    unit_price: number
+    discount_percent: number
+    tax_percent: number
+  }[]
+}
+
 export interface SalesOrderListParams {
   q?: string
   status?: SalesOrderStatus

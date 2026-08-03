@@ -2039,7 +2039,8 @@
       "actions": {
         "void": "Void",
         "voided": "Quotation voided",
-        "approved": "Approved"
+        "approved": "Approved",
+        "convertToSalesOrder": "Convert to Sales Order"
       },
       "header": {
         "quotationNo": "Quotation No."
@@ -3201,7 +3202,8 @@
         "completed": "Sales order completed",
         "void": "Void",
         "voided": "Sales order voided"
-      }
+      },
+      "prefilledFromQuotation": "Pre-filled from quotation {{number}}"
     }
   },
   "taxInvoices": {

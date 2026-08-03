@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { useForm, FormProvider } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -12,9 +12,8 @@ import { getCustomers } from '@/api/customers'
 import { getQuotations } from '@/api/quotation'
 import type { Customer } from '@/types/customer'
 import type {
-  SalesOrderDetail, SalesOrderCreate, SalesOrderUpdate, SalesOrderItemBulkItem,
+  SalesOrderDetail, SalesOrderCreate, SalesOrderUpdate, SalesOrderItemBulkItem, SalesOrderConversionPrefill,
 } from '@/types/salesOrder'
-import type { Quotation } from '@/types/quotation'
 import {
   salesOrderHeaderSchema, SALES_ORDER_EDITOR_DEFAULTS, type SalesOrderEditorFormValues,
 } from '@/schemas/salesOrderEditorSchema'
@@ -54,6 +53,8 @@ function emptyRow(defaultTaxRate: number): SalesOrderLineRow {
   }
 }
 
+type QuotationOption = { id: number; quotation_number: string; title: string }
+
 const STATUS_VARIANT: Record<string, BadgeVariant> = {
   draft: 'gray', confirmed: 'blue', completed: 'green', cancelled: 'gray',
 }
@@ -81,12 +82,28 @@ export default function SalesOrderEditorPage() {
   const { id } = useParams<{ id: string }>()
   const isNew = !id
   const navigate = useNavigate()
-  const headerColorClass = getHeaderColorClass(useLocation().pathname)
+  const location = useLocation()
+  const headerColorClass = getHeaderColorClass(location.pathname)
+
+  // Present only when navigated to from the Quotation editor's "Convert to
+  // Sales Order" action — pre-fills header/vehicle/line-item data so the
+  // user doesn't have to re-enter an already-approved quotation by hand.
+  const prefill = isNew
+    ? (location.state as { fromQuotation?: SalesOrderConversionPrefill } | null)?.fromQuotation
+    : undefined
 
   const [salesOrder, setSalesOrder] = useState<SalesOrderDetail | null>(null)
-  const [items, setItems] = useState<SalesOrderLineRow[]>(isNew ? [emptyRow(0)] : [])
+  const [items, setItems] = useState<SalesOrderLineRow[]>(isNew
+    ? (prefill?.items.length
+      ? prefill.items.map((it) => ({
+        _key: nextRowKey++, id: null, item_code: it.item_code, description: it.description,
+        quantity: it.quantity, unit: it.unit, unit_price: it.unit_price,
+        discount_percent: it.discount_percent, tax_percent: it.tax_percent,
+      }))
+      : [emptyRow(0)])
+    : [])
   const [customers, setCustomers] = useState<Customer[]>([])
-  const [quotations, setQuotations] = useState<Quotation[]>([])
+  const [quotations, setQuotations] = useState<QuotationOption[]>(prefill ? [prefill.quotationBrief] : [])
   const [isLoading, setIsLoading] = useState(!isNew)
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -100,14 +117,45 @@ export default function SalesOrderEditorPage() {
   useEffect(() => { fetchCompanyProfile() }, [fetchCompanyProfile])
 
   useEffect(() => {
+    if (prefill) {
+      toast.success(t('salesOrders.editor.prefilledFromQuotation', { number: prefill.quotationBrief.quotation_number }))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
     getCustomers().then(({ data }) => setCustomers(data)).catch(() => {})
-    getQuotations({ status: 'accepted', page_size: 100 }).then(({ data }) => setQuotations(data.items)).catch(() => {})
+    // The dropdown normally only offers "accepted" quotations; when arriving
+    // via "Convert to Sales Order" the source quotation is "approved" and
+    // wouldn't appear in that list, so keep it merged in as an extra option.
+    getQuotations({ status: 'accepted', page_size: 100 }).then(({ data }) => {
+      setQuotations((prev) => {
+        const extra = prev.filter((p) => !data.items.some((q) => q.id === p.id))
+        return [...extra, ...data.items]
+      })
+    }).catch(() => {})
   }, [])
 
   const methods = useForm<SalesOrderEditorFormValues>({
     resolver: zodResolver(salesOrderHeaderSchema),
-    defaultValues: SALES_ORDER_EDITOR_DEFAULTS,
+    defaultValues: prefill
+      ? { ...SALES_ORDER_EDITOR_DEFAULTS, ...prefill.header, quotation_id: prefill.quotationBrief.id }
+      : SALES_ORDER_EDITOR_DEFAULTS,
   })
+
+  // The customer <select> is an uncontrolled RHF field whose options only
+  // exist once `getCustomers()` resolves — applying `customer_id` via the
+  // initial `defaultValues` above loses that race (the option isn't in the
+  // DOM yet), so re-apply the full prefill once customers have actually
+  // loaded and rendered as <option> elements.
+  const prefillReappliedRef = useRef(false)
+  useEffect(() => {
+    if (prefill && customers.length > 0 && !prefillReappliedRef.current) {
+      prefillReappliedRef.current = true
+      methods.reset({ ...SALES_ORDER_EDITOR_DEFAULTS, ...prefill.header, quotation_id: prefill.quotationBrief.id })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customers])
 
   const load = async () => {
     if (isNew) return

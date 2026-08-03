@@ -2783,7 +2783,8 @@
       "actions": {
         "void": "ยกเลิก (Void)",
         "voided": "ยกเลิกใบเสนอราคาแล้ว",
-        "approved": "อนุมัติแล้ว"
+        "approved": "อนุมัติแล้ว",
+        "convertToSalesOrder": "แปลงเป็นใบสั่งขาย"
       },
       "header": {
         "quotationNo": "เลขที่ใบเสนอราคา"
@@ -3194,7 +3195,8 @@
         "completed": "ใบสั่งขายเสร็จสมบูรณ์แล้ว",
         "void": "ยกเลิก",
         "voided": "ยกเลิกใบสั่งขายแล้ว"
-      }
+      },
+      "prefilledFromQuotation": "กรอกข้อมูลล่วงหน้าจากใบเสนอราคา {{number}}"
     }
   },
   "taxInvoices": {

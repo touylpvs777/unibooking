@@ -2748,7 +2748,8 @@
       "actions": {
         "void": "ຍົກເລີກ (Void)",
         "voided": "ຍົກເລີກໃບສະເໜີລາຄາແລ້ວ",
-        "approved": "ອະນຸມັດແລ້ວ"
+        "approved": "ອະນຸມັດແລ້ວ",
+        "convertToSalesOrder": "ປ່ຽນເປັນໃບສັ່ງຂາຍ"
       },
       "header": {
         "quotationNo": "ເລກທີໃບສະເໜີລາຄາ"
@@ -3194,7 +3195,8 @@
         "completed": "ໃບສັ່ງຂາຍສຳເລັດແລ້ວ",
         "void": "ຍົກເລີກ",
         "voided": "ຍົກເລີກໃບສັ່ງຂາຍແລ້ວ"
-      }
+      },
+      "prefilledFromQuotation": "ຕື່ມຂໍ້ມູນລ່ວງໜ້າຈາກໃບສະເໜີລາຄາ {{number}}"
     }
   },
   "taxInvoices": {

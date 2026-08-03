@@ -3,7 +3,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { useForm, FormProvider } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
-import { AlertCircle, ChevronLeft, FileDown, FileSpreadsheet, Loader2 } from 'lucide-react'
+import { AlertCircle, ArrowRightCircle, ChevronLeft, FileDown, FileSpreadsheet, Loader2 } from 'lucide-react'
 import {
   getQuotation, createQuotation, updateQuotation, bulkReplaceItems,
   submitQuotation, approveQuotation, rejectQuotation, sendQuotation,
@@ -15,6 +15,7 @@ import type {
   QuotationDetail, QuotationCreate, QuotationUpdate, QuotationItemBulkItem, QuotationType,
 } from '@/types/quotation'
 import { quotationHeaderSchema, QUOTATION_EDITOR_DEFAULTS, type QuotationEditorFormValues } from '@/schemas/quotationEditorSchema'
+import type { SalesOrderConversionPrefill } from '@/types/salesOrder'
 import LineItemsGrid, { type GridColumn, type GridRow } from '@/components/grid/LineItemsGrid'
 import DocumentEditorHeader from '@/components/documents/DocumentEditorHeader'
 import VehicleInfoSection from '@/components/documents/VehicleInfoSection'
@@ -368,6 +369,50 @@ export default function QuotationEditorPage() {
     })
   }
 
+  const handleConvertToSalesOrder = () => {
+    if (!quotation) return
+    const prefill: SalesOrderConversionPrefill = {
+      quotationBrief: { id: quotation.id, quotation_number: quotation.quotation_number, title: quotation.title },
+      header: {
+        title: quotation.title,
+        customer_id: values.customer_id ?? null,
+        assigned_to: values.assigned_to ?? null,
+        contact_name: values.contact_name || '',
+        contact_email: values.contact_email || '',
+        contact_phone: values.contact_phone || '',
+        tax_rate: values.tax_rate,
+        discount_amount: values.discount_amount,
+        round_amount: values.round_amount,
+        currency: values.currency,
+        exchange_rate: values.exchange_rate,
+        customer_reference: values.customer_reference || '',
+        bank_details: values.bank_details || '',
+        job_number: values.job_number || '',
+        machine_type: values.machine_type || '',
+        vehicle_make: values.vehicle_make || '',
+        vehicle_model: values.vehicle_model || '',
+        vehicle_vin: values.vehicle_vin || '',
+        vehicle_engine_no: values.vehicle_engine_no || '',
+        hour_meter: values.hour_meter ?? null,
+        vehicle_reg_no: values.vehicle_reg_no || '',
+        location: values.location || '',
+        notes: values.notes || '',
+        internal_notes: values.internal_notes || '',
+        terms_conditions: values.terms_conditions || '',
+      },
+      items: items.filter((r) => r.description.trim()).map((r) => ({
+        item_code: r.item_code,
+        description: r.description,
+        quantity: r.quantity,
+        unit: r.unit,
+        unit_price: r.unit_price,
+        discount_percent: r.discount_percent,
+        tax_percent: r.tax_percent,
+      })),
+    }
+    navigate('/sales-orders/new', { state: { fromQuotation: prefill } })
+  }
+
   const selectedCustomer = customers.find((c) => c.id === values.customer_id)
 
   const previewProps = {
@@ -450,6 +495,11 @@ export default function QuotationEditorPage() {
               {qId && actions.includes('approve') && (
                 <button className="btn btn-primary" disabled={isSaving} onClick={() => runAction(t('quotations.editor.actions.approved'), () => approveQuotation(qId))}>
                   {t('quotations.detail.approve')}
+                </button>
+              )}
+              {quotation?.status === 'approved' && (
+                <button className="btn btn-primary" disabled={isSaving} onClick={handleConvertToSalesOrder}>
+                  <ArrowRightCircle size={14} /> {t('quotations.editor.actions.convertToSalesOrder')}
                 </button>
               )}
               {qId && actions.includes('reject') && (
