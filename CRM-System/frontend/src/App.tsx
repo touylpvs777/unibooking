@@ -22,6 +22,7 @@ const ForkliftDetailPage = lazy(() => import('@/pages/Equipment/ForkliftDetailPa
 const QuotationListPage = lazy(() => import('@/pages/Quotations/QuotationListPage'))
 const QuotationEditorPage = lazy(() => import('@/pages/Quotations/QuotationEditorPage'))
 const SalesOrderListPage = lazy(() => import('@/pages/Sales/SalesOrderListPage'))
+const SalesOrderEditorPage = lazy(() => import('@/pages/Sales/SalesOrderEditorPage'))
 const RentalContractListPage = lazy(() => import('@/pages/Rental/RentalContractListPage'))
 const RentalContractDetailPage = lazy(() => import('@/pages/Rental/RentalContractDetailPage'))
 const RentalContractFormPage = lazy(() => import('@/pages/Rental/RentalContractFormPage'))
@@ -58,6 +59,7 @@ const PurchaseOrderPage = lazy(() => import('@/pages/Inventory/PurchaseOrderPage
 const PurchaseOrderFormPage = lazy(() => import('@/pages/Inventory/PurchaseOrderFormPage'))
 const PurchaseOrderDetailPage = lazy(() => import('@/pages/Inventory/PurchaseOrderDetailPage'))
 const DeliveryNoteListPage = lazy(() => import('@/pages/Inventory/DeliveryNoteListPage'))
+const DeliveryNoteEditorPage = lazy(() => import('@/pages/Inventory/DeliveryNoteEditorPage'))
 const GoodsReceiveListPage = lazy(() => import('@/pages/Inventory/GoodsReceiveListPage'))
 const GoodsIssueListPage = lazy(() => import('@/pages/Inventory/GoodsIssueListPage'))
 const ExecutiveDashboardPage = lazy(() => import('@/pages/Executive/ExecutiveDashboardPage'))
@@ -115,6 +117,8 @@ export default function App() {
             <Route path="/quotations/:id"         element={<Suspense fallback={<PageLoader />}><QuotationEditorPage /></Suspense>} />
 
             <Route path="/sales-orders"           element={<Suspense fallback={<PageLoader />}><SalesOrderListPage /></Suspense>} />
+            <Route path="/sales-orders/new"       element={<Suspense fallback={<PageLoader />}><SalesOrderEditorPage /></Suspense>} />
+            <Route path="/sales-orders/:id"       element={<Suspense fallback={<PageLoader />}><SalesOrderEditorPage /></Suspense>} />
 
             <Route path="/rental-contracts"       element={<Suspense fallback={<PageLoader />}><RentalContractListPage /></Suspense>} />
             <Route path="/rental-contracts/new"   element={<Suspense fallback={<PageLoader />}><RentalContractFormPage /></Suspense>} />
@@ -160,6 +164,8 @@ export default function App() {
             <Route path="/inventory/goods-receive"        element={<Suspense fallback={<PageLoader />}><GoodsReceiveListPage /></Suspense>} />
             <Route path="/inventory/goods-issue"          element={<Suspense fallback={<PageLoader />}><GoodsIssueListPage /></Suspense>} />
             <Route path="/inventory/delivery-notes"       element={<Suspense fallback={<PageLoader />}><DeliveryNoteListPage /></Suspense>} />
+            <Route path="/inventory/delivery-notes/new"   element={<Suspense fallback={<PageLoader />}><DeliveryNoteEditorPage /></Suspense>} />
+            <Route path="/inventory/delivery-notes/:id"   element={<Suspense fallback={<PageLoader />}><DeliveryNoteEditorPage /></Suspense>} />
 
             <Route path="/executive"                     element={<Suspense fallback={<PageLoader />}><ExecutiveDashboardPage /></Suspense>} />
             <Route path="/iot-management"                element={<Suspense fallback={<PageLoader />}><IoTManagementPage /></Suspense>} />

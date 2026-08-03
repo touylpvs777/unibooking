@@ -3157,13 +3157,51 @@
     "list": {
       "title": "Sales Orders",
       "subtitle": "Confirmed customer orders converted from quotations",
-      "empty": "No sales orders yet"
+      "empty": "No sales orders yet",
+      "totalCount": "{{count}} sales orders",
+      "allStatuses": "All statuses",
+      "searchPlaceholder": "Search SO number or title...",
+      "newSalesOrder": "New Sales Order",
+      "createOrAdjust": "Create a new sales order or adjust your filters",
+      "deleteConfirmTitle": "Delete sales order?",
+      "deleteConfirmMessage": "This will permanently delete sales order {{number}}. This cannot be undone.",
+      "loadError": "Failed to load sales orders"
     },
     "table": {
       "number": "SO Number",
       "customer": "Customer",
       "quotationRef": "Quotation Ref.",
       "orderDate": "Order Date"
+    },
+    "status": {
+      "draft": "Draft",
+      "confirmed": "Confirmed",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "editor": {
+      "newTitle": "New Sales Order",
+      "title": "Sales Order",
+      "titleLabel": "Title",
+      "titlePlaceholder": "e.g. Forklift purchase — Vong Logistics",
+      "quotationRef": "Quotation Ref.",
+      "noQuotation": "No linked quotation",
+      "soNumber": "SO Number",
+      "orderDate": "Order Date",
+      "expectedDelivery": "Expected Delivery",
+      "saveDraft": "Save Draft",
+      "saveSuccess": "Sales order saved",
+      "saveFailed": "Failed to save sales order",
+      "notFoundError": "Sales order not found",
+      "actionFailed": "Failed to {{action}}",
+      "actions": {
+        "confirm": "Confirm",
+        "confirmed": "Sales order confirmed",
+        "complete": "Mark Completed",
+        "completed": "Sales order completed",
+        "void": "Void",
+        "voided": "Sales order voided"
+      }
     }
   },
   "taxInvoices": {
@@ -3211,7 +3249,14 @@
     "list": {
       "title": "Delivery Notes",
       "subtitle": "Goods dispatched to customers against sales orders",
-      "empty": "No delivery notes yet"
+      "empty": "No delivery notes yet",
+      "totalCount": "{{count}} delivery notes",
+      "searchPlaceholder": "Search DN number...",
+      "newDeliveryNote": "New Delivery Note",
+      "createOrAdjust": "Create a new delivery note or adjust your filters",
+      "deleteConfirmTitle": "Delete delivery note?",
+      "deleteConfirmMessage": "This will permanently delete delivery note {{number}}. This cannot be undone.",
+      "loadError": "Failed to load delivery notes"
     },
     "table": {
       "number": "DN Number",
@@ -3219,6 +3264,41 @@
       "soRef": "Sales Order Ref.",
       "deliveryDate": "Delivery Date",
       "warehouse": "Warehouse"
+    },
+    "status": {
+      "draft": "Draft",
+      "dispatched": "Dispatched",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled"
+    },
+    "editor": {
+      "newTitle": "New Delivery Note",
+      "dnNumber": "DN Number",
+      "salesOrderRef": "Sales Order",
+      "selectSalesOrder": "Select a sales order...",
+      "salesOrderRequired": "A sales order must be selected before saving.",
+      "deliveryDate": "Delivery Date",
+      "warehouse": "Warehouse",
+      "driverName": "Driver Name",
+      "vehiclePlate": "Vehicle Plate No.",
+      "deliveryAddress": "Delivery Address",
+      "saveDraft": "Save Draft",
+      "saveSuccess": "Delivery note saved",
+      "saveFailed": "Failed to save delivery note",
+      "notFoundError": "Delivery note not found",
+      "actionFailed": "Failed to {{action}}",
+      "grid": {
+        "qtyOrdered": "Qty Ordered",
+        "qtyDelivered": "Qty Delivered"
+      },
+      "actions": {
+        "dispatch": "Dispatch",
+        "dispatched": "Delivery note dispatched",
+        "deliver": "Mark Delivered",
+        "delivered": "Delivery note delivered",
+        "void": "Void",
+        "voided": "Delivery note voided"
+      }
     }
   },
   "goodsReceive": {

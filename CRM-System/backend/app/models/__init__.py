@@ -21,6 +21,12 @@ from app.models.quotation import Quotation
 from app.models.quotation_approval import QuotationApproval
 from app.models.quotation_item import QuotationItem
 from app.models.quotation_status_history import QuotationStatusHistory
+from app.models.sales_order import SalesOrder
+from app.models.sales_order_item import SalesOrderItem
+from app.models.sales_order_status_history import SalesOrderStatusHistory
+from app.models.delivery_note import DeliveryNote
+from app.models.delivery_note_item import DeliveryNoteItem
+from app.models.delivery_note_status_history import DeliveryNoteStatusHistory
 from app.models.rental_billing_cycle import RentalBillingCycle
 from app.models.rental_contract import RentalContract
 from app.models.rental_contract_item import RentalContractItem
@@ -69,6 +75,8 @@ __all__ = [
     "ForkliftModel", "Forklift", "ForkliftStatusHistory", "ForkliftLocation",
     "ForkliftHourMeterLog", "ForkliftDocument", "ForkliftPhoto", "ForkliftOwnershipCost", "ForkliftSpec",
     "Quotation", "QuotationItem", "QuotationStatusHistory", "QuotationApproval",
+    "SalesOrder", "SalesOrderItem", "SalesOrderStatusHistory",
+    "DeliveryNote", "DeliveryNoteItem", "DeliveryNoteStatusHistory",
     "RentalContract", "RentalContractItem", "RentalContractStatusHistory",
     "RentalContractTerm", "RentalExtension", "RentalReturn",
     "RentalDamageReport", "RentalBillingCycle",

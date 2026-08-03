@@ -1,6 +1,6 @@
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import type { QuotationEditorFormValues } from '@/schemas/quotationEditorSchema'
+import type { DocumentHeaderFormValues } from '@/schemas/documentEditorSchema'
 import './DocumentEditor.css'
 
 const CURRENCY_SYMBOLS: Record<string, string> = { LAK: '₭', THB: '฿', USD: '$', CNY: '¥' }
@@ -26,7 +26,7 @@ export default function DocumentTotalsPanel({
   subtotal, taxTotal, grandTotal, balanceDue, currency, readOnly, showBalanceDue = false,
 }: DocumentTotalsPanelProps) {
   const { t } = useTranslation()
-  const { register } = useFormContext<QuotationEditorFormValues>()
+  const { register } = useFormContext<DocumentHeaderFormValues>()
 
   return (
     <div className="doc-editor-totals">

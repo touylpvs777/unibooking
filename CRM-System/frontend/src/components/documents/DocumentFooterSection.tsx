@@ -1,6 +1,6 @@
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import type { QuotationEditorFormValues } from '@/schemas/quotationEditorSchema'
+import type { DocumentHeaderFormValues } from '@/schemas/documentEditorSchema'
 import './DocumentEditor.css'
 
 interface DocumentFooterSectionProps {
@@ -11,7 +11,7 @@ interface DocumentFooterSectionProps {
 
 export default function DocumentFooterSection({ readOnly, issuedByName, approvedByName }: DocumentFooterSectionProps) {
   const { t } = useTranslation()
-  const { register } = useFormContext<QuotationEditorFormValues>()
+  const { register } = useFormContext<DocumentHeaderFormValues>()
 
   return (
     <div className="doc-editor-section">

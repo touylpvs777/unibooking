@@ -3150,13 +3150,51 @@
     "list": {
       "title": "ใบสั่งขาย",
       "subtitle": "คำสั่งซื้อของลูกค้าที่ยืนยันแล้ว แปลงมาจากใบเสนอราคา",
-      "empty": "ยังไม่มีใบสั่งขาย"
+      "empty": "ยังไม่มีใบสั่งขาย",
+      "totalCount": "{{count}} ใบสั่งขาย",
+      "allStatuses": "ทุกสถานะ",
+      "searchPlaceholder": "ค้นหาเลขที่หรือชื่อใบสั่งขาย...",
+      "newSalesOrder": "ใบสั่งขายใหม่",
+      "createOrAdjust": "สร้างใบสั่งขายใหม่ หรือปรับตัวกรองของคุณ",
+      "deleteConfirmTitle": "ลบใบสั่งขาย?",
+      "deleteConfirmMessage": "การดำเนินการนี้จะลบใบสั่งขาย {{number}} อย่างถาวร ไม่สามารถย้อนกลับได้",
+      "loadError": "โหลดรายการใบสั่งขายล้มเหลว"
     },
     "table": {
       "number": "เลขที่ใบสั่งขาย",
       "customer": "ลูกค้า",
       "quotationRef": "อ้างอิงใบเสนอราคา",
       "orderDate": "วันที่สั่งซื้อ"
+    },
+    "status": {
+      "draft": "ฉบับร่าง",
+      "confirmed": "ยืนยันแล้ว",
+      "completed": "เสร็จสมบูรณ์",
+      "cancelled": "ยกเลิกแล้ว"
+    },
+    "editor": {
+      "newTitle": "ใบสั่งขายใหม่",
+      "title": "ใบสั่งขาย",
+      "titleLabel": "หัวข้อ",
+      "titlePlaceholder": "เช่น ซื้อรถโฟล์คลิฟท์ — บริษัท วอง โลจิสติกส์",
+      "quotationRef": "อ้างอิงใบเสนอราคา",
+      "noQuotation": "ไม่มีใบเสนอราคาที่เชื่อมโยง",
+      "soNumber": "เลขที่ใบสั่งขาย",
+      "orderDate": "วันที่สั่งซื้อ",
+      "expectedDelivery": "วันที่คาดว่าจะจัดส่ง",
+      "saveDraft": "บันทึกฉบับร่าง",
+      "saveSuccess": "บันทึกใบสั่งขายสำเร็จ",
+      "saveFailed": "บันทึกใบสั่งขายล้มเหลว",
+      "notFoundError": "ไม่พบใบสั่งขาย",
+      "actionFailed": "ดำเนินการ {{action}} ล้มเหลว",
+      "actions": {
+        "confirm": "ยืนยัน",
+        "confirmed": "ยืนยันใบสั่งขายแล้ว",
+        "complete": "ทำเครื่องหมายว่าเสร็จสมบูรณ์",
+        "completed": "ใบสั่งขายเสร็จสมบูรณ์แล้ว",
+        "void": "ยกเลิก",
+        "voided": "ยกเลิกใบสั่งขายแล้ว"
+      }
     }
   },
   "taxInvoices": {
@@ -3204,7 +3242,14 @@
     "list": {
       "title": "ใบส่งของ",
       "subtitle": "สินค้าที่จัดส่งให้ลูกค้าตามใบสั่งขาย",
-      "empty": "ยังไม่มีใบส่งของ"
+      "empty": "ยังไม่มีใบส่งของ",
+      "totalCount": "{{count}} ใบส่งของ",
+      "searchPlaceholder": "ค้นหาเลขที่ใบส่งของ...",
+      "newDeliveryNote": "ใบส่งของใหม่",
+      "createOrAdjust": "สร้างใบส่งของใหม่ หรือปรับตัวกรองของคุณ",
+      "deleteConfirmTitle": "ลบใบส่งของ?",
+      "deleteConfirmMessage": "การดำเนินการนี้จะลบใบส่งของ {{number}} อย่างถาวร ไม่สามารถย้อนกลับได้",
+      "loadError": "โหลดรายการใบส่งของล้มเหลว"
     },
     "table": {
       "number": "เลขที่ใบส่งของ",
@@ -3212,6 +3257,41 @@
       "soRef": "อ้างอิงใบสั่งขาย",
       "deliveryDate": "วันที่จัดส่ง",
       "warehouse": "คลังสินค้า"
+    },
+    "status": {
+      "draft": "ฉบับร่าง",
+      "dispatched": "จัดส่งออกแล้ว",
+      "delivered": "ส่งถึงแล้ว",
+      "cancelled": "ยกเลิกแล้ว"
+    },
+    "editor": {
+      "newTitle": "ใบส่งของใหม่",
+      "dnNumber": "เลขที่ใบส่งของ",
+      "salesOrderRef": "ใบสั่งขาย",
+      "selectSalesOrder": "เลือกใบสั่งขาย...",
+      "salesOrderRequired": "ต้องเลือกใบสั่งขายก่อนบันทึก",
+      "deliveryDate": "วันที่จัดส่ง",
+      "warehouse": "คลังสินค้า",
+      "driverName": "ชื่อผู้ขับ",
+      "vehiclePlate": "ทะเบียนรถ",
+      "deliveryAddress": "ที่อยู่จัดส่ง",
+      "saveDraft": "บันทึกฉบับร่าง",
+      "saveSuccess": "บันทึกใบส่งของสำเร็จ",
+      "saveFailed": "บันทึกใบส่งของล้มเหลว",
+      "notFoundError": "ไม่พบใบส่งของ",
+      "actionFailed": "ดำเนินการ {{action}} ล้มเหลว",
+      "grid": {
+        "qtyOrdered": "จำนวนสั่งซื้อ",
+        "qtyDelivered": "จำนวนที่จัดส่ง"
+      },
+      "actions": {
+        "dispatch": "จัดส่งออก",
+        "dispatched": "จัดส่งใบส่งของออกแล้ว",
+        "deliver": "ทำเครื่องหมายว่าส่งถึงแล้ว",
+        "delivered": "ใบส่งของถึงแล้ว",
+        "void": "ยกเลิก",
+        "voided": "ยกเลิกใบส่งของแล้ว"
+      }
     }
   },
   "goodsReceive": {

@@ -29,6 +29,14 @@ class PermissionName(str, enum.Enum):
     QUOTATION_DELETE = "quotation.delete"
     QUOTATION_APPROVE = "quotation.approve"
     QUOTATION_CONVERT = "quotation.convert"
+    SALES_ORDER_READ = "sales_order.read"
+    SALES_ORDER_CREATE = "sales_order.create"
+    SALES_ORDER_UPDATE = "sales_order.update"
+    SALES_ORDER_DELETE = "sales_order.delete"
+    DELIVERY_NOTE_READ = "delivery_note.read"
+    DELIVERY_NOTE_CREATE = "delivery_note.create"
+    DELIVERY_NOTE_UPDATE = "delivery_note.update"
+    DELIVERY_NOTE_DELETE = "delivery_note.delete"
     RENTAL_READ = "rental.read"
     RENTAL_CREATE = "rental.create"
     RENTAL_UPDATE = "rental.update"
@@ -76,6 +84,14 @@ ROLE_PERMISSIONS: dict[RoleName, frozenset[PermissionName]] = {
         PermissionName.QUOTATION_DELETE,
         PermissionName.QUOTATION_APPROVE,
         PermissionName.QUOTATION_CONVERT,
+        PermissionName.SALES_ORDER_READ,
+        PermissionName.SALES_ORDER_CREATE,
+        PermissionName.SALES_ORDER_UPDATE,
+        PermissionName.SALES_ORDER_DELETE,
+        PermissionName.DELIVERY_NOTE_READ,
+        PermissionName.DELIVERY_NOTE_CREATE,
+        PermissionName.DELIVERY_NOTE_UPDATE,
+        PermissionName.DELIVERY_NOTE_DELETE,
         PermissionName.RENTAL_READ,
         PermissionName.RENTAL_CREATE,
         PermissionName.RENTAL_UPDATE,
@@ -109,6 +125,12 @@ ROLE_PERMISSIONS: dict[RoleName, frozenset[PermissionName]] = {
         PermissionName.QUOTATION_READ,
         PermissionName.QUOTATION_CREATE,
         PermissionName.QUOTATION_UPDATE,
+        PermissionName.SALES_ORDER_READ,
+        PermissionName.SALES_ORDER_CREATE,
+        PermissionName.SALES_ORDER_UPDATE,
+        PermissionName.DELIVERY_NOTE_READ,
+        PermissionName.DELIVERY_NOTE_CREATE,
+        PermissionName.DELIVERY_NOTE_UPDATE,
         PermissionName.RENTAL_READ,
         PermissionName.RENTAL_CREATE,
         PermissionName.RENTAL_UPDATE,
@@ -122,6 +144,8 @@ ROLE_PERMISSIONS: dict[RoleName, frozenset[PermissionName]] = {
         PermissionName.EDIT_CUSTOMER,
         PermissionName.FORKLIFT_READ,
         PermissionName.QUOTATION_READ,
+        PermissionName.SALES_ORDER_READ,
+        PermissionName.DELIVERY_NOTE_READ,
         PermissionName.RENTAL_READ,
         PermissionName.BILLING_READ,
         # "Coordinators/technicians": can see project workflows and toggle

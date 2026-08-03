@@ -3150,13 +3150,51 @@
     "list": {
       "title": "ໃບສັ່ງຂາຍ",
       "subtitle": "ຄຳສັ່ງຊື້ຂອງລູກຄ້າທີ່ຢືນຢັນແລ້ວ ແປງມາຈາກໃບສະເໜີລາຄາ",
-      "empty": "ຍັງບໍ່ມີໃບສັ່ງຂາຍ"
+      "empty": "ຍັງບໍ່ມີໃບສັ່ງຂາຍ",
+      "totalCount": "{{count}} ໃບສັ່ງຂາຍ",
+      "allStatuses": "ທຸກສະຖານະ",
+      "searchPlaceholder": "ຄົ້ນຫາເລກທີ ຫຼື ຫົວຂໍ້ໃບສັ່ງຂາຍ...",
+      "newSalesOrder": "ໃບສັ່ງຂາຍໃໝ່",
+      "createOrAdjust": "ສ້າງໃບສັ່ງຂາຍໃໝ່ ຫຼື ປັບຕົວກອງຂອງທ່ານ",
+      "deleteConfirmTitle": "ລຶບໃບສັ່ງຂາຍ?",
+      "deleteConfirmMessage": "ການດຳເນີນການນີ້ຈະລຶບໃບສັ່ງຂາຍ {{number}} ຖາວອນ. ບໍ່ສາມາດຍົກເລີກໄດ້.",
+      "loadError": "ໂຫຼດລາຍການໃບສັ່ງຂາຍລົ້ມເຫລວ"
     },
     "table": {
       "number": "ເລກທີໃບສັ່ງຂາຍ",
       "customer": "ລູກຄ້າ",
       "quotationRef": "ອ້າງອີງໃບສະເໜີລາຄາ",
       "orderDate": "ວັນທີສັ່ງຊື້"
+    },
+    "status": {
+      "draft": "ສະບັບຮ່າງ",
+      "confirmed": "ຢືນຢັນແລ້ວ",
+      "completed": "ສຳເລັດແລ້ວ",
+      "cancelled": "ຍົກເລີກແລ້ວ"
+    },
+    "editor": {
+      "newTitle": "ໃບສັ່ງຂາຍໃໝ່",
+      "title": "ໃບສັ່ງຂາຍ",
+      "titleLabel": "ຫົວຂໍ້",
+      "titlePlaceholder": "ຕົວຢ່າງ: ຊື້ລົດຍົກ — ບໍລິສັດ ວົງ ໂລຈິສຕິກ",
+      "quotationRef": "ອ້າງອີງໃບສະເໜີລາຄາ",
+      "noQuotation": "ບໍ່ມີໃບສະເໜີລາຄາເຊື່ອມໂຍງ",
+      "soNumber": "ເລກທີໃບສັ່ງຂາຍ",
+      "orderDate": "ວັນທີສັ່ງຊື້",
+      "expectedDelivery": "ວັນທີສົ່ງເຄື່ອງທີ່ຄາດໄວ້",
+      "saveDraft": "ບັນທຶກສະບັບຮ່າງ",
+      "saveSuccess": "ບັນທຶກໃບສັ່ງຂາຍສຳເລັດແລ້ວ",
+      "saveFailed": "ບັນທຶກໃບສັ່ງຂາຍລົ້ມເຫລວ",
+      "notFoundError": "ບໍ່ພົບໃບສັ່ງຂາຍ",
+      "actionFailed": "ດຳເນີນການ {{action}} ລົ້ມເຫລວ",
+      "actions": {
+        "confirm": "ຢືນຢັນ",
+        "confirmed": "ຢືນຢັນໃບສັ່ງຂາຍແລ້ວ",
+        "complete": "ໝາຍວ່າສຳເລັດ",
+        "completed": "ໃບສັ່ງຂາຍສຳເລັດແລ້ວ",
+        "void": "ຍົກເລີກ",
+        "voided": "ຍົກເລີກໃບສັ່ງຂາຍແລ້ວ"
+      }
     }
   },
   "taxInvoices": {
@@ -3204,7 +3242,14 @@
     "list": {
       "title": "ໃບສົ່ງເຄື່ອງ",
       "subtitle": "ສິນຄ້າທີ່ສົ່ງໃຫ້ລູກຄ້າຕາມໃບສັ່ງຂາຍ",
-      "empty": "ຍັງບໍ່ມີໃບສົ່ງເຄື່ອງ"
+      "empty": "ຍັງບໍ່ມີໃບສົ່ງເຄື່ອງ",
+      "totalCount": "{{count}} ໃບສົ່ງເຄື່ອງ",
+      "searchPlaceholder": "ຄົ້ນຫາເລກທີໃບສົ່ງເຄື່ອງ...",
+      "newDeliveryNote": "ໃບສົ່ງເຄື່ອງໃໝ່",
+      "createOrAdjust": "ສ້າງໃບສົ່ງເຄື່ອງໃໝ່ ຫຼື ປັບຕົວກອງຂອງທ່ານ",
+      "deleteConfirmTitle": "ລຶບໃບສົ່ງເຄື່ອງ?",
+      "deleteConfirmMessage": "ການດຳເນີນການນີ້ຈະລຶບໃບສົ່ງເຄື່ອງ {{number}} ຖາວອນ. ບໍ່ສາມາດຍົກເລີກໄດ້.",
+      "loadError": "ໂຫຼດລາຍການໃບສົ່ງເຄື່ອງລົ້ມເຫລວ"
     },
     "table": {
       "number": "ເລກທີໃບສົ່ງເຄື່ອງ",
@@ -3212,6 +3257,41 @@
       "soRef": "ອ້າງອີງໃບສັ່ງຂາຍ",
       "deliveryDate": "ວັນທີສົ່ງເຄື່ອງ",
       "warehouse": "ສາງເກັບເຄື່ອງ"
+    },
+    "status": {
+      "draft": "ສະບັບຮ່າງ",
+      "dispatched": "ອອກເດີນທາງແລ້ວ",
+      "delivered": "ສົ່ງເຖິງແລ້ວ",
+      "cancelled": "ຍົກເລີກແລ້ວ"
+    },
+    "editor": {
+      "newTitle": "ໃບສົ່ງເຄື່ອງໃໝ່",
+      "dnNumber": "ເລກທີໃບສົ່ງເຄື່ອງ",
+      "salesOrderRef": "ໃບສັ່ງຂາຍ",
+      "selectSalesOrder": "ເລືອກໃບສັ່ງຂາຍ...",
+      "salesOrderRequired": "ຕ້ອງເລືອກໃບສັ່ງຂາຍກ່ອນບັນທຶກ.",
+      "deliveryDate": "ວັນທີສົ່ງເຄື່ອງ",
+      "warehouse": "ສາງເກັບເຄື່ອງ",
+      "driverName": "ຊື່ຄົນຂັບ",
+      "vehiclePlate": "ປ້າຍທະບຽນລົດ",
+      "deliveryAddress": "ທີ່ຢູ່ຈັດສົ່ງ",
+      "saveDraft": "ບັນທຶກສະບັບຮ່າງ",
+      "saveSuccess": "ບັນທຶກໃບສົ່ງເຄື່ອງສຳເລັດແລ້ວ",
+      "saveFailed": "ບັນທຶກໃບສົ່ງເຄື່ອງລົ້ມເຫລວ",
+      "notFoundError": "ບໍ່ພົບໃບສົ່ງເຄື່ອງ",
+      "actionFailed": "ດຳເນີນການ {{action}} ລົ້ມເຫລວ",
+      "grid": {
+        "qtyOrdered": "ຈຳນວນສັ່ງຊື້",
+        "qtyDelivered": "ຈຳນວນສົ່ງແລ້ວ"
+      },
+      "actions": {
+        "dispatch": "ອອກເດີນທາງ",
+        "dispatched": "ໃບສົ່ງເຄື່ອງອອກເດີນທາງແລ້ວ",
+        "deliver": "ໝາຍວ່າສົ່ງເຖິງແລ້ວ",
+        "delivered": "ໃບສົ່ງເຄື່ອງສົ່ງເຖິງແລ້ວ",
+        "void": "ຍົກເລີກ",
+        "voided": "ຍົກເລີກໃບສົ່ງເຄື່ອງແລ້ວ"
+      }
     }
   },
   "goodsReceive": {
