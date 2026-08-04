@@ -1,7 +1,7 @@
 """sales_orders, sales_order_items, sales_order_status_history,
 delivery_notes, delivery_note_items, delivery_note_status_history
 
-Revision ID: a1b2c3d4e5f6
+Revision ID: f6a7b8c9d0e1
 Revises: d4e5f6a7b8c9
 Create Date: 2026-08-03
 
@@ -10,7 +10,7 @@ from alembic import op
 import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
-revision = "a1b2c3d4e5f6"
+revision = "f6a7b8c9d0e1"
 down_revision = "d4e5f6a7b8c9"
 branch_labels = None
 depends_on = None

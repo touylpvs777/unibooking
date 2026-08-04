@@ -325,7 +325,8 @@
       "paymentVouchers": "ใบสำคัญจ่าย",
       "deliveryNotes": "ใบส่งของ",
       "goodsReceive": "ใบรับสินค้า",
-      "goodsIssue": "ใบเบิกสินค้า"
+      "goodsIssue": "ใบเบิกสินค้า",
+      "receipts": "ใบเสร็จรับเงิน"
     },
     "expandSidebar": "ขยายแผงนำทาง",
     "collapseSidebar": "ย่อแผงนำทาง"
@@ -367,6 +368,7 @@
     "markAllRead": "ทำเครื่องหมายว่าอ่านทั้งหมดแล้ว",
     "myProfile": "โปรไฟล์ของฉัน",
     "changePassword": "เปลี่ยนรหัสผ่าน",
+    "changePhoto": "เปลี่ยนรูปภาพ",
     "adminBroadcast": "ผู้ดูแลระบบ"
   },
   "login": {
@@ -380,7 +382,10 @@
     "signIn": "เข้าสู่ระบบ",
     "signingIn": "กำลังเข้าสู่ระบบ…",
     "invalidCredentials": "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง",
-    "footer": "© 2026 DK LAO Services สงวนลิขสิทธิ์"
+    "footer": "© 2026 DK LAO Services สงวนลิขสิทธิ์",
+    "forgotPassword": "ลืมรหัสผ่าน?",
+    "noAccount": "ยังไม่มีบัญชี?",
+    "signUp": "สมัครสมาชิก"
   },
   "dashboard": {
     "title": "แดชบอร์ด",
@@ -3113,6 +3118,29 @@
     "incorrectCurrentError": "รหัสผ่านปัจจุบันไม่ถูกต้อง",
     "genericError": "เปลี่ยนรหัสผ่านไม่สำเร็จ กรุณาลองใหม่อีกครั้ง"
   },
+  "profile": {
+    "title": "โปรไฟล์ของฉัน",
+    "subtitle": "จัดการข้อมูลส่วนตัวและความปลอดภัยของบัญชี",
+    "uploadPhoto": "อัปโหลดรูปภาพ",
+    "saveChanges": "บันทึกการเปลี่ยนแปลง",
+    "savedToast": "อัปเดตโปรไฟล์แล้ว",
+    "personalDetails": {
+      "title": "ข้อมูลส่วนตัว",
+      "firstName": "ชื่อจริง",
+      "lastName": "นามสกุล",
+      "email": "อีเมล",
+      "phone": "หมายเลขโทรศัพท์",
+      "phonePlaceholder": "เช่น +856 20 1234 5678"
+    },
+    "security": {
+      "title": "ความปลอดภัย",
+      "currentPassword": "รหัสผ่านปัจจุบัน",
+      "newPassword": "รหัสผ่านใหม่",
+      "confirmPassword": "ยืนยันรหัสผ่าน",
+      "mismatchError": "รหัสผ่านใหม่และการยืนยันไม่ตรงกัน",
+      "tooShortError": "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร"
+    }
+  },
   "documentPreview": {
     "docTitle": {
       "invoice": "ใบแจ้งหนี้",
@@ -3376,5 +3404,65 @@
     "pasteRow": "วางแถว",
     "duplicateRow": "ทำซ้ำแถว",
     "deleteRow": "ลบแถว"
+  },
+  "receipts": {
+    "list": {
+      "title": "ใบเสร็จรับเงิน",
+      "subtitle": "การชำระเงินที่ได้รับตามใบแจ้งหนี้ลูกค้า",
+      "empty": "ยังไม่มีใบเสร็จรับเงิน",
+      "totalCount": "{{count}} ใบเสร็จรับเงิน",
+      "allStatuses": "ทุกสถานะ",
+      "searchPlaceholder": "ค้นหาเลขที่ใบเสร็จรับเงิน...",
+      "newReceipt": "ใบเสร็จรับเงินใหม่",
+      "createOrAdjust": "สร้างใบเสร็จรับเงินใหม่ หรือปรับตัวกรองของคุณ",
+      "deleteConfirmTitle": "ลบใบเสร็จรับเงิน?",
+      "deleteConfirmMessage": "การดำเนินการนี้จะลบใบเสร็จรับเงิน {{number}} อย่างถาวร ไม่สามารถยกเลิกได้",
+      "loadError": "ไม่สามารถโหลดใบเสร็จรับเงินได้"
+    },
+    "table": {
+      "number": "เลขที่ใบเสร็จรับเงิน",
+      "customer": "ลูกค้า",
+      "invoiceRef": "อ้างอิงใบแจ้งหนี้",
+      "paymentDate": "วันที่ชำระ"
+    },
+    "status": {
+      "draft": "ฉบับร่าง",
+      "confirmed": "ยืนยันแล้ว",
+      "cancelled": "ยกเลิกแล้ว"
+    },
+    "editor": {
+      "newTitle": "ใบเสร็จรับเงินใหม่",
+      "title": "ใบเสร็จรับเงิน",
+      "receiptNumber": "เลขที่ใบเสร็จรับเงิน",
+      "invoiceRef": "ใบแจ้งหนี้",
+      "selectInvoice": "เลือกใบแจ้งหนี้...",
+      "invoiceRequired": "ต้องเลือกใบแจ้งหนี้ก่อนบันทึก",
+      "paymentDetails": "รายละเอียดการชำระเงิน",
+      "paymentDate": "วันที่ชำระ",
+      "paymentMethod": "วิธีการชำระเงิน",
+      "paymentMethods": {
+        "cash": "เงินสด",
+        "transfer": "โอนผ่านธนาคาร",
+        "cheque": "เช็ค"
+      },
+      "bankAccount": "บัญชีธนาคาร",
+      "selectBankAccount": "เลือกบัญชีธนาคาร...",
+      "referenceNumber": "เลขที่อ้างอิง / ธุรกรรม",
+      "referenceNumberPlaceholder": "เลขที่ธุรกรรมหรือเช็ค",
+      "amountReceived": "จำนวนเงินที่ได้รับ",
+      "invoiceBalanceDue": "ยอดค้างชำระใบแจ้งหนี้",
+      "saveDraft": "บันทึกฉบับร่าง",
+      "saveSuccess": "บันทึกใบเสร็จรับเงินแล้ว",
+      "saveFailed": "ไม่สามารถบันทึกใบเสร็จรับเงินได้",
+      "notFoundError": "ไม่พบใบเสร็จรับเงิน",
+      "actionFailed": "ไม่สามารถ {{action}} ได้",
+      "paymentAgainstInvoice": "ชำระเงินตามใบแจ้งหนี้ {{number}}",
+      "actions": {
+        "confirm": "ยืนยัน",
+        "confirmed": "ยืนยันใบเสร็จรับเงินแล้ว",
+        "void": "ยกเลิก",
+        "voided": "ใบเสร็จรับเงินถูกยกเลิกแล้ว"
+      }
+    }
   }
 }

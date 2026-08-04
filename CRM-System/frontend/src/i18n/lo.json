@@ -325,7 +325,8 @@
       "paymentVouchers": "ໃບຈ່າຍເງິນ",
       "deliveryNotes": "ໃບສົ່ງເຄື່ອງ",
       "goodsReceive": "ໃບຮັບເຄື່ອງ",
-      "goodsIssue": "ໃບເບີກເຄື່ອງ"
+      "goodsIssue": "ໃບເບີກເຄື່ອງ",
+      "receipts": "ໃບຮັບເງິນ"
     },
     "expandSidebar": "ຂະຫຍາຍກະດານການນຳທາງ",
     "collapseSidebar": "ຫຍໍ້ກະດານການນຳທາງ"
@@ -367,6 +368,7 @@
     "markAllRead": "ໝາຍວ່າອ່ານທັງໝົດແລ້ວ",
     "myProfile": "ໂປຣໄຟລ໌ຂອງຂ້ອຍ",
     "changePassword": "ປ່ຽນລະຫັດຜ່ານ",
+    "changePhoto": "ປ່ຽນຮູບພາບ",
     "adminBroadcast": "ຜູ້ດູແລລະບົບ"
   },
   "login": {
@@ -380,7 +382,10 @@
     "signIn": "ເຂົ້າສູ່ລະບົບ",
     "signingIn": "ກຳລັງເຂົ້າສູ່ລະບົບ…",
     "invalidCredentials": "ຊື່ຜູ້ໃຊ້ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ",
-    "footer": "© 2026 ດີເຄ ລາວ ເຊີວິສ. ສະຫງວນລິຂະສິດ."
+    "footer": "© 2026 ດີເຄ ລາວ ເຊີວິສ. ສະຫງວນລິຂະສິດ.",
+    "forgotPassword": "ລືມລະຫັດຜ່ານ?",
+    "noAccount": "ຍັງບໍ່ມີບັນຊີ?",
+    "signUp": "ສະໝັກສະມາຊິກ"
   },
   "dashboard": {
     "title": "ໜ້າຫຼັກ",
@@ -3113,6 +3118,29 @@
     "incorrectCurrentError": "ລະຫັດຜ່ານປັດຈຸບັນບໍ່ຖືກຕ້ອງ.",
     "genericError": "ປ່ຽນລະຫັດຜ່ານບໍ່ສຳເລັດ. ກະລຸນາລອງໃໝ່ອີກຄັ້ງ."
   },
+  "profile": {
+    "title": "ໂປຣໄຟລ໌ຂອງຂ້ອຍ",
+    "subtitle": "ຈັດການຂໍ້ມູນສ່ວນຕົວ ແລະ ຄວາມປອດໄພຂອງບັນຊີ.",
+    "uploadPhoto": "ອັບໂຫລດຮູບພາບ",
+    "saveChanges": "ບັນທຶກການປ່ຽນແປງ",
+    "savedToast": "ອັບເດດໂປຣໄຟລ໌ແລ້ວ.",
+    "personalDetails": {
+      "title": "ຂໍ້ມູນສ່ວນຕົວ",
+      "firstName": "ຊື່",
+      "lastName": "ນາມສະກຸນ",
+      "email": "ອີເມວ",
+      "phone": "ເບີໂທລະສັບ",
+      "phonePlaceholder": "ຕົວຢ່າງ: +856 20 1234 5678"
+    },
+    "security": {
+      "title": "ຄວາມປອດໄພ",
+      "currentPassword": "ລະຫັດຜ່ານປັດຈຸບັນ",
+      "newPassword": "ລະຫັດຜ່ານໃໝ່",
+      "confirmPassword": "ຢືນຢັນລະຫັດຜ່ານ",
+      "mismatchError": "ລະຫັດຜ່ານໃໝ່ ແລະ ການຢືນຢັນບໍ່ກົງກັນ.",
+      "tooShortError": "ລະຫັດຜ່ານຕ້ອງມີຢ່າງໜ້ອຍ 8 ຕົວອັກສອນ."
+    }
+  },
   "documentPreview": {
     "docTitle": {
       "invoice": "ໃບແຈ້ງໜີ້",
@@ -3376,5 +3404,65 @@
     "pasteRow": "ວາງແຖວ",
     "duplicateRow": "ຄັດລອກແຖວ",
     "deleteRow": "ລຶບແຖວ"
+  },
+  "receipts": {
+    "list": {
+      "title": "ໃບຮັບເງິນ",
+      "subtitle": "ການຊຳລະເງິນທີ່ໄດ້ຮັບຕໍ່ໃບແຈ້ງໜີ້ລູກຄ້າ",
+      "empty": "ຍັງບໍ່ມີໃບຮັບເງິນ",
+      "totalCount": "{{count}} ໃບຮັບເງິນ",
+      "allStatuses": "ທຸກສະຖານະ",
+      "searchPlaceholder": "ຄົ້ນຫາເລກທີໃບຮັບເງິນ...",
+      "newReceipt": "ໃບຮັບເງິນໃໝ່",
+      "createOrAdjust": "ສ້າງໃບຮັບເງິນໃໝ່ ຫຼື ປັບຕົວກອງຂອງທ່ານ",
+      "deleteConfirmTitle": "ລຶບໃບຮັບເງິນ?",
+      "deleteConfirmMessage": "ການດຳເນີນການນີ້ຈະລຶບໃບຮັບເງິນ {{number}} ຖາວອນ. ບໍ່ສາມາດຍົກເລີກໄດ້.",
+      "loadError": "ບໍ່ສາມາດໂຫຼດໃບຮັບເງິນໄດ້"
+    },
+    "table": {
+      "number": "ເລກທີໃບຮັບເງິນ",
+      "customer": "ລູກຄ້າ",
+      "invoiceRef": "ອ້າງອີງໃບແຈ້ງໜີ້",
+      "paymentDate": "ວັນທີຊຳລະ"
+    },
+    "status": {
+      "draft": "ຮ່າງ",
+      "confirmed": "ຢືນຢັນແລ້ວ",
+      "cancelled": "ຍົກເລີກແລ້ວ"
+    },
+    "editor": {
+      "newTitle": "ໃບຮັບເງິນໃໝ່",
+      "title": "ໃບຮັບເງິນ",
+      "receiptNumber": "ເລກທີໃບຮັບເງິນ",
+      "invoiceRef": "ໃບແຈ້ງໜີ້",
+      "selectInvoice": "ເລືອກໃບແຈ້ງໜີ້...",
+      "invoiceRequired": "ຕ້ອງເລືອກໃບແຈ້ງໜີ້ກ່ອນບັນທຶກ.",
+      "paymentDetails": "ລາຍລະອຽດການຊຳລະເງິນ",
+      "paymentDate": "ວັນທີຊຳລະ",
+      "paymentMethod": "ວິທີການຊຳລະ",
+      "paymentMethods": {
+        "cash": "ເງິນສົດ",
+        "transfer": "ໂອນຜ່ານທະນາຄານ",
+        "cheque": "ເຊັກ"
+      },
+      "bankAccount": "ບັນຊີທະນາຄານ",
+      "selectBankAccount": "ເລືອກບັນຊີທະນາຄານ...",
+      "referenceNumber": "ເລກທີອ້າງອີງ / ທຸລະກຳ",
+      "referenceNumberPlaceholder": "ເລກທີທຸລະກຳ ຫຼື ເຊັກ",
+      "amountReceived": "ຈຳນວນເງິນທີ່ໄດ້ຮັບ",
+      "invoiceBalanceDue": "ຍອດຄ້າງຊຳລະໃບແຈ້ງໜີ້",
+      "saveDraft": "ບັນທຶກຮ່າງ",
+      "saveSuccess": "ບັນທຶກໃບຮັບເງິນແລ້ວ",
+      "saveFailed": "ບໍ່ສາມາດບັນທຶກໃບຮັບເງິນໄດ້",
+      "notFoundError": "ບໍ່ພົບໃບຮັບເງິນ",
+      "actionFailed": "ບໍ່ສາມາດ {{action}} ໄດ້",
+      "paymentAgainstInvoice": "ຊຳລະເງິນຕໍ່ໃບແຈ້ງໜີ້ {{number}}",
+      "actions": {
+        "confirm": "ຢືນຢັນ",
+        "confirmed": "ຢືນຢັນໃບຮັບເງິນແລ້ວ",
+        "void": "ຍົກເລີກ",
+        "voided": "ໃບຮັບເງິນຖືກຍົກເລີກແລ້ວ"
+      }
+    }
   }
 }

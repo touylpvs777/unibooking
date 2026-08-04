@@ -17,4 +17,6 @@ export interface User {
   is_active: boolean
   is_superuser: boolean
   role_id: number | null
+  avatar_url?: string | null
+  avatar_icon?: string | null
 }

@@ -40,6 +40,8 @@ const InvoiceFormPage = lazy(() => import('@/pages/Billing/InvoiceFormPage'))
 const InvoiceDetailPage = lazy(() => import('@/pages/Billing/InvoiceDetailPage'))
 const PaymentListPage = lazy(() => import('@/pages/Billing/PaymentListPage'))
 const PaymentDetailPage = lazy(() => import('@/pages/Billing/PaymentDetailPage'))
+const ReceiptListPage = lazy(() => import('@/pages/Billing/ReceiptListPage'))
+const ReceiptEditorPage = lazy(() => import('@/pages/Billing/ReceiptEditorPage'))
 const TaxInvoiceListPage = lazy(() => import('@/pages/Billing/TaxInvoiceListPage'))
 const CreditNoteListPage = lazy(() => import('@/pages/Billing/CreditNoteListPage'))
 const PaymentVoucherListPage = lazy(() => import('@/pages/Billing/PaymentVoucherListPage'))
@@ -68,6 +70,7 @@ const ProjectListPage = lazy(() => import('@/pages/Projects/ProjectListPage'))
 const ProjectDetailPage = lazy(() => import('@/pages/Projects/ProjectDetailPage'))
 const SettingsPage = lazy(() => import('@/pages/Settings/Settings'))
 const ChangePasswordPage = lazy(() => import('@/pages/Settings/ChangePasswordPage'))
+const ProfilePage = lazy(() => import('@/pages/Profile/ProfilePage'))
 const RentalMvpDashboard = lazy(() => import('@/pages/RentalMvp/RentalDashboard'))
 
 function PageLoader() {
@@ -100,7 +103,7 @@ export default function App() {
             <Route path="/activities" element={<Suspense fallback={<PageLoader />}><ActivityPage /></Suspense>} />
             <Route path="/reports"  element={<Suspense fallback={<PageLoader />}><ReportsPage /></Suspense>} />
             <Route path="/settings" element={<Suspense fallback={<PageLoader />}><SettingsPage /></Suspense>} />
-            <Route path="/profile" element={<Placeholder name="My Profile" />} />
+            <Route path="/profile" element={<Suspense fallback={<PageLoader />}><ProfilePage /></Suspense>} />
             <Route path="/change-password" element={<Suspense fallback={<PageLoader />}><ChangePasswordPage /></Suspense>} />
 
             <Route path="/catalog"                element={<Suspense fallback={<PageLoader />}><CatalogPage /></Suspense>} />
@@ -138,6 +141,9 @@ export default function App() {
             <Route path="/billing/payments"                element={<Suspense fallback={<PageLoader />}><PaymentListPage /></Suspense>} />
             <Route path="/billing/payments/:id"            element={<Suspense fallback={<PageLoader />}><PaymentDetailPage /></Suspense>} />
             <Route path="/billing/payment-vouchers"        element={<Suspense fallback={<PageLoader />}><PaymentVoucherListPage /></Suspense>} />
+            <Route path="/billing/receipts"                element={<Suspense fallback={<PageLoader />}><ReceiptListPage /></Suspense>} />
+            <Route path="/billing/receipts/new"            element={<Suspense fallback={<PageLoader />}><ReceiptEditorPage /></Suspense>} />
+            <Route path="/billing/receipts/:id"            element={<Suspense fallback={<PageLoader />}><ReceiptEditorPage /></Suspense>} />
             <Route path="/billing/deposits"                element={<Suspense fallback={<PageLoader />}><DepositListPage /></Suspense>} />
             <Route path="/billing/deposits/:id"            element={<Suspense fallback={<PageLoader />}><DepositDetailPage /></Suspense>} />
             <Route path="/billing/revenue-recognitions"    element={<Suspense fallback={<PageLoader />}><RevenueRecognitionPage /></Suspense>} />

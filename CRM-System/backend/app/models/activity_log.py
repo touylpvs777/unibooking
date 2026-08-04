@@ -73,6 +73,12 @@ class ActionType(str, enum.Enum):
     DELIVERY_NOTE_DISPATCHED = "delivery_note_dispatched"
     DELIVERY_NOTE_DELIVERED = "delivery_note_delivered"
     DELIVERY_NOTE_CANCELLED = "delivery_note_cancelled"
+    # ── Receipts ───────────────────────────────────────────────────
+    RECEIPT_CREATED = "receipt_created"
+    RECEIPT_UPDATED = "receipt_updated"
+    RECEIPT_DELETED = "receipt_deleted"
+    RECEIPT_CONFIRMED = "receipt_confirmed"
+    RECEIPT_CANCELLED = "receipt_cancelled"
     # ── Rental Contracts ──────────────────────────────────────────
     RENTAL_CONTRACT_CREATED = "rental_contract_created"
     RENTAL_CONTRACT_UPDATED = "rental_contract_updated"
@@ -148,6 +154,7 @@ class EntityType(str, enum.Enum):
     QUOTATION = "quotation"
     SALES_ORDER = "sales_order"
     DELIVERY_NOTE = "delivery_note"
+    RECEIPT = "receipt"
     RENTAL_CONTRACT = "rental_contract"
     INVOICE = "invoice"
     PAYMENT = "payment"

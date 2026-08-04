@@ -37,6 +37,10 @@ class PermissionName(str, enum.Enum):
     DELIVERY_NOTE_CREATE = "delivery_note.create"
     DELIVERY_NOTE_UPDATE = "delivery_note.update"
     DELIVERY_NOTE_DELETE = "delivery_note.delete"
+    RECEIPT_READ = "receipt.read"
+    RECEIPT_CREATE = "receipt.create"
+    RECEIPT_UPDATE = "receipt.update"
+    RECEIPT_DELETE = "receipt.delete"
     RENTAL_READ = "rental.read"
     RENTAL_CREATE = "rental.create"
     RENTAL_UPDATE = "rental.update"
@@ -92,6 +96,10 @@ ROLE_PERMISSIONS: dict[RoleName, frozenset[PermissionName]] = {
         PermissionName.DELIVERY_NOTE_CREATE,
         PermissionName.DELIVERY_NOTE_UPDATE,
         PermissionName.DELIVERY_NOTE_DELETE,
+        PermissionName.RECEIPT_READ,
+        PermissionName.RECEIPT_CREATE,
+        PermissionName.RECEIPT_UPDATE,
+        PermissionName.RECEIPT_DELETE,
         PermissionName.RENTAL_READ,
         PermissionName.RENTAL_CREATE,
         PermissionName.RENTAL_UPDATE,
@@ -131,6 +139,9 @@ ROLE_PERMISSIONS: dict[RoleName, frozenset[PermissionName]] = {
         PermissionName.DELIVERY_NOTE_READ,
         PermissionName.DELIVERY_NOTE_CREATE,
         PermissionName.DELIVERY_NOTE_UPDATE,
+        PermissionName.RECEIPT_READ,
+        PermissionName.RECEIPT_CREATE,
+        PermissionName.RECEIPT_UPDATE,
         PermissionName.RENTAL_READ,
         PermissionName.RENTAL_CREATE,
         PermissionName.RENTAL_UPDATE,
@@ -146,6 +157,7 @@ ROLE_PERMISSIONS: dict[RoleName, frozenset[PermissionName]] = {
         PermissionName.QUOTATION_READ,
         PermissionName.SALES_ORDER_READ,
         PermissionName.DELIVERY_NOTE_READ,
+        PermissionName.RECEIPT_READ,
         PermissionName.RENTAL_READ,
         PermissionName.BILLING_READ,
         # "Coordinators/technicians": can see project workflows and toggle

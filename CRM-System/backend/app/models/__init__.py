@@ -17,6 +17,8 @@ from app.models.forklift_status_history import ForkliftStatusHistory
 from app.models.import_job import ImportError, ImportJob
 from app.models.invoice import Invoice
 from app.models.invoice_item import InvoiceItem
+from app.models.receipt import Receipt
+from app.models.receipt_status_history import ReceiptStatusHistory
 from app.models.quotation import Quotation
 from app.models.quotation_approval import QuotationApproval
 from app.models.quotation_item import QuotationItem
@@ -81,6 +83,7 @@ __all__ = [
     "RentalContractTerm", "RentalExtension", "RentalReturn",
     "RentalDamageReport", "RentalBillingCycle",
     "Invoice", "InvoiceItem", "Payment", "PaymentAllocation",
+    "Receipt", "ReceiptStatusHistory",
     "Deposit", "RevenueRecognition",
     "MaintenancePlan", "MaintenanceSchedule", "WorkOrder", "ServiceHistory", "MaintenanceCost",
     "SparePart", "Warehouse", "InventoryBalance", "InventoryTransaction",

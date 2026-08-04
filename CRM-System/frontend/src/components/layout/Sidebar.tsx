@@ -4,16 +4,18 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   LayoutDashboard, Users, TrendingUp, Activity, BarChart2, Settings,
-  Package, Truck, FileText, ClipboardList,
+  Package, Truck, Car, FileText, ClipboardList,
   Building2, ArrowRightLeft, Wrench, Radio,
   Box, Receipt, CreditCard, Landmark, FileSpreadsheet, Warehouse, LogOut, ShoppingCart,
   UserCircle, KeyRound, PanelLeftClose, PanelLeftOpen, ChevronDown,
   FileCheck2, ReceiptText, Undo2, Banknote, FileOutput, PackageCheck, PackageMinus,
+  BadgeCheck, Camera,
 } from 'lucide-react'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import { useAuthStore } from '@/store/authStore'
 import { useSidebarStore } from '@/store/sidebarStore'
 import { useCompanyStore } from '@/store/companyStore'
+import { useAvatarStore } from '@/store/avatarStore'
 import { resolveMediaUrl } from '@/utils/media'
 import './Sidebar.css'
 
@@ -21,6 +23,28 @@ interface NavGroup {
   id: string
   labelKey: string
   items: { to: string; labelKey: string; icon: React.ElementType; adminOnly?: boolean }[]
+}
+
+// Maps a user's `avatar_icon` value to a Lucide icon, used when they have
+// no uploaded photo but picked a stand-in icon instead (e.g. drivers/dispatchers).
+const AVATAR_ICONS: Record<string, React.ElementType> = {
+  truck: Truck,
+  car: Car,
+}
+
+function SidebarAvatarContent({
+  avatarUrl,
+  avatarIcon,
+  initials,
+}: {
+  avatarUrl: string | null
+  avatarIcon?: string | null
+  initials: string
+}) {
+  if (avatarUrl) return <img src={avatarUrl} alt="" className="sidebar-avatar-img" />
+  const Icon = avatarIcon ? AVATAR_ICONS[avatarIcon] : undefined
+  if (Icon) return <Icon size={16} />
+  return <>{initials}</>
 }
 
 const NAV_GROUPS: NavGroup[] = [
@@ -104,6 +128,7 @@ const NAV_GROUPS: NavGroup[] = [
       { to: '/billing/tax-invoices', labelKey: 'nav.items.taxInvoices', icon: ReceiptText },
       { to: '/billing/credit-notes', labelKey: 'nav.items.creditNotes', icon: Undo2 },
       { to: '/billing/payments', labelKey: 'nav.items.payments', icon: CreditCard },
+      { to: '/billing/receipts', labelKey: 'nav.items.receipts', icon: BadgeCheck },
       { to: '/billing/payment-vouchers', labelKey: 'nav.items.paymentVouchers', icon: Banknote },
       { to: '/billing/deposits', labelKey: 'nav.items.deposits', icon: Landmark },
       { to: '/billing/statements', labelKey: 'nav.items.statements', icon: FileSpreadsheet },
@@ -137,6 +162,21 @@ export default function Sidebar() {
   const initials = user
     ? (user.full_name ?? user.username).split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase()
     : '?'
+  const userAvatarUrl = resolveMediaUrl(user?.avatar_url)
+  const customAvatar = useAvatarStore((s) => s.customAvatar)
+  const setCustomAvatar = useAvatarStore((s) => s.setCustomAvatar)
+  const avatarFileInputRef = useRef<HTMLInputElement>(null)
+  const avatarUrl = customAvatar ?? userAvatarUrl
+
+  const handleAvatarFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => setCustomAvatar(reader.result as string)
+    reader.readAsDataURL(file)
+  }
+
   const displayName = user?.full_name ?? user?.username ?? '—'
   const role = user?.is_superuser ? t('header.roleAdmin') : t('header.roleUser')
 
@@ -198,7 +238,7 @@ export default function Sidebar() {
         {/* Brand */}
         <div className="sidebar-brand">
           <NavLink to="/dashboard" className="sidebar-brand-icon-link" onClick={closeMobile} title={brandCompanyName}>
-            <div className="sidebar-brand-icon">
+            <div className={`sidebar-brand-icon${brandLogoUrl ? ' sidebar-brand-icon--logo' : ''}`}>
               {brandLogoUrl
                 ? <img src={brandLogoUrl} alt="" className="sidebar-brand-logo-img" />
                 : <Building2 size={18} />}
@@ -290,7 +330,9 @@ export default function Sidebar() {
             aria-expanded={isUserMenuOpen}
             title={displayName}
           >
-            <div className="sidebar-avatar">{initials}</div>
+            <div className={`sidebar-avatar${avatarUrl ? ' sidebar-avatar--image' : ''}`}>
+              <SidebarAvatarContent avatarUrl={avatarUrl} avatarIcon={user?.avatar_icon} initials={initials} />
+            </div>
             {isExpanded && (
               <div className="sidebar-user-info">
                 <div className="sidebar-user-name">{displayName}</div>
@@ -307,7 +349,31 @@ export default function Sidebar() {
               role="menu"
             >
               <div className="sidebar-user-menu-header">
-                <div className="sidebar-avatar" style={{ width: 38, height: 38, fontSize: 13 }}>{initials}</div>
+                <button
+                  type="button"
+                  className="sidebar-avatar-upload-trigger"
+                  onClick={() => avatarFileInputRef.current?.click()}
+                  title={t('header.changePhoto')}
+                >
+                  <div
+                    className={`sidebar-avatar${avatarUrl ? ' sidebar-avatar--image' : ''}`}
+                    style={{ width: 38, height: 38, fontSize: 13 }}
+                  >
+                    <SidebarAvatarContent avatarUrl={avatarUrl} avatarIcon={user?.avatar_icon} initials={initials} />
+                  </div>
+                  <span className="sidebar-avatar-upload-overlay" aria-hidden="true">
+                    <Camera size={14} />
+                  </span>
+                </button>
+                <input
+                  ref={avatarFileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="sidebar-avatar-file-input"
+                  onChange={handleAvatarFileChange}
+                  tabIndex={-1}
+                  aria-hidden="true"
+                />
                 <div className="sidebar-user-menu-header-info">
                   <div className="sidebar-user-menu-name">{displayName}</div>
                   {user?.email && <div className="sidebar-user-menu-email">{user.email}</div>}

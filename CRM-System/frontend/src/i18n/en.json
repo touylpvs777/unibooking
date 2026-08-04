@@ -2309,7 +2309,8 @@
       "paymentVouchers": "Payment Vouchers",
       "deliveryNotes": "Delivery Notes",
       "goodsReceive": "Goods Receive",
-      "goodsIssue": "Goods Issue"
+      "goodsIssue": "Goods Issue",
+      "receipts": "Receipts"
     },
     "expandSidebar": "Expand navigation pane",
     "collapseSidebar": "Collapse navigation pane"
@@ -2351,6 +2352,7 @@
     "markAllRead": "Mark all as read",
     "myProfile": "My Profile",
     "changePassword": "Change Password",
+    "changePhoto": "Change Photo",
     "adminBroadcast": "Admin"
   },
   "login": {
@@ -2364,7 +2366,10 @@
     "signIn": "Sign In",
     "signingIn": "Signing in…",
     "invalidCredentials": "Invalid username or password",
-    "footer": "© 2026 DK LAO Services. All rights reserved."
+    "footer": "© 2026 DK LAO Services. All rights reserved.",
+    "forgotPassword": "Forgot Password?",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign Up"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -3120,6 +3125,29 @@
     "incorrectCurrentError": "Current password is incorrect.",
     "genericError": "Failed to change password. Please try again."
   },
+  "profile": {
+    "title": "My Profile",
+    "subtitle": "Manage your personal information and account security.",
+    "uploadPhoto": "Upload Photo",
+    "saveChanges": "Save Changes",
+    "savedToast": "Profile updated.",
+    "personalDetails": {
+      "title": "Personal Details",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "phonePlaceholder": "e.g. +856 20 1234 5678"
+    },
+    "security": {
+      "title": "Security",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "mismatchError": "New password and confirmation do not match.",
+      "tooShortError": "Password must be at least 8 characters."
+    }
+  },
   "documentPreview": {
     "docTitle": {
       "invoice": "INVOICE",
@@ -3383,5 +3411,65 @@
     "pasteRow": "Paste Row",
     "duplicateRow": "Duplicate Row",
     "deleteRow": "Delete Row"
+  },
+  "receipts": {
+    "list": {
+      "title": "Receipts",
+      "subtitle": "Payments received against customer invoices",
+      "empty": "No receipts yet",
+      "totalCount": "{{count}} receipts",
+      "allStatuses": "All statuses",
+      "searchPlaceholder": "Search receipt number...",
+      "newReceipt": "New Receipt",
+      "createOrAdjust": "Create a new receipt or adjust your filters",
+      "deleteConfirmTitle": "Delete receipt?",
+      "deleteConfirmMessage": "This will permanently delete receipt {{number}}. This cannot be undone.",
+      "loadError": "Failed to load receipts"
+    },
+    "table": {
+      "number": "Receipt Number",
+      "customer": "Customer",
+      "invoiceRef": "Invoice Ref.",
+      "paymentDate": "Payment Date"
+    },
+    "status": {
+      "draft": "Draft",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled"
+    },
+    "editor": {
+      "newTitle": "New Receipt",
+      "title": "Receipt",
+      "receiptNumber": "Receipt Number",
+      "invoiceRef": "Invoice",
+      "selectInvoice": "Select an invoice...",
+      "invoiceRequired": "An invoice must be selected before saving.",
+      "paymentDetails": "Payment Details",
+      "paymentDate": "Payment Date",
+      "paymentMethod": "Payment Method",
+      "paymentMethods": {
+        "cash": "Cash",
+        "transfer": "Bank Transfer",
+        "cheque": "Cheque"
+      },
+      "bankAccount": "Bank Account",
+      "selectBankAccount": "Select a bank account...",
+      "referenceNumber": "Reference / Txn No.",
+      "referenceNumberPlaceholder": "Transaction or cheque number",
+      "amountReceived": "Amount Received",
+      "invoiceBalanceDue": "Invoice Balance Due",
+      "saveDraft": "Save Draft",
+      "saveSuccess": "Receipt saved",
+      "saveFailed": "Failed to save receipt",
+      "notFoundError": "Receipt not found",
+      "actionFailed": "Failed to {{action}}",
+      "paymentAgainstInvoice": "Payment received against invoice {{number}}",
+      "actions": {
+        "confirm": "Confirm",
+        "confirmed": "Receipt confirmed",
+        "void": "Void",
+        "voided": "Receipt voided"
+      }
+    }
   }
 }
