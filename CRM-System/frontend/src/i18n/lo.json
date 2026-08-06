@@ -1580,6 +1580,22 @@
         "engineNo": "ເລກເຄື່ອງຈັກ",
         "regNo": "ເລກທະບຽນ",
         "jobNumber": "ເລກວຽກ"
+      },
+      "editor": {
+        "newTitle": "ໃບແຈ້ງໜີ້ໃໝ່",
+        "invoiceNumber": "ເລກທີໃບແຈ້ງໜີ້",
+        "notesLabel": "ໝາຍເຫດ",
+        "internalNotesLabel": "ໝາຍເຫດພາຍໃນ",
+        "receivedBy": "ຜູ້ຮັບ (ລູກຄ້າ)",
+        "referenceSalesOrder": "ໃບສັ່ງຂາຍ",
+        "noSalesOrder": "ບໍ່ມີໃບສັ່ງຂາຍທີ່ເຊື່ອມໂຍງ",
+        "fromQuotation": "ຈາກ {{number}}",
+        "saveDraft": "ບັນທຶກແບບຮ່າງ",
+        "saveSuccess": "ບັນທຶກໃບແຈ້ງໜີ້ແລ້ວ",
+        "saveFailed": "ບັນທຶກໃບແຈ້ງໜີ້ບໍ່ສຳເລັດ",
+        "notFoundError": "ບໍ່ພົບໃບແຈ້ງໜີ້",
+        "actionFailed": "ດຳເນີນການ {{action}} ບໍ່ສຳເລັດ",
+        "prefilledFromSalesOrder": "ຕື່ມຂໍ້ມູນຈາກໃບສັ່ງຂາຍ {{number}} ແລ້ວ"
       }
     },
     "payment": {
@@ -3222,7 +3238,8 @@
         "complete": "ໝາຍວ່າສຳເລັດ",
         "completed": "ໃບສັ່ງຂາຍສຳເລັດແລ້ວ",
         "void": "ຍົກເລີກ",
-        "voided": "ຍົກເລີກໃບສັ່ງຂາຍແລ້ວ"
+        "voided": "ຍົກເລີກໃບສັ່ງຂາຍແລ້ວ",
+        "convertToInvoice": "ປ່ຽນເປັນໃບແຈ້ງໜີ້"
       },
       "prefilledFromQuotation": "ຕື່ມຂໍ້ມູນລ່ວງໜ້າຈາກໃບສະເໜີລາຄາ {{number}}"
     }

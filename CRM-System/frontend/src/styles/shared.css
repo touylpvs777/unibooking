@@ -20,6 +20,7 @@
   padding: 16px 20px;
   border-radius: 12px;
   color: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 .page-header-banner h1 { color: white; }
 .page-header-banner .page-header-sub { color: rgba(255, 255, 255, 0.78); }
@@ -41,6 +42,18 @@
 .page-header-banner .btn-secondary:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.22);
   color: white;
+}
+
+/* Document editors (Quotation/Sales Order/Invoice): keeps the title + action
+   buttons in view while scrolling a long line-items grid. Lives inside
+   .doc-preview-hide-on-print, so it's already excluded from print — no
+   @media print override needed. z-index stays below the app shell's own
+   header/sidebar/dropdown layers (--z-header:100, --z-sidebar:200,
+   --z-dropdown:300). */
+.doc-editor-toolbar-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 30;
 }
 
 /* ── Toolbar ────────────────────────────────────────────── */

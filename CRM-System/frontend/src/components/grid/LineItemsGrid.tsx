@@ -8,8 +8,8 @@ import './LineItemsGrid.css'
 
 export interface GridRow {
   /** Stable identity for React reconciliation across add/delete/duplicate —
-   *  mirrors the existing `nextKey` counter pattern already used in
-   *  InvoiceFormPage/PurchaseOrderFormPage so focus doesn't jump mid-edit. */
+   *  mirrors the `nextKey` counter pattern already used by the document
+   *  editor pages so focus doesn't jump mid-edit. */
   _key: number
   [field: string]: unknown
 }

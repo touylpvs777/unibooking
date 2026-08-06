@@ -442,6 +442,8 @@ export default function QuotationEditorPage() {
     currency: values.currency,
     showBankDetails: true,
     bankDetailsText: values.bank_details,
+    showAmountInWords: true,
+    termsText: values.terms_conditions,
   }
 
   if (isLoading) return <div style={{ padding: 40, textAlign: 'center', color: 'var(--color-text-muted)' }}>{t('common.loading')}</div>
@@ -451,7 +453,7 @@ export default function QuotationEditorPage() {
     <FormProvider {...methods}>
       <div>
         <div className="doc-preview-hide-on-print">
-          <div className={`page-header page-header-banner ${headerColorClass}`}>
+          <div className={`page-header page-header-banner doc-editor-toolbar-sticky ${headerColorClass}`}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <button className="btn btn-ghost" onClick={() => navigate('/quotations')} style={{ padding: '6px 8px' }}>
                 <ChevronLeft size={16} />

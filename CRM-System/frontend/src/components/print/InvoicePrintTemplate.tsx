@@ -1,4 +1,6 @@
 import { resolveMediaUrl } from '@/utils/media'
+import { amountInWords } from '@/utils/amountInWords'
+import { DEFAULT_BANK_ACCOUNTS } from './invoiceBankAccounts'
 import './InvoicePrintTemplate.css'
 
 export interface InvoicePrintCompany {
@@ -69,18 +71,14 @@ export interface InvoicePrintTemplateProps {
   issuedByLabel?: string
   approvedByLabel?: string
   receivedByLabel?: string
-}
 
-/** DK Lao Trading's standard settlement accounts — placeholders pending the real
- *  account numbers from the reference invoice; swap in the real digits here. */
-export const DEFAULT_BANK_ACCOUNTS: InvoicePrintBankAccount[] = [
-  { bank: 'LDB (Lao Development Bank)', currency: 'LAK', accountName: 'DK Lao Trading Sole Co., Ltd', accountNumber: '000-1-00-0000000-0' },
-  { bank: 'LDB (Lao Development Bank)', currency: 'THB', accountName: 'DK Lao Trading Sole Co., Ltd', accountNumber: '000-2-00-0000000-0' },
-  { bank: 'LDB (Lao Development Bank)', currency: 'USD', accountName: 'DK Lao Trading Sole Co., Ltd', accountNumber: '000-3-00-0000000-0' },
-  { bank: 'BCEL (Banque Pour Le Commerce Exterieur Lao)', currency: 'LAK', accountName: 'DK Lao Trading Sole Co., Ltd', accountNumber: '111-1-00-0000000-0' },
-  { bank: 'BCEL (Banque Pour Le Commerce Exterieur Lao)', currency: 'THB', accountName: 'DK Lao Trading Sole Co., Ltd', accountNumber: '111-2-00-0000000-0' },
-  { bank: 'BCEL (Banque Pour Le Commerce Exterieur Lao)', currency: 'USD', accountName: 'DK Lao Trading Sole Co., Ltd', accountNumber: '111-3-00-0000000-0' },
-]
+  /** Renders a "Say: <Currency> <words> Only" line under Total Invoice. */
+  showAmountInWords?: boolean
+  /** Freeform notes block (Invoice has no terms_conditions column — `notes` is
+   *  reused for this print slot), rendered only when non-empty. */
+  notesText?: string | null
+  notesLabel?: string
+}
 
 const BRAND_LOGOS = ['Cummins', 'MITSUBISHI FORKLIFT TRUCKS', 'Kwick service', 'JUNGHEINRICH', 'Bangchak', 'Nilfisk', 'JLG']
 
@@ -135,6 +133,9 @@ export default function InvoicePrintTemplate({
   issuedByLabel = 'Issued By (Accounts Receivable)',
   approvedByLabel = 'Approved By (Finance Manager)',
   receivedByLabel = 'Received By (Customer)',
+  showAmountInWords = false,
+  notesText,
+  notesLabel = 'Notes',
 }: InvoicePrintTemplateProps) {
   const logoSrc = resolveMediaUrl(company.logoUrl)
   const useOverrideBank = !!bankDetailsText?.trim()
@@ -275,6 +276,11 @@ export default function InvoicePrintTemplate({
             <span>Total Invoice</span>
             <span className="tabular-nums">{fmtCurrency(total, currency)}</span>
           </div>
+          {showAmountInWords && currency && (
+            <div className="pt-1 text-[8.5px] italic text-gray-600">
+              {amountInWords(total, currency)}
+            </div>
+          )}
           {totalInBaseCurrency && totalInBaseCurrency.currency !== currency && (
             <div className="flex justify-between pt-1 text-[9px] text-gray-500 italic">
               <span>Total ({totalInBaseCurrency.currency}, Base Currency)</span>
@@ -283,6 +289,14 @@ export default function InvoicePrintTemplate({
           )}
         </div>
       </div>
+
+      {/* Notes */}
+      {notesText && notesText.trim() && (
+        <div className="border border-gray-300 rounded px-3 py-2 mt-3">
+          <div className="text-[9px] font-bold uppercase tracking-wide text-gray-500 mb-0.5">{notesLabel}</div>
+          <div className="whitespace-pre-wrap text-[9.5px]">{notesText.trim()}</div>
+        </div>
+      )}
 
       {/* Signatures */}
       <div className="flex justify-between gap-8 mt-10">

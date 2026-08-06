@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { amountInWords } from '@/utils/amountInWords'
 
 export type DocumentType = 'invoice' | 'quotation' | 'purchase_order' | 'sales_order' | 'receipt'
 
@@ -80,6 +81,17 @@ export interface DocumentPreviewProps {
 
   /** A4 orientation for both the screen preview sizing and the print `@page`. */
   layout?: 'portrait' | 'landscape'
+
+  /** e.g. "Quotation" / "Sales Order" — the document this one was converted/created from. */
+  referenceLabel?: string
+  referenceValue?: string
+
+  /** Freeform terms/notes block, rendered only when non-empty. */
+  termsText?: string
+  termsLabel?: string
+
+  /** Renders a "Say: <Currency> <words> Only" line under Grand Total. */
+  showAmountInWords?: boolean
 }
 
 function fmtCurrency(n: number, currency: string): string {
@@ -134,6 +146,11 @@ export default function DocumentPreview({
   issuedByLabel = 'Issued By',
   approvedByLabel = 'Approved By',
   layout = 'portrait',
+  referenceLabel,
+  referenceValue,
+  termsText,
+  termsLabel = 'Terms & Conditions',
+  showAmountInWords = false,
 }: DocumentPreviewProps) {
   const hasVehicle = !!(vehicle && (
     vehicle.make || vehicle.model || vehicle.vin || vehicle.engineNo || vehicle.regNo
@@ -158,9 +175,12 @@ export default function DocumentPreview({
           {companyPhone && <div className="text-[11px] text-gray-600">{companyPhone}</div>}
         </div>
         <div className="text-right">
-          <div className="text-base font-bold uppercase tracking-widest mb-1.5">{DOC_TITLE[docType]}</div>
+          <div className="text-xl font-extrabold uppercase tracking-widest text-gray-900 mb-1.5">{DOC_TITLE[docType]}</div>
           <Field label="Date">{date}</Field>
           <Field label="Document No.">{documentNumber}</Field>
+          {referenceLabel && referenceValue && (
+            <Field label={referenceLabel}>{referenceValue}</Field>
+          )}
         </div>
       </div>
 
@@ -194,12 +214,12 @@ export default function DocumentPreview({
       <table className="w-full border-collapse mb-4">
         <thead>
           <tr>
-            <th className="border border-gray-300 bg-gray-100 px-2 py-1 text-left text-[10px] font-bold uppercase">Item Code</th>
-            <th className="border border-gray-300 bg-gray-100 px-2 py-1 text-left text-[10px] font-bold uppercase">Description</th>
-            <th className="border border-gray-300 bg-gray-100 px-2 py-1 text-left text-[10px] font-bold uppercase">Qty</th>
-            <th className="border border-gray-300 bg-gray-100 px-2 py-1 text-left text-[10px] font-bold uppercase">Unit</th>
-            <th className="border border-gray-300 bg-gray-100 px-2 py-1 text-left text-[10px] font-bold uppercase">Unit Price</th>
-            <th className="border border-gray-300 bg-gray-100 px-2 py-1 text-left text-[10px] font-bold uppercase">Total</th>
+            <th className="border border-gray-300 bg-gray-800 text-white px-2 py-1 text-left text-[10px] font-bold uppercase tracking-wide">Item Code</th>
+            <th className="border border-gray-300 bg-gray-800 text-white px-2 py-1 text-left text-[10px] font-bold uppercase tracking-wide">Description</th>
+            <th className="border border-gray-300 bg-gray-800 text-white px-2 py-1 text-left text-[10px] font-bold uppercase tracking-wide">Qty</th>
+            <th className="border border-gray-300 bg-gray-800 text-white px-2 py-1 text-left text-[10px] font-bold uppercase tracking-wide">Unit</th>
+            <th className="border border-gray-300 bg-gray-800 text-white px-2 py-1 text-left text-[10px] font-bold uppercase tracking-wide">Unit Price</th>
+            <th className="border border-gray-300 bg-gray-800 text-white px-2 py-1 text-left text-[10px] font-bold uppercase tracking-wide">Total</th>
           </tr>
         </thead>
         <tbody>
@@ -248,6 +268,11 @@ export default function DocumentPreview({
             <span>Grand Total</span>
             <span className="tabular-nums">{fmtCurrency(grandTotal, currency)}</span>
           </div>
+          {showAmountInWords && currency && (
+            <div className="pt-1 text-[10px] italic text-gray-600">
+              {amountInWords(grandTotal, currency)}
+            </div>
+          )}
           {grandTotalInBaseCurrency && grandTotalInBaseCurrency.currency !== currency && (
             <div className="flex justify-between pt-1 text-[10.5px] text-gray-500 italic">
               <span>Grand Total ({grandTotalInBaseCurrency.currency}, Base Currency)</span>
@@ -256,6 +281,14 @@ export default function DocumentPreview({
           )}
         </div>
       </div>
+
+      {/* Terms & conditions / notes */}
+      {termsText && termsText.trim() && (
+        <div className="border border-gray-300 rounded px-3 py-2 mb-8">
+          <div className="text-[10px] font-bold uppercase tracking-wide text-gray-500 mb-0.5">{termsLabel}</div>
+          <div className="whitespace-pre-wrap text-[10.5px]">{termsText.trim()}</div>
+        </div>
+      )}
 
       {/* Signatures */}
       <div className="flex justify-between gap-10 mt-10">

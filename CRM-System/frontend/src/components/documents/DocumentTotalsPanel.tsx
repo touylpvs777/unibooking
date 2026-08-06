@@ -20,10 +20,13 @@ interface DocumentTotalsPanelProps {
   readOnly: boolean
   /** Balance Due only makes sense for documents tracking payments against them (Invoice), not Quotation. */
   showBalanceDue?: boolean
+  /** Round Amount has no backing field on Invoice — hide the (otherwise dead) control there. */
+  showRoundAmount?: boolean
 }
 
 export default function DocumentTotalsPanel({
   subtotal, taxTotal, grandTotal, balanceDue, currency, readOnly, showBalanceDue = false,
+  showRoundAmount = true,
 }: DocumentTotalsPanelProps) {
   const { t } = useTranslation()
   const { register } = useFormContext<DocumentHeaderFormValues>()
@@ -60,14 +63,16 @@ export default function DocumentTotalsPanel({
         </span>
       </div>
 
-      <div className="doc-editor-totals-row">
-        <span>{t('documentEditor.totals.roundAmount')}</span>
-        <input
-          type="number" step="any" className="doc-editor-totals-input"
-          {...register('round_amount', { valueAsNumber: true })}
-          disabled={readOnly}
-        />
-      </div>
+      {showRoundAmount && (
+        <div className="doc-editor-totals-row">
+          <span>{t('documentEditor.totals.roundAmount')}</span>
+          <input
+            type="number" step="any" className="doc-editor-totals-input"
+            {...register('round_amount', { valueAsNumber: true })}
+            disabled={readOnly}
+          />
+        </div>
+      )}
 
       <div className="doc-editor-totals-row doc-editor-totals-grand">
         <span>{t('documentEditor.totals.grandTotal')}</span>

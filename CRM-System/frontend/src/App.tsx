@@ -36,8 +36,7 @@ const WorkOrderDetailPage = lazy(() => import('@/pages/Maintenance/WorkOrderDeta
 const MaintenanceSchedulePage = lazy(() => import('@/pages/Maintenance/MaintenanceSchedulePage'))
 const BillingDashboardPage = lazy(() => import('@/pages/Billing/BillingDashboardPage'))
 const InvoiceListPage = lazy(() => import('@/pages/Billing/InvoiceListPage'))
-const InvoiceFormPage = lazy(() => import('@/pages/Billing/InvoiceFormPage'))
-const InvoiceDetailPage = lazy(() => import('@/pages/Billing/InvoiceDetailPage'))
+const InvoiceEditorPage = lazy(() => import('@/pages/Billing/InvoiceEditorPage'))
 const PaymentListPage = lazy(() => import('@/pages/Billing/PaymentListPage'))
 const PaymentDetailPage = lazy(() => import('@/pages/Billing/PaymentDetailPage'))
 const ReceiptListPage = lazy(() => import('@/pages/Billing/ReceiptListPage'))
@@ -134,8 +133,8 @@ export default function App() {
 
             <Route path="/billing"                         element={<Suspense fallback={<PageLoader />}><BillingDashboardPage /></Suspense>} />
             <Route path="/billing/invoices"                element={<Suspense fallback={<PageLoader />}><InvoiceListPage /></Suspense>} />
-            <Route path="/billing/invoices/new"            element={<Suspense fallback={<PageLoader />}><InvoiceFormPage /></Suspense>} />
-            <Route path="/billing/invoices/:id"            element={<Suspense fallback={<PageLoader />}><InvoiceDetailPage /></Suspense>} />
+            <Route path="/billing/invoices/new"            element={<Suspense fallback={<PageLoader />}><InvoiceEditorPage /></Suspense>} />
+            <Route path="/billing/invoices/:id"            element={<Suspense fallback={<PageLoader />}><InvoiceEditorPage /></Suspense>} />
             <Route path="/billing/tax-invoices"            element={<Suspense fallback={<PageLoader />}><TaxInvoiceListPage /></Suspense>} />
             <Route path="/billing/credit-notes"            element={<Suspense fallback={<PageLoader />}><CreditNoteListPage /></Suspense>} />
             <Route path="/billing/payments"                element={<Suspense fallback={<PageLoader />}><PaymentListPage /></Suspense>} />

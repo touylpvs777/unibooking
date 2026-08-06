@@ -877,6 +877,22 @@
         "engineNo": "Engine No.",
         "regNo": "Registration No.",
         "jobNumber": "Job Number"
+      },
+      "editor": {
+        "newTitle": "New Invoice",
+        "invoiceNumber": "Invoice Number",
+        "notesLabel": "Notes",
+        "internalNotesLabel": "Internal Notes",
+        "receivedBy": "Received By (Customer)",
+        "referenceSalesOrder": "Sales Order",
+        "noSalesOrder": "No linked sales order",
+        "fromQuotation": "from {{number}}",
+        "saveDraft": "Save Draft",
+        "saveSuccess": "Invoice saved",
+        "saveFailed": "Failed to save invoice",
+        "notFoundError": "Invoice not found",
+        "actionFailed": "Failed to {{action}}",
+        "prefilledFromSalesOrder": "Pre-filled from sales order {{number}}"
       }
     },
     "deposit": {
@@ -3229,7 +3245,8 @@
         "complete": "Mark Completed",
         "completed": "Sales order completed",
         "void": "Void",
-        "voided": "Sales order voided"
+        "voided": "Sales order voided",
+        "convertToInvoice": "Convert to Invoice"
       },
       "prefilledFromQuotation": "Pre-filled from quotation {{number}}"
     }

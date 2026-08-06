@@ -3,7 +3,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { useForm, FormProvider } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
-import { AlertCircle, ChevronLeft, FileDown, FileSpreadsheet, Loader2 } from 'lucide-react'
+import { AlertCircle, ArrowRightCircle, ChevronLeft, FileDown, FileSpreadsheet, Loader2 } from 'lucide-react'
 import {
   getSalesOrder, createSalesOrder, updateSalesOrder, bulkReplaceSalesOrderItems,
   confirmSalesOrder, completeSalesOrder, cancelSalesOrder,
@@ -14,6 +14,7 @@ import type { Customer } from '@/types/customer'
 import type {
   SalesOrderDetail, SalesOrderCreate, SalesOrderUpdate, SalesOrderItemBulkItem, SalesOrderConversionPrefill,
 } from '@/types/salesOrder'
+import type { InvoiceConversionPrefill } from '@/types/billing'
 import {
   salesOrderHeaderSchema, SALES_ORDER_EDITOR_DEFAULTS, type SalesOrderEditorFormValues,
 } from '@/schemas/salesOrderEditorSchema'
@@ -396,6 +397,38 @@ export default function SalesOrderEditorPage() {
     })
   }
 
+  const handleConvertToInvoice = () => {
+    if (!salesOrder) return
+    const prefill: InvoiceConversionPrefill = {
+      salesOrderBrief: { id: salesOrder.id, so_number: salesOrder.so_number, title: salesOrder.title },
+      header: {
+        customer_id: values.customer_id ?? null,
+        reference_type: 'sales',
+        reference_id: salesOrder.id,
+        tax_rate: values.tax_rate,
+        currency: values.currency,
+        exchange_rate: values.exchange_rate,
+        bank_details: values.bank_details || '',
+        vehicle_make: values.vehicle_make || '',
+        vehicle_model: values.vehicle_model || '',
+        vehicle_vin: values.vehicle_vin || '',
+        vehicle_engine_no: values.vehicle_engine_no || '',
+        vehicle_reg_no: values.vehicle_reg_no || '',
+        job_number: values.job_number || '',
+        notes: values.notes || '',
+        internal_notes: values.internal_notes || '',
+      },
+      items: items.filter((r) => r.description.trim()).map((r) => ({
+        item_code: r.item_code,
+        description: r.description,
+        quantity: r.quantity,
+        unit: r.unit,
+        unit_rate: r.unit_price,
+      })),
+    }
+    navigate('/billing/invoices/new', { state: { fromSalesOrder: prefill } })
+  }
+
   const selectedCustomer = customers.find((c) => c.id === values.customer_id)
 
   const previewProps = {
@@ -425,6 +458,10 @@ export default function SalesOrderEditorPage() {
     currency: values.currency,
     showBankDetails: true,
     bankDetailsText: values.bank_details,
+    showAmountInWords: true,
+    termsText: values.terms_conditions,
+    referenceLabel: salesOrder?.quotation ? t('salesOrders.editor.quotationRef') : undefined,
+    referenceValue: salesOrder?.quotation?.quotation_number,
   }
 
   if (isLoading) return <div style={{ padding: 40, textAlign: 'center', color: 'var(--color-text-muted)' }}>{t('common.loading')}</div>
@@ -434,7 +471,7 @@ export default function SalesOrderEditorPage() {
     <FormProvider {...methods}>
       <div>
         <div className="doc-preview-hide-on-print">
-          <div className={`page-header page-header-banner ${headerColorClass}`}>
+          <div className={`page-header page-header-banner doc-editor-toolbar-sticky ${headerColorClass}`}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <button className="btn btn-ghost" onClick={() => navigate('/sales-orders')} style={{ padding: '6px 8px' }}>
                 <ChevronLeft size={16} />
@@ -483,6 +520,11 @@ export default function SalesOrderEditorPage() {
               {soId && actions.includes('cancel') && (
                 <button className="btn btn-danger" disabled={isSaving} onClick={() => setVoidOpen(true)}>
                   {t('salesOrders.editor.actions.void')}
+                </button>
+              )}
+              {soId && (salesOrder?.status === 'confirmed' || salesOrder?.status === 'completed') && (
+                <button className="btn btn-primary" disabled={isSaving} onClick={handleConvertToInvoice}>
+                  <ArrowRightCircle size={14} /> {t('salesOrders.editor.actions.convertToInvoice')}
                 </button>
               )}
             </div>

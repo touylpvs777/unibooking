@@ -1626,6 +1626,22 @@
         "engineNo": "หมายเลขเครื่องยนต์",
         "regNo": "ทะเบียนรถ",
         "jobNumber": "หมายเลขงาน"
+      },
+      "editor": {
+        "newTitle": "ใบแจ้งหนี้ใหม่",
+        "invoiceNumber": "เลขที่ใบแจ้งหนี้",
+        "notesLabel": "หมายเหตุ",
+        "internalNotesLabel": "หมายเหตุภายใน",
+        "receivedBy": "ผู้รับ (ลูกค้า)",
+        "referenceSalesOrder": "ใบสั่งขาย",
+        "noSalesOrder": "ไม่มีใบสั่งขายที่เชื่อมโยง",
+        "fromQuotation": "จาก {{number}}",
+        "saveDraft": "บันทึกแบบร่าง",
+        "saveSuccess": "บันทึกใบแจ้งหนี้แล้ว",
+        "saveFailed": "บันทึกใบแจ้งหนี้ไม่สำเร็จ",
+        "notFoundError": "ไม่พบใบแจ้งหนี้",
+        "actionFailed": "ดำเนินการ {{action}} ไม่สำเร็จ",
+        "prefilledFromSalesOrder": "เติมข้อมูลจากใบสั่งขาย {{number}} แล้ว"
       }
     },
     "deposit": {
@@ -3222,7 +3238,8 @@
         "complete": "ทำเครื่องหมายว่าเสร็จสมบูรณ์",
         "completed": "ใบสั่งขายเสร็จสมบูรณ์แล้ว",
         "void": "ยกเลิก",
-        "voided": "ยกเลิกใบสั่งขายแล้ว"
+        "voided": "ยกเลิกใบสั่งขายแล้ว",
+        "convertToInvoice": "แปลงเป็นใบแจ้งหนี้"
       },
       "prefilledFromQuotation": "กรอกข้อมูลล่วงหน้าจากใบเสนอราคา {{number}}"
     }
