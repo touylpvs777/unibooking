@@ -9,6 +9,7 @@ from app.core.permissions import PermissionName, require_permission
 from app.database.session import get_db
 from app.models.activity_log import ActionType, EntityType
 from app.models.rental_billing_cycle import RentalBillingCycle
+from app.models.rental_contract import RentalContract
 from app.models.user import User
 from app.repositories.rental_repository import RentalRepository
 from app.schemas.rental import (
@@ -49,6 +50,19 @@ from app.services.rental_workflow_service import RentalWorkflowService
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/rental-contracts", tags=["Rental Contracts"])
+
+
+async def _contract_out(db: AsyncSession, contract: RentalContract) -> RentalContractOut:
+    # RentalContractOut.item_count has no ORM column backing it, so plain
+    # model_validate() leaves it at its default of 0. A dedicated COUNT query
+    # (rather than `len(contract.items)`) is used deliberately: `.items` is
+    # only guaranteed eager-loaded on contracts that came from get_by_id()
+    # (update/submit/approve/reject/activate/cancel/close/convert-quotation),
+    # not on a freshly created one — a COUNT query is correct and safe (no
+    # relationship access, no lazy-load risk) on every call site uniformly.
+    obj = RentalContractOut.model_validate(contract)
+    obj.item_count = await RentalRepository(db).get_item_count(contract.id)
+    return obj
 
 
 # =============================================================================
@@ -118,7 +132,7 @@ async def create_contract(
             "type": contract.contract_type,
         },
     )
-    return RentalContractOut.model_validate(contract)
+    return await _contract_out(db, contract)
 
 
 @router.put("/{contract_id}", response_model=RentalContractOut, summary="Update contract")
@@ -141,7 +155,7 @@ async def update_contract(
             "changed_fields": list(data.model_dump(exclude_unset=True).keys()),
         },
     )
-    return RentalContractOut.model_validate(contract)
+    return await _contract_out(db, contract)
 
 
 @router.delete(
@@ -253,7 +267,7 @@ async def submit_contract(
         entity_id=contract.id,
         details={"contract_number": contract.contract_number},
     )
-    return RentalContractOut.model_validate(contract)
+    return await _contract_out(db, contract)
 
 
 @router.post("/{contract_id}/approve", response_model=RentalContractOut, summary="Approve contract")
@@ -274,7 +288,7 @@ async def approve_contract(
             "reason": body.reason if body else None,
         },
     )
-    return RentalContractOut.model_validate(contract)
+    return await _contract_out(db, contract)
 
 
 @router.post("/{contract_id}/reject", response_model=RentalContractOut, summary="Request revision")
@@ -293,7 +307,7 @@ async def reject_contract(
         entity_id=contract.id,
         details={"contract_number": contract.contract_number, "reason": reason},
     )
-    return RentalContractOut.model_validate(contract)
+    return await _contract_out(db, contract)
 
 
 @router.post("/{contract_id}/activate", response_model=RentalContractOut, summary="Activate contract")
@@ -311,7 +325,7 @@ async def activate_contract(
         entity_id=contract.id,
         details={"contract_number": contract.contract_number},
     )
-    return RentalContractOut.model_validate(contract)
+    return await _contract_out(db, contract)
 
 
 @router.post("/{contract_id}/cancel", response_model=RentalContractOut, summary="Cancel contract")
@@ -332,7 +346,7 @@ async def cancel_contract(
             "reason": body.cancellation_reason,
         },
     )
-    return RentalContractOut.model_validate(contract)
+    return await _contract_out(db, contract)
 
 
 @router.post("/{contract_id}/close", response_model=RentalContractOut, summary="Close contract")
@@ -349,7 +363,7 @@ async def close_contract(
         entity_id=contract.id,
         details={"contract_number": contract.contract_number},
     )
-    return RentalContractOut.model_validate(contract)
+    return await _contract_out(db, contract)
 
 
 @router.post(
@@ -374,7 +388,7 @@ async def convert_quotation(
             "quotation_id": body.quotation_id,
         },
     )
-    return RentalContractOut.model_validate(contract)
+    return await _contract_out(db, contract)
 
 
 # =============================================================================

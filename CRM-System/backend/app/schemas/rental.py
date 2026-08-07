@@ -467,7 +467,7 @@ class RentalBillingCycleOut(BaseModel):
     payment_status: str
     due_date: date | None = None
     paid_date: date | None = None
-    generated_by: int | None = None
+    generated_by: str
     notes: str | None = None
     creator: UserBrief | None = None
     created_at: datetime
