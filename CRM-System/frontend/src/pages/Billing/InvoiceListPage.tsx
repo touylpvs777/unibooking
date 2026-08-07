@@ -1,11 +1,9 @@
-import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { AlertCircle, RefreshCw, ChevronLeft, ChevronRight, FileText, Search, Plus } from 'lucide-react'
-import { getInvoices } from '@/api/billing'
+import { useInvoices } from '@/hooks/useInvoices'
 import { Badge } from '@/components/ui/Badge'
 import type { BadgeVariant } from '@/components/ui/Badge'
-import type { InvoiceOut } from '@/types/billing'
 import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 
@@ -27,14 +25,13 @@ const STATUS_FILTER_VALUES = ['', 'draft', 'issued', 'sent', 'partially_paid', '
 export default function InvoiceListPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const [items, setItems] = useState<InvoiceOut[]>([])
-  const [total, setTotal] = useState(0)
-  const [pages, setPages] = useState(1)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [statusFilter, setStatusFilter] = useState('')
-  const [search, setSearch] = useState('')
-  const [page, setPage] = useState(1)
+  const {
+    invoices: items, total, pages, params, isLoading, isFetching, error,
+    applyParams, refetch,
+  } = useInvoices({ page: 1, page_size: 20 })
+  const statusFilter = params.status ?? ''
+  const search = params.q ?? ''
+  const page = params.page ?? 1
 
   function InvoiceStatusBadge({ status }: { status: string }) {
     const variant = STATUS_VARIANT[status] ?? ('gray' as BadgeVariant)
@@ -42,23 +39,12 @@ export default function InvoiceListPage() {
     return <Badge variant={variant}>{label}</Badge>
   }
 
-  const load = useCallback(async () => {
-    setIsLoading(true); setError(null)
-    try {
-      const { data } = await getInvoices({ status: statusFilter || undefined, q: search || undefined, page, page_size: 20 })
-      setItems(data.items); setTotal(data.total); setPages(data.pages)
-    } catch { setError(t('billing.invoice.list.loadError')) }
-    finally { setIsLoading(false) }
-  }, [statusFilter, search, page, t])
-
-  useEffect(() => { load() }, [load])
-
   return (
     <div>
       <PageHeader title={t('billing.invoice.list.title')} subtitle={t('billing.invoice.list.subtitle', { count: total })}>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button className="btn btn-ghost" onClick={load} disabled={isLoading}>
-            <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('billing.common.refresh')}
+          <button className="btn btn-ghost" onClick={() => refetch()} disabled={isFetching}>
+            <RefreshCw size={14} className={isFetching ? 'spin' : ''} /> {t('billing.common.refresh')}
           </button>
           <button className="btn btn-primary" onClick={() => navigate('/billing/invoices/new')}>
             <Plus size={15} /> {t('billing.invoice.list.newInvoice')}
@@ -71,9 +57,9 @@ export default function InvoiceListPage() {
       <div className="toolbar">
         <div className="search-wrap">
           <Search size={15} className="search-icon" />
-          <input className="search-input" placeholder={t('billing.invoice.list.searchPlaceholder')} value={search} onChange={(e) => { setSearch(e.target.value); setPage(1) }} />
+          <input className="search-input" placeholder={t('billing.invoice.list.searchPlaceholder')} value={search} onChange={(e) => applyParams({ q: e.target.value || undefined, page: 1 })} />
         </div>
-        <select className="filter-select" value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1) }}>
+        <select className="filter-select" value={statusFilter} onChange={(e) => applyParams({ status: e.target.value || undefined, page: 1 })}>
           {STATUS_FILTER_VALUES.map((v) => (
             <option key={v} value={v}>
               {v === '' ? t('billing.invoice.filter.all') : v === 'partially_paid' ? t('billing.invoice.filter.partially_paid') : t(STATUS_LABEL_KEYS[v])}
@@ -136,13 +122,13 @@ export default function InvoiceListPage() {
           <div className="pagination">
             <span className="pagination-info">{t('billing.invoice.pagination.info', { page, pages, total })}</span>
             <div className="pagination-controls">
-              <button className="page-btn" disabled={page === 1} onClick={() => setPage(page - 1)}><ChevronLeft size={14} /></button>
+              <button className="page-btn" disabled={page === 1} onClick={() => applyParams({ page: page - 1 })}><ChevronLeft size={14} /></button>
               {Array.from({ length: Math.min(pages, 5) }, (_, i) => {
                 const p = page <= 3 ? i + 1 : page - 2 + i
                 if (p < 1 || p > pages) return null
-                return <button key={p} className={`page-btn${p === page ? ' active' : ''}`} onClick={() => setPage(p)}>{p}</button>
+                return <button key={p} className={`page-btn${p === page ? ' active' : ''}`} onClick={() => applyParams({ page: p })}>{p}</button>
               })}
-              <button className="page-btn" disabled={page === pages} onClick={() => setPage(page + 1)}><ChevronRight size={14} /></button>
+              <button className="page-btn" disabled={page === pages} onClick={() => applyParams({ page: page + 1 })}><ChevronRight size={14} /></button>
             </div>
           </div>
         )}

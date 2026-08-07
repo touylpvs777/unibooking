@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Search, Plus, AlertCircle, RefreshCw, ChevronLeft, ChevronRight, Grid3X3, List } from 'lucide-react'
-import { getWorkOrders } from '@/api/maintenance'
+import { useWorkOrders } from '@/hooks/useWorkOrders'
 import { WOStatusBadge, WOTypeBadge, WOPriorityBadge } from '@/components/maintenance/MaintenanceStatusBadge'
 import WorkOrderCard from '@/components/maintenance/WorkOrderCard'
-import type { WorkOrder, WOListParams, WOStatus } from '@/types/maintenance'
+import type { WOStatus } from '@/types/maintenance'
 import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 import '@/styles/detail.css'
@@ -26,31 +26,18 @@ export default function WorkOrderListPage() {
     { value: 'corrective', label: t('maintenance.type.corrective') }, { value: 'emergency', label: t('maintenance.type.emergency') },
     { value: 'inspection', label: t('maintenance.type.inspection') },
   ]
-  const [items, setItems] = useState<WorkOrder[]>([])
-  const [total, setTotal] = useState(0)
-  const [pages, setPages] = useState(1)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [view, setView] = useState<'list' | 'grid'>('list')
-  const [params, setParams] = useState<WOListParams>({ page: 1, page_size: 20 })
-
-  const load = useCallback(async () => {
-    setIsLoading(true); setError(null)
-    try { const { data } = await getWorkOrders(params); setItems(data.items); setTotal(data.total); setPages(data.pages) }
-    catch { setError(t('maintenance.workOrders.list.loadError')) }
-    finally { setIsLoading(false) }
-  }, [params, t])
-
-  useEffect(() => { load() }, [load])
-
-  const apply = (p: Partial<WOListParams>) => setParams((prev) => ({ ...prev, ...p }))
+  const {
+    workOrders: items, total, pages, params, isLoading, isFetching, error,
+    applyParams: apply, refetch,
+  } = useWorkOrders({ page: 1, page_size: 20 })
   const cp = params.page ?? 1
 
   return (
     <div>
       <PageHeader title={t('maintenance.workOrders.list.title')} subtitle={t('maintenance.workOrders.list.subtitle', { count: total })}>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button className="btn btn-ghost" onClick={load} disabled={isLoading} style={{ display: 'flex', alignItems: 'center', gap: 6 }}><RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('maintenance.actions.refresh')}</button>
+          <button className="btn btn-ghost" onClick={() => refetch()} disabled={isFetching} style={{ display: 'flex', alignItems: 'center', gap: 6 }}><RefreshCw size={14} className={isFetching ? 'spin' : ''} /> {t('maintenance.actions.refresh')}</button>
           <button className="btn btn-primary" onClick={() => navigate('/maintenance/work-orders/new')}><Plus size={15} /> {t('maintenance.workOrders.list.newWorkOrder')}</button>
         </div>
       </PageHeader>

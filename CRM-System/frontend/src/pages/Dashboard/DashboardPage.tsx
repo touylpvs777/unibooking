@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import type { LucideIcon } from 'lucide-react'
@@ -8,8 +8,7 @@ import {
 } from 'lucide-react'
 import { useCustomUI, type FontSizeTier } from '@/config/customLanguageStore'
 import UICustomizerBar from '@/components/ui/UICustomizerBar'
-import { getErpSummary, getProfitTrend } from '@/api/dashboard'
-import type { ErpDashboardSummary, ProfitTrendPoint } from '@/types/dashboard'
+import { useDashboardStats } from '@/hooks/useDashboardStats'
 import { ProfitTrendChart, RevenueBreakdownChart, ServiceCostChart, SampleTrendChart } from './ErpCharts'
 import IoTWidget from './IoTWidget'
 
@@ -160,33 +159,7 @@ export default function DashboardPage() {
   const sizeClass = FONT_SIZE_CLASS[fontSize]
 
   const [tab, setTab] = useState<Tab>('financial')
-  const [data, setData] = useState<ErpDashboardSummary | null>(null)
-  const [trend, setTrend] = useState<ProfitTrendPoint[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    let cancelled = false
-    const load = async () => {
-      setIsLoading(true); setError(null)
-      try {
-        const [summaryRes, trendRes] = await Promise.all([getErpSummary(), getProfitTrend(6)])
-        if (cancelled) return
-        setData(summaryRes.data)
-        setTrend(trendRes.data)
-      } catch {
-        if (!cancelled) setError(t('dashboard.erp.loadError'))
-      } finally {
-        if (!cancelled) setIsLoading(false)
-      }
-    }
-    load()
-    return () => { cancelled = true }
-    // Fetch once on mount — `t` is intentionally excluded since react-i18next
-    // returns a new function reference on every render, which would otherwise
-    // cancel and restart this fetch forever without it ever resolving.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const { data, trend, isLoading, error } = useDashboardStats()
 
   return (
     <div className="min-h-full bg-slate-50 px-6 py-8 text-slate-800 lg:px-10">

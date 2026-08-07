@@ -1,14 +1,14 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   Search, Plus, AlertCircle, RefreshCw, Grid3X3, List,
   ChevronLeft, ChevronRight, ArrowRightLeft,
 } from 'lucide-react'
-import { getMovements } from '@/api/movement'
+import { useMovements } from '@/hooks/useMovements'
 import { MovementStatusBadge, MovementTypeBadge, MovementPriorityBadge } from '@/components/movement/MovementStatusBadge'
 import MovementCard from '@/components/movement/MovementCard'
-import type { Movement, MovementListParams, MovementStatus, MovementType as MType } from '@/types/movement'
+import type { MovementStatus, MovementType as MType } from '@/types/movement'
 import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
 
@@ -22,33 +22,11 @@ const TYPE_VALUES: MType[] = ['warehouse_transfer', 'customer_deployment', 'cust
 export default function MovementListPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const [movements, setMovements] = useState<Movement[]>([])
-  const [total, setTotal] = useState(0)
-  const [pages, setPages] = useState(1)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [view, setView] = useState<'grid' | 'list'>('list')
-  const [params, setParams] = useState<MovementListParams>({ page: 1, page_size: 20 })
-
-  const load = useCallback(async () => {
-    setIsLoading(true)
-    setError(null)
-    try {
-      const { data } = await getMovements(params)
-      setMovements(data.items)
-      setTotal(data.total)
-      setPages(data.pages)
-    } catch {
-      setError(t('movement.list.loadFailed'))
-    } finally {
-      setIsLoading(false)
-    }
-  }, [params, t])
-
-  useEffect(() => { load() }, [load])
-
-  const apply = (patch: Partial<MovementListParams>) =>
-    setParams((p) => ({ ...p, ...patch }))
+  const {
+    movements, total, pages, params, isLoading, isFetching, error,
+    applyParams: apply, refetch,
+  } = useMovements({ page: 1, page_size: 20 })
 
   const currentPage = params.page ?? 1
   const hasFilters = params.q || params.status || params.movement_type
@@ -57,8 +35,8 @@ export default function MovementListPage() {
     <div>
       <PageHeader title={t('movement.list.title')} subtitle={t('movement.list.totalCount', { count: total })}>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button className="btn btn-ghost" onClick={load} disabled={isLoading} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('movement.list.refresh')}
+          <button className="btn btn-ghost" onClick={() => refetch()} disabled={isFetching} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <RefreshCw size={14} className={isFetching ? 'spin' : ''} /> {t('movement.list.refresh')}
           </button>
           <button className="btn btn-primary" onClick={() => navigate('/movements/new')}>
             <Plus size={15} /> {t('movement.list.newMovement')}
