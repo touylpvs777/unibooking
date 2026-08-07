@@ -279,7 +279,11 @@
     "uploadedSuccessfully": "อัปโหลดสำเร็จแล้ว",
     "clickOrDrag": "คลิกหรือลากรูปภาพเพื่ออัปโหลด",
     "hint": "JPG, PNG, WebP · สูงสุด {{size}} MB",
-    "previewAlt": "ตัวอย่างรูปที่อัปโหลด"
+    "previewAlt": "ตัวอย่างรูปที่อัปโหลด",
+    "orDivider": "หรือ",
+    "urlPlaceholder": "วาง URL รูปภาพ...",
+    "fetchButton": "ดึงข้อมูล",
+    "urlFetchFailed": "ไม่สามารถดึงรูปภาพจาก URL นี้ได้"
   },
   "nav": {
     "groups": {

@@ -279,7 +279,11 @@
     "uploadedSuccessfully": "ອັບໂຫຼດສຳເລັດແລ້ວ",
     "clickOrDrag": "ຄລິກ ຫຼື ລາກຮູບພາບເພື່ອອັບໂຫຼດ",
     "hint": "JPG, PNG, WebP · ສູງສຸດ {{size}} MB",
-    "previewAlt": "ຕົວຢ່າງຮູບທີ່ອັບໂຫຼດ"
+    "previewAlt": "ຕົວຢ່າງຮູບທີ່ອັບໂຫຼດ",
+    "orDivider": "ຫຼື",
+    "urlPlaceholder": "ວາງ URL ຮູບພາບ...",
+    "fetchButton": "ດຶງຂໍ້ມູນ",
+    "urlFetchFailed": "ບໍ່ສາມາດດຶງຮູບພາບຈາກ URL ນັ້ນໄດ້."
   },
   "nav": {
     "groups": {

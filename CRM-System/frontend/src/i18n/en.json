@@ -2320,7 +2320,11 @@
     "uploadedSuccessfully": "Uploaded successfully",
     "clickOrDrag": "Click or drag an image to upload",
     "hint": "JPG, PNG, WebP · Max {{size}} MB",
-    "previewAlt": "Upload preview"
+    "previewAlt": "Upload preview",
+    "orDivider": "Or",
+    "urlPlaceholder": "Paste an image URL...",
+    "fetchButton": "Fetch",
+    "urlFetchFailed": "Could not fetch the image from that URL."
   },
   "nav": {
     "groups": {

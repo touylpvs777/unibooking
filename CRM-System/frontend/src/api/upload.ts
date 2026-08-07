@@ -26,3 +26,8 @@ export async function uploadImage(
 
   return data
 }
+
+export async function uploadImageFromUrl(imageUrl: string): Promise<UploadResult> {
+  const { data } = await client.post<UploadResult>('/uploads/from-url', { image_url: imageUrl })
+  return data
+}

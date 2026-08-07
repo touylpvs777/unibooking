@@ -1,12 +1,24 @@
 import { useRef, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Upload, X, CheckCircle2 } from 'lucide-react'
-import { uploadImage, type UploadResult } from '@/api/upload'
+import { Upload, X, CheckCircle2, Link2, Loader2 } from 'lucide-react'
+import { uploadImage, uploadImageFromUrl, type UploadResult } from '@/api/upload'
+import { resolveMediaUrl } from '@/utils/media'
+import { toast } from '@/store/toastStore'
 import './ImageUpload.css'
 
 const ACCEPTED = '.jpg,.jpeg,.png,.webp'
 const MAX_SIZE_MB = 5
 const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024
+
+function extractErrorMessage(err: unknown, fallback: string): string {
+  const detail = (err as { response?: { data?: { detail?: unknown } } })?.response?.data?.detail
+  if (typeof detail === 'string') return detail
+  if (Array.isArray(detail) && detail.length > 0) {
+    const first = detail[0] as { msg?: string }
+    if (first?.msg) return first.msg
+  }
+  return fallback
+}
 
 interface Props {
   onUploaded?: (result: UploadResult) => void
@@ -21,12 +33,15 @@ export default function ImageUpload({ onUploaded, className }: Props) {
   const [error, setError] = useState<string | null>(null)
   const [result, setResult] = useState<UploadResult | null>(null)
   const [dragging, setDragging] = useState(false)
+  const [urlInput, setUrlInput] = useState('')
+  const [urlLoading, setUrlLoading] = useState(false)
 
   const reset = () => {
     setPreview(null)
     setProgress(null)
     setError(null)
     setResult(null)
+    setUrlInput('')
     if (inputRef.current) inputRef.current.value = ''
   }
 
@@ -83,6 +98,33 @@ export default function ImageUpload({ onUploaded, className }: Props) {
     if (file) handleFile(file)
   }
 
+  const handleUrlFetch = useCallback(async () => {
+    const trimmed = urlInput.trim()
+    if (!trimmed || urlLoading) return
+
+    setUrlLoading(true)
+    try {
+      const res = await uploadImageFromUrl(trimmed)
+      setPreview(resolveMediaUrl(res.url))
+      setResult(res)
+      setError(null)
+      setProgress(null)
+      setUrlInput('')
+      onUploaded?.(res)
+    } catch (err) {
+      toast.error(extractErrorMessage(err, t('imageUpload.urlFetchFailed')))
+    } finally {
+      setUrlLoading(false)
+    }
+  }, [urlInput, urlLoading, onUploaded, t])
+
+  const onUrlKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleUrlFetch()
+    }
+  }
+
   if (preview) {
     return (
       <div className={className}>
@@ -134,6 +176,29 @@ export default function ImageUpload({ onUploaded, className }: Props) {
         <div className="img-upload-hint">{t('imageUpload.hint', { size: MAX_SIZE_MB })}</div>
       </div>
       {error && <div className="img-upload-error">{error}</div>}
+
+      <div className="img-upload-divider">{t('imageUpload.orDivider')}</div>
+
+      <div className="img-upload-url-row">
+        <input
+          type="url"
+          className="img-upload-url-input"
+          placeholder={t('imageUpload.urlPlaceholder')}
+          value={urlInput}
+          onChange={(e) => setUrlInput(e.target.value)}
+          onKeyDown={onUrlKeyDown}
+          disabled={urlLoading}
+        />
+        <button
+          type="button"
+          className="img-upload-url-btn"
+          onClick={handleUrlFetch}
+          disabled={urlLoading || !urlInput.trim()}
+        >
+          {urlLoading ? <Loader2 size={14} className="img-upload-spin" /> : <Link2 size={14} />}
+          {t('imageUpload.fetchButton')}
+        </button>
+      </div>
     </div>
   )
 }
