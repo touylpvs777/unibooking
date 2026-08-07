@@ -405,6 +405,7 @@ class InventoryService:
         plain dicts (from the Excel import parser) — both describe the PO's
         complete new item set."""
         po = await self.get_po(po_id)
+        self._ensure_po_editable(po)
 
         new_items: list[PurchaseOrderItem] = []
         for r in rows:
