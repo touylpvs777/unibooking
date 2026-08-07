@@ -259,6 +259,20 @@ class RentalRepository:
         )
         return float(result.scalar_one())
 
+    async def get_items_for_contract(self, contract_id: int) -> list[RentalContractItem]:
+        # RentalContractItemOut needs `.forklift` — get_by_id()'s
+        # selectinload(RentalContract.items) does NOT chain into .forklift,
+        # so a bulk-replace response built from `contract.items` would crash
+        # (MissingGreenlet) the same way add_item/update_item's pre-fix bug
+        # did. This is the safe path back to a fully-materialized item list.
+        result = await self.db.execute(
+            select(RentalContractItem)
+            .options(selectinload(RentalContractItem.forklift))
+            .where(RentalContractItem.contract_id == contract_id)
+            .order_by(RentalContractItem.sort_order, RentalContractItem.line_number)
+        )
+        return list(result.scalars().all())
+
     # ── Term helpers ─────────────────────────────────────────────────────────
 
     async def add_term(self, term: RentalContractTerm) -> RentalContractTerm:

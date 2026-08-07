@@ -25,6 +25,7 @@ from app.models.forklift_status_history import ForkliftStatusHistory
 from app.schemas.rental import (
     RentalContractCreate, RentalContractUpdate, RentalContractDetail,
     RentalContractItemCreate, RentalContractItemUpdate,
+    RentalContractItemBulkReplaceRequest,
     RentalContractListResponse, RentalContractOut,
     RentalContractTermCreate, RentalBillingCycleCreate,
     RentalBillingCycleUpdate, GenerateBillingAction,
@@ -244,14 +245,12 @@ class RentalContractService:
 
     # ── Items ────────────────────────────────────────────────────────────────
 
-    async def add_item(
-        self, contract_id: int, data: RentalContractItemCreate, user_id: int,
-    ) -> RentalContractItem:
-        contract = await self._require(contract_id)
-        self._require_editable(contract)
-
-        # Validate forklift
-        forklift = await self._forklift_repo.get_by_id(data.forklift_id)
+    async def _reserve_forklift(self, forklift_id: int, contract: RentalContract, user_id: int) -> None:
+        """Validates a forklift is active, in-stock, and free of scheduling
+        conflicts for `contract`'s dates, then marks it RESERVED. Raises
+        HTTPException on any validation failure. Does not commit — caller
+        owns the transaction."""
+        forklift = await self._forklift_repo.get_by_id(forklift_id)
         if forklift is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -268,9 +267,8 @@ class RentalContractService:
                 detail=f"Forklift is not available (current status: {forklift.status}).",
             )
 
-        # Check availability for the contract period
         conflicts = await self._repo.check_forklift_conflicts(
-            forklift_id=data.forklift_id,
+            forklift_id=forklift_id,
             start_date=contract.start_date,
             end_date=contract.end_date,
             exclude_contract_id=contract.id,
@@ -281,7 +279,6 @@ class RentalContractService:
                 detail="Forklift has scheduling conflicts with existing contracts.",
             )
 
-        # Reserve forklift
         old_status = forklift.status
         await self._forklift_repo.update(forklift, {
             "status": ForkliftStatus.RESERVED.value,
@@ -293,6 +290,30 @@ class RentalContractService:
             reason=f"Reserved for contract {contract.contract_number}",
             changed_by=user_id,
         ))
+
+    async def _release_forklift(self, forklift_id: int, contract: RentalContract, user_id: int) -> None:
+        """Releases a RESERVED forklift back to IN_STOCK. No-op if the
+        forklift is missing or not currently RESERVED. Does not commit."""
+        forklift = await self._forklift_repo.get_by_id(forklift_id)
+        if forklift and forklift.status == ForkliftStatus.RESERVED.value:
+            await self._forklift_repo.update(forklift, {
+                "status": ForkliftStatus.IN_STOCK.value,
+            })
+            await self._forklift_status_repo.create(ForkliftStatusHistory(
+                forklift_id=forklift.id,
+                from_status=ForkliftStatus.RESERVED.value,
+                to_status=ForkliftStatus.IN_STOCK.value,
+                reason=f"Removed from contract {contract.contract_number}",
+                changed_by=user_id,
+            ))
+
+    async def add_item(
+        self, contract_id: int, data: RentalContractItemCreate, user_id: int,
+    ) -> RentalContractItem:
+        contract = await self._require(contract_id)
+        self._require_editable(contract)
+
+        await self._reserve_forklift(data.forklift_id, contract, user_id)
 
         # Calculate line total
         duration_days = (contract.end_date - contract.start_date).days
@@ -348,24 +369,90 @@ class RentalContractService:
         self._require_editable(contract)
         item = await self._require_item(item_id, contract_id)
 
-        # Release forklift
         if item.forklift_id:
-            forklift = await self._forklift_repo.get_by_id(item.forklift_id)
-            if forklift and forklift.status == ForkliftStatus.RESERVED.value:
-                await self._forklift_repo.update(forklift, {
-                    "status": ForkliftStatus.IN_STOCK.value,
-                })
-                await self._forklift_status_repo.create(ForkliftStatusHistory(
-                    forklift_id=forklift.id,
-                    from_status=ForkliftStatus.RESERVED.value,
-                    to_status=ForkliftStatus.IN_STOCK.value,
-                    reason=f"Removed from contract {contract.contract_number}",
-                    changed_by=user_id,
-                ))
+            await self._release_forklift(item.forklift_id, contract, user_id)
 
         await self._repo.delete_item(item)
         await self._recalculate_totals(contract)
         await self.db.commit()
+
+    async def replace_items_bulk(
+        self, contract_id: int, data: RentalContractItemBulkReplaceRequest, user_id: int,
+    ) -> list[RentalContractItem]:
+        """Full differential replace of a contract's line items: lines
+        omitted from the payload are deleted (releasing their forklift
+        reservation), lines with a matching `id` are updated in place
+        (forklift is not changeable — see RentalContractItemBulkRow), lines
+        with no `id` are created (reserving a forklift exactly like
+        add_item). Uses the same `_require_editable` guard as every other
+        item mutation in this module, so bulk-replace can't be used to
+        bypass the single-item endpoints' status restriction.
+        """
+        contract = await self._require(contract_id)
+        self._require_editable(contract)
+
+        existing_by_id = {item.id: item for item in contract.items}
+        payload_ids = {row.id for row in data.items if row.id is not None}
+        unknown_ids = payload_ids - existing_by_id.keys()
+        if unknown_ids:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+                detail=f"Line item not found on this contract: {sorted(unknown_ids)}",
+            )
+        for row in data.items:
+            if row.id is None and row.forklift_id is None:
+                raise HTTPException(
+                    status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+                    detail="forklift_id is required for a new line item.",
+                )
+
+        for item in list(contract.items):
+            if item.id not in payload_ids:
+                if item.forklift_id:
+                    await self._release_forklift(item.forklift_id, contract, user_id)
+                await self._repo.delete_item(item)
+
+        duration_days = (contract.end_date - contract.start_date).days
+        next_line = await self._repo.next_line_number(contract_id)
+
+        for row in data.items:
+            line_total = round(row.monthly_rate * (duration_days / 30), 2)
+            if row.id is not None:
+                await self._repo.update_item(existing_by_id[row.id], {
+                    "description": row.description,
+                    "monthly_rate": row.monthly_rate,
+                    "daily_rate": row.daily_rate,
+                    "hourly_rate": row.hourly_rate,
+                    "contracted_hours_limit": row.contracted_hours_limit,
+                    "maintenance_interval_hours": row.maintenance_interval_hours,
+                    "notes": row.notes,
+                    "sort_order": row.sort_order,
+                    "line_total": line_total,
+                })
+            else:
+                await self._reserve_forklift(row.forklift_id, contract, user_id)
+                await self._repo.add_item(RentalContractItem(
+                    contract_id=contract_id,
+                    forklift_id=row.forklift_id,
+                    quotation_item_id=row.quotation_item_id,
+                    line_number=next_line,
+                    description=row.description,
+                    monthly_rate=row.monthly_rate,
+                    daily_rate=row.daily_rate,
+                    hourly_rate=row.hourly_rate,
+                    contracted_hours_limit=row.contracted_hours_limit,
+                    maintenance_interval_hours=row.maintenance_interval_hours,
+                    line_status=ContractItemStatus.RESERVED.value,
+                    line_total=line_total,
+                    sort_order=row.sort_order,
+                    notes=row.notes,
+                ))
+                next_line += 1
+
+        await self._recalculate_totals(contract)
+        await self.db.commit()
+
+        return await self._repo.get_items_for_contract(contract_id)
 
     # ── Terms ────────────────────────────────────────────────────────────────
 

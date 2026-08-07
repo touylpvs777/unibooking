@@ -143,6 +143,23 @@ class CostOut(BaseModel):
     created_at: datetime
 
 
+class CostBulkItem(BaseModel):
+    # `id` distinguishes an existing row to update (id set, must belong to
+    # this work order) from a new row to create (id omitted/None). Any
+    # existing row whose id is absent from the payload is deleted.
+    id: int | None = None
+    cost_type: MaintenanceCostType
+    description: str = Field(..., min_length=1, max_length=300)
+    quantity: float = Field(default=1.0, gt=0)
+    unit_rate: float = Field(..., ge=0)
+    vendor: str | None = Field(default=None, max_length=200)
+    reference_number: str | None = Field(default=None, max_length=100)
+
+
+class CostBulkReplaceRequest(BaseModel):
+    costs: list[CostBulkItem]
+
+
 # ── Work Order schemas ───────────────────────────────────────────────────────
 
 class WorkOrderCreate(BaseModel):

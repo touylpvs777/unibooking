@@ -16,6 +16,7 @@ from app.models.maintenance_cost import MaintenanceCost
 from app.repositories.forklift_repository import ForkliftRepository
 from app.repositories.maintenance_repository import MaintenanceRepository, WorkOrderFilter
 from app.schemas.maintenance import (
+    CostBulkReplaceRequest,
     CostCreate,
     MaintenanceDashboardSummary,
     PlanCreate,
@@ -285,11 +286,15 @@ class MaintenanceService:
 
     # ── Costs ────────────────────────────────────────────────────────────────
 
-    async def add_cost(self, wo_id: int, data: CostCreate) -> MaintenanceCost:
-        wo = await self._require_wo(wo_id)
+    @staticmethod
+    def _require_cost_editable(wo: WorkOrder) -> None:
         if wo.status in (WorkOrderStatus.VERIFIED.value, WorkOrderStatus.CANCELLED.value):
             raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
-                                detail="Cannot add costs to verified or cancelled work orders")
+                                detail="Cannot modify costs on a verified or cancelled work order")
+
+    async def add_cost(self, wo_id: int, data: CostCreate) -> MaintenanceCost:
+        wo = await self._require_wo(wo_id)
+        self._require_cost_editable(wo)
         amount = round(data.quantity * data.unit_rate, 2)
         cost = MaintenanceCost(
             work_order_id=wo_id,
@@ -304,6 +309,54 @@ class MaintenanceService:
         cost = await self._repo.add_cost(cost)
         await self.db.commit()
         return cost
+
+    async def replace_costs_bulk(self, wo_id: int, data: CostBulkReplaceRequest) -> list[MaintenanceCost]:
+        """Full differential replace of a work order's cost entries: rows
+        omitted from the payload are deleted, rows with a matching `id` are
+        updated in place, rows with no `id` are created. Mirrors the status
+        guard already established by `add_cost` (blocks `verified`/
+        `cancelled`) rather than the task brief's literal "completed or
+        cancelled" wording — `add_cost` deliberately still allows editing
+        costs on a `completed`-but-not-yet-verified work order (to allow
+        correction before sign-off), and having bulk-replace enforce a
+        stricter rule than the single-row endpoint it's meant to complement
+        would make the two inconsistent with no functional benefit.
+        """
+        wo = await self._require_wo(wo_id)
+        self._require_cost_editable(wo)
+
+        existing = await self._repo.get_costs_for_work_order(wo_id)
+        existing_by_id = {c.id: c for c in existing}
+        payload_ids = {row.id for row in data.costs if row.id is not None}
+        unknown_ids = payload_ids - existing_by_id.keys()
+        if unknown_ids:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+                detail=f"Cost entry not found on this work order: {sorted(unknown_ids)}",
+            )
+
+        for cost in existing:
+            if cost.id not in payload_ids:
+                await self._repo.delete_cost(cost)
+
+        for row in data.costs:
+            amount = round(row.quantity * row.unit_rate, 2)
+            changes = {
+                "cost_type": row.cost_type.value,
+                "description": row.description.strip(),
+                "quantity": row.quantity,
+                "unit_rate": row.unit_rate,
+                "amount": amount,
+                "vendor": row.vendor,
+                "reference_number": row.reference_number,
+            }
+            if row.id is not None:
+                await self._repo.update_cost(existing_by_id[row.id], changes)
+            else:
+                await self._repo.add_cost(MaintenanceCost(work_order_id=wo_id, **changes))
+
+        await self.db.commit()
+        return await self._repo.get_costs_for_work_order(wo_id)
 
     # ── Service History ──────────────────────────────────────────────────────
 

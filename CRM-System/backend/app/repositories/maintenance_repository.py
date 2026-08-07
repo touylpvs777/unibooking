@@ -256,6 +256,26 @@ class MaintenanceRepository:
         await self.db.refresh(cost)
         return cost
 
+    async def get_costs_for_work_order(self, wo_id: int) -> list[MaintenanceCost]:
+        result = await self.db.execute(
+            select(MaintenanceCost)
+            .where(MaintenanceCost.work_order_id == wo_id)
+            .order_by(MaintenanceCost.id)
+        )
+        return list(result.scalars().all())
+
+    async def update_cost(self, cost: MaintenanceCost, changes: dict) -> MaintenanceCost:
+        # No refresh needed: MaintenanceCost has no relationships to expire
+        # and no onupdate=func.now() column, unlike RentalContractItem.
+        for key, value in changes.items():
+            setattr(cost, key, value)
+        await self.db.flush()
+        return cost
+
+    async def delete_cost(self, cost: MaintenanceCost) -> None:
+        await self.db.delete(cost)
+        await self.db.flush()
+
     async def get_wo_total_cost(self, wo_id: int) -> float:
         result = await self.db.execute(
             select(func.coalesce(func.sum(MaintenanceCost.amount), 0.0))

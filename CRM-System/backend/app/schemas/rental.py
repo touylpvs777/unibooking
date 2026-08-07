@@ -192,6 +192,32 @@ class RentalContractItemUpdate(BaseModel):
     sort_order: int | None = None
 
 
+class RentalContractItemBulkRow(BaseModel):
+    # `id` distinguishes an existing line to update (id set, must belong to
+    # this contract) from a new line to create (id omitted/None). Any
+    # existing line whose id is absent from the payload is deleted.
+    # `forklift_id` is required for new lines but ignored for existing ones
+    # — matching RentalContractItemUpdate, which likewise doesn't allow
+    # changing a line's forklift after creation (swapping equipment would
+    # require re-running the reservation/conflict-check flow that only
+    # add_item/delete_item currently implement).
+    id: int | None = None
+    forklift_id: int | None = None
+    description: str = Field(..., min_length=1, max_length=1000)
+    monthly_rate: float = Field(..., ge=0)
+    daily_rate: float = Field(..., ge=0)
+    hourly_rate: float | None = Field(default=None, ge=0)
+    contracted_hours_limit: float | None = Field(default=None, gt=0)
+    maintenance_interval_hours: float | None = Field(default=None, gt=0)
+    quotation_item_id: int | None = None
+    notes: str | None = None
+    sort_order: int = 0
+
+
+class RentalContractItemBulkReplaceRequest(BaseModel):
+    items: list[RentalContractItemBulkRow]
+
+
 class RentalContractItemOut(BaseModel):
     model_config = {"from_attributes": True}
 

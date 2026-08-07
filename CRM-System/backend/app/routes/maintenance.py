@@ -10,6 +10,7 @@ from app.models.user import User
 from app.schemas.maintenance import (
     CancelAction,
     CompleteAction,
+    CostBulkReplaceRequest,
     CostCreate,
     CostOut,
     MaintenanceDashboardSummary,
@@ -239,6 +240,21 @@ async def add_cost(
 ):
     cost = await MaintenanceService(db).add_cost(wo_id, data)
     return CostOut.model_validate(cost)
+
+
+@router.put(
+    "/work-orders/{wo_id}/items/bulk",
+    response_model=list[CostOut],
+    summary="Bulk replace cost entries (line items)",
+)
+async def replace_costs_bulk(
+    wo_id: int,
+    data: CostBulkReplaceRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = require_permission(PermissionName.FORKLIFT_UPDATE),
+):
+    costs = await MaintenanceService(db).replace_costs_bulk(wo_id, data)
+    return [CostOut.model_validate(c) for c in costs]
 
 
 # ── Service History ──────────────────────────────────────────────────────────

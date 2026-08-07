@@ -25,6 +25,7 @@ from app.schemas.rental import (
     RentalBillingCycleOut,
     RentalContractCreate,
     RentalContractDetail,
+    RentalContractItemBulkReplaceRequest,
     RentalContractItemCreate,
     RentalContractItemOut,
     RentalContractItemUpdate,
@@ -214,6 +215,21 @@ async def add_item(
 ):
     item = await RentalContractService(db).add_item(contract_id, data, user_id=current_user.id)
     return RentalContractItemOut.model_validate(item)
+
+
+@router.put(
+    "/{contract_id}/items/bulk",
+    response_model=list[RentalContractItemOut],
+    summary="Bulk replace line items",
+)
+async def replace_items_bulk(
+    contract_id: int,
+    data: RentalContractItemBulkReplaceRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = require_permission(PermissionName.RENTAL_UPDATE),
+):
+    items = await RentalContractService(db).replace_items_bulk(contract_id, data, user_id=current_user.id)
+    return [RentalContractItemOut.model_validate(i) for i in items]
 
 
 @router.put(
