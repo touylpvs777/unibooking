@@ -39,6 +39,30 @@ MIME_TO_EXT = {
 
 FETCH_TIMEOUT_SECONDS = 10.0
 
+# How many bytes of the response body to buffer before deciding whether it's
+# a real image. Large enough to cover every signature below with margin
+# (WebP's is the longest at 12 bytes), small enough that a malicious or
+# broken URL serving a huge non-image payload only ever costs us this much
+# bandwidth before the download is aborted.
+SNIFF_BYTES = 2048
+
+
+def _sniff_image_type(head: bytes) -> str | None:
+    """Identifies the true image format from its byte signature ("magic
+    bytes"), independent of whatever Content-Type header the remote server
+    sent — some CDNs/misconfigured servers serve real images under a generic
+    type like `application/octet-stream`, which a header-only check would
+    wrongly reject. Only the three formats this endpoint accepts are
+    recognized; anything else (including non-image files) returns None.
+    """
+    if head.startswith(b"\xff\xd8\xff"):
+        return "image/jpeg"
+    if head.startswith(b"\x89PNG\r\n\x1a\n"):
+        return "image/png"
+    if len(head) >= 12 and head[:4] == b"RIFF" and head[8:12] == b"WEBP":
+        return "image/webp"
+    return None
+
 
 def _validate_file(file: UploadFile) -> None:
     if file.content_type not in ALLOWED_MIME_TYPES:
@@ -156,7 +180,15 @@ async def upload_image_from_url(
     await _assert_public_host(hostname)
 
     max_bytes = settings.MAX_UPLOAD_SIZE_MB * 1024 * 1024
-    content_type = ""
+    chunks = bytearray()
+    detected_type: str | None = None
+    invalid_signature_error = HTTPException(
+        status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+        detail=(
+            "URL did not return a supported image (checked the file's actual "
+            "signature, not just its Content-Type header). Accepted: JPEG, PNG, WebP."
+        ),
+    )
 
     try:
         async with httpx.AsyncClient(timeout=FETCH_TIMEOUT_SECONDS, follow_redirects=False) as client:
@@ -172,21 +204,35 @@ async def upload_image_from_url(
                         detail=f"Could not fetch the image (remote server responded {response.status_code}).",
                     )
 
-                content_type = (response.headers.get("content-type") or "").split(";")[0].strip().lower()
-                if content_type not in ALLOWED_MIME_TYPES:
-                    raise HTTPException(
-                        status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
-                        detail=f"URL did not return a supported image type ('{content_type or 'unknown'}'). Accepted: JPEG, PNG, WebP.",
-                    )
-
-                chunks = bytearray()
-                async for chunk in response.aiter_bytes():
+                # The Content-Type header is deliberately NOT gated on here —
+                # some CDNs serve real images as application/octet-stream or
+                # similar, which previously caused false rejections. The
+                # magic-byte check below is the sole authority on file type.
+                async for chunk in response.aiter_bytes(chunk_size=SNIFF_BYTES):
                     chunks.extend(chunk)
+
+                    if detected_type is None and len(chunks) >= SNIFF_BYTES:
+                        detected_type = _sniff_image_type(bytes(chunks))
+                        if detected_type is None:
+                            # Raising here exits both `async with` blocks via
+                            # their __aexit__, which aborts the in-flight
+                            # download and closes the connection immediately —
+                            # a bad/oversized payload is never fully fetched.
+                            raise invalid_signature_error
+
                     if len(chunks) > max_bytes:
                         raise HTTPException(
                             status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
                             detail=f"Image exceeds {settings.MAX_UPLOAD_SIZE_MB} MB limit.",
                         )
+
+                # Response ended before SNIFF_BYTES accumulated (a
+                # legitimately small image) — sniff whatever we have; every
+                # signature above fits well under SNIFF_BYTES.
+                if detected_type is None:
+                    detected_type = _sniff_image_type(bytes(chunks))
+                    if detected_type is None:
+                        raise invalid_signature_error
     except httpx.TimeoutException:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
@@ -199,24 +245,25 @@ async def upload_image_from_url(
         )
 
     content = bytes(chunks)
-    if not content:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail="The image URL returned no content.")
 
     upload_dir = Path(settings.UPLOAD_DIR)
     upload_dir.mkdir(parents=True, exist_ok=True)
 
-    ext = MIME_TO_EXT[content_type]
+    ext = MIME_TO_EXT[detected_type]
     unique_name = f"{uuid.uuid4().hex}{ext}"
     file_path = upload_dir / unique_name
     file_path.write_bytes(content)
 
     url = f"/uploads/images/{unique_name}"
-    logger.info("Image fetched from URL and saved: %s (%d bytes, source=%s)", url, len(content), image_url)
+    logger.info(
+        "Image fetched from URL and saved: %s (%d bytes, source=%s, detected_type=%s)",
+        url, len(content), image_url, detected_type,
+    )
 
     return {
         "url": url,
         "filename": unique_name,
         "original_name": image_url,
         "size": len(content),
-        "content_type": content_type,
+        "content_type": detected_type,
     }
