@@ -181,8 +181,14 @@ class RentalRepository:
             # Scope the refresh to just the changed columns — refreshing with no
             # attribute_names expires already-loaded relationships (e.g. .items,
             # .customer), which then crash on next access (unawaited lazy-load
-            # outside of an async context).
-            await self.db.refresh(contract, attribute_names=list(changes.keys()))
+            # outside of an async context). "updated_at" is always included even
+            # when absent from `changes`: it carries onupdate=func.now(), a
+            # server-evaluated default, so SQLAlchemy expires it on every flush
+            # regardless of what was explicitly assigned — leaving it expired
+            # (and therefore an unawaited-lazy-load crash risk on serialization)
+            # unless it's explicitly refreshed here too.
+            refresh_attrs = set(changes.keys()) | {"updated_at"}
+            await self.db.refresh(contract, attribute_names=list(refresh_attrs))
             logger.info("Rental contract updated: id=%s", contract.id)
             return contract
         except IntegrityError:
@@ -197,7 +203,12 @@ class RentalRepository:
     # ── Item helpers ─────────────────────────────────────────────────────────
 
     async def get_item_by_id(self, item_id: int) -> RentalContractItem | None:
-        return await self.db.get(RentalContractItem, item_id)
+        result = await self.db.execute(
+            select(RentalContractItem)
+            .options(selectinload(RentalContractItem.forklift))
+            .where(RentalContractItem.id == item_id)
+        )
+        return result.scalar_one_or_none()
 
     async def next_line_number(self, contract_id: int) -> int:
         result = await self.db.execute(
@@ -206,18 +217,29 @@ class RentalRepository:
         )
         return result.scalar_one() + 1
 
+    async def _reload_item(self, item_id: int) -> RentalContractItem:
+        # RentalContractItemOut needs `.forklift`, a lazy relationship that plain
+        # db.refresh() never populates (it only reloads/expires attributes that
+        # were already loaded). Re-select with selectinload so the object handed
+        # back to the route is fully materialized before Pydantic serializes it
+        # outside the async session's greenlet context.
+        result = await self.db.execute(
+            select(RentalContractItem)
+            .options(selectinload(RentalContractItem.forklift))
+            .where(RentalContractItem.id == item_id)
+        )
+        return result.scalar_one()
+
     async def add_item(self, item: RentalContractItem) -> RentalContractItem:
         self.db.add(item)
         await self.db.flush()
-        await self.db.refresh(item)
-        return item
+        return await self._reload_item(item.id)
 
     async def update_item(self, item: RentalContractItem, changes: dict) -> RentalContractItem:
         for key, value in changes.items():
             setattr(item, key, value)
         await self.db.flush()
-        await self.db.refresh(item)
-        return item
+        return await self._reload_item(item.id)
 
     async def delete_item(self, item: RentalContractItem) -> None:
         await self.db.delete(item)
@@ -263,21 +285,40 @@ class RentalRepository:
 
     # ── Extension helpers ────────────────────────────────────────────────────
 
+    async def _reload_extension(self, ext_id: int) -> RentalExtension:
+        # RentalExtensionOut needs `.requester`/`.approver` — never populated by
+        # a plain db.refresh() on a relationship that was never loaded.
+        result = await self.db.execute(
+            select(RentalExtension)
+            .options(
+                selectinload(RentalExtension.requester),
+                selectinload(RentalExtension.approver),
+            )
+            .where(RentalExtension.id == ext_id)
+        )
+        return result.scalar_one()
+
     async def add_extension(self, ext: RentalExtension) -> RentalExtension:
         self.db.add(ext)
         await self.db.flush()
-        await self.db.refresh(ext)
-        return ext
+        return await self._reload_extension(ext.id)
 
     async def get_extension_by_id(self, ext_id: int) -> RentalExtension | None:
-        return await self.db.get(RentalExtension, ext_id)
+        result = await self.db.execute(
+            select(RentalExtension)
+            .options(
+                selectinload(RentalExtension.requester),
+                selectinload(RentalExtension.approver),
+            )
+            .where(RentalExtension.id == ext_id)
+        )
+        return result.scalar_one_or_none()
 
     async def update_extension(self, ext: RentalExtension, changes: dict) -> RentalExtension:
         for key, value in changes.items():
             setattr(ext, key, value)
         await self.db.flush()
-        await self.db.refresh(ext)
-        return ext
+        return await self._reload_extension(ext.id)
 
     async def next_extension_number(self, contract_id: int) -> int:
         result = await self.db.execute(
@@ -288,11 +329,28 @@ class RentalRepository:
 
     # ── Return helpers ───────────────────────────────────────────────────────
 
+    async def _reload_return(self, return_id: int) -> RentalReturn:
+        # RentalReturnOut needs `.forklift`/`.driver_user`/`.inspector_user`, and
+        # the model's `updated_at` carries onupdate=func.now() (a server-evaluated
+        # default SQLAlchemy expires after every flush that touches the row) — a
+        # plain db.refresh() leaves both classes of attribute unpopulated/expired.
+        # Re-selecting after flush picks up the eager relationships and the fresh
+        # onupdate value in one awaited round trip.
+        result = await self.db.execute(
+            select(RentalReturn)
+            .options(
+                selectinload(RentalReturn.forklift),
+                selectinload(RentalReturn.driver_user),
+                selectinload(RentalReturn.inspector_user),
+            )
+            .where(RentalReturn.id == return_id)
+        )
+        return result.scalar_one()
+
     async def add_return(self, ret: RentalReturn) -> RentalReturn:
         self.db.add(ret)
         await self.db.flush()
-        await self.db.refresh(ret)
-        return ret
+        return await self._reload_return(ret.id)
 
     async def get_return_by_id(self, return_id: int) -> RentalReturn | None:
         result = await self.db.execute(
@@ -311,8 +369,7 @@ class RentalRepository:
         for key, value in changes.items():
             setattr(ret, key, value)
         await self.db.flush()
-        await self.db.refresh(ret)
-        return ret
+        return await self._reload_return(ret.id)
 
     async def return_number_exists(self, number: str) -> bool:
         result = await self.db.execute(
@@ -322,21 +379,43 @@ class RentalRepository:
 
     # ── Damage report helpers ────────────────────────────────────────────────
 
+    async def _reload_damage_report(self, report_id: int) -> RentalDamageReport:
+        # RentalDamageReportOut needs `.forklift`/`.assessor`/`.dispute_resolver`,
+        # and `updated_at` carries onupdate=func.now() — same expired-attribute
+        # risk as RentalReturn, fixed the same way (re-select after flush).
+        result = await self.db.execute(
+            select(RentalDamageReport)
+            .options(
+                selectinload(RentalDamageReport.forklift),
+                selectinload(RentalDamageReport.assessor),
+                selectinload(RentalDamageReport.dispute_resolver),
+            )
+            .where(RentalDamageReport.id == report_id)
+        )
+        return result.scalar_one()
+
     async def add_damage_report(self, report: RentalDamageReport) -> RentalDamageReport:
         self.db.add(report)
         await self.db.flush()
-        await self.db.refresh(report)
-        return report
+        return await self._reload_damage_report(report.id)
 
     async def get_damage_report_by_id(self, report_id: int) -> RentalDamageReport | None:
-        return await self.db.get(RentalDamageReport, report_id)
+        result = await self.db.execute(
+            select(RentalDamageReport)
+            .options(
+                selectinload(RentalDamageReport.forklift),
+                selectinload(RentalDamageReport.assessor),
+                selectinload(RentalDamageReport.dispute_resolver),
+            )
+            .where(RentalDamageReport.id == report_id)
+        )
+        return result.scalar_one_or_none()
 
     async def update_damage_report(self, report: RentalDamageReport, changes: dict) -> RentalDamageReport:
         for key, value in changes.items():
             setattr(report, key, value)
         await self.db.flush()
-        await self.db.refresh(report)
-        return report
+        return await self._reload_damage_report(report.id)
 
     async def report_number_exists(self, number: str) -> bool:
         result = await self.db.execute(
@@ -346,21 +425,34 @@ class RentalRepository:
 
     # ── Billing cycle helpers ────────────────────────────────────────────────
 
+    async def _reload_billing_cycle(self, cycle_id: int) -> RentalBillingCycle:
+        # RentalBillingCycleOut needs `.creator`, and `updated_at` carries
+        # onupdate=func.now() — same expired-attribute risk as RentalReturn.
+        result = await self.db.execute(
+            select(RentalBillingCycle)
+            .options(selectinload(RentalBillingCycle.creator))
+            .where(RentalBillingCycle.id == cycle_id)
+        )
+        return result.scalar_one()
+
     async def add_billing_cycle(self, cycle: RentalBillingCycle) -> RentalBillingCycle:
         self.db.add(cycle)
         await self.db.flush()
-        await self.db.refresh(cycle)
-        return cycle
+        return await self._reload_billing_cycle(cycle.id)
 
     async def get_billing_cycle_by_id(self, cycle_id: int) -> RentalBillingCycle | None:
-        return await self.db.get(RentalBillingCycle, cycle_id)
+        result = await self.db.execute(
+            select(RentalBillingCycle)
+            .options(selectinload(RentalBillingCycle.creator))
+            .where(RentalBillingCycle.id == cycle_id)
+        )
+        return result.scalar_one_or_none()
 
     async def update_billing_cycle(self, cycle: RentalBillingCycle, changes: dict) -> RentalBillingCycle:
         for key, value in changes.items():
             setattr(cycle, key, value)
         await self.db.flush()
-        await self.db.refresh(cycle)
-        return cycle
+        return await self._reload_billing_cycle(cycle.id)
 
     async def billing_number_exists(self, number: str) -> bool:
         result = await self.db.execute(
