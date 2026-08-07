@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import Modal from '@/components/ui/Modal'
-import type { Product, Brand, ProductCategory } from '@/types/catalog'
+import ImageUpload from '@/components/ui/ImageUpload'
+import { getProduct, addProductImage, updateProductImage } from '@/api/catalog'
+import { toast } from '@/store/toastStore'
+import type { UploadResult } from '@/api/upload'
+import type { Product, Brand, ProductCategory, ProductImage } from '@/types/catalog'
 import '@/styles/shared.css'
 
 interface ProductFormProps {
   isOpen: boolean
   onClose: () => void
-  onSubmit: (data: Record<string, unknown>) => Promise<boolean>
+  onSubmit: (data: Record<string, unknown>) => Promise<Product | null>
   product?: Product | null
   brands: Brand[]
   categories: ProductCategory[]
@@ -42,6 +46,14 @@ export default function ProductForm({
   const [isSaving, setIsSaving] = useState(false)
   const [err, setErr]           = useState<string | null>(null)
 
+  // The product's image is a separate gallery sub-resource on the backend
+  // (`primary_image_url` is derived server-side from `ProductImage` rows, not
+  // a plain create/update field) — tracked independently of `form` and only
+  // acted on at submit time if the user actually touched it.
+  const [pendingImageUrl, setPendingImageUrl] = useState<string | null>(null)
+  const [imageTouched, setImageTouched] = useState(false)
+  const [existingImages, setExistingImages] = useState<ProductImage[]>([])
+
   useEffect(() => {
     if (!isOpen) return
     if (product) {
@@ -60,14 +72,35 @@ export default function ProductForm({
         is_used_available: product.is_used_available,
         is_service_item:   product.is_service_item,
       })
+      setPendingImageUrl(product.primary_image_url ?? null)
+      setImageTouched(false)
+      setExistingImages([])
+      // Needed only to unset any prior primary image(s) if the user uploads
+      // a new one — `Product` (the list-row shape passed in as `product`)
+      // doesn't carry the full image gallery, only `ProductDetail` does.
+      getProduct(product.id)
+        .then(({ data }) => setExistingImages(data.images))
+        .catch(() => { /* non-fatal — worst case a stale primary lingers in the gallery */ })
     } else {
       setForm({ ...EMPTY })
+      setPendingImageUrl(null)
+      setImageTouched(false)
+      setExistingImages([])
     }
     setErr(null)
   }, [isOpen, product])
 
   const set = (key: string, value: unknown) =>
     setForm((prev) => ({ ...prev, [key]: value }))
+
+  const handleImageUploaded = (result: UploadResult) => {
+    setPendingImageUrl(result.url)
+    setImageTouched(true)
+  }
+  const handleImageRemoved = () => {
+    setPendingImageUrl(null)
+    setImageTouched(true)
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -89,10 +122,30 @@ export default function ProductForm({
       is_service_item:   form.is_service_item,
     }
     if (!product && form.sku.trim()) payload.sku = form.sku.trim()
-    const ok = await onSubmit(payload)
+
+    const saved = await onSubmit(payload)
+    if (!saved) {
+      setIsSaving(false)
+      setErr(t('catalog.products.form.saveFailed'))
+      return
+    }
+
+    if (imageTouched) {
+      try {
+        const stalePrimaries = existingImages.filter((img) => img.is_primary)
+        await Promise.all(
+          stalePrimaries.map((img) => updateProductImage(saved.id, img.id, { is_primary: false })),
+        )
+        if (pendingImageUrl) {
+          await addProductImage(saved.id, { image_url: pendingImageUrl, is_primary: true })
+        }
+      } catch {
+        toast.error(t('catalog.products.form.imageSaveFailed'))
+      }
+    }
+
     setIsSaving(false)
-    if (ok) onClose()
-    else setErr(t('catalog.products.form.saveFailed'))
+    onClose()
   }
 
   const FLAGS: [string, string][] = [
@@ -113,6 +166,15 @@ export default function ProductForm({
     >
       <form onSubmit={handleSubmit} className="form-grid">
         {err && <div className="page-error" style={{ margin: 0 }}>{err}</div>}
+
+        <div className="form-group">
+          <label>{t('catalog.products.form.imageLabel')}</label>
+          <ImageUpload
+            initialImageUrl={product?.primary_image_url}
+            onUploaded={handleImageUploaded}
+            onRemoved={handleImageRemoved}
+          />
+        </div>
 
         <div className="form-row-2">
           <div className="form-group">

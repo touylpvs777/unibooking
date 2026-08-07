@@ -2669,6 +2669,8 @@
         "brandLabel": "ຍີ່ຫໍ້",
         "createProduct": "ສ້າງສິນຄ້າ",
         "descriptionPlaceholder": "ລາຍລະອຽດສິນຄ້າ…",
+        "imageLabel": "ຮູບພາບສິນຄ້າ",
+        "imageSaveFailed": "ບັນທຶກສິນຄ້າແລ້ວ, ແຕ່ບໍ່ສາມາດບັນທຶກຮູບພາບໄດ້.",
         "modelNumberLabel": "ເລກລຸ້ນ",
         "modelNumberPlaceholder": "ຕົວຢ່າງ: EFG115",
         "nameEnLabel": "ຊື່ (ພາສາອັງກິດ)",

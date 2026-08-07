@@ -7,7 +7,7 @@ import {
   deleteProduct as apiDelete,
 } from '@/api/catalog'
 import { toast } from '@/store/toastStore'
-import type { ProductCreate, ProductUpdate, ProductListParams, ProductListResponse } from '@/types/catalog'
+import type { Product, ProductCreate, ProductUpdate, ProductListParams, ProductListResponse } from '@/types/catalog'
 
 const DEFAULT_PARAMS: ProductListParams = {
   page: 1,
@@ -40,27 +40,27 @@ export function useCatalog(initialParams: ProductListParams = DEFAULT_PARAMS) {
   const applyParams = (next: Partial<ProductListParams>) =>
     setParams((prev) => ({ ...prev, ...next, page: next.page ?? 1 }))
 
-  const create = async (data: ProductCreate): Promise<boolean> => {
+  const create = async (data: ProductCreate): Promise<Product | null> => {
     try {
-      await apiCreate(data)
+      const { data: created } = await apiCreate(data)
       await load(params)
       toast.success(t('catalog.products.toast.createSuccess'))
-      return true
+      return created
     } catch {
       toast.error(t('catalog.products.toast.createError'))
-      return false
+      return null
     }
   }
 
-  const update = async (id: number, data: ProductUpdate): Promise<boolean> => {
+  const update = async (id: number, data: ProductUpdate): Promise<Product | null> => {
     try {
-      await apiUpdate(id, data)
+      const { data: updated } = await apiUpdate(id, data)
       await load(params)
       toast.success(t('catalog.products.toast.updateSuccess'))
-      return true
+      return updated
     } catch {
       toast.error(t('catalog.products.toast.updateError'))
-      return false
+      return null
     }
   }
 

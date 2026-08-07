@@ -1832,6 +1832,8 @@
       "form": {
         "nameRequired": "Product name is required.",
         "saveFailed": "Save failed. Please try again.",
+        "imageLabel": "Product Image",
+        "imageSaveFailed": "Product saved, but the image could not be saved.",
         "nameEnLabel": "Name (English)",
         "nameEnPlaceholder": "Product name in English",
         "nameLoLabel": "Name (Lao)",

@@ -22,13 +22,20 @@ function extractErrorMessage(err: unknown, fallback: string): string {
 
 interface Props {
   onUploaded?: (result: UploadResult) => void
+  /** Called when the user clears a previously-set image via the remove (×) button. */
+  onRemoved?: () => void
+  /** Pre-seeds the preview with an already-known image (e.g. when editing an
+   * existing record). Read once on mount — the parent's `key` prop should
+   * change to force a remount if the underlying record being edited changes
+   * while this component stays on screen. */
+  initialImageUrl?: string | null
   className?: string
 }
 
-export default function ImageUpload({ onUploaded, className }: Props) {
+export default function ImageUpload({ onUploaded, onRemoved, initialImageUrl, className }: Props) {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement>(null)
-  const [preview, setPreview] = useState<string | null>(null)
+  const [preview, setPreview] = useState<string | null>(() => resolveMediaUrl(initialImageUrl) ?? null)
   const [progress, setProgress] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [result, setResult] = useState<UploadResult | null>(null)
@@ -43,6 +50,7 @@ export default function ImageUpload({ onUploaded, className }: Props) {
     setResult(null)
     setUrlInput('')
     if (inputRef.current) inputRef.current.value = ''
+    onRemoved?.()
   }
 
   const validate = (file: File): string | null => {
