@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   getCategoryTree,
   getCategoriesFlat,
@@ -21,64 +22,81 @@ function flattenTree(nodes: ProductCategory[], depth = 0): ProductCategory[] {
 
 export function useCategories() {
   const { t } = useTranslation()
-  const [tree, setTree]           = useState<ProductCategory[]>([])
-  const [flat, setFlat]           = useState<ProductCategory[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError]         = useState<string | null>(null)
+  const queryClient = useQueryClient()
 
-  const load = useCallback(async () => {
-    setIsLoading(true)
-    setError(null)
-    try {
+  const query = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
       const [treeRes, flatRes] = await Promise.all([getCategoryTree(), getCategoriesFlat()])
-      setTree(treeRes.data)
-      setFlat(flatRes.data)
-    } catch {
-      setError(t('catalog.categories.toast.loadError'))
-    } finally {
-      setIsLoading(false)
-    }
-  }, [t])
+      return { tree: treeRes.data, flat: flatRes.data }
+    },
+  })
 
-  useEffect(() => { load() }, [load])
-
+  const tree = useMemo(() => query.data?.tree ?? [], [query.data])
+  const flat = query.data?.flat ?? []
   const treeFlattened = useMemo(() => flattenTree(tree), [tree])
 
+  const createMutation = useMutation({
+    mutationFn: (data: CategoryCreate) => apiCreate(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['categories'] })
+      toast.success(t('catalog.categories.toast.createSuccess'))
+    },
+    onError: () => toast.error(t('catalog.categories.toast.createError')),
+  })
   const create = async (data: CategoryCreate): Promise<boolean> => {
     try {
-      await apiCreate(data)
-      await load()
-      toast.success(t('catalog.categories.toast.createSuccess'))
+      await createMutation.mutateAsync(data)
       return true
     } catch {
-      toast.error(t('catalog.categories.toast.createError'))
       return false
     }
   }
 
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: CategoryUpdate }) => apiUpdate(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['categories'] })
+      toast.success(t('catalog.categories.toast.updateSuccess'))
+    },
+    onError: () => toast.error(t('catalog.categories.toast.updateError')),
+  })
   const update = async (id: number, data: CategoryUpdate): Promise<boolean> => {
     try {
-      await apiUpdate(id, data)
-      await load()
-      toast.success(t('catalog.categories.toast.updateSuccess'))
+      await updateMutation.mutateAsync({ id, data })
       return true
     } catch {
-      toast.error(t('catalog.categories.toast.updateError'))
       return false
     }
   }
 
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => apiDelete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['categories'] })
+      toast.success(t('catalog.categories.toast.deleteSuccess'))
+    },
+    onError: () => toast.error(t('catalog.categories.toast.deleteError')),
+  })
   const remove = async (id: number): Promise<boolean> => {
     try {
-      await apiDelete(id)
-      await load()
-      toast.success(t('catalog.categories.toast.deleteSuccess'))
+      await deleteMutation.mutateAsync(id)
       return true
     } catch {
-      toast.error(t('catalog.categories.toast.deleteError'))
       return false
     }
   }
 
-  return { tree, flat, treeFlattened, isLoading, error, refetch: load, create, update, remove }
+  return {
+    tree,
+    flat,
+    treeFlattened,
+    isLoading: query.isLoading,
+    isFetching: query.isFetching,
+    error: query.isError ? t('catalog.categories.toast.loadError') : null,
+    refetch: query.refetch,
+    create,
+    update,
+    remove,
+  }
 }

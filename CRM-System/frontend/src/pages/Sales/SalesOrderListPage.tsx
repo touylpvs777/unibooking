@@ -29,7 +29,7 @@ export default function SalesOrderListPage() {
   const { t } = useTranslation()
   const {
     salesOrders, total, pages, page: currentPage,
-    params, isLoading, error,
+    params, isLoading, isFetching, error,
     applyParams, refetch, remove,
   } = useSalesOrders({ page: 1, page_size: 20 })
 
@@ -67,8 +67,8 @@ export default function SalesOrderListPage() {
     <div>
       <PageHeader title={t('salesOrders.list.title')} subtitle={t('salesOrders.list.totalCount', { count: total })}>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button className="btn btn-ghost" onClick={refetch} disabled={isLoading} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('quotations.list.refresh')}
+          <button className="btn btn-ghost" onClick={() => refetch()} disabled={isFetching} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <RefreshCw size={14} className={isFetching ? 'spin' : ''} /> {t('quotations.list.refresh')}
           </button>
           <button className="btn btn-primary" onClick={() => navigate('/sales-orders/new')}>
             <Plus size={15} /> {t('salesOrders.list.newSalesOrder')}

@@ -1,10 +1,11 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useMutation, useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query'
 import {
   getReceipts,
   deleteReceipt as apiDelete,
 } from '@/api/receipt'
-import type { ReceiptListParams, ReceiptListResponse } from '@/types/receipt'
+import type { ReceiptListParams } from '@/types/receipt'
 
 const DEFAULT_PARAMS: ReceiptListParams = {
   page: 1,
@@ -15,36 +16,29 @@ const DEFAULT_PARAMS: ReceiptListParams = {
 
 export function useReceipts(initialParams: ReceiptListParams = DEFAULT_PARAMS) {
   const { t } = useTranslation()
-  const [response, setResponse]   = useState<ReceiptListResponse | null>(null)
-  const [params, setParams]       = useState<ReceiptListParams>(initialParams)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError]         = useState<string | null>(null)
+  const queryClient = useQueryClient()
+  const [params, setParams] = useState<ReceiptListParams>(initialParams)
 
-  const load = useCallback(async (p: ReceiptListParams) => {
-    setIsLoading(true)
-    setError(null)
-    try {
-      const { data } = await getReceipts(p)
-      setResponse(data)
-    } catch {
-      setError(t('receipts.list.loadError'))
-    } finally {
-      setIsLoading(false)
-    }
-  }, [t])
-
-  useEffect(() => { load(params) }, [load, params])
+  const query = useQuery({
+    queryKey: ['receipts', params],
+    queryFn: () => getReceipts(params).then((r) => r.data),
+    placeholderData: keepPreviousData,
+  })
 
   const applyParams = (next: Partial<ReceiptListParams>) =>
     setParams((prev) => ({ ...prev, ...next, page: next.page ?? 1 }))
 
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => apiDelete(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['receipts'] }),
+  })
   const remove = async (id: number): Promise<boolean> => {
     try {
-      await apiDelete(id)
-      const newPage = response && response.items.length === 1 && params.page! > 1
-        ? params.page! - 1
-        : params.page
-      await load({ ...params, page: newPage })
+      const wasLastItemOnPage = query.data?.items.length === 1 && (params.page ?? 1) > 1
+      await deleteMutation.mutateAsync(id)
+      if (wasLastItemOnPage) {
+        setParams((prev) => ({ ...prev, page: (prev.page ?? 1) - 1 }))
+      }
       return true
     } catch {
       return false
@@ -52,15 +46,16 @@ export function useReceipts(initialParams: ReceiptListParams = DEFAULT_PARAMS) {
   }
 
   return {
-    receipts:    response?.items ?? [],
-    total:       response?.total ?? 0,
-    pages:       response?.pages ?? 1,
-    page:        response?.page  ?? 1,
+    receipts:  query.data?.items ?? [],
+    total:     query.data?.total ?? 0,
+    pages:     query.data?.pages ?? 1,
+    page:      query.data?.page  ?? 1,
     params,
-    isLoading,
-    error,
+    isLoading: query.isLoading,
+    isFetching: query.isFetching,
+    error: query.isError ? t('receipts.list.loadError') : null,
     applyParams,
-    refetch: () => load(params),
+    refetch: query.refetch,
     remove,
   }
 }

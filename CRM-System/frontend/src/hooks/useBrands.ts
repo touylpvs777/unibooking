@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   getBrands,
   createBrand as apiCreate,
@@ -7,64 +7,76 @@ import {
   deleteBrand as apiDelete,
 } from '@/api/catalog'
 import { toast } from '@/store/toastStore'
-import type { Brand, BrandCreate, BrandUpdate } from '@/types/catalog'
+import type { BrandCreate, BrandUpdate } from '@/types/catalog'
 
 export function useBrands(activeOnly = false) {
   const { t } = useTranslation()
-  const [brands, setBrands]       = useState<Brand[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError]         = useState<string | null>(null)
+  const queryClient = useQueryClient()
 
-  const load = useCallback(async () => {
-    setIsLoading(true)
-    setError(null)
-    try {
-      const { data } = await getBrands(activeOnly ? { is_active: true, limit: 500 } : { limit: 500 })
-      setBrands(data)
-    } catch {
-      setError(t('catalog.brands.toast.loadError'))
-    } finally {
-      setIsLoading(false)
-    }
-  }, [activeOnly, t])
+  const query = useQuery({
+    queryKey: ['brands', activeOnly],
+    queryFn: () => getBrands(activeOnly ? { is_active: true, limit: 500 } : { limit: 500 }).then((r) => r.data),
+  })
 
-  useEffect(() => { load() }, [load])
-
+  const createMutation = useMutation({
+    mutationFn: (data: BrandCreate) => apiCreate(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['brands'] })
+      toast.success(t('catalog.brands.toast.createSuccess'))
+    },
+    onError: () => toast.error(t('catalog.brands.toast.createError')),
+  })
   const create = async (data: BrandCreate): Promise<boolean> => {
     try {
-      await apiCreate(data)
-      await load()
-      toast.success(t('catalog.brands.toast.createSuccess'))
+      await createMutation.mutateAsync(data)
       return true
     } catch {
-      toast.error(t('catalog.brands.toast.createError'))
       return false
     }
   }
 
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: BrandUpdate }) => apiUpdate(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['brands'] })
+      toast.success(t('catalog.brands.toast.updateSuccess'))
+    },
+    onError: () => toast.error(t('catalog.brands.toast.updateError')),
+  })
   const update = async (id: number, data: BrandUpdate): Promise<boolean> => {
     try {
-      await apiUpdate(id, data)
-      await load()
-      toast.success(t('catalog.brands.toast.updateSuccess'))
+      await updateMutation.mutateAsync({ id, data })
       return true
     } catch {
-      toast.error(t('catalog.brands.toast.updateError'))
       return false
     }
   }
 
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => apiDelete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['brands'] })
+      toast.success(t('catalog.brands.toast.deleteSuccess'))
+    },
+    onError: () => toast.error(t('catalog.brands.toast.deleteError')),
+  })
   const remove = async (id: number): Promise<boolean> => {
     try {
-      await apiDelete(id)
-      await load()
-      toast.success(t('catalog.brands.toast.deleteSuccess'))
+      await deleteMutation.mutateAsync(id)
       return true
     } catch {
-      toast.error(t('catalog.brands.toast.deleteError'))
       return false
     }
   }
 
-  return { brands, isLoading, error, refetch: load, create, update, remove }
+  return {
+    brands: query.data ?? [],
+    isLoading: query.isLoading,
+    isFetching: query.isFetching,
+    error: query.isError ? t('catalog.brands.toast.loadError') : null,
+    refetch: query.refetch,
+    create,
+    update,
+    remove,
+  }
 }

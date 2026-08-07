@@ -25,7 +25,7 @@ export default function DeliveryNoteListPage() {
   const { t } = useTranslation()
   const {
     deliveryNotes, total, pages, page: currentPage,
-    params, isLoading, error,
+    params, isLoading, isFetching, error,
     applyParams, refetch, remove,
   } = useDeliveryNotes({ page: 1, page_size: 20 })
 
@@ -63,8 +63,8 @@ export default function DeliveryNoteListPage() {
     <div>
       <PageHeader title={t('deliveryNotes.list.title')} subtitle={t('deliveryNotes.list.totalCount', { count: total })}>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button className="btn btn-ghost" onClick={refetch} disabled={isLoading} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('quotations.list.refresh')}
+          <button className="btn btn-ghost" onClick={() => refetch()} disabled={isFetching} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <RefreshCw size={14} className={isFetching ? 'spin' : ''} /> {t('quotations.list.refresh')}
           </button>
           <button className="btn btn-primary" onClick={() => navigate('/inventory/delivery-notes/new')}>
             <Plus size={15} /> {t('deliveryNotes.list.newDeliveryNote')}

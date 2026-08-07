@@ -1,10 +1,11 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useMutation, useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query'
 import {
   getDeliveryNotes,
   deleteDeliveryNote as apiDelete,
 } from '@/api/deliveryNote'
-import type { DeliveryNoteListParams, DeliveryNoteListResponse } from '@/types/deliveryNote'
+import type { DeliveryNoteListParams } from '@/types/deliveryNote'
 
 const DEFAULT_PARAMS: DeliveryNoteListParams = {
   page: 1,
@@ -15,36 +16,29 @@ const DEFAULT_PARAMS: DeliveryNoteListParams = {
 
 export function useDeliveryNotes(initialParams: DeliveryNoteListParams = DEFAULT_PARAMS) {
   const { t } = useTranslation()
-  const [response, setResponse]   = useState<DeliveryNoteListResponse | null>(null)
-  const [params, setParams]       = useState<DeliveryNoteListParams>(initialParams)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError]         = useState<string | null>(null)
+  const queryClient = useQueryClient()
+  const [params, setParams] = useState<DeliveryNoteListParams>(initialParams)
 
-  const load = useCallback(async (p: DeliveryNoteListParams) => {
-    setIsLoading(true)
-    setError(null)
-    try {
-      const { data } = await getDeliveryNotes(p)
-      setResponse(data)
-    } catch {
-      setError(t('deliveryNotes.list.loadError'))
-    } finally {
-      setIsLoading(false)
-    }
-  }, [t])
-
-  useEffect(() => { load(params) }, [load, params])
+  const query = useQuery({
+    queryKey: ['deliveryNotes', params],
+    queryFn: () => getDeliveryNotes(params).then((r) => r.data),
+    placeholderData: keepPreviousData,
+  })
 
   const applyParams = (next: Partial<DeliveryNoteListParams>) =>
     setParams((prev) => ({ ...prev, ...next, page: next.page ?? 1 }))
 
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => apiDelete(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['deliveryNotes'] }),
+  })
   const remove = async (id: number): Promise<boolean> => {
     try {
-      await apiDelete(id)
-      const newPage = response && response.items.length === 1 && params.page! > 1
-        ? params.page! - 1
-        : params.page
-      await load({ ...params, page: newPage })
+      const wasLastItemOnPage = query.data?.items.length === 1 && (params.page ?? 1) > 1
+      await deleteMutation.mutateAsync(id)
+      if (wasLastItemOnPage) {
+        setParams((prev) => ({ ...prev, page: (prev.page ?? 1) - 1 }))
+      }
       return true
     } catch {
       return false
@@ -52,15 +46,16 @@ export function useDeliveryNotes(initialParams: DeliveryNoteListParams = DEFAULT
   }
 
   return {
-    deliveryNotes: response?.items ?? [],
-    total:         response?.total ?? 0,
-    pages:         response?.pages ?? 1,
-    page:          response?.page  ?? 1,
+    deliveryNotes: query.data?.items ?? [],
+    total:         query.data?.total ?? 0,
+    pages:         query.data?.pages ?? 1,
+    page:          query.data?.page  ?? 1,
     params,
-    isLoading,
-    error,
+    isLoading: query.isLoading,
+    isFetching: query.isFetching,
+    error: query.isError ? t('deliveryNotes.list.loadError') : null,
     applyParams,
-    refetch: () => load(params),
+    refetch: query.refetch,
     remove,
   }
 }

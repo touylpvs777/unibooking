@@ -30,7 +30,7 @@ export default function CatalogPage() {
   const { t } = useTranslation()
   const {
     products, total, pages, page: currentPage,
-    params, isLoading, error,
+    params, isLoading, isFetching, error,
     applyParams, refetch, create, update, remove,
   } = useCatalog({ page: 1, page_size: 20 })
 
@@ -150,8 +150,8 @@ export default function CatalogPage() {
           </button>
         )}
 
-        <button className="btn btn-ghost" onClick={refetch} disabled={isLoading} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('catalog.products.refresh')}
+        <button className="btn btn-ghost" onClick={() => refetch()} disabled={isFetching} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <RefreshCw size={14} className={isFetching ? 'spin' : ''} /> {t('catalog.products.refresh')}
         </button>
         <button className="btn btn-ghost" onClick={() => navigate('/catalog/import')} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <Upload size={14} /> {t('inventory.import.button')}

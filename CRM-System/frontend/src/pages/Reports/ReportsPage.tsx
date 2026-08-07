@@ -160,7 +160,10 @@ export default function ReportsPage() {
     ? recordToBarData(metrics.data.by_source, sourceLabels)
     : []
 
-  const anyLoading = summary.isLoading || leadTrend.isLoading || custTrend.isLoading || metrics.isLoading
+  // Drives the refresh button's disabled/spin state — isFetching (not
+  // isLoading) so it also reflects background/manual refetches, matching
+  // the button's old behavior under the hand-rolled hooks.
+  const anyFetching = summary.isFetching || leadTrend.isFetching || custTrend.isFetching || metrics.isFetching
 
   return (
     <div className="rp-page">
@@ -172,10 +175,10 @@ export default function ReportsPage() {
           <button
             className="btn btn-ghost"
             onClick={refetchAll}
-            disabled={anyLoading}
+            disabled={anyFetching}
             style={{ gap: 6 }}
           >
-            <RefreshCw size={14} className={anyLoading ? 'spin' : ''} />
+            <RefreshCw size={14} className={anyFetching ? 'spin' : ''} />
             {t('reports.refresh')}
           </button>
         </div>
@@ -186,7 +189,7 @@ export default function ReportsPage() {
         <div className="page-error" style={{ marginBottom: 24 }}>
           <AlertCircle size={16} />
           {summary.error}
-          <button className="clear-btn" onClick={summary.refetch} style={{ marginLeft: 'auto' }}>{t('reports.retry')}</button>
+          <button className="clear-btn" onClick={() => summary.refetch()} style={{ marginLeft: 'auto' }}>{t('reports.retry')}</button>
         </div>
       )}
 

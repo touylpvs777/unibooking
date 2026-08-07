@@ -29,7 +29,7 @@ export default function EquipmentRegistryPage() {
   const { t } = useTranslation()
   const {
     forklifts, total, pages, page: currentPage,
-    params, isLoading, error,
+    params, isLoading, isFetching, error,
     applyParams, refetch, create, update, remove,
   } = useForklifts({ page: 1, page_size: 20 })
 
@@ -106,8 +106,8 @@ export default function EquipmentRegistryPage() {
             <div className="mp-hero-sub">{t('equipment.registry.subtitle')}</div>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
-            <button className="btn btn-ghost" onClick={refetch} disabled={isLoading}>
-              <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('equipment.registry.refresh')}
+            <button className="btn btn-ghost" onClick={() => refetch()} disabled={isFetching}>
+              <RefreshCw size={14} className={isFetching ? 'spin' : ''} /> {t('equipment.registry.refresh')}
             </button>
             <button className="btn btn-primary" onClick={openCreate}>
               <Plus size={15} /> {t('equipment.registry.registerForklift')}

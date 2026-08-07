@@ -347,7 +347,7 @@ export default function ActivityPage() {
   const [page, setPage]       = useState(1)
   const [selected, setSelected] = useState<ActivityLog | null>(null)
 
-  const { logs, isLoading, error, refetch } = useActivity(filters)
+  const { logs, isLoading, isFetching, error, refetch } = useActivity(filters)
 
   const patchFilter = (patch: Partial<ActivityFilters>) => {
     setFilters((f) => ({ ...f, ...patch }))
@@ -394,8 +394,8 @@ export default function ActivityPage() {
     <div>
       {/* Header */}
       <PageHeader title={t('activity.title')} subtitle={t('activity.eventsLoaded', { count: filtered.length })}>
-        <button className="btn btn-ghost" onClick={refetch} disabled={isLoading}>
-          <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('activity.refresh')}
+        <button className="btn btn-ghost" onClick={() => refetch()} disabled={isFetching}>
+          <RefreshCw size={14} className={isFetching ? 'spin' : ''} /> {t('activity.refresh')}
         </button>
       </PageHeader>
 

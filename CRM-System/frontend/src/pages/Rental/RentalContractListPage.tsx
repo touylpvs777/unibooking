@@ -25,7 +25,7 @@ export default function RentalContractListPage() {
   const { t } = useTranslation()
   const {
     contracts, total, pages, page: currentPage,
-    params, isLoading, error,
+    params, isLoading, isFetching, error,
     applyParams, refetch, remove,
   } = useRentalContracts({ page: 1, page_size: 20 })
 
@@ -79,8 +79,8 @@ export default function RentalContractListPage() {
     <div>
       <PageHeader title={t('rental.list.title')} subtitle={t('rental.list.totalCount', { count: total })}>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button className="btn btn-ghost" onClick={refetch} disabled={isLoading} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('rental.list.refresh')}
+          <button className="btn btn-ghost" onClick={() => refetch()} disabled={isFetching} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <RefreshCw size={14} className={isFetching ? 'spin' : ''} /> {t('rental.list.refresh')}
           </button>
           <button className="btn btn-primary" onClick={() => navigate('/rental-contracts/new')}>
             <Plus size={15} /> {t('rental.list.newContract')}

@@ -38,7 +38,7 @@ export default function IoTManagementPage() {
 
   const {
     forklifts, total, pages, page: currentPage,
-    params, isLoading, error,
+    params, isLoading, isFetching, error,
     applyParams, refetch, update,
   } = useForklifts({ page: 1, page_size: 50, sort: 'name_en', order: 'asc' })
 
@@ -73,8 +73,8 @@ export default function IoTManagementPage() {
     <div>
       <PageHeader title={t('iot.title')} subtitle={t('iot.subtitle')}>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button className="btn btn-ghost" onClick={refetch} disabled={isLoading}>
-            <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('iot.refresh')}
+          <button className="btn btn-ghost" onClick={() => refetch()} disabled={isFetching}>
+            <RefreshCw size={14} className={isFetching ? 'spin' : ''} /> {t('iot.refresh')}
           </button>
         </div>
       </PageHeader>

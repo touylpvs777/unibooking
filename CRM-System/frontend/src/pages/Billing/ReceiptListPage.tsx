@@ -29,7 +29,7 @@ export default function ReceiptListPage() {
   const { t } = useTranslation()
   const {
     receipts, total, pages, page: currentPage,
-    params, isLoading, error,
+    params, isLoading, isFetching, error,
     applyParams, refetch, remove,
   } = useReceipts({ page: 1, page_size: 20 })
 
@@ -66,8 +66,8 @@ export default function ReceiptListPage() {
     <div>
       <PageHeader title={t('receipts.list.title')} subtitle={t('receipts.list.totalCount', { count: total })}>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button className="btn btn-ghost" onClick={refetch} disabled={isLoading} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <RefreshCw size={14} className={isLoading ? 'spin' : ''} /> {t('quotations.list.refresh')}
+          <button className="btn btn-ghost" onClick={() => refetch()} disabled={isFetching} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <RefreshCw size={14} className={isFetching ? 'spin' : ''} /> {t('quotations.list.refresh')}
           </button>
           <button className="btn btn-primary" onClick={() => navigate('/billing/receipts/new')}>
             <Plus size={15} /> {t('receipts.list.newReceipt')}
