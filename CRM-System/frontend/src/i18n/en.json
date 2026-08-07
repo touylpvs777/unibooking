@@ -340,6 +340,18 @@
         "receivedDate": "Received Date",
         "qtyOrdered": "Qty Ordered",
         "qtyReceived": "Qty Received"
+      },
+      "editor": {
+        "newTitle": "New Purchase Order",
+        "partner": "Vendor (Partner)",
+        "noPartner": "— Select a partner —",
+        "headerLocked": "Header fields are locked after the purchase order is created.",
+        "saveSuccess": "Purchase order saved",
+        "saveFailed": "Failed to save purchase order",
+        "notFoundError": "Purchase order not found",
+        "saveItems": "Save Line Items",
+        "itemsSaveSuccess": "Line items updated",
+        "itemsSaveFailed": "Failed to update line items"
       }
     },
     "spareParts": {
@@ -1122,6 +1134,19 @@
           "adding": "Adding..."
         },
         "cancelReasonDefault": "Cancelled by user"
+      },
+      "editor": {
+        "priority": "Priority",
+        "estimatedCost": "Estimated Cost",
+        "saveChanges": "Save Changes",
+        "saveSuccess": "Work order saved",
+        "saveFailed": "Failed to save work order",
+        "notFoundError": "Work order not found",
+        "costsAddOnlyNote": "Existing cost entries cannot be edited or removed once saved — only new rows can be added.",
+        "confirmCancel": "Are you sure you want to cancel this work order?",
+        "serialNumber": "Serial Number",
+        "equipmentName": "Equipment Name",
+        "currentHourMeter": "Current Hour Meter"
       }
     }
   },
@@ -2150,7 +2175,23 @@
       "startDateRequired": "Start date is required.",
       "endDateRequired": "End date is required.",
       "createFailed": "Failed to create rental contract.",
-      "createdToast": "Contract {{number}} created."
+      "createdToast": "Contract {{number}} created.",
+      "billingCycleDay": "Billing Cycle Day",
+      "earlyTerminationFee": "Early Termination Fee",
+      "lateReturnPenalty": "Late Return Penalty",
+      "overtimeRate": "Overtime Rate"
+    },
+    "editor": {
+      "notFoundError": "Rental contract not found",
+      "saveSuccess": "Rental contract saved",
+      "saveFailed": "Failed to save rental contract",
+      "saveChanges": "Save Changes",
+      "itemRequired": "At least one equipment line item is required",
+      "itemsAddOnlyNote": "Existing line items can only be removed, not edited — add a new row instead to change equipment, rates, or description.",
+      "keyTerms": "Key Terms",
+      "confirmCancel": "Are you sure you want to cancel this rental contract?",
+      "itemWarning": "One or more line items may not have saved — please reload and verify before continuing.",
+      "refreshFailed": "Couldn't refresh the latest data — your last change may still have saved. Reload to check."
     },
     "detail": {
       "backToContracts": "Back to Rental Contracts",
@@ -2320,6 +2361,8 @@
       "warehouseProjects": "Warehouse Projects",
       "purchaseOrders": "Purchase Orders",
       "salesOrders": "Sales Orders",
+      "workOrders": "Work Orders",
+      "rentalContracts": "Rental Contracts",
       "taxInvoices": "Tax Invoices",
       "creditNotes": "Credit Notes",
       "paymentVouchers": "Payment Vouchers",

@@ -24,15 +24,13 @@ const QuotationEditorPage = lazy(() => import('@/pages/Quotations/QuotationEdito
 const SalesOrderListPage = lazy(() => import('@/pages/Sales/SalesOrderListPage'))
 const SalesOrderEditorPage = lazy(() => import('@/pages/Sales/SalesOrderEditorPage'))
 const RentalContractListPage = lazy(() => import('@/pages/Rental/RentalContractListPage'))
-const RentalContractDetailPage = lazy(() => import('@/pages/Rental/RentalContractDetailPage'))
-const RentalContractFormPage = lazy(() => import('@/pages/Rental/RentalContractFormPage'))
+const RentalContractEditorPage = lazy(() => import('@/pages/Rental/RentalContractEditorPage'))
 const MovementListPage = lazy(() => import('@/pages/Movement/MovementListPage'))
 const MovementDetailPage = lazy(() => import('@/pages/Movement/MovementDetailPage'))
 const MovementForm = lazy(() => import('@/pages/Movement/MovementForm'))
 const MaintenanceDashboardPage = lazy(() => import('@/pages/Maintenance/MaintenanceDashboardPage'))
 const WorkOrderListPage = lazy(() => import('@/pages/Maintenance/WorkOrderListPage'))
-const WorkOrderFormPage = lazy(() => import('@/pages/Maintenance/WorkOrderFormPage'))
-const WorkOrderDetailPage = lazy(() => import('@/pages/Maintenance/WorkOrderDetailPage'))
+const WorkOrderEditorPage = lazy(() => import('@/pages/Maintenance/WorkOrderEditorPage'))
 const MaintenanceSchedulePage = lazy(() => import('@/pages/Maintenance/MaintenanceSchedulePage'))
 const BillingDashboardPage = lazy(() => import('@/pages/Billing/BillingDashboardPage'))
 const InvoiceListPage = lazy(() => import('@/pages/Billing/InvoiceListPage'))
@@ -57,8 +55,7 @@ const SparePartDetailPage = lazy(() => import('@/pages/Inventory/SparePartDetail
 const WarehousePage = lazy(() => import('@/pages/Inventory/WarehousePage'))
 const WarehouseDetailPage = lazy(() => import('@/pages/Inventory/WarehouseDetailPage'))
 const PurchaseOrderPage = lazy(() => import('@/pages/Inventory/PurchaseOrderPage'))
-const PurchaseOrderFormPage = lazy(() => import('@/pages/Inventory/PurchaseOrderFormPage'))
-const PurchaseOrderDetailPage = lazy(() => import('@/pages/Inventory/PurchaseOrderDetailPage'))
+const PurchaseOrderEditorPage = lazy(() => import('@/pages/Inventory/PurchaseOrderEditorPage'))
 const DeliveryNoteListPage = lazy(() => import('@/pages/Inventory/DeliveryNoteListPage'))
 const DeliveryNoteEditorPage = lazy(() => import('@/pages/Inventory/DeliveryNoteEditorPage'))
 const GoodsReceiveListPage = lazy(() => import('@/pages/Inventory/GoodsReceiveListPage'))
@@ -123,8 +120,8 @@ export default function App() {
             <Route path="/sales-orders/:id"       element={<Suspense fallback={<PageLoader />}><SalesOrderEditorPage /></Suspense>} />
 
             <Route path="/rental-contracts"       element={<Suspense fallback={<PageLoader />}><RentalContractListPage /></Suspense>} />
-            <Route path="/rental-contracts/new"   element={<Suspense fallback={<PageLoader />}><RentalContractFormPage /></Suspense>} />
-            <Route path="/rental-contracts/:id"   element={<Suspense fallback={<PageLoader />}><RentalContractDetailPage /></Suspense>} />
+            <Route path="/rental-contracts/new"   element={<Suspense fallback={<PageLoader />}><RentalContractEditorPage /></Suspense>} />
+            <Route path="/rental-contracts/:id"   element={<Suspense fallback={<PageLoader />}><RentalContractEditorPage /></Suspense>} />
             <Route path="/rental-mvp"             element={<Suspense fallback={<PageLoader />}><RentalMvpDashboard /></Suspense>} />
 
             <Route path="/movements"              element={<Suspense fallback={<PageLoader />}><MovementListPage /></Suspense>} />
@@ -153,8 +150,8 @@ export default function App() {
 
             <Route path="/maintenance"                    element={<Suspense fallback={<PageLoader />}><MaintenanceDashboardPage /></Suspense>} />
             <Route path="/maintenance/work-orders"        element={<Suspense fallback={<PageLoader />}><WorkOrderListPage /></Suspense>} />
-            <Route path="/maintenance/work-orders/new"    element={<Suspense fallback={<PageLoader />}><WorkOrderFormPage /></Suspense>} />
-            <Route path="/maintenance/work-orders/:id"    element={<Suspense fallback={<PageLoader />}><WorkOrderDetailPage /></Suspense>} />
+            <Route path="/maintenance/work-orders/new"    element={<Suspense fallback={<PageLoader />}><WorkOrderEditorPage /></Suspense>} />
+            <Route path="/maintenance/work-orders/:id"    element={<Suspense fallback={<PageLoader />}><WorkOrderEditorPage /></Suspense>} />
             <Route path="/maintenance/schedules"          element={<Suspense fallback={<PageLoader />}><MaintenanceSchedulePage /></Suspense>} />
 
             <Route path="/inventory"                      element={<Suspense fallback={<PageLoader />}><InventoryDashboardPage /></Suspense>} />
@@ -164,8 +161,8 @@ export default function App() {
             <Route path="/inventory/warehouses"           element={<Suspense fallback={<PageLoader />}><WarehousePage /></Suspense>} />
             <Route path="/inventory/warehouses/:id"        element={<Suspense fallback={<PageLoader />}><WarehouseDetailPage /></Suspense>} />
             <Route path="/inventory/purchase-orders"      element={<Suspense fallback={<PageLoader />}><PurchaseOrderPage /></Suspense>} />
-            <Route path="/inventory/purchase-orders/new"  element={<Suspense fallback={<PageLoader />}><PurchaseOrderFormPage /></Suspense>} />
-            <Route path="/inventory/purchase-orders/:id"  element={<Suspense fallback={<PageLoader />}><PurchaseOrderDetailPage /></Suspense>} />
+            <Route path="/inventory/purchase-orders/new"  element={<Suspense fallback={<PageLoader />}><PurchaseOrderEditorPage /></Suspense>} />
+            <Route path="/inventory/purchase-orders/:id"  element={<Suspense fallback={<PageLoader />}><PurchaseOrderEditorPage /></Suspense>} />
             <Route path="/inventory/goods-receive"        element={<Suspense fallback={<PageLoader />}><GoodsReceiveListPage /></Suspense>} />
             <Route path="/inventory/goods-issue"          element={<Suspense fallback={<PageLoader />}><GoodsIssueListPage /></Suspense>} />
             <Route path="/inventory/delivery-notes"       element={<Suspense fallback={<PageLoader />}><DeliveryNoteListPage /></Suspense>} />

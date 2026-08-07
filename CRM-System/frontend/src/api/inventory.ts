@@ -1,6 +1,16 @@
 import client from './client'
 import type { SparePart, SparePartListResponse, SparePartCreate, PartListParams, Warehouse, InventoryBalance, InventoryTransaction, PurchaseOrder, POListResponse, POCreate, ReceiveItemAction, DashboardSummary, InventoryImportResult } from '@/types/inventory'
 
+export interface POGridRow {
+  id: number | null
+  item_code?: string
+  description?: string
+  unit?: string
+  quantity_ordered: number
+  unit_cost: number
+  line_total: number
+}
+
 const B = '/inventory'
 
 export const getDashboard = () => client.get<DashboardSummary>(`${B}/dashboard`)
@@ -31,6 +41,8 @@ export const getPurchaseOrder = (id: number) => client.get<PurchaseOrder>(`${B}/
 export const createPurchaseOrder = (data: POCreate) => client.post<PurchaseOrder>(`${B}/purchase-orders`, data)
 export const submitPO = (id: number) => client.post<PurchaseOrder>(`${B}/purchase-orders/${id}/submit`)
 export const receivePO = (id: number, items: ReceiveItemAction[]) => client.post<PurchaseOrder>(`${B}/purchase-orders/${id}/receive`, items)
+export const updatePOGrid = (id: number, rows: POGridRow[]) => client.put<PurchaseOrder>(`${B}/purchase-orders/${id}/grid`, { rows })
+export const exportPOExcel = (id: number) => client.get(`${B}/purchase-orders/${id}/export-excel`, { responseType: 'blob' })
 
 export const consumePart = (data: { spare_part_id: number; warehouse_id: number; quantity: number; work_order_id?: number; forklift_id?: number; notes?: string }) => client.post(`${B}/consume`, data)
 export const getConsumptions = (params?: { spare_part_id?: number; work_order_id?: number }) => client.get(`${B}/consumptions`, { params })

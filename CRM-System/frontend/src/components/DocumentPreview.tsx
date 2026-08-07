@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { amountInWords } from '@/utils/amountInWords'
 
-export type DocumentType = 'invoice' | 'quotation' | 'purchase_order' | 'sales_order' | 'receipt'
+export type DocumentType = 'invoice' | 'quotation' | 'purchase_order' | 'sales_order' | 'receipt' | 'work_order' | 'rental_contract'
 
 export interface DocumentLineItem {
   itemCode?: string
@@ -106,6 +106,8 @@ const DOC_TITLE: Record<DocumentType, string> = {
   purchase_order: 'PURCHASE ORDER',
   sales_order: 'SALES ORDER',
   receipt: 'RECEIPT',
+  work_order: 'WORK ORDER',
+  rental_contract: 'RENTAL CONTRACT',
 }
 
 function fmtNum(n: number): string {

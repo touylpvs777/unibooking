@@ -37,6 +37,8 @@ export interface InventoryTransaction {
   notes: string | null; user: UserBrief | null; created_at: string
 }
 
+export interface PartnerBrief { id: number; name: string; partner_type: string }
+
 export interface POItem {
   id: number; spare_part: SparePartBrief | null
   item_code: string | null; description: string | null; unit: string | null
@@ -45,7 +47,7 @@ export interface POItem {
 }
 export interface PurchaseOrder {
   id: number; po_number: string; status: POStatus; vendor: string
-  vendor_address: string | null; vendor_contact: string | null
+  vendor_address: string | null; vendor_contact: string | null; partner: PartnerBrief | null
   warehouse: WarehouseBrief; order_date: string; expected_date: string | null; received_date: string | null
   subtotal: number; tax_rate: number; tax_amount: number; total_amount: number; currency: string
   notes: string | null; is_active: boolean; created_at: string; updated_at: string | null
@@ -65,7 +67,7 @@ export interface POItemCreate {
   quantity_ordered: number; unit_cost: number; notes?: string
 }
 export interface POCreate {
-  vendor: string; vendor_address?: string; vendor_contact?: string
+  vendor: string; vendor_address?: string; vendor_contact?: string; partner_id?: number | null
   warehouse_id: number; order_date: string; expected_date?: string
   tax_rate: number; notes?: string; items: POItemCreate[]
 }
