@@ -4,10 +4,10 @@ import { useForm, FormProvider, useFormContext } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
 import {
-  AlertCircle, Check, ChevronLeft, FileDown, Loader2, RotateCcw, Send, Trash2, X,
+  AlertCircle, Check, ChevronLeft, FileDown, Loader2, RotateCcw, Send, X,
 } from 'lucide-react'
 import {
-  getRentalContract, createRentalContract, updateRentalContract, addContractItem, deleteContractItem,
+  getRentalContract, createRentalContract, updateRentalContract, addContractItem, replaceContractItemsBulk,
   submitContract, approveContract, rejectContract, activateContract, cancelContract, closeContract,
 } from '@/api/rental'
 import { getCustomers } from '@/api/customers'
@@ -229,8 +229,11 @@ export default function RentalContractEditorPage() {
   useEffect(() => { void load() }, [id])
 
   const values = methods.watch()
-  const isEditableHeader = isNew || ct?.status === 'draft' || ct?.status === 'reservation'
-  const canAddItems = isEditableHeader
+  // Mirrors the backend's `_require_editable` guard on both the header PUT
+  // and the items bulk-replace endpoint: only reservation/draft/revision
+  // contracts are editable (revision was previously missing here).
+  const isEditableHeader = isNew || ct?.status === 'reservation' || ct?.status === 'draft' || ct?.status === 'revision'
+  const canEditItems = isEditableHeader
 
   const totals = useMemo(() => {
     const subtotal = items.reduce((s, r) => s + r.monthly_rate, 0)
@@ -324,39 +327,33 @@ export default function RentalContractEditorPage() {
         notes: form.notes,
         internal_notes: form.internal_notes,
       })
-      const newItems = items.filter((r) => r.id === null && r.forklift_id && r.description.trim())
-      let itemWarning = false
-      for (const row of newItems) {
-        try {
-          await addContractItem(ct.id, {
-            forklift_id: row.forklift_id!, description: row.description,
-            monthly_rate: row.monthly_rate, daily_rate: row.daily_rate,
-            hourly_rate: row.hourly_rate || undefined,
-          })
-        } catch {
-          itemWarning = true
-        }
-      }
-      if (itemWarning) toast.error(t('rental.editor.itemWarning'))
+      // Differential merge: rows with an `id` update in place (forklift_id
+      // ignored — swapping equipment on a saved line isn't supported), rows
+      // with `id: null` are created (forklift_id required), and any existing
+      // item whose id isn't in this array gets deleted + its forklift
+      // released server-side — one atomic call for edits, additions, and
+      // removals from the grid.
+      const validRows = items.filter((r) => r.description.trim() && (r.id !== null || r.forklift_id))
+      if (validRows.length === 0) { setError(t('rental.editor.itemRequired')); setIsSaving(false); return }
+      await replaceContractItemsBulk(ct.id, {
+        items: validRows.map((r) => ({
+          id: r.id,
+          forklift_id: r.forklift_id,
+          description: r.description.trim(),
+          monthly_rate: r.monthly_rate,
+          daily_rate: r.daily_rate,
+          hourly_rate: r.hourly_rate || undefined,
+        })),
+      })
       toast.success(t('rental.editor.saveSuccess'))
       await load()
-    } catch {
-      setError(t('rental.editor.saveFailed'))
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail
+      setError(msg ?? t('rental.editor.saveFailed'))
     } finally {
       setIsSaving(false)
     }
   })
-
-  const handleDeleteItem = async (itemId: number) => {
-    if (!ct) return
-    try {
-      await deleteContractItem(ct.id, itemId)
-      toast.success(t('rental.detail.toasts.itemRemoved'))
-      await load()
-    } catch {
-      toast.error(t('rental.detail.actionFailed', { action: t('common.delete') }))
-    }
-  }
 
   const runAction = async (label: string, fn: () => Promise<unknown>) => {
     setIsSaving(true)
@@ -523,21 +520,12 @@ export default function RentalContractEditorPage() {
                   rows={items}
                   onRowsChange={setItems}
                   createEmptyRow={emptyRow}
-                  readOnly={!canAddItems}
+                  readOnly={!canEditItems}
                   filterKey="description"
                 />
-                {!isNew && ct && (
-                  <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 4 }}>
-                    {ct.items.map((it) => canAddItems && (
-                      <button key={it.id} type="button" className="btn btn-ghost btn-sm" style={{ alignSelf: 'flex-start' }} onClick={() => handleDeleteItem(it.id)}>
-                        <Trash2 size={12} /> {t('common.delete')}: {it.description}
-                      </button>
-                    ))}
-                  </div>
-                )}
-                {!isNew && (
+                {!isNew && canEditItems && (
                   <div style={{ fontSize: 11.5, color: 'var(--color-text-muted)', marginTop: 8, fontStyle: 'italic' }}>
-                    {t('rental.editor.itemsAddOnlyNote')}
+                    {t('rental.editor.itemsBulkEditNote')}
                   </div>
                 )}
               </div>

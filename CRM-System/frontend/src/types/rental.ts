@@ -312,6 +312,24 @@ export interface RentalContractItemCreate {
   sort_order?: number
 }
 
+// A row with `id` updates that line item in place; `id: null` creates a new
+// one (forklift_id required in that case); any existing item whose id is
+// omitted from the array is deleted.
+export interface RentalContractItemBulkRow {
+  id: number | null
+  forklift_id: number | null
+  description: string
+  monthly_rate: number
+  daily_rate: number
+  hourly_rate?: number | null
+  contracted_hours_limit?: number | null
+  maintenance_interval_hours?: number | null
+  quotation_item_id?: number | null
+  notes?: string | null
+  sort_order?: number
+}
+export interface RentalContractItemBulkReplaceRequest { items: RentalContractItemBulkRow[] }
+
 export interface RentalReturnCreate {
   return_type: ReturnType
   requested_date: string

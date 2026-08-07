@@ -1,5 +1,5 @@
 import client from './client'
-import type { MaintenancePlan, MaintenanceSchedule, WorkOrder, WorkOrderDetail, WorkOrderListResponse, WOListParams, WOCreate, PlanCreate, CostEntry, ServiceHistoryEntry, DashboardSummary, UserBrief } from '@/types/maintenance'
+import type { MaintenancePlan, MaintenanceSchedule, WorkOrder, WorkOrderDetail, WorkOrderListResponse, WOListParams, WOCreate, PlanCreate, CostEntry, CostBulkReplaceRequest, ServiceHistoryEntry, DashboardSummary, UserBrief } from '@/types/maintenance'
 
 const B = '/maintenance'
 
@@ -26,5 +26,7 @@ export const verifyWorkOrder = (id: number) => client.post<WorkOrder>(`${B}/work
 export const cancelWorkOrder = (id: number, cancellation_reason: string) => client.post<WorkOrder>(`${B}/work-orders/${id}/cancel`, { cancellation_reason })
 
 export const addCost = (woId: number, data: { cost_type: string; description: string; quantity: number; unit_rate: number; vendor?: string }) => client.post<CostEntry>(`${B}/work-orders/${woId}/costs`, data)
+
+export const replaceCostsBulk = (woId: number, data: CostBulkReplaceRequest) => client.put<CostEntry[]>(`${B}/work-orders/${woId}/items/bulk`, data)
 
 export const getServiceHistory = (forkliftId: number) => client.get<ServiceHistoryEntry[]>(`${B}/service-history/${forkliftId}`)

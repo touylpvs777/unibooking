@@ -32,6 +32,19 @@ export interface CostEntry {
   vendor: string | null; reference_number: string | null; currency: string; created_at: string
 }
 
+// A row with `id` updates that cost entry in place; `id: null` creates a new
+// one; any existing entry whose id is omitted from the array is deleted.
+export interface CostBulkItem {
+  id: number | null
+  cost_type: MCostType
+  description: string
+  quantity: number
+  unit_rate: number
+  vendor?: string | null
+  reference_number?: string | null
+}
+export interface CostBulkReplaceRequest { costs: CostBulkItem[] }
+
 export interface WorkOrder {
   id: number; work_order_number: string; forklift: ForkliftBrief
   schedule: ScheduleBrief | null; plan: PlanBrief | null; technician: UserBrief | null

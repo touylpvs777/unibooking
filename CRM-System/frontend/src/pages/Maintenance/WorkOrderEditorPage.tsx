@@ -8,12 +8,12 @@ import {
 } from 'lucide-react'
 import {
   getWorkOrder, createWorkOrder, updateWorkOrder, getTechnicians,
-  startWorkOrder, completeWorkOrder, verifyWorkOrder, cancelWorkOrder, addCost,
+  startWorkOrder, completeWorkOrder, verifyWorkOrder, cancelWorkOrder, addCost, replaceCostsBulk,
 } from '@/api/maintenance'
 import AssetSelect from '@/components/maintenance/AssetSelect'
 import WorkOrderEquipmentSection from '@/components/maintenance/WorkOrderEquipmentSection'
 import { WOStatusBadge, WOTypeBadge, WOPriorityBadge } from '@/components/maintenance/MaintenanceStatusBadge'
-import type { WorkOrderDetail, WOCreate, UserBrief } from '@/types/maintenance'
+import type { WorkOrderDetail, WOCreate, UserBrief, MCostType } from '@/types/maintenance'
 import type { Forklift } from '@/types/forklift'
 import {
   workOrderHeaderSchema, WORK_ORDER_EDITOR_DEFAULTS, type WorkOrderEditorFormValues,
@@ -210,7 +210,10 @@ export default function WorkOrderEditorPage() {
   const canComplete = s === 'in_progress'
   const canVerify = s === 'completed'
   const canCancel = !!s && !['completed', 'verified', 'cancelled'].includes(s)
-  const canAddCost = isNew || (!!s && !['verified', 'cancelled'].includes(s))
+  // Mirrors the backend's `_require_cost_editable` guard on the bulk-replace
+  // endpoint: costs stay fully editable (add/edit/delete) through every
+  // status except verified/cancelled.
+  const canEditCosts = isNew || (!!s && !['verified', 'cancelled'].includes(s))
 
   const totalCost = useMemo(() => costs.reduce((sum, r) => sum + r.quantity * r.unit_rate, 0), [costs])
 
@@ -275,14 +278,24 @@ export default function WorkOrderEditorPage() {
         estimated_hours: form.estimated_hours,
         estimated_cost: form.estimated_cost,
       })
-      const newCosts = costs.filter((r) => r.id === null && r.description.trim())
-      for (const row of newCosts) {
-        await addCost(wo.id, { cost_type: row.cost_type, description: row.description, quantity: row.quantity, unit_rate: row.unit_rate })
-      }
+      // Differential merge: rows with an `id` update in place, rows with
+      // `id: null` are created, and any existing cost whose id isn't in
+      // this array gets deleted server-side — a single atomic call covers
+      // edits, additions, and removals from the grid.
+      await replaceCostsBulk(wo.id, {
+        costs: costs.filter((r) => r.description.trim()).map((r) => ({
+          id: r.id,
+          cost_type: r.cost_type as MCostType,
+          description: r.description.trim(),
+          quantity: r.quantity,
+          unit_rate: r.unit_rate,
+        })),
+      })
       toast.success(t('maintenance.workOrders.editor.saveSuccess'))
       await load()
-    } catch {
-      setError(t('maintenance.workOrders.editor.saveFailed'))
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail
+      setError(msg ?? t('maintenance.workOrders.editor.saveFailed'))
     } finally {
       setIsSaving(false)
     }
@@ -368,7 +381,7 @@ export default function WorkOrderEditorPage() {
                   {isSaving ? <Loader2 size={14} className="spin" /> : null} {t('maintenance.workOrders.form.createWorkOrder')}
                 </button>
               )}
-              {!isNew && canAddCost && (
+              {!isNew && canEditCosts && (
                 <button className="btn btn-primary" disabled={isSaving} onClick={() => onSaveHeader()}>
                   {isSaving ? <Loader2 size={14} className="spin" /> : null} {t('maintenance.workOrders.editor.saveChanges')}
                 </button>
@@ -428,12 +441,12 @@ export default function WorkOrderEditorPage() {
                   rows={costs}
                   onRowsChange={setCosts}
                   createEmptyRow={emptyCostRow}
-                  readOnly={!canAddCost}
+                  readOnly={!canEditCosts}
                   filterKey="description"
                 />
-                {!isNew && (
+                {!isNew && canEditCosts && (
                   <div style={{ fontSize: 11.5, color: 'var(--color-text-muted)', marginTop: 8, fontStyle: 'italic' }}>
-                    {t('maintenance.workOrders.editor.costsAddOnlyNote')}
+                    {t('maintenance.workOrders.editor.costsBulkEditNote')}
                   </div>
                 )}
               </div>

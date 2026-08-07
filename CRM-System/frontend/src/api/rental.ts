@@ -5,6 +5,7 @@ import type {
   RentalContractDetail,
   RentalContractItemCreate,
   RentalContractItemOut,
+  RentalContractItemBulkReplaceRequest,
   RentalContractListParams,
   RentalContractListResponse,
   RentalContractUpdate,
@@ -40,6 +41,9 @@ export const addContractItem = (contractId: number, data: RentalContractItemCrea
 
 export const deleteContractItem = (contractId: number, itemId: number) =>
   client.delete(`${BASE}/${contractId}/items/${itemId}`)
+
+export const replaceContractItemsBulk = (contractId: number, data: RentalContractItemBulkReplaceRequest) =>
+  client.put<RentalContractItemOut[]>(`${BASE}/${contractId}/items/bulk`, data)
 
 // -- Workflow Actions ---------------------------------------------------------
 
