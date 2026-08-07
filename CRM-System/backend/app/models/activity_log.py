@@ -132,6 +132,7 @@ class ActionType(str, enum.Enum):
     PURCHASE_ORDER_SUBMITTED = "purchase_order_submitted"
     PURCHASE_ORDER_RECEIVED = "purchase_order_received"
     PURCHASE_ORDER_UPDATED = "purchase_order_updated"
+    PURCHASE_ORDER_CANCELLED = "purchase_order_cancelled"
     PURCHASE_ORDER_APPROVALS_UPDATED = "purchase_order_approvals_updated"
     PURCHASE_ORDER_EXCEL_EXPORTED = "purchase_order_excel_exported"
     PURCHASE_ORDER_EXCEL_IMPORTED = "purchase_order_excel_imported"

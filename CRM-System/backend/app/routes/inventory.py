@@ -9,8 +9,8 @@ from app.models.activity_log import ActionType, EntityType
 from app.models.user import User
 from app.schemas.document_approval import DocumentApprovalOut, DocumentApprovalSetRequest
 from app.schemas.inventory import (
-    BalanceOut, ConsumeAction, ConsumptionOut, InventoryDashboardSummary,
-    POCreate, POListResponse, POOut, ReceiveItemAction,
+    BalanceOut, CancelPOAction, ConsumeAction, ConsumptionOut, InventoryDashboardSummary,
+    POCreate, POListResponse, POOut, POUpdate, ReceiveItemAction,
     SparePartCreate, SparePartListResponse, SparePartOut, SparePartUpdate,
     TransactionCreate, TransactionOut, WarehouseCreate, WarehouseOut,
 )
@@ -178,6 +178,19 @@ async def create_po(data: POCreate, db: AsyncSession = Depends(get_db), current_
     )
     return POOut.model_validate(po)
 
+@router.put("/purchase-orders/{po_id}", response_model=POOut)
+async def update_po(
+    po_id: int, data: POUpdate,
+    db: AsyncSession = Depends(get_db), current_user: User = require_permission(PermissionName.MANAGE_CATALOG),
+):
+    po = await InventoryService(db).update_po_header(po_id, data)
+    await ActivityLogService(db).log(
+        user_id=current_user.id, action=ActionType.PURCHASE_ORDER_UPDATED,
+        entity_type=EntityType.PURCHASE_ORDER, entity_id=po.id,
+        details={"po_number": po.po_number, "changed_fields": list(data.model_dump(exclude_unset=True).keys())},
+    )
+    return POOut.model_validate(po)
+
 @router.post("/purchase-orders/{po_id}/submit", response_model=POOut)
 async def submit_po(po_id: int, db: AsyncSession = Depends(get_db), current_user: User = require_permission(PermissionName.MANAGE_CATALOG)):
     po = await InventoryService(db).submit_po(po_id)
@@ -195,6 +208,20 @@ async def receive_po(po_id: int, items: list[ReceiveItemAction], db: AsyncSessio
         user_id=current_user.id, action=ActionType.PURCHASE_ORDER_RECEIVED,
         entity_type=EntityType.PURCHASE_ORDER, entity_id=po.id,
         details={"po_number": po.po_number, "status": po.status},
+    )
+    return POOut.model_validate(po)
+
+@router.post("/purchase-orders/{po_id}/cancel", response_model=POOut)
+async def cancel_po(
+    po_id: int, body: CancelPOAction | None = None,
+    db: AsyncSession = Depends(get_db), current_user: User = require_permission(PermissionName.MANAGE_CATALOG),
+):
+    reason = body.cancellation_reason if body else None
+    po = await InventoryService(db).cancel_po(po_id, reason)
+    await ActivityLogService(db).log(
+        user_id=current_user.id, action=ActionType.PURCHASE_ORDER_CANCELLED,
+        entity_type=EntityType.PURCHASE_ORDER, entity_id=po.id,
+        details={"po_number": po.po_number, "reason": reason},
     )
     return POOut.model_validate(po)
 

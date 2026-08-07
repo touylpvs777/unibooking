@@ -144,6 +144,17 @@ class POCreate(BaseModel):
     notes: str | None = None
     items: list[POItemCreate] = Field(..., min_length=1)
 
+class POUpdate(BaseModel):
+    vendor: str | None = Field(default=None, min_length=1, max_length=200)
+    vendor_address: str | None = None
+    vendor_contact: str | None = Field(default=None, max_length=200)
+    partner_id: int | None = None
+    warehouse_id: int | None = None
+    order_date: date | None = None
+    expected_date: date | None = None
+    tax_rate: float | None = Field(default=None, ge=0, le=100)
+    notes: str | None = None
+
 class POItemOut(BaseModel):
     model_config = {"from_attributes": True}
     id: int; spare_part: SparePartBrief | None = None
@@ -160,6 +171,7 @@ class POOut(BaseModel):
     expected_date: date | None = None; received_date: date | None = None
     subtotal: float; tax_rate: float; tax_amount: float; total_amount: float; currency: str
     notes: str | None = None; is_active: bool
+    cancellation_reason: str | None = None
     created_at: datetime; updated_at: datetime | None = None
     items: list[POItemOut] = []
 
@@ -177,6 +189,9 @@ class POListOut(BaseModel):
 class ReceiveItemAction(BaseModel):
     item_id: int
     quantity_received: float = Field(..., gt=0)
+
+class CancelPOAction(BaseModel):
+    cancellation_reason: str | None = Field(default=None, max_length=1000)
 
 
 # ── Consumption ──────────────────────────────────────────────────────────────

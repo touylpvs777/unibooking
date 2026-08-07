@@ -18,7 +18,7 @@ from app.services.notification_service import ADMIN_ROLE, NotificationService, r
 from app.services.po_excel_service import POExcelService
 from app.schemas.inventory import (
     BalanceOut, ConsumeAction, ConsumptionOut, InventoryDashboardSummary,
-    POCreate, POListResponse, POListOut, POOut,
+    POCreate, POListResponse, POListOut, POOut, POUpdate,
     ReorderAlertItem, SparePartCreate, SparePartListResponse, SparePartOut,
     SparePartUpdate, TransactionCreate, TransactionOut, WarehouseCreate, WarehouseOut,
     ReceiveItemAction,
@@ -274,6 +274,54 @@ class InventoryService:
         await self.db.flush()
         await self.db.commit()
         return await self._repo.get_po_by_id(po.id)
+
+    def _ensure_po_editable(self, po: PurchaseOrder) -> None:
+        # Shared guard for both header updates and cancellation: a PO that's
+        # already cancelled, fully received, or has had any goods received
+        # against it (partially_received, or any line with quantity_received
+        # > 0 even if the aggregate status hasn't caught up yet) is locked —
+        # there's no separate Goods Receipt entity in this schema, so "linked
+        # to a completed goods receipt" is read as "any receiving occurred".
+        if po.status == POStatus.CANCELLED.value:
+            raise HTTPException(status_code=422, detail="Cannot modify a cancelled purchase order.")
+        if po.status == POStatus.RECEIVED.value:
+            raise HTTPException(status_code=422, detail="Cannot modify a fully received purchase order.")
+        if any(item.quantity_received > 0 for item in po.items):
+            raise HTTPException(status_code=422, detail="Cannot modify a purchase order that already has received goods.")
+
+    async def update_po_header(self, po_id: int, data: POUpdate) -> PurchaseOrder:
+        po = await self.get_po(po_id)
+        self._ensure_po_editable(po)
+
+        changes = data.model_dump(exclude_unset=True)
+        if not changes:
+            return po
+
+        if "warehouse_id" in changes:
+            wh = await self._repo.get_warehouse_by_id(changes["warehouse_id"])
+            if wh is None:
+                raise HTTPException(status_code=404, detail="Warehouse not found")
+        if changes.get("partner_id") is not None:
+            partner = await PartnerRepository(self.db).get_partner_by_id(changes["partner_id"])
+            if partner is None:
+                raise HTTPException(status_code=404, detail="Partner not found")
+        if changes.get("vendor") is not None:
+            changes["vendor"] = changes["vendor"].strip()
+
+        await self._repo.update_po(po, changes)
+        await self.db.commit()
+        return await self._repo.get_po_by_id(po_id)
+
+    async def cancel_po(self, po_id: int, cancellation_reason: str | None) -> PurchaseOrder:
+        po = await self.get_po(po_id)
+        self._ensure_po_editable(po)
+
+        await self._repo.update_po(po, {
+            "status": POStatus.CANCELLED.value,
+            "cancellation_reason": cancellation_reason,
+        })
+        await self.db.commit()
+        return await self._repo.get_po_by_id(po_id)
 
     async def submit_po(self, po_id: int) -> PurchaseOrder:
         po = await self.get_po(po_id)
