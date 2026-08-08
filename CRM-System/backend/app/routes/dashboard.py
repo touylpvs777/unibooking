@@ -24,10 +24,16 @@ async def get_summary(
     summary="Financial & operational ERP summary: sales, costs, profit, inventory, service, credit, revenue breakdown",
 )
 async def get_erp_summary(
+    time_range: str = Query(
+        default="all",
+        alias="range",
+        pattern="^(week|month|last_month|year|all)$",
+        description="Time-range filter applied to the revenue breakdown chart only",
+    ),
     db: AsyncSession = Depends(get_db),
     _: User = require_permission(PermissionName.VIEW_DASHBOARD),
 ):
-    return await DashboardService(db).get_erp_summary()
+    return await DashboardService(db).get_erp_summary(revenue_range=time_range)
 
 
 @router.get(

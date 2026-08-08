@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from sqlalchemy import case, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -66,6 +66,28 @@ def _month_expr(column):
 
 def _rate(numerator: int, denominator: int) -> float:
     return round(numerator / denominator * 100, 1) if denominator else 0.0
+
+
+def _revenue_range_bounds(range_key: str) -> tuple[datetime | None, datetime | None]:
+    """Return (start, end) bounds for a Revenue Breakdown time-range filter.
+
+    `end` is exclusive; either bound may be None to mean unbounded. Unknown
+    keys behave like "all" (no filter) rather than raising.
+    """
+    today = date.today()
+    if range_key == "week":
+        start = today - timedelta(days=today.weekday())
+        return datetime.combine(start, datetime.min.time()), None
+    if range_key == "month":
+        return datetime(today.year, today.month, 1), None
+    if range_key == "last_month":
+        this_month_start = date(today.year, today.month, 1)
+        prev_month = today.month - 1 or 12
+        prev_year = today.year if today.month > 1 else today.year - 1
+        return datetime(prev_year, prev_month, 1), datetime.combine(this_month_start, datetime.min.time())
+    if range_key == "year":
+        return datetime(today.year, 1, 1), None
+    return None, None
 
 
 # ── Service ────────────────────────────────────────────────────────────────────
@@ -252,7 +274,7 @@ class DashboardService:
             stmt = stmt.where(MaintenanceCost.created_at >= since)
         return (await self.db.execute(stmt)).scalar_one()
 
-    async def get_erp_summary(self) -> ErpDashboardSummary:
+    async def get_erp_summary(self, revenue_range: str = "all") -> ErpDashboardSummary:
         today_start = datetime.combine(date.today(), datetime.min.time())
         month_start = _cutoff_from_months(1)
 
@@ -398,13 +420,16 @@ class DashboardService:
             (Invoice.reference_type == ReferenceType.SALES.value, "parts"),
             else_="other",
         )
-        bucket_rows = (
-            await self.db.execute(
-                select(bucket_expr.label("bucket"), func.coalesce(func.sum(Invoice.total_amount), 0.0).label("amt"))
-                .where(Invoice.status.notin_(_OPEN_INVOICE_STATUSES))
-                .group_by(bucket_expr)
-            )
-        ).all()
+        revenue_start, revenue_end = _revenue_range_bounds(revenue_range)
+        bucket_stmt = (
+            select(bucket_expr.label("bucket"), func.coalesce(func.sum(Invoice.total_amount), 0.0).label("amt"))
+            .where(Invoice.status.notin_(_OPEN_INVOICE_STATUSES))
+        )
+        if revenue_start is not None:
+            bucket_stmt = bucket_stmt.where(Invoice.created_at >= revenue_start)
+        if revenue_end is not None:
+            bucket_stmt = bucket_stmt.where(Invoice.created_at < revenue_end)
+        bucket_rows = (await self.db.execute(bucket_stmt.group_by(bucket_expr))).all()
         buckets = {row.bucket: row.amt for row in bucket_rows}
         revenue_breakdown = RevenueBreakdown(
             parts_revenue=buckets.get("parts", 0.0),

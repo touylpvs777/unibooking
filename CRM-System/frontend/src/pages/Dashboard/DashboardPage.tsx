@@ -9,6 +9,7 @@ import {
 import { useCustomUI, type FontSizeTier } from '@/config/customLanguageStore'
 import UICustomizerBar from '@/components/ui/UICustomizerBar'
 import { useDashboardStats } from '@/hooks/useDashboardStats'
+import type { DashboardRevenueRange } from '@/types/dashboard'
 import { ProfitTrendChart, RevenueBreakdownChart, ServiceCostChart, SampleTrendChart } from './ErpCharts'
 import IoTWidget from './IoTWidget'
 
@@ -159,7 +160,8 @@ export default function DashboardPage() {
   const sizeClass = FONT_SIZE_CLASS[fontSize]
 
   const [tab, setTab] = useState<Tab>('financial')
-  const { data, trend, isLoading, error } = useDashboardStats()
+  const [revenueRange, setRevenueRange] = useState<DashboardRevenueRange>('all')
+  const { data, trend, isLoading, isFetching, error } = useDashboardStats(revenueRange)
 
   return (
     <div className="min-h-full bg-slate-50 px-6 py-8 text-slate-800 lg:px-10">
@@ -295,7 +297,13 @@ export default function DashboardPage() {
                     { label: t('dashboard.erp.credit.outstandingBalance'), value: formatLak(data.credit.outstanding_balance) },
                   ]}
                 />
-                <RevenueBreakdownChart data={data.revenue_breakdown} to="/reports" />
+                <RevenueBreakdownChart
+                  data={data.revenue_breakdown}
+                  range={revenueRange}
+                  onRangeChange={setRevenueRange}
+                  isFetching={isFetching}
+                  to="/reports"
+                />
               </div>
 
               <SampleTrendChart to="/reports" />

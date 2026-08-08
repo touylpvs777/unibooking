@@ -85,6 +85,8 @@ export interface RevenueBreakdown {
   other_revenue: number
 }
 
+export type DashboardRevenueRange = 'week' | 'month' | 'last_month' | 'year' | 'all'
+
 export interface ErpDashboardSummary {
   sales: SalesMetrics
   costs: CostMetrics

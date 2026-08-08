@@ -410,6 +410,14 @@
         }
       }
     },
+    "pos": {
+      "title": "Parts POS",
+      "subtitle_one": "{{count}} part",
+      "subtitle_other": "{{count}} parts",
+      "searchPlaceholder": "Scan barcode or search part number, name...",
+      "loadError": "Failed to load parts.",
+      "noResults": "No parts match your search."
+    },
     "warehouse": {
       "title": "Stock Locations",
       "list": {
@@ -2353,6 +2361,7 @@
       "dashboard": "Executive Dashboard",
       "maintenance": "Service & Maintenance",
       "inventory": "Inventory Control",
+      "partsPOS": "Parts POS",
       "billing": "Billing & Receivables",
       "products": "Product Catalog",
       "invoices": "Invoices",
@@ -2613,7 +2622,14 @@
         "salesOpsTrend": "Financial & Operational Trends",
         "salesOpsTrendSub": "Illustrative monthly trend — sample data for demonstration",
         "salesSeries": "Sales",
-        "costsSeries": "Costs"
+        "costsSeries": "Costs",
+        "timeRange": {
+          "week": "This Week",
+          "month": "This Month",
+          "last_month": "Last Month",
+          "year": "This Year",
+          "all": "All Time"
+        }
       }
     },
     "iot": {
@@ -3120,6 +3136,7 @@
     "pmSchedules": "PM Schedules",
     "inventory": "Inventory",
     "spareParts": "Spare Parts",
+    "partsPOS": "Parts POS",
     "newPart": "New Part",
     "partDetail": "Part Detail",
     "warehouses": "Warehouses",

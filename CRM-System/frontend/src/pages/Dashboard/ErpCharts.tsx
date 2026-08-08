@@ -5,7 +5,7 @@ import { ArrowRight } from 'lucide-react'
 import {
   AreaChart, Area, BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell, ResponsiveContainer,
 } from 'recharts'
-import type { ProfitTrendPoint, RevenueBreakdown } from '@/types/dashboard'
+import type { ProfitTrendPoint, RevenueBreakdown, DashboardRevenueRange } from '@/types/dashboard'
 
 const TOOLTIP_STYLE = {
   contentStyle: { background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 10, fontSize: 12, padding: '8px 12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' },
@@ -212,12 +212,32 @@ export function SampleTrendChart({ to }: { to?: string }) {
 
 interface RevenueBreakdownChartProps {
   data: RevenueBreakdown
+  range: DashboardRevenueRange
+  onRangeChange: (range: DashboardRevenueRange) => void
+  isFetching?: boolean
   to?: string
 }
 
 const REVENUE_COLORS = ['#60a5fa', '#a78bfa', '#34d399', '#fbbf24']
+const REVENUE_RANGES: DashboardRevenueRange[] = ['week', 'month', 'last_month', 'year', 'all']
 
-export function RevenueBreakdownChart({ data, to }: RevenueBreakdownChartProps) {
+function RevenueRangeSelect({ value, onChange, disabled }: { value: DashboardRevenueRange; onChange: (r: DashboardRevenueRange) => void; disabled?: boolean }) {
+  const { t } = useTranslation()
+  return (
+    <select
+      className="filter-select"
+      value={value}
+      disabled={disabled}
+      onChange={(e) => onChange(e.target.value as DashboardRevenueRange)}
+    >
+      {REVENUE_RANGES.map((r) => (
+        <option key={r} value={r}>{t(`dashboard.erp.chart.timeRange.${r}`)}</option>
+      ))}
+    </select>
+  )
+}
+
+export function RevenueBreakdownChart({ data, range, onRangeChange, isFetching, to }: RevenueBreakdownChartProps) {
   const { t } = useTranslation()
   const chartData = [
     { key: t('dashboard.erp.revenue.partsRevenue'), value: data.parts_revenue },
@@ -228,8 +248,11 @@ export function RevenueBreakdownChart({ data, to }: RevenueBreakdownChartProps) 
 
   return (
     <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-md">
-      <SectionTitle title={t('dashboard.erp.chart.revenueBreakdown')} sub={t('dashboard.erp.chart.revenueBreakdownSub')} to={to} />
-      <div style={{ height: 260 }}>
+      <div className="mb-2 flex flex-wrap items-start justify-between gap-3">
+        <SectionTitle title={t('dashboard.erp.chart.revenueBreakdown')} sub={t('dashboard.erp.chart.revenueBreakdownSub')} to={to} />
+        <RevenueRangeSelect value={range} onChange={onRangeChange} disabled={isFetching} />
+      </div>
+      <div style={{ height: 260 }} className={`transition-opacity duration-200 ${isFetching ? 'opacity-50' : 'opacity-100'}`}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} margin={{ top: 12, right: 8, left: -8, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" vertical={false} />

@@ -310,6 +310,7 @@
       "dashboard": "ໜ້າປັດຈະຕະການ",
       "maintenance": "ບໍລິການ ແລະ ການບໍລິຫານ",
       "inventory": "ການຄຸ້ມຄອງສິນຄ້າ",
+      "partsPOS": "ໜ້າຂາຍອະໄຫຼ່",
       "billing": "ການແຈ້ງໜີ້ ແລະ ສະກັດເງິນ",
       "products": "ຕະຫຼາດສິນຄ້າ",
       "invoices": "ໃບແຈ້ງໜີ້",
@@ -570,7 +571,14 @@
         "salesOpsTrend": "ແນວໂນ້ມການເງິນ ແລະ ການດຳເນີນງານ",
         "salesOpsTrendSub": "ແນວໂນ້ມຕົວຢ່າງລາຍເດືອນ — ຂໍ້ມູນສາທິດ",
         "salesSeries": "ຍອດຂາຍ",
-        "costsSeries": "ຕົ້ນທຶນ"
+        "costsSeries": "ຕົ້ນທຶນ",
+        "timeRange": {
+          "week": "ອາທິດນີ້",
+          "month": "ເດືອນນີ້",
+          "last_month": "ເດືອນແລ້ວ",
+          "year": "ປີນີ້",
+          "all": "ທັງໝົດ"
+        }
       }
     },
     "iot": {
@@ -1077,6 +1085,7 @@
     "pmSchedules": "ຕາຕະລາງ PM",
     "inventory": "ຄັງສິນຄ້າ",
     "spareParts": "ອະໄຫຼ່",
+    "partsPOS": "ໜ້າຂາຍອະໄຫຼ່",
     "newPart": "ອະໄຫຼ່ໃໝ່",
     "partDetail": "ລາຍລະອຽດອະໄຫຼ່",
     "warehouses": "ສາງເກັບເຄື່ອງ",
@@ -1225,6 +1234,14 @@
           "cost": "ຕົ້ນທຶນ"
         }
       }
+    },
+    "pos": {
+      "title": "ໜ້າຂາຍອະໄຫຼ່",
+      "subtitle_one": "{{count}} ລາຍການ",
+      "subtitle_other": "{{count}} ລາຍການ",
+      "searchPlaceholder": "ສະແກນບາໂຄດ ຫຼື ຄົ້ນຫາໝາຍເລກ, ຊື່ອາໄຫຼ່...",
+      "loadError": "ບໍ່ສາມາດໂຫຼດອາໄຫຼ່ໄດ້.",
+      "noResults": "ບໍ່ພົບອາໄຫຼ່ທີ່ຄົ້ນຫາ."
     },
     "warehouse": {
       "title": "ສະຖານທີ່ສະຫຼູດ",
