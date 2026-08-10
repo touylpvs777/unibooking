@@ -13,6 +13,8 @@ class CustomerBase(BaseModel):
     company: str | None = None
     status: CustomerStatus = CustomerStatus.PROSPECT
     notes: str | None = None
+    latitude: float | None = Field(default=None, ge=-90, le=90)
+    longitude: float | None = Field(default=None, ge=-180, le=180)
     assigned_to: int | None = None
 
 
@@ -28,6 +30,8 @@ class CustomerUpdate(BaseModel):
     company: str | None = None
     status: CustomerStatus | None = None
     notes: str | None = None
+    latitude: float | None = Field(default=None, ge=-90, le=90)
+    longitude: float | None = Field(default=None, ge=-180, le=180)
     assigned_to: int | None = None
 
 

@@ -174,6 +174,8 @@ class WorkOrderCreate(BaseModel):
     scheduled_date: datetime
     estimated_hours: float = Field(default=1.0, gt=0)
     estimated_cost: float = Field(default=0.0, ge=0)
+    latitude: float | None = Field(default=None, ge=-90, le=90)
+    longitude: float | None = Field(default=None, ge=-180, le=180)
 
 
 class WorkOrderUpdate(BaseModel):
@@ -184,6 +186,8 @@ class WorkOrderUpdate(BaseModel):
     scheduled_date: datetime | None = None
     estimated_hours: float | None = Field(default=None, gt=0)
     estimated_cost: float | None = Field(default=None, ge=0)
+    latitude: float | None = Field(default=None, ge=-90, le=90)
+    longitude: float | None = Field(default=None, ge=-180, le=180)
 
 
 class StartAction(BaseModel):
@@ -224,6 +228,8 @@ class WorkOrderOut(BaseModel):
     actual_hours: float | None = None
     estimated_cost: float
     actual_cost: float | None = None
+    latitude: float | None = None
+    longitude: float | None = None
     is_active: bool
     created_at: datetime
     updated_at: datetime | None = None

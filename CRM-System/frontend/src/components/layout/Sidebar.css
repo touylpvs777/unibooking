@@ -19,12 +19,17 @@
 }
 
 /* ── Brand ──────────────────────────────────────────────── */
+/* Background is pinned to #8b0000 (not `--sidebar-bg`) so the logo box reads
+   as one continuous bar with .header instead of showing the sidebar's own
+   navy. Keep this hex in sync with Header.css's light-mode `.header`
+   background — the dark-mode override below does the same for blue-950. */
 .sidebar-brand {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
   padding: 20px 12px;
+  background: #b91c1c !important; /* forced solid red in all themes */
   border-bottom: 1px solid var(--sidebar-border);
   flex-shrink: 0;
   overflow: hidden;
@@ -80,17 +85,17 @@
 }
 
 /* ── Dark mode: match the topbar exactly ─────────────────────────────────
-   `--sidebar-bg` (which .sidebar-brand inherits) goes near-black in dark
-   mode (see tokens.css), while Header.css's dark topbar is blue-950
-   (#172554) — so give the brand box that same blue-950 explicitly, and
+   Header.css swaps its light-mode DK Red (#8b0000) for blue-950 (#172554)
+   in dark mode, so .sidebar-brand's background follows suit here — plus
    drop the sidebar's hairline border-right, so the logo box and the
-   topbar read as one continuous bar with no seam at the corner. Keep this
-   hex in sync with Header.css's `[data-theme="dark"] .header` background. */
+   topbar read as one continuous bar with no seam at the corner in either
+   theme. Keep this hex in sync with Header.css's
+   `[data-theme="dark"] .header` background. */
 [data-theme="dark"] .sidebar {
   border-right-color: transparent;
 }
 [data-theme="dark"] .sidebar-brand {
-  background: #172554; /* blue-950 — must match .header in Header.css */
+  background: #b91c1c !important; /* forced solid red in all themes */
 }
 
 /* ── Navigation ─────────────────────────────────────────── */

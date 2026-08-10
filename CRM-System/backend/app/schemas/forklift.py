@@ -152,6 +152,8 @@ class ForkliftUpdate(BaseModel):
     notes: str | None = None
     is_active: bool | None = None
     iot_device_id: str | None = Field(default=None, max_length=100)
+    current_latitude: float | None = Field(default=None, ge=-90, le=90)
+    current_longitude: float | None = Field(default=None, ge=-180, le=180)
 
 
 class ForkliftOut(BaseModel):
@@ -182,6 +184,9 @@ class ForkliftOut(BaseModel):
     primary_photo_url: str | None = None
     iot_device_id: str | None = None
     last_telemetry_ping: datetime | None = None
+    current_latitude: float | None = None
+    current_longitude: float | None = None
+    last_location_update: datetime | None = None
     created_at: datetime
     updated_at: datetime | None = None
 

@@ -112,10 +112,16 @@ class ForkliftHourMeterService:
         )
         log = await self._repo.create(log)
 
-        await self._forklift_repo.update(forklift, {
+        forklift_updates = {
             "current_hour_meter": engine_hours,
             "last_telemetry_ping": now,
-        })
+        }
+        if geo_location and geo_location.get("lat") is not None and geo_location.get("lng") is not None:
+            forklift_updates["current_latitude"] = geo_location["lat"]
+            forklift_updates["current_longitude"] = geo_location["lng"]
+            forklift_updates["last_location_update"] = now
+
+        await self._forklift_repo.update(forklift, forklift_updates)
 
         crossed_count = await self._notify_pm_thresholds_crossed(forklift, previous_hours, engine_hours)
 

@@ -95,7 +95,7 @@
   --sidebar-width-expanded:  280px;
   --sidebar-width-collapsed: 72px;
   --topbar-height:           64px;
-  --content-max-width:       1440px;
+  --content-max-width:       none;
 
   /* ── Radius ───────────────────────────────────────────── */
   --radius-sm:   4px;

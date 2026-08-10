@@ -80,6 +80,9 @@ class WorkOrder(Base):
     estimated_cost: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     actual_cost: Mapped[float | None] = mapped_column(Float, nullable=True)
 
+    latitude: Mapped[float | None] = mapped_column(Float, nullable=True)
+    longitude: Mapped[float | None] = mapped_column(Float, nullable=True)
+
     findings: Mapped[str | None] = mapped_column(Text, nullable=True)
     resolution: Mapped[str | None] = mapped_column(Text, nullable=True)
     cancellation_reason: Mapped[str | None] = mapped_column(Text, nullable=True)

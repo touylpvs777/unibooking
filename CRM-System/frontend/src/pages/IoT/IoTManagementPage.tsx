@@ -1,13 +1,14 @@
 import { useMemo, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Radio, RefreshCw, Satellite, WifiOff, Cable, Link2, Unlink, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Radio, RefreshCw, Satellite, WifiOff, Cable, Link2, Unlink, ChevronLeft, ChevronRight, MapPin } from 'lucide-react'
 import { useForklifts } from '@/hooks/useForklifts'
 import { useAuthStore } from '@/store/authStore'
 import { Badge } from '@/components/ui/Badge'
 import Modal from '@/components/ui/Modal'
 import ConfirmDialog from '@/components/ui/ConfirmDialog'
 import { EquipmentSearch } from '@/modules/equipment'
+import LiveMap, { type LiveMapDevice } from '@/components/iot/LiveMap'
 import type { Forklift } from '@/types/forklift'
 import PageHeader from '@/components/layout/PageHeader'
 import './IoTManagementPage.css'
@@ -33,7 +34,7 @@ function fmtPing(iso: string | null): string {
 }
 
 export default function IoTManagementPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const user = useAuthStore((s) => s.user)
 
   const {
@@ -45,6 +46,8 @@ export default function IoTManagementPage() {
   const [pairTarget, setPairTarget] = useState<Forklift | null>(null)
   const [unpairTarget, setUnpairTarget] = useState<Forklift | null>(null)
   const [isUnpairing, setIsUnpairing] = useState(false)
+  const [detailTarget, setDetailTarget] = useState<Forklift | null>(null)
+  const [focusedId, setFocusedId] = useState<number | null>(null)
 
   const kpis = useMemo(() => {
     const paired = forklifts.filter((f) => f.iot_device_id)
@@ -57,12 +60,33 @@ export default function IoTManagementPage() {
     }
   }, [forklifts])
 
+  const mapDevices = useMemo<LiveMapDevice[]>(() =>
+    forklifts
+      .filter((f) => typeof f.current_latitude === 'number' && typeof f.current_longitude === 'number')
+      .map((f) => ({
+        id: f.id,
+        name: i18n.language.startsWith('lo') && f.name_lo ? f.name_lo : f.name_en,
+        deviceId: f.iot_device_id,
+        latitude: f.current_latitude as number,
+        longitude: f.current_longitude as number,
+        lastUpdate: f.last_location_update,
+        isLive: isIotLive(f.last_location_update),
+      })),
+    [forklifts, i18n.language],
+  )
+
   const handleUnpair = async () => {
     if (!unpairTarget) return
     setIsUnpairing(true)
     await update(unpairTarget.id, { iot_device_id: null })
     setIsUnpairing(false)
     setUnpairTarget(null)
+  }
+
+  const handleRowClick = (f: Forklift) => {
+    setDetailTarget(f)
+    const hasGps = typeof f.current_latitude === 'number' && typeof f.current_longitude === 'number'
+    setFocusedId(hasGps ? f.id : null)
   }
 
   if (!user?.is_superuser) {
@@ -113,6 +137,18 @@ export default function IoTManagementPage() {
         </div>
       </div>
 
+      {/* Live Fleet Map */}
+      <div className="mb-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-3 shadow-md">
+        <div className="mb-2.5 flex items-center gap-2">
+          <Satellite size={15} className="text-[var(--color-primary-600)]" />
+          <span className="text-[13.5px] font-semibold text-[var(--color-text)]">{t('iot.map.title')}</span>
+          <span className="ml-auto text-xs text-[var(--color-text-muted)]">
+            {t('iot.map.count', { count: mapDevices.length })}
+          </span>
+        </div>
+        <LiveMap devices={mapDevices} focusId={focusedId} emptyLabel={t('iot.map.empty')} />
+      </div>
+
       {/* Search */}
       <div style={{ marginBottom: 12 }}>
         <EquipmentSearch
@@ -151,8 +187,13 @@ export default function IoTManagementPage() {
               ) : forklifts.map((f) => {
                 const paired = !!f.iot_device_id
                 const live = isIotLive(f.last_telemetry_ping)
+                const hasGps = typeof f.current_latitude === 'number' && typeof f.current_longitude === 'number'
                 return (
-                  <tr key={f.id}>
+                  <tr
+                    key={f.id}
+                    onClick={() => handleRowClick(f)}
+                    className="cursor-pointer transition-colors hover:bg-[var(--color-bg-subtle)]"
+                  >
                     <td>
                       <div className="fleet-row-name">
                         {f.primary_photo_url ? <img src={f.primary_photo_url} alt="" className="fleet-row-thumb" /> : <div className="fleet-row-thumb" />}
@@ -169,23 +210,34 @@ export default function IoTManagementPage() {
                       {f.last_telemetry_ping ? fmtPing(f.last_telemetry_ping) : t('iot.never')}
                     </td>
                     <td>
-                      {paired ? (
-                        <span className={`iot-status-pill ${live ? 'live' : 'offline'}`}>
-                          <span className="iot-status-dot" />
-                          {live ? t('equipment.card.iotLive') : t('equipment.card.iotOffline')}
-                        </span>
-                      ) : (
-                        <Badge variant="gray">{t('iot.notPaired')}</Badge>
-                      )}
+                      <div className="flex items-center gap-2">
+                        {paired ? (
+                          <span className={`iot-status-pill ${live ? 'live' : 'offline'}`}>
+                            <span className="iot-status-dot" />
+                            {live ? t('equipment.card.iotLive') : t('equipment.card.iotOffline')}
+                          </span>
+                        ) : (
+                          <Badge variant="gray">{t('iot.notPaired')}</Badge>
+                        )}
+                        {hasGps && <MapPin size={12} className="text-[var(--color-primary-600)]" />}
+                      </div>
                     </td>
                     <td>
                       <div className="row-actions">
                         {paired ? (
-                          <button className="action-btn danger" title={t('iot.unpairAction')} onClick={() => setUnpairTarget(f)}>
+                          <button
+                            className="action-btn danger"
+                            title={t('iot.unpairAction')}
+                            onClick={(e) => { e.stopPropagation(); setUnpairTarget(f) }}
+                          >
                             <Unlink size={14} />
                           </button>
                         ) : (
-                          <button className="action-btn" title={t('iot.pairAction')} onClick={() => setPairTarget(f)}>
+                          <button
+                            className="action-btn"
+                            title={t('iot.pairAction')}
+                            onClick={(e) => { e.stopPropagation(); setPairTarget(f) }}
+                          >
                             <Link2 size={14} />
                           </button>
                         )}
@@ -209,6 +261,12 @@ export default function IoTManagementPage() {
           </div>
         </div>
       )}
+
+      <ForkliftDetailModal
+        forklift={detailTarget}
+        isOpen={!!detailTarget}
+        onClose={() => { setDetailTarget(null); setFocusedId(null) }}
+      />
 
       <PairDeviceModal
         forklift={pairTarget}
@@ -288,6 +346,78 @@ function PairDeviceModal({ forklift, isOpen, existingDeviceIds, onClose, onSubmi
           </button>
         </div>
       </form>
+    </Modal>
+  )
+}
+
+interface ForkliftDetailModalProps {
+  forklift: Forklift | null
+  isOpen: boolean
+  onClose: () => void
+}
+
+function ForkliftDetailModal({ forklift, isOpen, onClose }: ForkliftDetailModalProps) {
+  const { t } = useTranslation()
+  if (!forklift) return null
+
+  const paired = !!forklift.iot_device_id
+  const live = isIotLive(forklift.last_telemetry_ping)
+  const hasGps = typeof forklift.current_latitude === 'number' && typeof forklift.current_longitude === 'number'
+
+  const rows: [string, React.ReactNode][] = [
+    [t('iot.table.deviceId'), forklift.iot_device_id ?? t('iot.notPaired')],
+    [t('iot.table.lastPing'), forklift.last_telemetry_ping ? fmtPing(forklift.last_telemetry_ping) : t('iot.never')],
+    [
+      t('iot.table.status'),
+      paired ? (
+        <span className={`iot-status-pill ${live ? 'live' : 'offline'}`}>
+          <span className="iot-status-dot" />
+          {live ? t('equipment.card.iotLive') : t('equipment.card.iotOffline')}
+        </span>
+      ) : (
+        <Badge variant="gray">{t('iot.notPaired')}</Badge>
+      ),
+    ],
+    [
+      t('iot.detailModal.gpsLabel'),
+      hasGps
+        ? `${forklift.current_latitude!.toFixed(5)}, ${forklift.current_longitude!.toFixed(5)}`
+        : t('iot.detailModal.noGps'),
+    ],
+  ]
+  if (hasGps) {
+    rows.push([t('iot.detailModal.lastLocationUpdate'), forklift.last_location_update ? fmtPing(forklift.last_location_update) : t('iot.never')])
+  }
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} title={forklift.name_en} width={420}>
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center gap-3">
+          {forklift.primary_photo_url
+            ? <img src={forklift.primary_photo_url} alt="" className="fleet-row-thumb" style={{ width: 48, height: 48 }} />
+            : <div className="fleet-row-thumb" style={{ width: 48, height: 48 }} />}
+          <div>
+            <div className="fleet-row-name-text">{forklift.name_en}</div>
+            <div className="fleet-row-model">{forklift.serial_number}</div>
+          </div>
+        </div>
+
+        <div className="flex flex-col divide-y divide-[var(--color-border)] rounded-lg border border-[var(--color-border)]">
+          {rows.map(([label, value]) => (
+            <div key={label} className="flex items-center justify-between gap-4 px-3 py-2 text-sm">
+              <span className="text-[var(--color-text-muted)]">{label}</span>
+              <span className="font-medium text-[var(--color-text)]">{value}</span>
+            </div>
+          ))}
+        </div>
+
+        {hasGps && (
+          <p className="flex items-center gap-1.5 text-xs text-[var(--color-text-muted)]">
+            <MapPin size={12} className="text-[var(--color-primary-600)]" />
+            {t('iot.detailModal.mapCentered')}
+          </p>
+        )}
+      </div>
     </Modal>
   )
 }

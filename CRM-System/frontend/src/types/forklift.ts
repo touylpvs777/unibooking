@@ -120,6 +120,9 @@ export interface Forklift {
   primary_photo_url: string | null
   iot_device_id: string | null
   last_telemetry_ping: string | null
+  current_latitude: number | null
+  current_longitude: number | null
+  last_location_update: string | null
   created_at: string
   updated_at: string | null
 }

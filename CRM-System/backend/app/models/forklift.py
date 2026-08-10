@@ -123,6 +123,11 @@ class Forklift(Base):
     last_telemetry_ping: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True,
     )
+    current_latitude: Mapped[float | None] = mapped_column(Float, nullable=True)
+    current_longitude: Mapped[float | None] = mapped_column(Float, nullable=True)
+    last_location_update: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True,
+    )
 
     @property
     def meter_hours(self) -> int:

@@ -3,11 +3,11 @@ import uuid
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy import select, text
 from sqlalchemy.exc import IntegrityError, OperationalError
@@ -502,3 +502,54 @@ async def health_check():
         "version": settings.APP_VERSION,
         "database": "ok" if db_ok else "unreachable",
     }
+
+# Serve the built React app (frontend/dist). Static assets under /assets get
+# their own mount (fingerprinted filenames, safe to cache hard); everything
+# else - including root-level public/ files like login.jpeg and any client
+# -side route (/login, /dashboard/123, ...) - falls through to serve_frontend,
+# which returns the real file when it exists on disk and the SPA shell
+# (index.html) otherwise. Missing assets raise a real 404 instead of being
+# silently rewritten into index.html, so a broken image fails loudly instead
+# of rendering as an unstyled page.
+FRONTEND_DIST_DIR = Path(__file__).resolve().parent.parent.parent / "frontend" / "dist"
+
+if FRONTEND_DIST_DIR.exists():
+    app.mount(
+        "/assets",
+        StaticFiles(directory=FRONTEND_DIST_DIR / "assets"),
+        name="frontend-assets",
+    )
+
+    _STATIC_ASSET_SUFFIXES = {
+        ".js", ".css", ".map", ".json", ".webmanifest",
+        ".png", ".jpg", ".jpeg", ".svg", ".gif", ".webp", ".ico",
+        ".woff", ".woff2", ".ttf",
+    }
+
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str):
+        if full_path.startswith("api/"):
+            raise HTTPException(status_code=404, detail="API route not found")
+
+        requested_file = FRONTEND_DIST_DIR / full_path
+        if requested_file.is_file():
+            return FileResponse(requested_file)
+
+        # A path that looks like a static asset (has a known extension) but
+        # wasn't found on disk is a genuinely broken reference - fail loudly
+        # with a 404 rather than masking it as the SPA shell, which is what
+        # made a missing login.jpeg render as a blank background instead of
+        # a visible error in the browser's network tab.
+        if Path(full_path).suffix.lower() in _STATIC_ASSET_SUFFIXES:
+            raise HTTPException(status_code=404, detail="Asset not found")
+
+        # Anything else is a client-side route (e.g. /login, /dashboard/123)
+        # that React Router resolves - hand it the SPA shell.
+        return FileResponse(FRONTEND_DIST_DIR / "index.html")
+
+    logger.info("Serving frontend build from %s", FRONTEND_DIST_DIR)
+else:
+    logger.warning(
+        "Frontend build not found at %s - run `npm run build` in frontend/ first.",
+        FRONTEND_DIST_DIR,
+    )

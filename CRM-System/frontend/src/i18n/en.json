@@ -3159,6 +3159,17 @@
     "subtitle": "Manage GPS/hour-meter device pairings and monitor live connectivity across the fleet.",
     "refresh": "Refresh",
     "searchPlaceholder": "Search by forklift name or serial number...",
+    "map": {
+      "title": "Live Fleet Map",
+      "count": "{{count}} reporting GPS",
+      "empty": "No forklifts currently reporting GPS location."
+    },
+    "detailModal": {
+      "gpsLabel": "GPS Coordinates",
+      "noGps": "Not reporting",
+      "lastLocationUpdate": "Location Updated",
+      "mapCentered": "Map centered on this forklift's last known location."
+    },
     "kpi": {
       "totalPaired": "Devices Paired",
       "live": "Live Now",
