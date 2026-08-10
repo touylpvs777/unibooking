@@ -2614,6 +2614,7 @@
         "profitSeries": "Profit",
         "revenueBreakdown": "Revenue Breakdown",
         "revenueBreakdownSub": "By income stream",
+        "revenueSeries": "Revenue",
         "chartType": "Chart Type",
         "line": "Line",
         "bar": "Bar",

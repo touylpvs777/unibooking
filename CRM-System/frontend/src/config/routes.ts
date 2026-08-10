@@ -51,6 +51,7 @@ export const ROUTE_CONFIG: RouteConfig[] = [
   { path: '/maintenance/schedules',         labelKey: 'routes.pmSchedules',       parent: '/maintenance' },
   { path: '/inventory',                     labelKey: 'routes.inventory' },
   { path: '/inventory/parts',               labelKey: 'routes.spareParts',        parent: '/inventory' },
+  { path: '/inventory/pos',                 labelKey: 'routes.partsPOS',           parent: '/inventory' },
   { path: '/inventory/parts/new',           labelKey: 'routes.newPart',           parent: '/inventory/parts' },
   { path: '/inventory/parts/:id',           labelKey: 'routes.partDetail',        parent: '/inventory/parts' },
   { path: '/inventory/warehouses',          labelKey: 'routes.warehouses',        parent: '/inventory' },

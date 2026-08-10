@@ -18,7 +18,7 @@ const lakShort = (v: number) =>
 
 function SectionTitle({ title, sub, to }: { title: string; sub?: string; to?: string }) {
   const heading = (
-    <h2 className={`flex items-center gap-1.5 text-base font-semibold text-slate-800 ${to ? 'group-hover:text-blue-700' : ''}`}>
+    <h2 className={`flex items-center gap-1.5 text-base font-semibold text-slate-900 dark:text-white ${to ? 'group-hover:text-blue-700' : ''}`}>
       {title}
       {to && <ArrowRight size={14} className="opacity-0 transition-opacity group-hover:opacity-100" />}
     </h2>
@@ -26,7 +26,7 @@ function SectionTitle({ title, sub, to }: { title: string; sub?: string; to?: st
   return (
     <div className="mb-4">
       {to ? <Link to={to} className="group inline-flex">{heading}</Link> : heading}
-      {sub && <p className="mt-0.5 text-xs text-slate-500">{sub}</p>}
+      {sub && <p className="mt-0.5 text-xs text-slate-500 dark:text-zinc-400">{sub}</p>}
     </div>
   )
 }
@@ -68,7 +68,7 @@ export function ProfitTrendChart({ data, to }: ProfitTrendChartProps) {
   const tooltipFormatter = (value: unknown) => [`₭ ${lakShort(Number(value))}`, seriesName] as [string, string]
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-md">
+    <section className="rounded-2xl overflow-hidden bg-white dark:bg-zinc-900 border border-slate-200/60 dark:border-zinc-800/70 p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-all duration-200 hover:shadow-md">
       <div className="mb-2 flex flex-wrap items-start justify-between gap-3">
         <SectionTitle title={t('dashboard.erp.chart.profitTrend')} sub={t('dashboard.erp.chart.last6Months')} to={to} />
         <ChartTypeToggle value={mode} onChange={setMode} labels={toggleLabels} />
@@ -142,7 +142,7 @@ export function SampleTrendChart({ to }: { to?: string }) {
   const profitName = t('dashboard.erp.chart.profitSeries')
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-md">
+    <section className="rounded-2xl overflow-hidden bg-white dark:bg-zinc-900 border border-slate-200/60 dark:border-zinc-800/70 p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-all duration-200 hover:shadow-md">
       <div className="mb-2 flex flex-wrap items-start justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
@@ -239,6 +239,9 @@ function RevenueRangeSelect({ value, onChange, disabled }: { value: DashboardRev
 
 export function RevenueBreakdownChart({ data, range, onRangeChange, isFetching, to }: RevenueBreakdownChartProps) {
   const { t } = useTranslation()
+  const [mode, setMode] = useState<ChartMode>('bar')
+  const toggleLabels = { line: t('dashboard.erp.chart.line'), bar: t('dashboard.erp.chart.bar'), area: t('dashboard.erp.chart.area') }
+  const seriesName = t('dashboard.erp.chart.revenueSeries')
   const chartData = [
     { key: t('dashboard.erp.revenue.partsRevenue'), value: data.parts_revenue },
     { key: t('dashboard.erp.revenue.vehicleRevenue'), value: data.vehicle_revenue },
@@ -247,24 +250,68 @@ export function RevenueBreakdownChart({ data, range, onRangeChange, isFetching, 
   ]
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-md">
+    <section className="rounded-2xl overflow-hidden bg-white dark:bg-zinc-900 border border-slate-200/60 dark:border-zinc-800/70 p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-all duration-200 hover:shadow-md">
       <div className="mb-2 flex flex-wrap items-start justify-between gap-3">
         <SectionTitle title={t('dashboard.erp.chart.revenueBreakdown')} sub={t('dashboard.erp.chart.revenueBreakdownSub')} to={to} />
-        <RevenueRangeSelect value={range} onChange={onRangeChange} disabled={isFetching} />
+        <div className="flex items-center gap-2">
+          <RevenueRangeSelect value={range} onChange={onRangeChange} disabled={isFetching} />
+          <ChartTypeToggle value={mode} onChange={setMode} labels={toggleLabels} />
+        </div>
       </div>
       <div style={{ height: 260 }} className={`transition-opacity duration-200 ${isFetching ? 'opacity-50' : 'opacity-100'}`}>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={chartData} margin={{ top: 12, right: 8, left: -8, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" vertical={false} />
-            <XAxis dataKey="key" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} width={85} tickFormatter={lakShort} />
-            <Tooltip {...TOOLTIP_STYLE} formatter={(value) => `₭ ${lakShort(Number(value))}`} cursor={{ fill: 'rgba(0,0,0,0.04)' }} />
-            <Bar dataKey="value" radius={[4, 4, 0, 0]}>
-              {chartData.map((entry, i) => (
-                <Cell key={entry.key} fill={REVENUE_COLORS[i % REVENUE_COLORS.length]} />
-              ))}
-            </Bar>
-          </BarChart>
+          {mode === 'bar' ? (
+            <BarChart data={chartData} margin={{ top: 12, right: 8, left: -8, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" vertical={false} />
+              <XAxis dataKey="key" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} width={85} tickFormatter={lakShort} />
+              <Tooltip {...TOOLTIP_STYLE} formatter={(value) => `₭ ${lakShort(Number(value))}`} cursor={{ fill: 'rgba(0,0,0,0.04)' }} />
+              <Bar dataKey="value" name={seriesName} radius={[4, 4, 0, 0]}>
+                {chartData.map((entry, i) => (
+                  <Cell key={entry.key} fill={REVENUE_COLORS[i % REVENUE_COLORS.length]} />
+                ))}
+              </Bar>
+            </BarChart>
+          ) : mode === 'line' ? (
+            <LineChart data={chartData} margin={{ top: 12, right: 8, left: -8, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" vertical={false} />
+              <XAxis dataKey="key" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} width={85} tickFormatter={lakShort} />
+              <Tooltip {...TOOLTIP_STYLE} formatter={(value) => `₭ ${lakShort(Number(value))}`} cursor={{ stroke: 'rgba(0,0,0,0.15)' }} />
+              <Line
+                type="monotone"
+                dataKey="value"
+                name={seriesName}
+                stroke="#60a5fa"
+                strokeWidth={2.5}
+                dot={{ r: 3, fill: '#60a5fa', strokeWidth: 0 }}
+                activeDot={{ r: 5 }}
+              />
+            </LineChart>
+          ) : (
+            <AreaChart data={chartData} margin={{ top: 12, right: 8, left: -8, bottom: 0 }}>
+              <defs>
+                <linearGradient id="revenueBreakdownFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#60a5fa" stopOpacity={0.35} />
+                  <stop offset="100%" stopColor="#60a5fa" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" vertical={false} />
+              <XAxis dataKey="key" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} width={85} tickFormatter={lakShort} />
+              <Tooltip {...TOOLTIP_STYLE} formatter={(value) => `₭ ${lakShort(Number(value))}`} cursor={{ stroke: 'rgba(0,0,0,0.15)' }} />
+              <Area
+                type="monotone"
+                dataKey="value"
+                name={seriesName}
+                stroke="#60a5fa"
+                strokeWidth={2.5}
+                fill="url(#revenueBreakdownFill)"
+                dot={{ r: 3, fill: '#60a5fa', strokeWidth: 0 }}
+                activeDot={{ r: 5 }}
+              />
+            </AreaChart>
+          )}
         </ResponsiveContainer>
       </div>
     </section>
@@ -287,7 +334,7 @@ export function ServiceCostChart({ labor, parts, other, to }: ServiceCostChartPr
   ]
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-md">
+    <section className="rounded-2xl overflow-hidden bg-white dark:bg-zinc-900 border border-slate-200/60 dark:border-zinc-800/70 p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-all duration-200 hover:shadow-md">
       <SectionTitle title={t('dashboard.erp.service.title')} to={to} />
       <div style={{ height: 220 }}>
         <ResponsiveContainer width="100%" height="100%">

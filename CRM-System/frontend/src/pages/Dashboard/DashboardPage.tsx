@@ -33,11 +33,6 @@ interface KpiCardProps {
   to?: string
 }
 
-// The `accent` prop already encodes red for critical/alert states (e.g. negative
-// net profit, low stock) via its existing gradient class — reuse that signal to
-// pick the top-border color instead of introducing a new prop.
-const topBorderClass = (accent: string) => (accent.includes('red') ? 'border-t-4 border-t-red-600' : 'border-t-4 border-t-blue-600')
-
 function KpiCard({ label, value, sublabel, icon: Icon, accent, to }: KpiCardProps) {
   const { t } = useTranslation()
   const fontSize = useCustomUI((s) => s.fontSize)
@@ -47,9 +42,9 @@ function KpiCard({ label, value, sublabel, icon: Icon, accent, to }: KpiCardProp
     <>
       <div className="flex items-start justify-between">
         <div className="min-w-0">
-          <p className={`${sizeClass} text-slate-500`}>{label}</p>
-          <p className="mt-2 truncate text-2xl font-bold tracking-tight text-slate-800">{value}</p>
-          {sublabel && <p className={`mt-1 ${sizeClass} text-slate-500`}>{sublabel}</p>}
+          <p className={`${sizeClass} text-slate-500 dark:text-zinc-400`}>{label}</p>
+          <p className="mt-2 truncate text-2xl font-bold tracking-tight text-slate-900 dark:text-white">{value}</p>
+          {sublabel && <p className={`mt-1 ${sizeClass} text-slate-500 dark:text-zinc-400`}>{sublabel}</p>}
         </div>
         <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${accent}`}>
           <Icon size={20} className="text-white" strokeWidth={2} />
@@ -63,7 +58,7 @@ function KpiCard({ label, value, sublabel, icon: Icon, accent, to }: KpiCardProp
     </>
   )
 
-  const className = `group rounded-xl border border-slate-200 bg-white ${topBorderClass(accent)} p-5 shadow-sm transition-all duration-200 hover:shadow-md ${
+  const className = `group rounded-2xl overflow-hidden bg-white dark:bg-zinc-900 border border-slate-200/60 dark:border-zinc-800/70 p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-all duration-200 hover:shadow-md ${
     to ? 'cursor-pointer' : ''
   }`
 
@@ -75,14 +70,14 @@ function KpiCard({ label, value, sublabel, icon: Icon, accent, to }: KpiCardProp
 }
 
 function KpiCardSkeleton() {
-  return <div className="h-[104px] animate-pulse rounded-xl border border-slate-200 bg-slate-100" />
+  return <div className="h-[104px] animate-pulse rounded-2xl border border-slate-200 bg-slate-100" />
 }
 
 function MetricRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between border-b border-slate-100 py-2.5 text-sm last:border-0">
-      <span className="text-slate-500">{label}</span>
-      <span className="font-semibold text-slate-800">{value}</span>
+    <div className="flex items-center justify-between border-b border-slate-100 dark:border-zinc-800 py-2.5 text-sm last:border-0">
+      <span className="text-slate-500 dark:text-zinc-400">{label}</span>
+      <span className="font-semibold text-slate-900 dark:text-white">{value}</span>
     </div>
   )
 }
@@ -105,7 +100,7 @@ function MetricPanel({
           <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${accent}`}>
             <Icon size={16} className="text-white" strokeWidth={2} />
           </div>
-          <h3 className="text-sm font-semibold text-slate-800">{title}</h3>
+          <h3 className="text-sm font-semibold text-slate-900 dark:text-white">{title}</h3>
         </div>
         {to && (
           <span className="flex shrink-0 items-center gap-1 text-xs font-semibold text-blue-700 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
@@ -119,7 +114,7 @@ function MetricPanel({
     </>
   )
 
-  const className = `group block rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-md ${
+  const className = `group block rounded-2xl overflow-hidden bg-white dark:bg-zinc-900 border border-slate-200/60 dark:border-zinc-800/70 p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-all duration-200 hover:shadow-md ${
     to ? 'cursor-pointer' : ''
   }`
 

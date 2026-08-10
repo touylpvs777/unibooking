@@ -252,6 +252,20 @@ class RentalRepository:
         )
         return result.scalar_one()
 
+    async def get_item_counts(self, contract_ids: list[int]) -> dict[int, int]:
+        """Batched replacement for calling get_item_count() once per contract
+        in a list response — a single GROUP BY query for the whole page
+        instead of N round trips. Contracts with zero items are simply
+        absent from the result; callers should default-to-0 on lookup."""
+        if not contract_ids:
+            return {}
+        result = await self.db.execute(
+            select(RentalContractItem.contract_id, func.count(RentalContractItem.id))
+            .where(RentalContractItem.contract_id.in_(contract_ids))
+            .group_by(RentalContractItem.contract_id)
+        )
+        return dict(result.all())
+
     async def get_items_subtotal(self, contract_id: int) -> float:
         result = await self.db.execute(
             select(func.coalesce(func.sum(RentalContractItem.line_total), 0.0))

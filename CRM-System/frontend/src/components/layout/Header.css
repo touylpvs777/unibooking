@@ -84,11 +84,9 @@
   background: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.4);
 }
-.header .search-trigger-kbd {
-  border-color: rgba(255, 255, 255, 0.3);
-  color: rgba(255, 255, 255, 0.75);
-  background: rgba(255, 255, 255, 0.1);
-}
+/* ::placeholder doesn't inherit `color`, so the header's white-on-red/blue
+   treatment above needs an explicit placeholder override too. */
+.header .search-trigger::placeholder { color: rgba(255, 255, 255, 0.6); }
 
 /* Language toggle pills + overflow dropdown */
 .header .lang-toggle,
@@ -136,3 +134,27 @@
 }
 .header .user-dropdown-name { color: #ffffff; }
 .header .user-dropdown-chevron { color: rgba(255, 255, 255, 0.75); }
+
+/* ── Dark mode: swap DK Red for a deep brand blue ────────────────────────
+   Light mode keeps the #8b0000 brand red above untouched. In dark mode the
+   header uses blue-950 (#172554) — the same value Sidebar.css's
+   `.sidebar-brand` uses for its dark background — so the header and the
+   logo box form one continuous bar with no color seam at the top-left
+   corner. Keep these two hex values in sync if either changes. The
+   white-translucent overlays above (lang-toggle, notification, profile)
+   keep working as-is since they contrast fine against blue the same as
+   red — only the search trigger gets an explicit solid treatment below. ── */
+[data-theme="dark"] .header {
+  background: #172554; /* blue-950 — must match .sidebar-brand in Sidebar.css */
+  border-bottom: 1px solid #334155; /* slate-700 */
+}
+
+[data-theme="dark"] .header .search-trigger {
+  background: #1e293b; /* slate-800 */
+  border-color: #475569; /* slate-600 */
+  color: #ffffff;
+}
+[data-theme="dark"] .header .search-trigger:hover {
+  background: #27354a;
+  border-color: #64748b;
+}

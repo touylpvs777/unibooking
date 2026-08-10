@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { I18nextProvider } from 'react-i18next'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { registerSW } from 'virtual:pwa-register'
 import ThemeProvider from '@/providers/ThemeProvider'
 import i18n from '@/i18n'
 import './index.css'
@@ -10,6 +11,10 @@ import './styles/shared.css'
 import './styles/marketplace.css'
 import './styles/print.css'
 import App from './App'
+
+// autoUpdate: silently activates new service worker versions on navigation,
+// no user prompt needed for this step of offline support.
+registerSW({ immediate: true })
 
 // Default staleTime of 30s means data fetched by a list page (e.g. Sales
 // Orders) renders instantly from cache on remount within that window — no

@@ -84,10 +84,14 @@ class RentalContractService:
         contracts, total = await self._repo.get_list(f)
         pages = math.ceil(total / page_size) if page_size else 1
 
+        # Single GROUP BY query for the whole page instead of one
+        # get_item_count() round trip per contract — was the N+1 responsible
+        # for the 2.1-2.5s response time on this endpoint.
+        item_counts = await self._repo.get_item_counts([ct.id for ct in contracts])
         items = []
         for ct in contracts:
             obj = RentalContractOut.model_validate(ct)
-            obj.item_count = await self._repo.get_item_count(ct.id)
+            obj.item_count = item_counts.get(ct.id, 0)
             items.append(obj)
 
         return RentalContractListResponse(

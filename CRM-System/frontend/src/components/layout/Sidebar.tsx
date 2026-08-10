@@ -9,7 +9,7 @@ import {
   Box, Receipt, CreditCard, Landmark, FileSpreadsheet, Warehouse, LogOut, ShoppingCart,
   UserCircle, KeyRound, PanelLeftClose, PanelLeftOpen, ChevronDown,
   FileCheck2, ReceiptText, Undo2, Banknote, FileOutput, PackageCheck, PackageMinus,
-  BadgeCheck, Camera,
+  BadgeCheck, Camera, LayoutGrid,
 } from 'lucide-react'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import { useAuthStore } from '@/store/authStore'
@@ -107,6 +107,7 @@ const NAV_GROUPS: NavGroup[] = [
     labelKey: 'nav.groups.inventory',
     items: [
       { to: '/inventory', labelKey: 'nav.items.inventory', icon: Box },
+      { to: '/inventory/pos', labelKey: 'nav.items.partsPOS', icon: LayoutGrid },
       { to: '/inventory/goods-issue', labelKey: 'nav.items.goodsIssue', icon: PackageMinus },
       { to: '/inventory/goods-receive', labelKey: 'nav.items.goodsReceive', icon: PackageCheck },
       { to: '/catalog', labelKey: 'nav.items.products', icon: Package },

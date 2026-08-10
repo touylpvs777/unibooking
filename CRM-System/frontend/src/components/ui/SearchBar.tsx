@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Search, X, ArrowRight, Command } from 'lucide-react'
-import { createPortal } from 'react-dom'
+import { Search, X, ArrowRight } from 'lucide-react'
 import { ROUTE_CONFIG } from '@/config/routes'
 import './SearchBar.css'
 
@@ -30,7 +29,7 @@ export default function SearchBar() {
   const [activeIndex, setActiveIndex] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
   const paletteRef = useRef<HTMLDivElement>(null)
-  const previousFocus = useRef<HTMLElement | null>(null)
+  const wrapRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
 
   const filtered = useMemo(() => (query.trim()
@@ -41,34 +40,42 @@ export default function SearchBar() {
   ), [query, t])
 
   const open = useCallback(() => {
-    previousFocus.current = document.activeElement as HTMLElement
     setIsOpen(true)
-    setQuery('')
     setActiveIndex(0)
   }, [])
 
+  // The input is now always mounted in the topbar (not a modal), so "close"
+  // just blurs it and drops the results — no previous-focus bookkeeping needed.
   const close = useCallback(() => {
     setIsOpen(false)
-    previousFocus.current?.focus()
+    inputRef.current?.blur()
   }, [])
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault()
-        setIsOpen((v) => { if (!v) previousFocus.current = document.activeElement as HTMLElement; return !v })
+        if (isOpen) close(); else inputRef.current?.focus()
       }
     }
     document.addEventListener('keydown', handler)
     return () => document.removeEventListener('keydown', handler)
-  }, [])
+  }, [isOpen, close])
 
+  // The dropdown no longer sits behind a full-screen backdrop, so closing on
+  // an outside click has to be done explicitly instead of via backdrop onMouseDown.
   useEffect(() => {
-    if (isOpen) setTimeout(() => inputRef.current?.focus(), 50)
-  }, [isOpen])
+    if (!isOpen) return
+    const handler = (e: MouseEvent) => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) close()
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [isOpen, close])
 
   const select = (result: SearchResult) => {
     navigate(result.path)
+    setQuery('')
     close()
   }
 
@@ -95,76 +102,68 @@ export default function SearchBar() {
   const listboxId = 'search-palette-listbox'
 
   return (
-    <>
-      <button className="search-trigger" onClick={open} aria-label={t('header.searchLabel')}>
-        <Search size={15} />
-        <span className="search-trigger-text">{t('header.searchTrigger')}</span>
-        <kbd className="search-trigger-kbd"><Command size={10} />K</kbd>
-      </button>
-
-      {isOpen && createPortal(
-        <div className="search-overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) close() }}>
-          <div ref={paletteRef} className="search-palette" role="dialog" aria-modal="true" aria-label={t('header.searchLabel')} onKeyDown={handleKeyDown}>
-            <div className="search-palette-input-wrap">
-              <Search size={18} className="search-palette-icon" />
-              <input
-                ref={inputRef}
-                className="search-palette-input"
-                placeholder={t('header.searchPlaceholder')}
-                value={query}
-                onChange={(e) => { setQuery(e.target.value); setActiveIndex(0) }}
-                role="combobox"
-                aria-expanded="true"
-                aria-controls={listboxId}
-                aria-activedescendant={filtered[activeIndex] ? `search-opt-${activeIndex}` : undefined}
-                aria-autocomplete="list"
-                aria-label={t('header.searchCommandsLabel')}
-              />
-              {query && (
-                <button className="search-palette-clear" onClick={() => setQuery('')} aria-label={t('header.clearSearch')}>
-                  <X size={14} />
-                </button>
-              )}
-            </div>
-
-            <div className="search-palette-results" id={listboxId} role="listbox" aria-label={t('header.searchResults')}>
-              {Object.entries(grouped).map(([groupKey, items]) => (
-                <div key={groupKey} className="search-group" role="group" aria-label={t(groupKey)}>
-                  <div className="search-group-label" aria-hidden="true">{t(groupKey)}</div>
-                  {items.map((item) => {
-                    flatIdx++
-                    const idx = flatIdx
-                    return (
-                      <button
-                        key={item.path + item.labelKey}
-                        id={`search-opt-${idx}`}
-                        className={`search-result${idx === activeIndex ? ' active' : ''}`}
-                        onClick={() => select(item)}
-                        onMouseEnter={() => setActiveIndex(idx)}
-                        role="option"
-                        aria-selected={idx === activeIndex}
-                      >
-                        <span className="search-result-label">{t(item.labelKey)}</span>
-                        <ArrowRight size={14} className="search-result-arrow" />
-                      </button>
-                    )
-                  })}
-                </div>
-              ))}
-              {filtered.length === 0 && (
-                <div className="search-empty" role="status">{t('header.noResults', { query })}</div>
-              )}
-            </div>
-
-            <div className="search-palette-footer" aria-hidden="true">
-              <span>↑↓ {t('header.navigate')}</span>
-              <span>↵ {t('header.select')}</span>
-              <span>esc {t('header.close')}</span>
-            </div>
-          </div>
-        </div>,
-        document.body
+    <div className="search-wrap" ref={wrapRef}>
+      <Search size={15} className="search-input-icon" aria-hidden="true" />
+      <input
+        ref={inputRef}
+        className="search-trigger"
+        placeholder={t('header.searchPlaceholder')}
+        value={query}
+        onFocus={open}
+        onChange={(e) => { setQuery(e.target.value); setActiveIndex(0) }}
+        onKeyDown={handleKeyDown}
+        role="combobox"
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+        aria-controls={listboxId}
+        aria-activedescendant={isOpen && filtered[activeIndex] ? `search-opt-${activeIndex}` : undefined}
+        aria-autocomplete="list"
+        aria-label={t('header.searchCommandsLabel')}
+      />
+      {query && (
+        <button className="search-input-clear" onClick={() => setQuery('')} aria-label={t('header.clearSearch')}>
+          <X size={14} />
+        </button>
       )}
-    </>
+
+      {isOpen && (
+        <div ref={paletteRef} className="search-palette">
+          <div className="search-palette-results" id={listboxId} role="listbox" aria-label={t('header.searchResults')}>
+            {Object.entries(grouped).map(([groupKey, items]) => (
+              <div key={groupKey} className="search-group" role="group" aria-label={t(groupKey)}>
+                <div className="search-group-label" aria-hidden="true">{t(groupKey)}</div>
+                {items.map((item) => {
+                  flatIdx++
+                  const idx = flatIdx
+                  return (
+                    <button
+                      key={item.path + item.labelKey}
+                      id={`search-opt-${idx}`}
+                      className={`search-result${idx === activeIndex ? ' active' : ''}`}
+                      onClick={() => select(item)}
+                      onMouseEnter={() => setActiveIndex(idx)}
+                      role="option"
+                      aria-selected={idx === activeIndex}
+                    >
+                      <span className="search-result-label">{t(item.labelKey)}</span>
+                      <ArrowRight size={14} className="search-result-arrow" />
+                    </button>
+                  )
+                })}
+              </div>
+            ))}
+            {filtered.length === 0 && (
+              <div className="search-empty" role="status">{t('header.noResults', { query })}</div>
+            )}
+          </div>
+
+          <div className="search-palette-footer" aria-hidden="true">
+            <span>↑↓ {t('header.navigate')}</span>
+            <span>↵ {t('header.select')}</span>
+            <span>esc {t('header.close')}</span>
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
