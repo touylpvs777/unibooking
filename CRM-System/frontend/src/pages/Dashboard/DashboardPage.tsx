@@ -159,7 +159,7 @@ export default function DashboardPage() {
   const { data, trend, isLoading, isFetching, error } = useDashboardStats(revenueRange)
 
   return (
-    <div className="min-h-full bg-slate-50 px-6 py-8 text-slate-800 lg:px-10">
+    <div className="min-h-full py-8">
       {/* Header: premium DK Blue enterprise banner */}
       <header className="mb-8 rounded-2xl border border-blue-800 bg-[#003366] px-6 py-6 shadow-sm sm:px-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
