@@ -25,7 +25,9 @@ export default function UICustomizerBar() {
             aria-pressed={fontSize === opt.tier}
             title={t(opt.titleKey)}
             className={`w-7 rounded-md border py-1 text-xs font-semibold transition-colors ${
-              fontSize === opt.tier ? 'border-white bg-white text-blue-900' : 'border-white/30 text-white hover:bg-white/10'
+              fontSize === opt.tier
+                ? 'border-white bg-white text-blue-900 dark:border-white dark:bg-white dark:text-blue-900'
+                : 'border-white/30 text-white hover:bg-white/10 dark:border-white/30 dark:text-white dark:hover:bg-white/10'
             }`}
           >
             {opt.label}

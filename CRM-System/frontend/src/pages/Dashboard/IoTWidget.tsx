@@ -25,7 +25,7 @@ export default function IoTWidget() {
   const { t } = useTranslation()
 
   return (
-    <section className="rounded-2xl overflow-hidden bg-white dark:bg-zinc-900 border border-slate-200/60 dark:border-zinc-800/70 p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none">
+    <section className="rounded-2xl overflow-hidden bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700 p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
           <Radio size={18} className="text-blue-700" />

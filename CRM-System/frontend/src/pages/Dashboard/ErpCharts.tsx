@@ -68,7 +68,7 @@ export function ProfitTrendChart({ data, to }: ProfitTrendChartProps) {
   const tooltipFormatter = (value: unknown) => [`₭ ${lakShort(Number(value))}`, seriesName] as [string, string]
 
   return (
-    <section className="rounded-2xl overflow-hidden bg-white dark:bg-zinc-900 border border-slate-200/60 dark:border-zinc-800/70 p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-all duration-200 hover:shadow-md">
+    <section className="rounded-2xl overflow-hidden bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700 p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-all duration-200 hover:shadow-md">
       <div className="mb-2 flex flex-wrap items-start justify-between gap-3">
         <SectionTitle title={t('dashboard.erp.chart.profitTrend')} sub={t('dashboard.erp.chart.last6Months')} to={to} />
         <ChartTypeToggle value={mode} onChange={setMode} labels={toggleLabels} />
@@ -142,7 +142,7 @@ export function SampleTrendChart({ to }: { to?: string }) {
   const profitName = t('dashboard.erp.chart.profitSeries')
 
   return (
-    <section className="rounded-2xl overflow-hidden bg-white dark:bg-zinc-900 border border-slate-200/60 dark:border-zinc-800/70 p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-all duration-200 hover:shadow-md">
+    <section className="rounded-2xl overflow-hidden bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700 p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-all duration-200 hover:shadow-md">
       <div className="mb-2 flex flex-wrap items-start justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
@@ -250,7 +250,7 @@ export function RevenueBreakdownChart({ data, range, onRangeChange, isFetching, 
   ]
 
   return (
-    <section className="rounded-2xl overflow-hidden bg-white dark:bg-zinc-900 border border-slate-200/60 dark:border-zinc-800/70 p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-all duration-200 hover:shadow-md">
+    <section className="rounded-2xl overflow-hidden bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700 p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-all duration-200 hover:shadow-md">
       <div className="mb-2 flex flex-wrap items-start justify-between gap-3">
         <SectionTitle title={t('dashboard.erp.chart.revenueBreakdown')} sub={t('dashboard.erp.chart.revenueBreakdownSub')} to={to} />
         <div className="flex items-center gap-2">
@@ -334,7 +334,7 @@ export function ServiceCostChart({ labor, parts, other, to }: ServiceCostChartPr
   ]
 
   return (
-    <section className="rounded-2xl overflow-hidden bg-white dark:bg-zinc-900 border border-slate-200/60 dark:border-zinc-800/70 p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-all duration-200 hover:shadow-md">
+    <section className="rounded-2xl overflow-hidden bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700 p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-all duration-200 hover:shadow-md">
       <SectionTitle title={t('dashboard.erp.service.title')} to={to} />
       <div style={{ height: 220 }}>
         <ResponsiveContainer width="100%" height="100%">

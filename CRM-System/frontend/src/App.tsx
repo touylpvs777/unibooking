@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import PrivateRoute from '@/components/layout/PrivateRoute'
 import AppLayout from '@/components/layout/AppLayout'
 import ToastContainer from '@/components/ui/Toast'
+import OfflineBanner from '@/components/OfflineBanner'
 import { Loader2 } from 'lucide-react'
 
 const LoginPage = lazy(() => import('@/pages/Login/LoginPage'))
@@ -87,6 +88,7 @@ const Placeholder = ({ name }: { name: string }) => (
 export default function App() {
   return (
     <BrowserRouter>
+      <OfflineBanner />
       <Routes>
         <Route path="/login" element={<Suspense fallback={<PageLoader />}><LoginPage /></Suspense>} />
 
