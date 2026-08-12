@@ -39,6 +39,14 @@ class Settings(BaseSettings):
     # ── IoT Telemetry (forklift GPS/hour-meter device webhook) ───────────────
     IOT_WEBHOOK_API_KEY: str = ""
 
+    # ── Initial admin user (seed_admin.py / scripts/rotate_admin_password.py) ─
+    # Not used by the running app itself — only read by the seed/rotation
+    # scripts, which fail loudly if email/password are unset.
+    DEFAULT_ADMIN_EMAIL: str = ""
+    DEFAULT_ADMIN_PASSWORD: str = ""
+    DEFAULT_ADMIN_USERNAME: str = "admin"
+    DEFAULT_ADMIN_FULL_NAME: str = "System Administrator"
+
     ALLOWED_ORIGINS: list[str] = [
         "http://localhost:3000",
         "http://localhost:8080",

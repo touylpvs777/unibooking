@@ -1,13 +1,19 @@
 """
-One-time script: create the initial admin user in crm.db.
-Run from: f:/DK Sevice/CRM-System/backend/
-Command:  ..\venv\Scripts\python seed_admin.py
+One-time script: create the initial admin user in the configured database.
+Reads credentials from the environment (.env) — never hardcode them here.
+Run from: CRM-System/backend/
+Command:  ..\\venv\\Scripts\\python seed_admin.py
 """
 import asyncio
+import os
+import sys
 from datetime import datetime, UTC
 
+from dotenv import load_dotenv
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
+load_dotenv()  # populate os.environ from .env before os.getenv() calls below
 
 from app.database.session import AsyncSessionLocal
 from app.database.base import Base
@@ -18,15 +24,31 @@ from app.models.user import User
 from app.core.security import hash_password, verify_password
 
 
-ADMIN = {
-    "email": "admin@dkservice.com",
-    "username": "admin",
-    "full_name": "System Administrator",
-    "password": "Admin@123",
-}
+def load_admin_config() -> dict:
+    email = os.getenv("DEFAULT_ADMIN_EMAIL")
+    password = os.getenv("DEFAULT_ADMIN_PASSWORD")
+    missing = [
+        name
+        for name, value in (("DEFAULT_ADMIN_EMAIL", email), ("DEFAULT_ADMIN_PASSWORD", password))
+        if not value
+    ]
+    if missing:
+        sys.exit(
+            "[FAIL] Missing required environment variable(s): "
+            f"{', '.join(missing)}. Set them in .env (see .env.example) before running this script."
+        )
+
+    return {
+        "email": email,
+        "username": os.getenv("DEFAULT_ADMIN_USERNAME", "admin"),
+        "full_name": os.getenv("DEFAULT_ADMIN_FULL_NAME", "System Administrator"),
+        "password": password,
+    }
 
 
 async def main() -> None:
+    admin = load_admin_config()
+
     # Ensure tables exist (safe to run multiple times)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
@@ -35,7 +57,7 @@ async def main() -> None:
         existing = (
             await session.execute(
                 select(User).where(
-                    (User.email == ADMIN["email"]) | (User.username == ADMIN["username"])
+                    (User.email == admin["email"]) | (User.username == admin["username"])
                 )
             )
         ).scalar_one_or_none()
@@ -53,11 +75,11 @@ async def main() -> None:
                 session.add(role)
                 await session.flush()
 
-            hashed = hash_password(ADMIN["password"])
+            hashed = hash_password(admin["password"])
             user = User(
-                email=ADMIN["email"],
-                username=ADMIN["username"],
-                full_name=ADMIN["full_name"],
+                email=admin["email"],
+                username=admin["username"],
+                full_name=admin["full_name"],
                 hashed_password=hashed,
                 is_active=True,
                 is_superuser=True,
@@ -72,7 +94,7 @@ async def main() -> None:
 
         # Verify password hash is correct
         target = existing or user  # type: ignore[possibly-undefined]
-        ok = verify_password(ADMIN["password"], target.hashed_password)
+        ok = verify_password(admin["password"], target.hashed_password)
         print(f"[VERIFY]  password check -> {'PASS' if ok else 'FAIL'}")
 
 
