@@ -1,4 +1,10 @@
 import axios from 'axios';
+import { API_LOGIN, API_REGISTER } from '../utils/api';
+
+// A 401 from these two endpoints means "these credentials were rejected,"
+// not "your session expired" -- the blanket redirect below must not fire
+// for them (see the interceptor's 401 branch).
+const AUTH_ENDPOINTS_WITH_EXPECTED_401 = [API_LOGIN, API_REGISTER];
 
 export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig();
@@ -28,8 +34,16 @@ export default defineNuxtPlugin((nuxtApp) => {
 
       if (error.response) {
         const status = error.response.status;
+        // A 401 on the login/register call itself means wrong credentials,
+        // not an expired session -- the caller (authStore.login/register)
+        // already has its own error handling and UI for that, so this
+        // interceptor must stay out of the way instead of hard-redirecting
+        // to /login (which was wiping that error via a full page reload
+        // before it could ever render).
+        const isExpectedAuthFailure =
+          status === 401 && AUTH_ENDPOINTS_WITH_EXPECTED_401.includes(error.config?.url);
 
-        if (status === 401) {
+        if (status === 401 && !isExpectedAuthFailure) {
           errorMessage = 'ເຊດຊັນຂອງທ່ານໝົດອາຍຸແລ້ວ ກະລຸນາລັອກອິນໃໝ່.';
 
           // Cookie ໝົດອາຍຸ/ບໍ່ຖືກຕ້ອງ: ສົ່ງກັບໄປໜ້າ Login

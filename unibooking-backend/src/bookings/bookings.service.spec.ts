@@ -3,6 +3,7 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { BookingStatus, Prisma, Role } from '@prisma/client';
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import { PrismaService } from '../prisma/prisma.service';
+import { SupplierOwnershipService } from '../catalog/supplier-ownership.service';
 import {
   createPrismaMock,
   mockPrismaTransactions,
@@ -49,6 +50,10 @@ describe('BookingsService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         BookingsService,
+        // Real (unmocked) instance -- it only calls prisma.supplier.findUnique,
+        // which the findForSupplier tests below already mock via prismaMock,
+        // so this behaves identically to the inline lookup it replaced.
+        SupplierOwnershipService,
         { provide: PrismaService, useValue: prismaMock },
       ],
     }).compile();

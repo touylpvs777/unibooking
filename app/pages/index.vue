@@ -5,52 +5,49 @@
         <HeroSlider :slides="heroSlides" :active-index="heroSlide" class="hero-card__slider" />
         <div class="hero-card__scrim" aria-hidden="true" />
 
-        <header class="hero-navbar">
-          <NuxtLink to="/" class="hero-navbar__logo">
-            <img src="/images/unibooking-logo.png" alt="UniBooking" class="hero-navbar__logo-img">
+        <header class="glass-navbar-wrap">
+          <NuxtLink to="/" class="glass-navbar-wrap__logo">
+            <img src="/images/unibooking-logo.png" alt="UniBooking" class="glass-navbar-wrap__logo-img">
           </NuxtLink>
 
+          <!-- Single pill-shaped nav: the neumorphic outer shadow lives on
+               .glass-navbar only, items stay transparent, and .glass-navbar__indicator
+               slides beneath whichever item is active (see moveGlassIndicatorTo). -->
           <ClientOnly>
-            <nav class="hero-navbar__links">
-              <NuxtLink to="/" class="hero-navbar__btn">Home</NuxtLink>
-              <a href="#" class="hero-navbar__btn">About Us</a>
-              <a href="#" class="hero-navbar__btn">Premium</a>
-              <a href="#" class="hero-navbar__btn">Blogs</a>
+            <nav class="glass-navbar">
+              <ul class="glass-navbar__list">
+                <li
+                  v-for="(item, index) in heroNavItems"
+                  :key="item.key"
+                  :ref="(el) => setGlassNavItemRef(el, index)"
+                  class="glass-navbar__item"
+                  :class="{ 'is-active': activeGlassNavIndex === index }"
+                >
+                  <a-dropdown v-if="item.key === 'lang'" placement="bottomRight">
+                    <a class="glass-navbar__link" @click.prevent="setActiveGlassNav(index)">{{ item.label }}</a>
+                    <template #overlay>
+                      <a-menu @click="({ key }) => (heroLang = key)">
+                        <a-menu-item key="EN">EN</a-menu-item>
+                        <a-menu-item key="Lao">Lao</a-menu-item>
+                        <a-menu-item key="Thai">Thai</a-menu-item>
+                      </a-menu>
+                    </template>
+                  </a-dropdown>
+                  <NuxtLink v-else-if="item.to" :to="item.to" class="glass-navbar__link" @click="setActiveGlassNav(index)">
+                    {{ item.label }}
+                  </NuxtLink>
+                  <a v-else :href="item.href" class="glass-navbar__link" @click="setActiveGlassNav(index)">
+                    {{ item.label }}
+                  </a>
+                </li>
+                <div class="glass-navbar__indicator" :style="glassIndicatorStyle" aria-hidden="true" />
+              </ul>
             </nav>
+
+            <template #fallback>
+              <div class="glass-navbar glass-navbar--fallback" />
+            </template>
           </ClientOnly>
-
-          <div class="hero-navbar__actions">
-            <ClientOnly>
-              <a-dropdown placement="bottomRight">
-                <a class="hero-navbar__lang hero-navbar__btn" @click.prevent>
-                  <component :is="GlobalOutlined" />
-                  <span>{{ heroLang }}</span>
-                </a>
-                <template #overlay>
-                  <a-menu @click="({ key }) => (heroLang = key)">
-                    <a-menu-item key="EN">EN</a-menu-item>
-                    <a-menu-item key="Lao">Lao</a-menu-item>
-                    <a-menu-item key="Thai">Thai</a-menu-item>
-                  </a-menu>
-                </template>
-              </a-dropdown>
-            </ClientOnly>
-
-            <!-- Raised/neumorphic gold pill: a vertical gradient plus inset
-                 top highlight and bottom shadow for a beveled, tactile look,
-                 lifted off the hero photo by its own outer drop shadow --
-                 no separate glow-ring wrapper needed to read as a CTA. -->
-            <a href="#services" class="hero-navbar__btn">Explore</a>
-
-            <ClientOnly>
-              <NuxtLink v-if="!authStore.isAuthenticated" to="/login" class="hero-navbar__btn">
-                Login
-              </NuxtLink>
-              <NuxtLink v-else to="/profile" class="hero-navbar__btn">
-                {{ authStore.fullName }}
-              </NuxtLink>
-            </ClientOnly>
-          </div>
         </header>
 
         <div class="hero-copy">
@@ -212,7 +209,7 @@
             class="luxury-card"
             :class="{ 'luxury-card--tinted': !item.image }"
           >
-            <img v-if="item.image" :src="item.image" :alt="item.title">
+            <img v-if="item.image" :src="item.image" :alt="item.title" @error="handleImageError">
             <component :is="item.icon" v-else class="luxury-card__ghost-icon" />
             <div class="luxury-card__overlay">
               <span class="luxury-card__title">{{ item.title }}</span>
@@ -268,22 +265,18 @@
           <h2 class="luxury-header__title">Our Latest Videos</h2>
         </div>
 
-        <!-- YouTube-style video thumbnail grid -->
-        <div class="video-grid">
-          <div
-            v-for="(video, index) in videos"
-            :key="`${video.title}-${index}`"
-            class="video-card"
-            @click="openVideo(video)"
-          >
-            <img :src="video.thumb" :alt="video.title">
-            <PlayCircleFilled class="video-card__play" />
-            <div class="video-card__meta">
-              <span class="video-card__title">{{ video.title }}</span>
-              <span class="video-card__duration">{{ video.duration }}</span>
-            </div>
+        <!-- YouTube-style video thumbnail grid -- fetched from GET /videos/latest
+             (see useVideosStore), sorted createdAt DESC, capped to 8 for the 4x2 layout -->
+        <a-spin :spinning="videosStore.isLoading">
+          <div class="video-grid">
+            <VideoCard
+              v-for="video in videosStore.videos"
+              :key="video.id"
+              :video="video"
+              @play="openVideo"
+            />
           </div>
-        </div>
+        </a-spin>
       </div>
     </section>
 
@@ -308,7 +301,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, computed, h, onMounted, onUnmounted } from 'vue'
+import { ref, computed, h, nextTick, onMounted, onUnmounted } from 'vue'
 import {
   BankOutlined,
   CarOutlined,
@@ -321,7 +314,6 @@ import {
   ThunderboltOutlined,
   GlobalOutlined,
   CustomerServiceOutlined,
-  PlayCircleFilled,
   ArrowRightOutlined,
   CloseOutlined,
   HomeOutlined,
@@ -330,6 +322,7 @@ import {
   DownOutlined
 } from '@ant-design/icons-vue'
 import { useAuthStore } from '~/stores/auth'
+import { useVideosStore } from '~/stores/videos'
 
 // Hides the persistent site header on desktop (see site-header--hero-mode in
 // app/layouts/default.vue) since the floating hero card below carries its own
@@ -338,6 +331,54 @@ definePageMeta({ hideSiteHeader: true })
 
 const authStore = useAuthStore()
 const heroLang = ref('Lao')
+
+// --- Glass navbar: sliding indicator ----------------------------------
+// heroNavItems is a computed list (not a static array) because two of its
+// entries -- the lang label and the login/profile link -- depend on
+// reactive state (heroLang, authStore.isAuthenticated), so the DOM node
+// widths the indicator measures can change out from under it.
+const heroNavItems = computed(() => [
+  { key: 'home', label: 'Home', to: '/' },
+  { key: 'about', label: 'About Us', href: '#' },
+  { key: 'premium', label: 'Premium', href: '#' },
+  { key: 'blogs', label: 'Blogs', href: '#' },
+  { key: 'lang', label: `🌐 ${heroLang.value}` },
+  { key: 'explore', label: 'Explore', href: '#services' },
+  authStore.isAuthenticated
+    ? { key: 'login', label: authStore.fullName, to: '/profile' }
+    : { key: 'login', label: 'Login', to: '/login' }
+])
+
+const glassNavItemRefs = ref([])
+const activeGlassNavIndex = ref(0)
+const glassIndicatorStyle = ref({ left: '0px', top: '0px', width: '0px', height: '0px' })
+
+function setGlassNavItemRef(el, index) {
+  if (el) glassNavItemRefs.value[index] = el
+}
+
+// Reads the target <li>'s offsetWidth/offsetLeft (both already relative to
+// .glass-navbar__list, its nearest positioned ancestor) and mirrors them
+// onto the indicator; the CSS transition on left/width is what animates it.
+function moveGlassIndicatorTo(index) {
+  const el = glassNavItemRefs.value[index]
+  if (!el) return
+  glassIndicatorStyle.value = {
+    left: `${el.offsetLeft}px`,
+    top: `${el.offsetTop}px`,
+    width: `${el.offsetWidth}px`,
+    height: `${el.offsetHeight}px`
+  }
+}
+
+function setActiveGlassNav(index) {
+  activeGlassNavIndex.value = index
+  nextTick(() => moveGlassIndicatorTo(index))
+}
+
+function handleGlassNavResize() {
+  moveGlassIndicatorTo(activeGlassNavIndex.value)
+}
 
 const heroSlide = ref(0)
 const heroSlides = [
@@ -387,6 +428,12 @@ onMounted(startHeroAutoplay)
 // router) would leave this interval running forever in the background --
 // a classic memory leak.
 onUnmounted(stopHeroAutoplay)
+
+onMounted(() => {
+  nextTick(() => moveGlassIndicatorTo(activeGlassNavIndex.value))
+  window.addEventListener('resize', handleGlassNavResize)
+})
+onUnmounted(() => window.removeEventListener('resize', handleGlassNavResize))
 
 // Accurate, real-world icons (Material Symbols glyphs, Apache-2.0) for the nodes
 // antd doesn't cover precisely — a real airplane (not SendOutlined's paper plane),
@@ -547,11 +594,13 @@ const valueProps = [
 // kept for any future category added here without dedicated photography yet.
 //
 // train-ticket.jpg / car-rental.jpg don't exist in public/images/ yet -- these
-// two cards will 404 until real photos land at those exact paths. Deliberately
-// not substituted with one of the existing Laos landscape photos: those are
-// all destination/nature shots, and reusing one here (e.g. a waterfall behind
-// "Car Rentals") would be the "unrelated destination photo" this file's own
-// previous comment already called out as worth avoiding.
+// two cards 404 until real photos land at those exact paths, at which point
+// @error="handleImageError" (below) swaps in a placeholder instead of a
+// broken image. Deliberately not substituted with one of the existing Laos
+// landscape photos: those are all destination/nature shots, and reusing one
+// here (e.g. a waterfall behind "Car Rentals") would be the "unrelated
+// destination photo" this file's own previous comment already called out as
+// worth avoiding.
 const bestOfLaos = [
   { title: 'River Cruise', image: '/images/Muaengngoy.jpg' },
   { title: 'Train Ticketing', image: '/images/train-ticket.jpg' },
@@ -564,25 +613,21 @@ const tourCategories = [
   { title: 'CYCLING TOURS', image: '/images/Muaengngoy.jpg' }
 ]
 
-// Real, verified 4K travel/nature footage (checked against YouTube's oembed
-// endpoint before adding — the previous IDs here were meme/placeholder videos).
-// start/end trim each embed down to a 15s highlight instead of playing in full.
-// TODO: the 4 entries marked youtubeId: '' need a real, verified YouTube ID
-// (and start/end trim seconds) before their cards will play anything in the
-// lightbox — see the video-modal src binding in the template.
-const videos = reactive([
-  { thumb: '/images/Tardkaungse.png', title: 'ທ່ຽວນ້ຳຕົກຕາດກວາງຊີ', duration: '0:15', youtubeId: '1sjB1KgMM5U', start: 30, end: 45 },
-  { thumb: '/images/khonephapheng.jpg', title: 'ພະລັງນ້ຳຕົກຄອນພະເພັງ', duration: '0:15', youtubeId: 'Zy-HzW1QF_4', start: 40, end: 55 },
-  { thumb: '/images/Wat-Phu-Laos.jpg', title: 'ວັດພູ ມໍລະດົກໂລກ', duration: '0:15', youtubeId: 'S_yyfJbKj9Y', start: 25, end: 40 },
-  // 7Xv-a9z0M_s (originally requested) 404s on YouTube's oembed endpoint —
-  // substituted with Oxvp6i49GFo, verified live and titled "Plain Of Jars
-  // (Laos) Vacation Travel Video Guide".
-  { thumb: '/images/thonghaiheen.jpg', title: 'ຄວາມລຶກລັບທົ່ງໄຫຫິນ', duration: '0:15', youtubeId: 'Oxvp6i49GFo', start: 15, end: 30 },
-  { thumb: '/images/muang-ngoi.jpg', title: 'ເມືອງງອຍ', duration: '0:15', youtubeId: '', start: 0, end: 15 },
-  { thumb: '/images/muang-feuang.jpg', title: 'ເມືອງເຟືອງ', duration: '0:15', youtubeId: '', start: 0, end: 15 },
-  { thumb: '/images/tad-fane.jpg', title: 'ຕາດຟານ', duration: '0:15', youtubeId: '', start: 0, end: 15 },
-  { thumb: '/images/phou-khao-khouay.jpg', title: 'ທຳມະຊາດພູເຂົາຄວຍ', duration: '0:15', youtubeId: '', start: 0, end: 15 }
-])
+// "Our Latest Videos" grid: fetched from the backend (GET /videos/latest,
+// sorted createdAt DESC, capped to 8) instead of hardcoded here -- see
+// useVideosStore and VideoCard.vue for the fetch + per-card fallback logic.
+const videosStore = useVideosStore()
+onMounted(() => videosStore.fetchLatestVideos(8))
+
+// Shared @error handler for hardcoded local /images/* references elsewhere on
+// this page (bestOfLaos cards): swaps a 404'd local image for an external
+// placeholder instead of leaving a broken-image icon and a red 404 in the
+// console. onerror is cleared first so a failing placeholder request can't
+// loop back into this handler forever.
+function handleImageError(event) {
+  event.target.onerror = null
+  event.target.src = `https://placehold.co/600x400/14294f/d4af37?text=${encodeURIComponent(event.target.alt || 'UniBooking')}`
+}
 
 const isVideoModalOpen = ref(false)
 const currentVideo = ref(null)
@@ -690,6 +735,9 @@ function closeVideo() {
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 2px 10px rgba(0, 0, 0, 0.7);
 }
 
+/* Same frosted-glass texture as .glass-navbar__indicator (see the navbar
+   styles below), tinted with the button's own gold instead of white so the
+   base color survives the blur. */
 .hero-copy__button {
   display: inline-flex;
   align-items: center;
@@ -698,7 +746,17 @@ function closeVideo() {
   margin-top: 26px;
   padding: 13px 28px;
   border-radius: 100px;
-  background: #c5a059;
+  background: rgba(197, 160, 89, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(15px);
+  box-shadow:
+    inset 0 0 0 rgba(255, 255, 255, 0.1),
+    inset -3px -3px 6px rgba(0, 0, 0, 0.3),
+    inset 0 0 9px rgba(255, 255, 255, 0.2),
+    inset 2px 4px 8px rgba(255, 255, 255, 0.4),
+    inset -6px -12px 18px rgba(0, 0, 0, 0.2),
+    0 6px 12px rgba(0, 0, 0, 0.3);
   color: #0a0a0a;
   font-size: 14px;
   font-weight: 700;
@@ -707,7 +765,7 @@ function closeVideo() {
 }
 
 .hero-copy__button:hover {
-  background: #d8bc7b;
+  background: rgba(216, 188, 123, 0.85);
   color: #0a0a0a;
   transform: translateY(-2px);
 }
@@ -753,30 +811,40 @@ function closeVideo() {
   margin: -20px auto 0;
 }
 
+/* Same frosted-glass texture as .glass-navbar__indicator (see the navbar
+   styles below), tinted with the card's own navy instead of white so the
+   base color survives the blur. */
 .search-form-wrapper :deep(.search-form.ant-card) {
-  background: #14294f;
+  background: rgba(20, 41, 79, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55), 0 0 40px rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(15px);
+  box-shadow:
+    inset 0 0 0 rgba(255, 255, 255, 0.1),
+    inset -3px -3px 6px rgba(0, 0, 0, 0.3),
+    inset 0 0 9px rgba(255, 255, 255, 0.2),
+    inset 2px 4px 8px rgba(255, 255, 255, 0.4),
+    inset -6px -12px 18px rgba(0, 0, 0, 0.2),
+    0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Transparent navbar: floats over the top of the card. Hidden below 768px —
-   the persistent site header (with the hamburger drawer) is what mobile
-   visitors use instead (see site-header--hero-mode). */
-.hero-navbar {
+/* Floats over the top of the card. Hidden below 768px -- the persistent
+   site header (with the hamburger drawer) is what mobile visitors use
+   instead (see site-header--hero-mode). */
+.glass-navbar-wrap {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   gap: 24px;
   padding: 30px 50px;
   z-index: 10;
 }
 
-.hero-navbar__logo {
+.glass-navbar-wrap__logo {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
@@ -784,76 +852,102 @@ function closeVideo() {
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
 }
 
-.hero-navbar__logo-img {
+.glass-navbar-wrap__logo-img {
   height: 40px;
   width: auto;
   object-fit: contain;
 }
 
-.hero-navbar__links {
+/* The wrapper: single pill container, neumorphic outer shadow lives here
+   only -- items and the indicator sit on top of this surface. */
+.glass-navbar {
+  /* Absolutely centered on the header wrapper (already `position: absolute`,
+     so it's the containing block here) -- this way the pill sits dead
+     center of the hero card regardless of the logo's width, instead of
+     drifting right the way `justify-content: space-between` pushed it. */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  padding: 6px;
+  background: linear-gradient(145deg, #f0f0f3, #ffffff);
+  box-shadow:
+    8px 8px 16px rgba(0, 0, 0, 0.2),
+    -8px -8px 16px rgba(255, 255, 255, 0.7);
+}
+
+.glass-navbar__list {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 2px;
 }
 
-.hero-navbar__actions {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+/* Items stay fully transparent -- no background, padding-background, or
+   shadow of their own -- so the glass indicator reads as sliding beneath
+   them rather than being layered under a competing surface. */
+.glass-navbar__item {
+  position: relative;
+  z-index: 1;
 }
 
-/* Layout only -- .hero-navbar__btn (below) now supplies the pill's
-   background, padding, border-radius, and text color; this just keeps
-   the dropdown trigger's icon+label from touching. */
-.hero-navbar__lang {
-  gap: 6px;
-  cursor: pointer;
-}
-
-/* Raised gold pill -- vertical gradient + inset top highlight/bottom
-   shade for the bevel, outer drop shadow to lift it off the photo. No
-   border: the bevel itself reads as the edge. */
-.hero-navbar__btn {
+.glass-navbar__link {
   display: inline-flex;
   align-items: center;
-  padding: 8px 22px;
-  border: none;
-  border-radius: 999px;
-  background: linear-gradient(to bottom, #e6c982 0%, #c5a059 100%);
-  box-shadow:
-    inset 0 2px 3px rgba(255, 255, 255, 0.7),
-    inset 0 -2px 3px rgba(0, 0, 0, 0.18),
-    0 4px 10px rgba(0, 0, 0, 0.35);
-  color: #3a2a0d;
-  font-size: 13px;
-  font-weight: 700;
+  padding: 10px 20px;
+  color: rgba(38, 44, 61, 0.55);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
   text-decoration: none;
-  transition: background 0.2s ease, box-shadow 0.15s ease, transform 0.1s ease;
+  cursor: pointer;
+  transition: color 0.25s ease;
 }
 
-.hero-navbar__btn:hover {
-  background: linear-gradient(to bottom, #edd695 0%, #d4af37 100%);
-  box-shadow:
-    inset 0 2px 3px rgba(255, 255, 255, 0.75),
-    inset 0 -2px 3px rgba(0, 0, 0, 0.15),
-    0 6px 14px rgba(0, 0, 0, 0.4);
-  transform: translateY(-1px);
-  color: #3a2a0d;
+.glass-navbar__link:hover {
+  color: rgba(38, 44, 61, 0.8);
 }
 
-/* Pressed: bevel inverts (dark on top, no bottom highlight) and the
-   button sinks -- the "tactile" cue that it actually registered a click. */
-.hero-navbar__btn:active {
-  background: linear-gradient(to bottom, #c5a059 0%, #b08d47 100%);
+.glass-navbar__item.is-active .glass-navbar__link {
+  color: #262c3d;
+  font-weight: 700;
+}
+
+/* The slider: glassmorphic pill that animates to the active item's
+   offsetLeft/offsetWidth (see moveGlassIndicatorTo in the script). */
+.glass-navbar__indicator {
+  position: absolute;
+  z-index: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #f5f5f5, #ffffff);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(15px);
   box-shadow:
-    inset 0 2px 4px rgba(0, 0, 0, 0.3),
-    0 1px 3px rgba(0, 0, 0, 0.3);
-  transform: translateY(1px);
+    inset 0 0 0 rgba(0, 0, 0, 0.1),
+    inset -3px -3px 6px rgba(0, 0, 0, 0.25),
+    inset 0 0 9px rgba(255, 255, 255, 0.3),
+    inset 2px 4px 8px rgba(255, 255, 255, 1),
+    inset -6px -12px 18px rgba(0, 0, 0, 0.25),
+    0 6px 6px rgba(0, 0, 0, 0.4);
+  transition: left 0.45s cubic-bezier(0.65, 0, 0.35, 1),
+    width 0.45s cubic-bezier(0.65, 0, 0.35, 1),
+    top 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+  pointer-events: none;
+}
+
+.glass-navbar--fallback {
+  width: 520px;
+  max-width: 100%;
+  height: 44px;
 }
 
 @media (max-width: 767px) {
-  .hero-navbar {
+  .glass-navbar-wrap {
     display: none;
   }
 }
@@ -1824,64 +1918,9 @@ function closeVideo() {
   }
 }
 
-.video-card {
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-  aspect-ratio: 16 / 9;
-  cursor: pointer;
-  border: 1px solid rgba(197, 160, 89, 0.5);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 18px rgba(197, 160, 89, 0.25);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.video-card:hover {
-  border-color: rgba(197, 160, 89, 0.85);
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6), 0 0 28px rgba(197, 160, 89, 0.4);
-}
-
-.video-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.video-card__play {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1;
-  font-size: 48px;
-  color: #c5a059;
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4));
-  transition: transform 0.3s ease;
-}
-
-.video-card:hover .video-card__play {
-  transform: translate(-50%, -50%) scale(1.1);
-}
-
-.video-card__meta {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 12px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.92), transparent);
-  color: #ffffff;
-  font-size: 12px;
-}
-
-.video-card__duration {
-  background: rgba(0, 0, 0, 0.6);
-  padding: 2px 6px;
-  border-radius: 4px;
-}
+/* Individual card styling (thumbnail, play icon, gradient overlay,
+   title/duration) now lives in VideoCard.vue -- only the grid and the
+   lightbox it opens stay here. */
 
 /* ============================================================
    Video lightbox: full-screen player launched from a video card

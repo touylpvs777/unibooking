@@ -37,6 +37,11 @@
         >
           ເຂົ້າສູ່ລະບົບ
         </a-button>
+
+        <p class="login-register-hint">
+          ຍັງບໍ່ມີບັນຊີ?
+          <NuxtLink to="/register">ສະໝັກສະມາຊິກ</NuxtLink>
+        </p>
       </a-form>
     </a-card>
   </div>
@@ -89,5 +94,11 @@ async function handleSubmit() {
 
 .login-error {
   margin-bottom: 16px;
+}
+
+.login-register-hint {
+  text-align: center;
+  margin: 16px 0 0;
+  color: rgba(0, 0, 0, 0.65);
 }
 </style>

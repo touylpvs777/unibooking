@@ -4,7 +4,16 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InventoryPricing, Prisma, Role, Service } from '@prisma/client';
+import {
+  CarRentalDetails,
+  HotelDetails,
+  InventoryPricing,
+  Prisma,
+  Role,
+  Service,
+  TourDetails,
+  TransportDetails,
+} from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { AddInventoryDto } from './dto/add-inventory.dto';
@@ -21,6 +30,37 @@ const MS_PER_DAY = 24 * 60 * 60 * 1000;
 const searchResultInclude = {
   supplier: { select: { companyName: true, isVerified: true } },
 } satisfies Prisma.ServiceInclude;
+
+// Powers GET /services/me -- every detail relation is optional since
+// exactly one is populated depending on `type` (see the Service model's
+// own comment in schema.prisma), and `inventory` is at most the single
+// nearest upcoming InventoryPricing row (see findMyServices).
+export type ServiceWithDetails = Service & {
+  hotelDetails: HotelDetails | null;
+  tourDetails: TourDetails | null;
+  carRentalDetails: CarRentalDetails | null;
+  transportDetails: TransportDetails | null;
+  inventory: InventoryPricing[];
+};
+
+// Powers GET /services/:id -- the public Service Details page. Same
+// supplier exposure as searchResultInclude (no contactEmail/taxId), plus
+// every vertical detail relation (see ServiceWithDetails above for why
+// each is optional) so the page can show type-specific fields (star
+// rating, group size, vehicle type, ...) without a second request.
+// `inventory` is only populated when a date range is requested (see
+// findOne) -- otherwise there's nothing meaningful to show a price for.
+export type ServiceDetail = Service & {
+  supplier: { companyName: string; isVerified: boolean };
+  hotelDetails: HotelDetails | null;
+  tourDetails: TourDetails | null;
+  carRentalDetails: CarRentalDetails | null;
+  transportDetails: TransportDetails | null;
+  // Only present at all (as a key) when a date range was requested --
+  // `include.inventory` is passed as `false` otherwise, which Prisma
+  // treats as "omit the key entirely," not "included as []".
+  inventory?: InventoryPricing[];
+};
 
 export interface SearchResult {
   data: Array<
@@ -62,6 +102,57 @@ export class ServicesService {
         description: dto.description,
         location: dto.location,
       },
+    });
+  }
+
+  /**
+   * Powers the supplier portal's inventory table (GET /services/me) --
+   * every Service this supplier owns, plus its vertical-specific details
+   * and the single nearest upcoming InventoryPricing row (if any) as a
+   * lightweight stand-in for "current price / units available" on a list
+   * view rather than pulling every date. A freshly created Service has no
+   * InventoryPricing rows at all until pricing is added via
+   * POST /services/:id/inventory, so `inventory` is often empty here.
+   */
+  async findMyServices(
+    user: JwtPayload,
+    requestedSupplierId?: string,
+  ): Promise<ServiceWithDetails[]> {
+    const supplierId = await this.resolveSupplierId(user, requestedSupplierId);
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+
+    return this.prisma.service.findMany({
+      where: { supplierId },
+      include: {
+        hotelDetails: true,
+        tourDetails: true,
+        carRentalDetails: true,
+        transportDetails: true,
+        inventory: {
+          where: { date: { gte: startOfToday } },
+          orderBy: { date: 'asc' },
+          take: 1,
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  /**
+   * Soft-delete: flips isActive to false rather than a real Prisma delete.
+   * Service cascades onto InventoryPricing -> BookingItem, so a hard
+   * delete here would silently destroy a customer's real booking history
+   * the moment a supplier removes a listing -- isActive is already what
+   * search() filters on, so deactivating is enough to pull a listing out
+   * of the public catalog.
+   */
+  async deactivate(serviceId: string, user: JwtPayload): Promise<Service> {
+    await this.assertOwnsService(serviceId, user);
+
+    return this.prisma.service.update({
+      where: { id: serviceId },
+      data: { isActive: false },
     });
   }
 
@@ -300,6 +391,57 @@ export class ServicesService {
       data,
       meta: { page, limit, total, totalPages: Math.ceil(total / limit) },
     };
+  }
+
+  /**
+   * Public -- powers the Service Details page (GET /explore -> View
+   * Details). Only an active listing is visible: a deactivated Service
+   * (see deactivate() above) 404s here too, same as it already silently
+   * disappears from search(). `startDate`/`endDate` are optional and, like
+   * search(), must be given together -- when present, the matching
+   * InventoryPricing rows come back so the page can show real per-night
+   * pricing for that exact range instead of nothing.
+   */
+  async findOne(
+    id: string,
+    startDate?: string,
+    endDate?: string,
+  ): Promise<ServiceDetail> {
+    if (Boolean(startDate) !== Boolean(endDate)) {
+      throw new BadRequestException(
+        'startDate and endDate must be provided together.',
+      );
+    }
+
+    let inventoryWhere: Prisma.InventoryPricingWhereInput | undefined;
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      if (start >= end) {
+        throw new BadRequestException('endDate must be after startDate.');
+      }
+      inventoryWhere = { date: { gte: start, lt: end } };
+    }
+
+    const service = await this.prisma.service.findFirst({
+      where: { id, isActive: true },
+      include: {
+        supplier: { select: { companyName: true, isVerified: true } },
+        hotelDetails: true,
+        tourDetails: true,
+        carRentalDetails: true,
+        transportDetails: true,
+        inventory: inventoryWhere
+          ? { where: inventoryWhere, orderBy: { date: 'asc' } }
+          : false,
+      },
+    });
+
+    if (!service) {
+      throw new NotFoundException(`Service with id "${id}" not found.`);
+    }
+
+    return service;
   }
 
   private async resolveSupplierId(

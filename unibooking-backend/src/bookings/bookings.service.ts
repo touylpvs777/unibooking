@@ -1,11 +1,8 @@
 import { randomBytes } from 'crypto';
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { BookingStatus, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { SupplierOwnershipService } from '../catalog/supplier-ownership.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import type { JwtPayload } from '../auth/strategies/jwt.strategy';
 
@@ -39,6 +36,21 @@ export type BookingWithItems = Prisma.BookingGetPayload<{
   include: typeof bookingInclude;
 }>;
 
+// GET /bookings/supplier's own shape -- same as bookingInclude, plus the
+// guest's name/email, matching AdminService's adminBookingInclude (see
+// src/admin/admin.service.ts). findMine()/createBooking() don't need this:
+// a customer reading their own booking already knows who they are.
+const supplierBookingInclude = {
+  ...bookingInclude,
+  user: {
+    select: { id: true, email: true, firstName: true, lastName: true },
+  },
+} satisfies Prisma.BookingInclude;
+
+export type BookingWithItemsAndUser = Prisma.BookingGetPayload<{
+  include: typeof supplierBookingInclude;
+}>;
+
 /** One Date per night in [startDate, endDate) -- checkout day itself excluded. */
 function nightsBetween(startDate: string, endDate: string): Date[] {
   const start = new Date(startDate);
@@ -56,7 +68,10 @@ function generateBookingReference(): string {
 
 @Injectable()
 export class BookingsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly supplierOwnership: SupplierOwnershipService,
+  ) {}
 
   /**
    * The overbooking-safe path. Everything -- availability check, total
@@ -168,23 +183,26 @@ export class BookingsService {
     });
   }
 
-  async findForSupplier(user: JwtPayload): Promise<BookingWithItems[]> {
-    const supplier = await this.prisma.supplier.findUnique({
-      where: { userId: user.sub },
-    });
-    if (!supplier) {
-      throw new NotFoundException(
-        'No supplier profile found for this account.',
-      );
-    }
+  // `requestedSupplierId` is only honoured for ADMIN (see
+  // SupplierOwnershipService.resolveSupplierId's own doc comment) -- a
+  // SUPPLIER caller always sees their own bookings regardless of what they
+  // send here.
+  async findForSupplier(
+    user: JwtPayload,
+    requestedSupplierId?: string,
+  ): Promise<BookingWithItemsAndUser[]> {
+    const supplierId = await this.supplierOwnership.resolveSupplierId(
+      user,
+      requestedSupplierId,
+    );
 
     return this.prisma.booking.findMany({
       where: {
         items: {
-          some: { inventoryPricing: { service: { supplierId: supplier.id } } },
+          some: { inventoryPricing: { service: { supplierId } } },
         },
       },
-      include: bookingInclude,
+      include: supplierBookingInclude,
       orderBy: { createdAt: 'desc' },
     });
   }

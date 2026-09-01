@@ -23,6 +23,7 @@ import { TransportModule } from './transport/transport.module';
 import { ToursModule } from './tours/tours.module';
 import { CarRentalsModule } from './car-rentals/car-rentals.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { VideosModule } from './videos/videos.module';
 
 @Module({
   imports: [
@@ -94,6 +95,7 @@ import { ReviewsModule } from './reviews/reviews.module';
     UploadsModule,
     AdminModule,
     ReviewsModule,
+    VideosModule,
   ],
   controllers: [AppController],
   providers: [

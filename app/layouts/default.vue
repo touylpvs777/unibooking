@@ -23,6 +23,9 @@
             <a-menu-item key="home">
               <NuxtLink to="/">Home</NuxtLink>
             </a-menu-item>
+            <a-menu-item key="explore">
+              <NuxtLink to="/explore">Explore</NuxtLink>
+            </a-menu-item>
             <a-menu-item key="hotels">
               <NuxtLink to="/hotels">Hotels</NuxtLink>
             </a-menu-item>
@@ -64,13 +67,21 @@
               </a>
               <template #overlay>
                 <a-menu @click="handleMenuClick">
+                  <a-menu-item v-if="canAccessSupplierPortal" key="supplier-portal">
+                    <NuxtLink to="/supplier">Supplier Portal</NuxtLink>
+                  </a-menu-item>
                   <a-menu-item key="logout">ອອກຈາກລະບົບ</a-menu-item>
                 </a-menu>
               </template>
             </a-dropdown>
-            <NuxtLink v-else to="/login" class="login-link user-menu-wrapper--desktop">
-              Login
-            </NuxtLink>
+            <template v-else>
+              <NuxtLink to="/login" class="login-link user-menu-wrapper--desktop">
+                Login
+              </NuxtLink>
+              <NuxtLink to="/register" class="register-btn user-menu-wrapper--desktop">
+                Register
+              </NuxtLink>
+            </template>
           </ClientOnly>
 
           <!-- Mobile hamburger: hidden from 768px up via CSS -->
@@ -116,6 +127,9 @@
           <a-menu-item key="home">
             <NuxtLink to="/">Home</NuxtLink>
           </a-menu-item>
+          <a-menu-item key="explore">
+            <NuxtLink to="/explore">Explore</NuxtLink>
+          </a-menu-item>
           <a-menu-item key="hotels">
             <NuxtLink to="/hotels">Hotels</NuxtLink>
           </a-menu-item>
@@ -127,13 +141,21 @@
             <a-menu-item key="profile">
               <NuxtLink to="/profile">{{ authStore.fullName }}</NuxtLink>
             </a-menu-item>
+            <a-menu-item v-if="canAccessSupplierPortal" key="supplier-portal">
+              <NuxtLink to="/supplier">Supplier Portal</NuxtLink>
+            </a-menu-item>
             <a-menu-item key="logout">
               ອອກຈາກລະບົບ
             </a-menu-item>
           </template>
-          <a-menu-item v-else key="login">
-            <NuxtLink to="/login">Login</NuxtLink>
-          </a-menu-item>
+          <template v-else>
+            <a-menu-item key="login">
+              <NuxtLink to="/login">Login</NuxtLink>
+            </a-menu-item>
+            <a-menu-item key="register">
+              <NuxtLink to="/register">Register</NuxtLink>
+            </a-menu-item>
+          </template>
         </a-menu>
       </ClientOnly>
     </a-drawer>
@@ -264,6 +286,11 @@ const route = useRoute()
 const authStore = useAuthStore()
 
 const userInitial = computed(() => authStore.fullName?.charAt(0).toUpperCase() ?? '?')
+
+// Matches app/middleware/supplier.js's own allowed-roles check -- kept in
+// sync manually since this is the only other place role-gates the same
+// /supplier area (as a nav link rather than a route guard).
+const canAccessSupplierPortal = computed(() => ['SUPPLIER', 'ADMIN'].includes(authStore.user?.role))
 
 const isDrawerOpen = ref(false)
 
@@ -479,6 +506,22 @@ function handleDrawerMenuClick({ key }) {
   color: #ffffff;
   font-weight: 500;
   text-decoration: none;
+}
+
+.register-btn {
+  color: #ffffff;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 6px 16px;
+  border: 1px solid #c5a059;
+  border-radius: 999px;
+  line-height: 1.2;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.register-btn:hover {
+  background: #c5a059;
+  color: #0a0a0a;
 }
 
 .user-menu {

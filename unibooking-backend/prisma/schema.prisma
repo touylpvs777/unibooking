@@ -290,3 +290,19 @@ model Review {
   user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   bookingItem   BookingItem @relation(fields: [bookingItemId], references: [id], onDelete: Cascade)
 }
+
+// 10. Videos: "Our Latest Videos" grid on the homepage.
+// thumbnailUrl is optional on purpose -- a video with no thumbnail yet is a
+// real, expected state (footage added before its poster frame is ready),
+// not an error. The frontend (VideoCard.vue) renders a plain gradient
+// placeholder for it instead of trying to display a broken image.
+model Video {
+  id            String   @id @default(uuid())
+  title         String
+  thumbnailUrl  String?
+  youtubeId     String?
+  durationLabel String
+  startSeconds  Int      @default(0)
+  endSeconds    Int      @default(15)
+  createdAt     DateTime @default(now())
+}
