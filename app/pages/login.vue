@@ -1,104 +1,223 @@
 <template>
-  <div class="login-page">
-    <a-card class="login-card" :bordered="false">
-      <h1 class="login-title">ເຂົ້າສູ່ລະບົບ</h1>
+  <div class="login-wrapper">
+    <div class="glass-card">
+      <div class="header">
+        <h1 class="title">UniBooking</h1>
+        <p class="subtitle">ເຂົ້າສູ່ລະບົບເພື່ອດຳເນີນການຕໍ່</p>
+      </div>
 
-      <a-form layout="vertical" :model="form" @finish="handleSubmit">
-        <a-form-item
-          label="ອີເມວ"
-          name="email"
-          :rules="[{ required: true, message: 'ກະລຸນາປ້ອນອີເມວ' }]"
-        >
-          <a-input v-model:value="form.email" size="large" placeholder="you@example.com" />
-        </a-form-item>
+      <form @submit.prevent="handleLogin" class="form-container">
+        <div class="input-group">
+          <label>ອີເມວ</label>
+          <div class="input-wrapper">
+            <span class="icon">📧</span>
+            <input type="email" placeholder="you@example.com" required />
+          </div>
+        </div>
 
-        <a-form-item
-          label="ລະຫັດຜ່ານ"
-          name="password"
-          :rules="[{ required: true, message: 'ກະລຸນາປ້ອນລະຫັດຜ່ານ' }]"
-        >
-          <a-input-password v-model:value="form.password" size="large" placeholder="••••••••" />
-        </a-form-item>
+        <div class="input-group">
+          <label>ລະຫັດຜ່ານ</label>
+          <div class="input-wrapper">
+            <span class="icon">🔒</span>
+            <input type="password" placeholder="••••••••" required />
+          </div>
+        </div>
 
-        <a-alert
-          v-if="authStore.error"
-          type="error"
-          show-icon
-          :message="authStore.error"
-          class="login-error"
-        />
+        <div class="forgot-password">
+          <a href="#">ລືມລະຫັດຜ່ານ?</a>
+        </div>
 
-        <a-button
-          type="primary"
-          size="large"
-          html-type="submit"
-          block
-          :loading="authStore.isLoading"
-        >
-          ເຂົ້າສູ່ລະບົບ
-        </a-button>
+        <button type="submit" class="login-btn">ເຂົ້າສູ່ລະບົບ</button>
+      </form>
 
-        <p class="login-register-hint">
-          ຍັງບໍ່ມີບັນຊີ?
-          <NuxtLink to="/register">ສະໝັກສະມາຊິກ</NuxtLink>
-        </p>
-      </a-form>
-    </a-card>
+      <div class="footer">
+        <p>ຍັງບໍ່ມີບັນຊີ? <a href="#" class="register-link">ສະໝັກສະມາຊິກ</a></p>
+        
+        <div class="language-selector">
+          <button class="lang-btn">EN</button>
+          <button class="lang-btn active">ລາວ</button>
+          <button class="lang-btn">ไทย</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
-<script setup>
-import { message } from 'ant-design-vue'
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
 
-// Nuxt/Pinia auto-imports: reactive, useAuthStore, useRouter
-const authStore = useAuthStore()
 const router = useRouter()
 
-const form = reactive({
-  email: '',
-  password: ''
-})
-
-async function handleSubmit() {
-  try {
-    await authStore.login(form.email, form.password)
-    message.success('ເຂົ້າສູ່ລະບົບສຳເລັດ')
-    router.push('/')
-  } catch {
-    // authStore.error ຖືກຕັ້ງຄ່າແລ້ວພາຍໃນ store ແລະສະແດງຜ່ານ a-alert ຂ້າງເທິງ
-  }
+function handleLogin(event?: Event) {
+  // Placeholder login handler — replace with real auth logic
+  event?.preventDefault()
+  // After successful login redirect (example)
+  router.push('/').catch(() => {})
 }
 </script>
 
 <style scoped>
-.login-page {
-  min-height: calc(100vh - 64px - 70px - 48px);
+/* ຕັ້ງຄ່າພື້ນຫຼັງທຳມະຊາດເຕັມຈໍ */
+.login-wrapper {
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f0f9ff;
+  /* ສາມາດປ່ຽນ Link ຮູບທຳມະຊາດອື່ນໆໄດ້ບ່ອນນີ້ */
+  background-image: url('https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=2070&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+  font-family: 'Phetsarath OT', sans-serif; /* ຟອນພາສາລາວ */
 }
 
-.login-card {
+/* ສະຕາຍກ່ອງແກ້ວ (Glassmorphism) */
+.glass-card {
+  background: rgba(40, 40, 40, 0.6); /* ສີພື້ນດຳໂປ່ງໃສ */
+  backdrop-filter: blur(12px); /* ເຮັດໃຫ້ມົວ (ເບລີ) */
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2); /* ຂອບສີຂາວຈາງໆ */
+  border-radius: 24px;
+  padding: 40px 30px;
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
+  color: white;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #e0e0e0;
+  margin: 0;
+}
+
+/* ການຈັດການຊ່ອງປ້ອນຂໍ້ມູນ */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  background: #f0f4ff; /* ສີພື້ນຊ່ອງປ້ອນຂໍ້ມູນ */
   border-radius: 12px;
-  box-shadow: 0 12px 32px rgba(2, 132, 199, 0.15);
+  padding: 0 15px;
+  height: 48px;
 }
 
-.login-title {
+.icon {
+  font-size: 16px;
+  margin-right: 10px;
+  opacity: 0.6;
+}
+
+.input-wrapper input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  font-size: 15px;
+  color: #333;
+}
+
+/* ປຸ່ມລືມລະຫັດຜ່ານ */
+.forgot-password {
+  text-align: right;
+  margin-top: -10px;
+}
+
+.forgot-password a {
+  color: #e0e0e0;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+/* ປຸ່ມເຂົ້າສູ່ລະບົບ */
+.login-btn {
+  background: linear-gradient(135deg, #4F75FF 0%, #3B5BDB 100%); /* ປຸ່ມສີຟ້າໄລ່ລະດັບສີ */
+  color: white;
+  border: none;
+  border-radius: 12px;
+  height: 50px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  box-shadow: 0 4px 15px rgba(79, 117, 255, 0.4);
+}
+
+.login-btn:hover {
+  opacity: 0.9;
+}
+
+/* ສ່ວນທ້າຍ (Footer) */
+.footer {
   text-align: center;
-  color: #0c4a6e;
-  margin-bottom: 24px;
+  margin-top: 25px;
+  font-size: 14px;
 }
 
-.login-error {
-  margin-bottom: 16px;
+.register-link {
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
 }
 
-.login-register-hint {
-  text-align: center;
-  margin: 16px 0 0;
-  color: rgba(0, 0, 0, 0.65);
+.register-link:hover {
+  text-decoration: underline;
+}
+
+/* ປຸ່ມປ່ຽນພາສາ */
+.language-selector {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 20px;
+  background: white;
+  padding: 5px;
+  border-radius: 20px;
+  width: max-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.lang-btn {
+  background: transparent;
+  border: none;
+  color: #555;
+  padding: 5px 15px;
+  border-radius: 15px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.lang-btn.active {
+  background: #3B5BDB;
+  color: white;
 }
 </style>
