@@ -68,7 +68,7 @@
       <a-col v-for="service in exploreStore.services" :key="service.id" :xs="24" :sm="12" :md="8" :lg="6">
         <a-card class="service-card" :bordered="false" :body-style="{ padding: '16px' }">
           <template #cover>
-            <img :src="placeholderImage(service.name)" :alt="service.name" class="service-card__image">
+            <img :src="coverImage(service)" :alt="service.name" class="service-card__image">
           </template>
 
           <a-tag :color="typeTagMeta(service.type).color" class="service-card__type-tag">
@@ -148,6 +148,13 @@ function typeTagMeta(type) {
 // Same placehold.co convention as pages/hotels.vue's placeholderImage.
 function placeholderImage(name) {
   return `https://placehold.co/600x400/f0f9ff/1e40af?text=${encodeURIComponent(name)}`
+}
+
+// `images` is at most 1 row here -- the oldest upload, i.e. the cover photo
+// (see ServicesService's searchResultInclude) -- falling back to the
+// placeholder for a service with no photos uploaded yet.
+function coverImage(service) {
+  return service.images?.[0]?.url || placeholderImage(service.name)
 }
 
 function formatPrice(value) {

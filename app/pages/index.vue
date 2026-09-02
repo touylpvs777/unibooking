@@ -74,10 +74,10 @@
         <!-- Left: copy -->
         <div class="modular-text">
           <span class="modular-badge">MODULAR TRAVEL SOLUTIONS</span>
-          <h2 class="modular-title">ການເດີນທາງທີ່ເຊື່ອມຕໍ່ກັນຢ່າງສົມບູນ</h2>
+          <h2 class="modular-title">ການເດີນທາງທີ່ເຊື່ອມຕໍ່ກັນຢ່າງລົງຕົວ</h2>
           <p class="modular-desc">
             ປະຢັດເວລາ ແລະ ເພີ່ມຄວາມສະດວກສະບາຍດ້ວຍແພລດຟອມຂອງພວກເຮົາ.
-            ເຊື່ອມຕໍ່ການເດີນທາງຂອງທ່ານຕັ້ງແຕ່ສະໜາມບິນ, ລົດໄຟດ່ວນ, ລົດຮັບສົ່ງ, ໂຮງແຮມ
+            ເຊື່ອມຕໍ່ການເດີນທາງຂອງທ່ານຕັ້ງແຕ່ສະໜາມບິນ, ລົດໄຟ, ລົດຮັບສົ່ງ, ໂຮງແຮມ - ທີພັກ
             ຈົນຮອດສະຖານທີ່ທ່ອງທ່ຽວ ໄວ້ໃນບ່ອນດຽວ.
           </p>
         </div>
@@ -853,7 +853,7 @@ function closeVideo() {
 }
 
 .glass-navbar-wrap__logo-img {
-  height: 40px;
+  height: 80px;
   width: auto;
   object-fit: contain;
 }

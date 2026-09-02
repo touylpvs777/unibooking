@@ -4,7 +4,10 @@ import {
   API_CREATE_HOTEL,
   API_CREATE_TOUR,
   API_CREATE_CAR_RENTAL,
-  apiServiceDeactivate
+  API_UPLOAD_MULTIPLE,
+  apiServiceDeactivate,
+  apiServiceImages,
+  apiServiceImage
 } from '../utils/api';
 
 // Which vertical endpoint creates a Service of this type -- each atomically
@@ -54,6 +57,12 @@ export const useInventoryStore = defineStore('inventory', {
     // Row-level busy flag: the id currently being deactivated, so only
     // that row's Delete button shows a spinner instead of the whole table.
     deactivatingId: null,
+    // True while a batch of files is being uploaded + attached to whichever
+    // service the Images modal currently has open.
+    isUploadingImages: false,
+    // The id of the image currently being removed, so only that thumbnail
+    // shows a spinner instead of the whole modal.
+    removingImageId: null,
     error: null
   }),
 
@@ -90,12 +99,12 @@ export const useInventoryStore = defineStore('inventory', {
       try {
         const { $unibookingApi } = useNuxtApp();
         const { data } = await $unibookingApi.post(endpoint, payload);
-        // A freshly created service has no InventoryPricing rows yet
-        // (pricing/availability is set separately, per date, via
-        // POST /services/:id/inventory -- not part of this form) --
-        // `inventory: []` matches what GET /services/me itself returns so
-        // the table's `record.inventory?.[0]` lookup needs no extra branch.
-        this.services.unshift({ inventory: [], ...data });
+        // A freshly created service has no InventoryPricing rows or images
+        // yet (both are set separately -- pricing via POST
+        // /services/:id/inventory, photos via uploadServiceImages above) --
+        // matches what GET /services/me itself returns so the table's
+        // `record.inventory?.[0]` / `record.images` lookups need no extra branch.
+        this.services.unshift({ inventory: [], images: [], ...data });
         return data;
       } catch (err) {
         this.error = resolveServiceErrorMessage(err);
@@ -123,6 +132,56 @@ export const useInventoryStore = defineStore('inventory', {
         throw err;
       } finally {
         this.deactivatingId = null;
+      }
+    },
+
+    // Two calls in sequence: raw bytes go to POST /uploads/multiple (no
+    // domain link yet), then the URLs it returns get attached to this
+    // service via POST /services/:id/images. `files` is a plain array of
+    // native File objects (from an <input type="file" multiple"> change
+    // event) -- axios serializes each into one multipart field named
+    // 'files', matching FilesInterceptor('files', ...) on the backend.
+    async uploadServiceImages(serviceId, files) {
+      this.isUploadingImages = true;
+      this.error = null;
+
+      try {
+        const { $unibookingApi } = useNuxtApp();
+        const formData = new FormData();
+        for (const file of files) formData.append('files', file);
+
+        const { data: uploaded } = await $unibookingApi.post(API_UPLOAD_MULTIPLE, formData);
+        const { data: images } = await $unibookingApi.post(apiServiceImages(serviceId), {
+          urls: uploaded.map((f) => f.url)
+        });
+
+        const service = this.services.find((s) => s.id === serviceId);
+        if (service) service.images = [...(service.images || []), ...images];
+
+        return images;
+      } catch (err) {
+        this.error = resolveServiceErrorMessage(err);
+        throw err;
+      } finally {
+        this.isUploadingImages = false;
+      }
+    },
+
+    async removeServiceImage(serviceId, imageId) {
+      this.removingImageId = imageId;
+      this.error = null;
+
+      try {
+        const { $unibookingApi } = useNuxtApp();
+        await $unibookingApi.delete(apiServiceImage(serviceId, imageId));
+
+        const service = this.services.find((s) => s.id === serviceId);
+        if (service) service.images = (service.images || []).filter((img) => img.id !== imageId);
+      } catch (err) {
+        this.error = resolveServiceErrorMessage(err);
+        throw err;
+      } finally {
+        this.removingImageId = null;
       }
     }
   }

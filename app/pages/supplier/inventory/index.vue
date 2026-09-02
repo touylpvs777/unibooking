@@ -48,6 +48,10 @@
 
           <template v-else-if="column.key === 'actions'">
             <a-space>
+              <a-button size="small" @click="openImagesModal(record)">
+                <template #icon><PictureOutlined /></template>
+                Images
+              </a-button>
               <a-button size="small" @click="handleEdit">
                 <template #icon><EditOutlined /></template>
                 Edit
@@ -246,13 +250,74 @@
         </template>
       </a-form>
     </a-modal>
+
+    <a-modal
+      v-model:open="isImagesModalOpen"
+      title="ຈັດການຮູບພາບ"
+      :footer="null"
+      @cancel="closeImagesModal"
+    >
+      <div v-if="activeService" class="image-manager">
+        <a-alert
+          v-if="inventoryStore.error"
+          type="error"
+          :message="inventoryStore.error"
+          show-icon
+          closable
+          class="image-manager__error"
+          @close="inventoryStore.error = null"
+        />
+
+        <a-empty v-if="!activeService.images?.length" description="ຍັງບໍ່ມີຮູບພາບ" />
+        <div v-else class="image-manager__grid">
+          <div v-for="img in activeService.images" :key="img.id" class="image-manager__item">
+            <img :src="img.url" :alt="activeService.name" class="image-manager__thumb">
+            <a-popconfirm
+              title="ລຶບຮູບນີ້?"
+              ok-text="ລຶບ"
+              cancel-text="ຍົກເລີກ"
+              @confirm="handleRemoveImage(img.id)"
+            >
+              <a-button
+                size="small"
+                danger
+                shape="circle"
+                class="image-manager__remove"
+                :loading="inventoryStore.removingImageId === img.id"
+              >
+                <template #icon><DeleteOutlined /></template>
+              </a-button>
+            </a-popconfirm>
+          </div>
+        </div>
+
+        <input
+          ref="fileInputRef"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          multiple
+          hidden
+          @change="handleFilesSelected"
+        >
+        <a-button
+          type="primary"
+          block
+          :loading="inventoryStore.isUploadingImages"
+          class="image-manager__upload-btn"
+          @click="fileInputRef?.click()"
+        >
+          <template #icon><UploadOutlined /></template>
+          ອັບໂຫລດຮູບພາບ (ສູງສຸດ 5 ຮູບຕໍ່ຄັ້ງ)
+        </a-button>
+      </div>
+    </a-modal>
   </div>
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
+import { PlusOutlined, EditOutlined, DeleteOutlined, PictureOutlined, UploadOutlined } from '@ant-design/icons-vue'
 import { useInventoryStore } from '~/stores/inventory'
 
 definePageMeta({ layout: 'supplier', middleware: ['supplier'] })
@@ -415,6 +480,54 @@ async function handleDelete(record) {
   }
 }
 
+// --- Images modal ----------------------------------------------------------
+// Tracked by id, not the row object itself -- looked up fresh from
+// inventoryStore.services on every render so the modal stays in sync with
+// uploadServiceImages/removeServiceImage's in-place mutations of that array.
+const isImagesModalOpen = ref(false)
+const activeServiceId = ref(null)
+const fileInputRef = ref(null)
+const activeService = computed(
+  () => inventoryStore.services.find((s) => s.id === activeServiceId.value) || null
+)
+
+function openImagesModal(record) {
+  activeServiceId.value = record.id
+  isImagesModalOpen.value = true
+}
+
+function closeImagesModal() {
+  isImagesModalOpen.value = false
+  activeServiceId.value = null
+  inventoryStore.error = null
+  if (fileInputRef.value) fileInputRef.value.value = ''
+}
+
+async function handleFilesSelected(event) {
+  const files = Array.from(event.target.files || [])
+  if (!files.length || !activeServiceId.value) return
+
+  try {
+    await inventoryStore.uploadServiceImages(activeServiceId.value, files)
+    message.success('ອັບໂຫລດຮູບພາບສຳເລັດ')
+  } catch {
+    // inventoryStore.error is already set and shown via the a-alert above
+  } finally {
+    event.target.value = ''
+  }
+}
+
+async function handleRemoveImage(imageId) {
+  if (!activeServiceId.value) return
+
+  try {
+    await inventoryStore.removeServiceImage(activeServiceId.value, imageId)
+    message.success('ລຶບຮູບພາບແລ້ວ')
+  } catch {
+    // inventoryStore.error is already set and shown via the a-alert above
+  }
+}
+
 onMounted(() => inventoryStore.fetchServices())
 </script>
 
@@ -433,5 +546,40 @@ onMounted(() => inventoryStore.fetchServices())
 
 .supplier-inventory__error {
   margin-bottom: 16px;
+}
+
+.image-manager__error {
+  margin-bottom: 16px;
+}
+
+.image-manager__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.image-manager__item {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+}
+
+.image-manager__thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.image-manager__remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+}
+
+.image-manager__upload-btn {
+  margin-top: 4px;
 }
 </style>

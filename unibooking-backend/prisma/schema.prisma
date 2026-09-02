@@ -137,6 +137,7 @@ model Service {
   transportDetails TransportDetails?
   tourDetails      TourDetails?
   carRentalDetails CarRentalDetails?
+  images           Image[]
 }
 
 // 3a. HotelDetails: attributes specific to ServiceType.HOTEL, split out of
@@ -291,7 +292,23 @@ model Review {
   bookingItem   BookingItem @relation(fields: [bookingItemId], references: [id], onDelete: Cascade)
 }
 
-// 10. Videos: "Our Latest Videos" grid on the homepage.
+// 10. Images: supplier-managed photos for a Service, shown on the public
+// Explore grid (cover only) and Service Details gallery (all of them).
+// Ordered by createdAt -- the first-uploaded image is the de-facto cover
+// photo everywhere, so there's no separate `order`/`isPrimary` column to
+// keep in sync.
+model Image {
+  id        String   @id @default(uuid())
+  serviceId String
+  url       String
+  createdAt DateTime @default(now())
+
+  service   Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([serviceId])
+}
+
+// 11. Videos: "Our Latest Videos" grid on the homepage.
 // thumbnailUrl is optional on purpose -- a video with no thumbnail yet is a
 // real, expected state (footage added before its poster frame is ready),
 // not an error. The frontend (VideoCard.vue) renders a plain gradient

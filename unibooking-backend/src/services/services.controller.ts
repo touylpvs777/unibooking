@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
   Param,
   ParseUUIDPipe,
   Patch,
@@ -9,7 +11,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { InventoryPricing, Role, Service } from '@prisma/client';
+import { Image, InventoryPricing, Role, Service } from '@prisma/client';
 import {
   ServicesService,
   SearchResult,
@@ -18,6 +20,7 @@ import {
 } from './services.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { AddInventoryDto } from './dto/add-inventory.dto';
+import { AddImagesDto } from './dto/add-images.dto';
 import { SearchServicesQueryDto } from './dto/search-services-query.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -79,6 +82,29 @@ export class ServicesController {
     @CurrentUser() user: JwtPayload,
   ): Promise<InventoryPricing[]> {
     return this.servicesService.addInventory(serviceId, dto, user);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.SUPPLIER, Role.ADMIN)
+  @Post(':id/images')
+  addImages(
+    @Param('id', ParseUUIDPipe) serviceId: string,
+    @Body() dto: AddImagesDto,
+    @CurrentUser() user: JwtPayload,
+  ): Promise<Image[]> {
+    return this.servicesService.addImages(serviceId, dto, user);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.SUPPLIER, Role.ADMIN)
+  @Delete(':id/images/:imageId')
+  @HttpCode(204)
+  removeImage(
+    @Param('id', ParseUUIDPipe) serviceId: string,
+    @Param('imageId', ParseUUIDPipe) imageId: string,
+    @CurrentUser() user: JwtPayload,
+  ): Promise<void> {
+    return this.servicesService.removeImage(serviceId, imageId, user);
   }
 
   // Public -- powers the Service Details page. Declared LAST among this

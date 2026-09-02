@@ -18,7 +18,16 @@
     <a-row v-else-if="service" :gutter="[32, 32]">
       <!-- Main content -->
       <a-col :xs="24" :md="16">
-        <img :src="placeholderImage(service.name)" :alt="service.name" class="service-detail-page__image">
+        <a-image-preview-group>
+          <div class="service-detail-page__cover">
+            <a-image :src="galleryImages[0].url" :alt="service.name" />
+          </div>
+          <div v-if="galleryImages.length > 1" class="service-detail-page__thumbs">
+            <div v-for="img in galleryImages.slice(1)" :key="img.id" class="service-detail-page__thumb">
+              <a-image :src="img.url" :alt="service.name" />
+            </div>
+          </div>
+        </a-image-preview-group>
 
         <a-tag :color="typeTagMeta(service.type).color" class="service-detail-page__type-tag">
           {{ typeTagMeta(service.type).text }}
@@ -73,6 +82,11 @@
             <a-descriptions-item label="ຈຳນວນບ່ອນນັ່ງ">{{ service.carRentalDetails.seatingCapacity }}</a-descriptions-item>
           </a-descriptions>
         </template>
+
+        <h2 class="service-detail-page__section-title">ຣີວິວ</h2>
+        <ReviewsReviewList :service-id="service.id" />
+        <a-divider />
+        <ReviewsWriteReviewForm :service-id="service.id" @submitted="reviewsStore.fetchReviews(service.id)" />
       </a-col>
 
       <!-- Reservation card -->
@@ -119,11 +133,13 @@ import { message } from 'ant-design-vue'
 import { EnvironmentOutlined } from '@ant-design/icons-vue'
 import { useServiceDetailStore } from '~/stores/serviceDetail'
 import { useBookingStore } from '~/stores/booking'
+import { useReviewsStore } from '~/stores/reviews'
 
 const route = useRoute()
 const router = useRouter()
 const serviceDetailStore = useServiceDetailStore()
 const bookingStore = useBookingStore()
+const reviewsStore = useReviewsStore()
 
 const service = computed(() => serviceDetailStore.service)
 
@@ -174,6 +190,14 @@ function typeTagMeta(type) {
 function placeholderImage(name) {
   return `https://placehold.co/1000x500/f0f9ff/1e40af?text=${encodeURIComponent(name)}`
 }
+
+// GET /services/:id includes the full gallery, oldest (cover) first (see
+// ServicesService.findOne's allImagesInclude) -- falls back to a single
+// placeholder entry so the template can always assume at least one image.
+const galleryImages = computed(() => {
+  const images = service.value?.images
+  return images?.length ? images : [{ id: 'placeholder', url: placeholderImage(service.value?.name || '') }]
+})
 
 function formatPrice(value) {
   return new Intl.NumberFormat('lo-LA').format(value || 0)
@@ -230,12 +254,43 @@ function handleBookNow() {
   padding: 64px 0;
 }
 
-.service-detail-page__image {
+.service-detail-page__cover {
   width: 100%;
   height: 360px;
-  object-fit: cover;
   border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.service-detail-page__cover :deep(.ant-image),
+.service-detail-page__cover :deep(.ant-image-img) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.service-detail-page__thumbs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
   margin-bottom: 20px;
+}
+
+.service-detail-page__thumb {
+  flex: 0 0 auto;
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.service-detail-page__thumb :deep(.ant-image),
+.service-detail-page__thumb :deep(.ant-image-img) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .service-detail-page__type-tag {

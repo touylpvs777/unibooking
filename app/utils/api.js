@@ -14,6 +14,10 @@ export const API_SEARCH_SERVICES = '/services/search';
 // a real Prisma delete would cascade onto real customers' booking history).
 export const API_MY_SERVICES = '/services/me';
 export const apiServiceDeactivate = (serviceId) => `/services/${serviceId}/deactivate`;
+// Supplier portal: attach already-uploaded image URLs to a service, or
+// remove one -- see unibooking-backend/src/services/dto/add-images.dto.ts.
+export const apiServiceImages = (serviceId) => `/services/${serviceId}/images`;
+export const apiServiceImage = (serviceId, imageId) => `/services/${serviceId}/images/${imageId}`;
 // Public -- the Service Details page (?startDate=&endDate= optionally
 // included as query params, not part of the path -- see ServicesService.findOne).
 export const apiServiceDetail = (serviceId) => `/services/${serviceId}`;
@@ -42,6 +46,11 @@ export const API_SUPPLIER_BOOKINGS = '/bookings/supplier';
 // Payments (unibooking-backend/src/payments/payments.controller.ts)
 export const API_CREATE_CHECKOUT = '/payments/checkout';
 export const apiPaymentStatus = (bookingId) => `/payments/status/${bookingId}`;
+
+// Uploads (unibooking-backend/src/uploads/uploads.controller.ts) -- raw file
+// bytes only, no domain link. The supplier portal uploads here first, then
+// attaches the returned url(s) to a service via apiServiceImages above.
+export const API_UPLOAD_MULTIPLE = '/uploads/multiple';
 
 // Reviews (unibooking-backend/src/reviews/reviews.controller.ts)
 export const API_CREATE_REVIEW = '/reviews';

@@ -1,10 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-// Namespace import, not `import cookieParser from 'cookie-parser'` --
-// this tsconfig doesn't set esModuleInterop, and cookie-parser is a plain
-// CJS `module.exports = fn`, so a default import would resolve to
-// `undefined` at runtime while still type-checking fine.
-import * as cookieParser from 'cookie-parser';
+// `import ... = require(...)`, not `import cookieParser from 'cookie-parser'`
+// or `import * as cookieParser from 'cookie-parser'` -- this tsconfig
+// doesn't set esModuleInterop, and cookie-parser's types declare it via
+// `export =` (a callable function+namespace merge, not an ES default
+// export), which only this import form both type-checks as callable AND
+// resolves to the real callable value at runtime.
+import cookieParser = require('cookie-parser');
 import { AppModule } from './app.module';
 import { PrismaService } from './prisma/prisma.service';
 
@@ -17,7 +19,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { rawBody: true });
 
   // Populates `request.cookies`, which JwtStrategy's cookie extractor reads.
-  app.use(cookieParser.default());
+  app.use(cookieParser());
 
   // The Nuxt frontend calls this API with `credentials: 'include'`, so the
   // browser only attaches/accepts the auth cookie if the server explicitly

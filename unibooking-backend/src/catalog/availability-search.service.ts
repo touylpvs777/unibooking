@@ -39,8 +39,12 @@ interface QualifyingService {
   avgPrice: number;
 }
 
+// `images` capped to 1 (the oldest, i.e. cover photo) -- same reasoning as
+// ServicesService's own searchResultInclude: these rows feed a card list,
+// not a gallery.
 const supplierInclude = {
   supplier: { select: { companyName: true, isVerified: true } },
+  images: { orderBy: { createdAt: 'asc' }, take: 1 },
 } satisfies Prisma.ServiceInclude;
 
 /**

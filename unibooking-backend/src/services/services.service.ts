@@ -7,6 +7,7 @@ import {
 import {
   CarRentalDetails,
   HotelDetails,
+  Image,
   InventoryPricing,
   Prisma,
   Role,
@@ -17,6 +18,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { AddInventoryDto } from './dto/add-inventory.dto';
+import { AddImagesDto } from './dto/add-images.dto';
 import {
   SearchServicesQueryDto,
   ServiceSortBy,
@@ -27,8 +29,18 @@ const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 // What a search result exposes about its supplier -- deliberately not the
 // full Supplier row (no contactEmail/taxId) since this feeds a public endpoint.
+// `images` is capped to 1 (the oldest, i.e. the cover photo) -- a list of
+// cards only ever shows one image each, so there's no reason to ship the
+// full gallery for every row on a search page.
 const searchResultInclude = {
   supplier: { select: { companyName: true, isVerified: true } },
+  images: { orderBy: { createdAt: 'asc' }, take: 1 },
+} satisfies Prisma.ServiceInclude;
+
+// The full gallery, oldest (cover) first -- used by the supplier portal
+// (managing every photo) and the Service Details page (showing all of them).
+const allImagesInclude = {
+  images: { orderBy: { createdAt: 'asc' } },
 } satisfies Prisma.ServiceInclude;
 
 // Powers GET /services/me -- every detail relation is optional since
@@ -41,6 +53,7 @@ export type ServiceWithDetails = Service & {
   carRentalDetails: CarRentalDetails | null;
   transportDetails: TransportDetails | null;
   inventory: InventoryPricing[];
+  images: Image[];
 };
 
 // Powers GET /services/:id -- the public Service Details page. Same
@@ -60,6 +73,7 @@ export type ServiceDetail = Service & {
   // `include.inventory` is passed as `false` otherwise, which Prisma
   // treats as "omit the key entirely," not "included as []".
   inventory?: InventoryPricing[];
+  images: Image[];
 };
 
 export interface SearchResult {
@@ -67,6 +81,7 @@ export interface SearchResult {
     Service & {
       supplier: { companyName: string; isVerified: boolean };
       inventory?: InventoryPricing[];
+      images: Image[];
     }
   >;
   meta: { page: number; limit: number; total: number; totalPages: number };
@@ -134,6 +149,7 @@ export class ServicesService {
           orderBy: { date: 'asc' },
           take: 1,
         },
+        ...allImagesInclude,
       },
       orderBy: { createdAt: 'desc' },
     });
@@ -187,6 +203,50 @@ export class ServicesService {
         }),
       ),
     );
+  }
+
+  /**
+   * Attaches already-uploaded image URLs (see AddImagesDto) to a service --
+   * the client is expected to have gotten these from POST /uploads/multiple
+   * first. Runs as a transaction for the same reason addInventory() does:
+   * a batch of URLs either lands entirely or not at all.
+   */
+  async addImages(
+    serviceId: string,
+    dto: AddImagesDto,
+    user: JwtPayload,
+  ): Promise<Image[]> {
+    await this.assertOwnsService(serviceId, user);
+
+    return this.prisma.$transaction(
+      dto.urls.map((url) =>
+        this.prisma.image.create({ data: { serviceId, url } }),
+      ),
+    );
+  }
+
+  /**
+   * `deleteMany` with both `id` and `serviceId` in the where-clause, not a
+   * plain `delete({ where: { id } })` -- this is what stops a supplier from
+   * deleting an image that exists but belongs to a *different* service (an
+   * IDOR: assertOwnsService above only proves they own `serviceId`, not
+   * that `imageId` is actually one of its images).
+   */
+  async removeImage(
+    serviceId: string,
+    imageId: string,
+    user: JwtPayload,
+  ): Promise<void> {
+    await this.assertOwnsService(serviceId, user);
+
+    const { count } = await this.prisma.image.deleteMany({
+      where: { id: imageId, serviceId },
+    });
+    if (count === 0) {
+      throw new NotFoundException(
+        `Image with id "${imageId}" not found on this service.`,
+      );
+    }
   }
 
   /**
@@ -434,6 +494,7 @@ export class ServicesService {
         inventory: inventoryWhere
           ? { where: inventoryWhere, orderBy: { date: 'asc' } }
           : false,
+        ...allImagesInclude,
       },
     });
 
