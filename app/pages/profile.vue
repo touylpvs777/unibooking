@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <!-- Guarded by definePageMeta below; this only renders once authenticated -->
+  <div v-if="isAuthorized" class="container">
+    <!-- Guarded by middleware/auth.js + this page's own isAuthorized gate below (see script) -->
     <a-card class="profile-header" :bordered="false">
       <div class="profile-header__inner">
         <a-avatar :size="64">{{ userInitial }}</a-avatar>
@@ -105,28 +105,37 @@
       />
     </a-modal>
   </div>
+
+  <div v-else class="profile-loading">
+    <a-spin size="large" />
+  </div>
 </template>
 
 <script setup>
-// Redirect unauthenticated visitors before the page renders
-definePageMeta({
-  middleware: [
-    () => {
-      const authStore = useAuthStore()
-      if (!authStore.isAuthenticated) {
-        return navigateTo('/login')
-      }
-    }
-  ]
-})
+// The actual check now lives in middleware/auth.js (skips on the server --
+// see its own comment for why a hard refresh here previously always
+// bounced to /login even when already logged in). isAuthorized below is
+// this page's own client-side half of the same belt-and-suspenders
+// pattern used by layouts/admin.vue and layouts/supplier.vue, so a hard
+// refresh never flashes real booking history before that check resolves.
+definePageMeta({ middleware: ['auth'] })
 
-// Nuxt/Pinia auto-imports: computed, onMounted, useAuthStore, useBookingStore, navigateTo
+// Nuxt/Pinia auto-imports: computed, onMounted, ref, useAuthStore, useBookingStore, navigateTo
 const authStore = useAuthStore()
 const bookingStore = useBookingStore()
 
+const isAuthorized = ref(false)
 const userInitial = computed(() => authStore.fullName?.charAt(0).toUpperCase() ?? '?')
 
-onMounted(() => {
+onMounted(async () => {
+  await authStore.initAuth()
+
+  if (!authStore.isAuthenticated) {
+    navigateTo('/login')
+    return
+  }
+
+  isAuthorized.value = true
   bookingStore.fetchBookingHistory()
 })
 
@@ -203,6 +212,13 @@ function handleWriteReview(record) {
 .container {
   max-width: 1000px;
   margin: 0 auto;
+}
+
+.profile-loading {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .profile-header {

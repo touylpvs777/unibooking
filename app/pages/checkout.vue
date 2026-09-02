@@ -1,5 +1,5 @@
 <template>
-  <div class="checkout-page">
+  <div v-if="isAuthorized" class="checkout-page">
     <a-row :gutter="32">
       <!-- Left: contact info + dates/units + payment method -->
       <a-col :xs="24" :lg="16">
@@ -86,6 +86,10 @@
           <template v-else>
             <h3 class="summary-card__name">{{ bookingStore.selectedService.name }}</h3>
             <p class="summary-card__location">{{ bookingStore.selectedService.location }}</p>
+            <p v-if="bookingStore.bookingData.startDate && bookingStore.bookingData.endDate" class="summary-card__dates">
+              <CalendarOutlined />
+              {{ bookingStore.bookingData.startDate }} → {{ bookingStore.bookingData.endDate }}
+            </p>
 
             <a-divider />
 
@@ -106,6 +110,15 @@
             </div>
 
             <a-alert v-if="!bookingStore.isBookingReady" type="warning" show-icon message="ກະລຸນາປ້ອນວັນທີ່ ແລະ ຈຳນວນໃຫ້ຄົບຖ້ວນ" class="ready-alert" />
+            <a-alert
+              v-if="bookingStore.error"
+              type="error"
+              show-icon
+              closable
+              :message="bookingStore.error"
+              class="ready-alert"
+              @close="bookingStore.error = null"
+            />
 
             <a-button
               type="primary"
@@ -146,33 +159,44 @@
       </div>
     </a-modal>
   </div>
+
+  <div v-else class="checkout-page-loading">
+    <a-spin size="large" />
+  </div>
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch, onUnmounted } from 'vue'
+import { ref, reactive, computed, watch, onMounted, onUnmounted } from 'vue'
 import { Modal, message } from 'ant-design-vue'
 import QRCode from 'qrcode'
-import { QrcodeOutlined, CreditCardOutlined, HomeOutlined } from '@ant-design/icons-vue'
+import { QrcodeOutlined, CreditCardOutlined, HomeOutlined, CalendarOutlined } from '@ant-design/icons-vue'
 import { useAuthStore } from '~/stores/auth'
 import { useBookingStore } from '~/stores/booking'
 
-// POST /bookings and POST /payments/checkout both require the auth cookie
-definePageMeta({
-  middleware: [
-    () => {
-      const authStore = useAuthStore()
-      if (!authStore.isAuthenticated) {
-        return navigateTo('/login')
-      }
-    }
-  ]
-})
+// POST /bookings and POST /payments/checkout both require the auth cookie.
+// The actual check now lives in middleware/auth.js (skips on the server --
+// see its own comment for why); isAuthorized below is this page's own
+// client-side half of the same belt-and-suspenders pattern used by
+// layouts/admin.vue and layouts/supplier.vue, so a hard refresh here never
+// flashes the real order summary/payment form before that check resolves.
+definePageMeta({ middleware: ['auth'] })
 
 const authStore = useAuthStore()
 const bookingStore = useBookingStore()
 const router = useRouter()
 
+const isAuthorized = ref(false)
 const isSubmitting = ref(false)
+
+onMounted(async () => {
+  await authStore.initAuth()
+
+  if (!authStore.isAuthenticated) {
+    navigateTo('/login')
+  } else {
+    isAuthorized.value = true
+  }
+})
 
 const contactInfo = reactive({ fullName: '', email: '' })
 watch(
@@ -327,6 +351,13 @@ onUnmounted(stopPolling)
   border-radius: 16px;
 }
 
+.checkout-page-loading {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .section-card {
   border-radius: 16px;
   box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
@@ -416,6 +447,15 @@ onUnmounted(stopPolling)
 .summary-card__location {
   font-size: 13px;
   color: #64748b;
+}
+
+.summary-card__dates {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 8px;
 }
 
 .price-row {

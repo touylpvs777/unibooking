@@ -118,9 +118,12 @@ import dayjs from 'dayjs'
 import { message } from 'ant-design-vue'
 import { EnvironmentOutlined } from '@ant-design/icons-vue'
 import { useServiceDetailStore } from '~/stores/serviceDetail'
+import { useBookingStore } from '~/stores/booking'
 
 const route = useRoute()
+const router = useRouter()
 const serviceDetailStore = useServiceDetailStore()
+const bookingStore = useBookingStore()
 
 const service = computed(() => serviceDetailStore.service)
 
@@ -189,14 +192,26 @@ const totalPrice = computed(
   () => (service.value?.inventory ?? []).reduce((sum, row) => sum + Number(row.price), 0)
 )
 
+// Hands off to the existing checkout flow (pages/checkout.vue) the same
+// way pages/hotels.vue's handleBookNow already does: populate
+// bookingStore.selectedService/bookingData directly rather than via URL
+// query params, then navigate -- checkout.vue reads exclusively from this
+// store. `service.value` already carries `.inventory` for the selected
+// range (see fetchWithSelectedDates), matching the shape
+// bookingStore's unitPrice getter expects.
 function handleBookNow() {
   if (!hasSelectedDates.value) {
     message.warning('ກະລຸນາເລືອກວັນທີກ່ອນຈອງ')
     return
   }
-  // No checkout flow exists yet -- honest placeholder, same "not ready
-  // yet" pattern used across the supplier portal.
-  message.info('ດຳເນີນການໄປສູ່ການຊຳລະເງິນ... (Proceed to Checkout)')
+
+  const [start, end] = selectedDates.value
+  bookingStore.selectedService = service.value
+  bookingStore.bookingData.startDate = isoDate(start)
+  bookingStore.bookingData.endDate = isoDate(end)
+  bookingStore.bookingData.units = 1
+
+  router.push('/checkout')
 }
 </script>
 

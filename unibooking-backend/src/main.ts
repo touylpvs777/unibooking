@@ -17,7 +17,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { rawBody: true });
 
   // Populates `request.cookies`, which JwtStrategy's cookie extractor reads.
-  app.use(cookieParser());
+  app.use(cookieParser.default());
 
   // The Nuxt frontend calls this API with `credentials: 'include'`, so the
   // browser only attaches/accepts the auth cookie if the server explicitly
