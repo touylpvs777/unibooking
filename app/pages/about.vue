@@ -5,9 +5,9 @@
       <img src="/images/gd_image_8.webp" alt="Wat Xieng Thong, Luang Prabang" class="page-hero__img">
       <div class="page-hero__scrim" aria-hidden="true" />
       <div class="page-hero__content">
-        <span class="page-hero__tag">OUR STORY</span>
-        <h1 class="page-hero__title">About UniBooking</h1>
-        <p class="page-hero__subtitle">Connecting travelers to the real Laos -- one booking at a time.</p>
+        <span class="page-hero__tag">{{ $t('about.heroTag') }}</span>
+        <h1 class="page-hero__title">{{ $t('about.heroTitle') }}</h1>
+        <p class="page-hero__subtitle">{{ $t('about.heroSubtitle') }}</p>
       </div>
     </section>
 
@@ -15,21 +15,10 @@
       <!-- Story -->
       <a-row :gutter="[48, 32]" class="story-section">
         <a-col :xs="24" :md="12" class="story-section__text">
-          <span class="section-eyebrow">WHO WE ARE</span>
-          <h2 class="section-title">Built in Laos, for Laos travel</h2>
-          <p class="section-body">
-            UniBooking started with a simple idea: booking a trip across Laos --
-            hotels, tours, car rentals, and everything in between -- shouldn't
-            mean juggling five different websites. We bring every part of your
-            journey into one platform, backed by local suppliers who know the
-            country best.
-          </p>
-          <p class="section-body">
-            From the golden temples of Luang Prabang to the rolling hills of
-            Xieng Khouang, we work directly with hotels, tour operators, and
-            drivers across the country so every booking supports a local
-            business.
-          </p>
+          <span class="section-eyebrow">{{ $t('about.whoWeAreEyebrow') }}</span>
+          <h2 class="section-title">{{ $t('about.whoWeAreTitle') }}</h2>
+          <p class="section-body">{{ $t('about.whoWeAreP1') }}</p>
+          <p class="section-body">{{ $t('about.whoWeAreP2') }}</p>
         </a-col>
         <a-col :xs="24" :md="12">
           <img src="/images/pralartsavung%20kao.jpg" alt="Royal Palace grounds, Luang Prabang" class="story-section__img">
@@ -39,34 +28,34 @@
       <!-- Stats -->
       <a-row :gutter="[24, 24]" class="stats-section">
         <a-col :xs="12" :md="6">
-          <a-statistic title="Destinations Covered" :value="18" suffix="ແຂວງ" />
+          <a-statistic :title="$t('about.statsDestinations')" :value="18" suffix="ແຂວງ" />
         </a-col>
         <a-col :xs="12" :md="6">
-          <a-statistic title="Local Partners" :value="200" suffix="+" />
+          <a-statistic :title="$t('about.statsPartners')" :value="200" suffix="+" />
         </a-col>
         <a-col :xs="12" :md="6">
-          <a-statistic title="Happy Travelers" :value="10000" suffix="+" />
+          <a-statistic :title="$t('about.statsTravelers')" :value="10000" suffix="+" />
         </a-col>
         <a-col :xs="12" :md="6">
-          <a-statistic title="Customer Support" value="24/7" />
+          <a-statistic :title="$t('about.statsSupport')" value="24/7" />
         </a-col>
       </a-row>
 
       <!-- Gallery -->
       <section class="gallery-section">
-        <span class="section-eyebrow">THE LANDSCAPE WE BOOK</span>
-        <h2 class="section-title">A country worth discovering</h2>
+        <span class="section-eyebrow">{{ $t('about.galleryEyebrow') }}</span>
+        <h2 class="section-title">{{ $t('about.galleryTitle') }}</h2>
         <a-row :gutter="[24, 24]" class="gallery-section__grid">
           <a-col :xs="24" :sm="12">
             <div class="gallery-tile">
               <img src="/images/thonghaiheen.jpg" alt="Plain of Jars, Xieng Khouang" class="gallery-tile__img">
-              <span class="gallery-tile__caption">Plain of Jars, Xieng Khouang</span>
+              <span class="gallery-tile__caption">{{ $t('about.galleryCaption1') }}</span>
             </div>
           </a-col>
           <a-col :xs="24" :sm="12">
             <div class="gallery-tile">
               <img src="/images/gd_image_33.webp" alt="Rural highlands of Laos" class="gallery-tile__img">
-              <span class="gallery-tile__caption">Rural highlands, Northern Laos</span>
+              <span class="gallery-tile__caption">{{ $t('about.galleryCaption2') }}</span>
             </div>
           </a-col>
         </a-row>
@@ -77,31 +66,31 @@
         <a-col :xs="24" :md="8">
           <a-card :bordered="false" class="value-card">
             <CompassOutlined class="value-card__icon" />
-            <h3 class="value-card__title">Our Mission</h3>
-            <p class="value-card__text">Make booking travel across Laos as easy as booking anywhere else in the world.</p>
+            <h3 class="value-card__title">{{ $t('about.missionTitle') }}</h3>
+            <p class="value-card__text">{{ $t('about.missionText') }}</p>
           </a-card>
         </a-col>
         <a-col :xs="24" :md="8">
           <a-card :bordered="false" class="value-card">
             <TeamOutlined class="value-card__icon" />
-            <h3 class="value-card__title">Our Community</h3>
-            <p class="value-card__text">Every listing comes from a real local supplier -- hotels, guides, and drivers we work with directly.</p>
+            <h3 class="value-card__title">{{ $t('about.communityTitle') }}</h3>
+            <p class="value-card__text">{{ $t('about.communityText') }}</p>
           </a-card>
         </a-col>
         <a-col :xs="24" :md="8">
           <a-card :bordered="false" class="value-card">
             <SafetyCertificateOutlined class="value-card__icon" />
-            <h3 class="value-card__title">Our Promise</h3>
-            <p class="value-card__text">Transparent pricing, verified suppliers, and real support whenever you need it.</p>
+            <h3 class="value-card__title">{{ $t('about.promiseTitle') }}</h3>
+            <p class="value-card__text">{{ $t('about.promiseText') }}</p>
           </a-card>
         </a-col>
       </a-row>
 
       <!-- CTA -->
       <section class="cta-section">
-        <h2 class="cta-section__title">Ready to start exploring?</h2>
+        <h2 class="cta-section__title">{{ $t('about.ctaTitle') }}</h2>
         <NuxtLink to="/explore">
-          <a-button type="primary" size="large">Explore Services</a-button>
+          <a-button type="primary" size="large">{{ $t('about.ctaButton') }}</a-button>
         </NuxtLink>
       </section>
     </div>

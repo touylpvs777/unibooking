@@ -16,6 +16,8 @@ export interface AdminStats {
   totalUsers: number;
   totalBookings: number;
   totalRevenue: number;
+  averageRating: number | null;
+  bookingsByStatus: Record<BookingStatus, number>;
 }
 
 // Admin needs both sides Phase 04's own BookingsService deliberately
@@ -60,26 +62,44 @@ export class AdminService {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
-   * Three independent aggregates batched into one transaction round trip.
-   * _sum/_count do the counting/summing inside Postgres -- nothing here
-   * pulls every User/Booking row back to Node just to add them up.
+   * One transaction round trip: total counts/sum/avg plus one `count()` per
+   * BookingStatus for the dashboard's status breakdown -- `groupBy` would
+   * do this in a single query, but its TS overloads don't narrow `_count`'s
+   * shape cleanly here, and four cheap indexed counts inside the same
+   * transaction cost nothing extra worth trading type-safety for.
    */
   async getStats(): Promise<AdminStats> {
-    const [totalUsers, totalBookings, revenue] = await this.prisma.$transaction(
-      [
+    const statuses = Object.values(BookingStatus);
+
+    const [totalUsers, totalBookings, revenue, ratingAggregate, ...statusCounts] =
+      await this.prisma.$transaction([
         this.prisma.user.count(),
         this.prisma.booking.count(),
         this.prisma.booking.aggregate({
-          where: { status: BookingStatus.CONFIRMED },
+          // CONFIRMED and COMPLETED both represent money actually taken --
+          // PENDING is an unpaid hold and CANCELLED never converted, so
+          // neither belongs in revenue (same rule the supplier dashboard
+          // applies to its own totalRevenue, see pages/supplier/index.vue).
+          where: { status: { in: [BookingStatus.CONFIRMED, BookingStatus.COMPLETED] } },
           _sum: { totalPrice: true },
         }),
-      ],
-    );
+        this.prisma.review.aggregate({ _avg: { rating: true } }),
+        ...statuses.map((status) => this.prisma.booking.count({ where: { status } })),
+      ]);
+
+    const bookingsByStatus = Object.fromEntries(
+      statuses.map((status, index) => [status, statusCounts[index]]),
+    ) as Record<BookingStatus, number>;
 
     return {
       totalUsers,
       totalBookings,
       totalRevenue: Number(revenue._sum.totalPrice ?? 0),
+      averageRating:
+        ratingAggregate._avg.rating === null
+          ? null
+          : Number(ratingAggregate._avg.rating.toFixed(2)),
+      bookingsByStatus,
     };
   }
 

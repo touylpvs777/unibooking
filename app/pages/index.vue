@@ -26,10 +26,8 @@
                   <a-dropdown v-if="item.key === 'lang'" placement="bottomRight">
                     <a class="glass-navbar__link" @click.prevent="setActiveGlassNav(index)">{{ item.label }}</a>
                     <template #overlay>
-                      <a-menu @click="({ key }) => langStore.setLang(key)">
-                        <a-menu-item key="EN">EN</a-menu-item>
-                        <a-menu-item key="Lao">Lao</a-menu-item>
-                        <a-menu-item key="Thai">Thai</a-menu-item>
+                      <a-menu @click="({ key }) => setLocale(key)">
+                        <a-menu-item v-for="loc in locales" :key="loc.code">{{ loc.name }}</a-menu-item>
                       </a-menu>
                     </template>
                   </a-dropdown>
@@ -51,10 +49,10 @@
         </header>
 
         <div class="hero-copy">
-          <span class="hero-copy__tag">LANDMARK</span>
+          <span class="hero-copy__tag">{{ $t('hero.tag') }}</span>
           <h1 class="hero-copy__title">{{ heroSlides[heroSlide].title }}</h1>
-          <p class="hero-copy__subtitle">{{ heroSlides[heroSlide].subtitle }} · Discover Laos through places worth remembering.</p>
-          <a href="#services" class="hero-copy__button">ເລີ່ມຕົ້ນ</a>
+          <p class="hero-copy__subtitle">{{ heroSlides[heroSlide].subtitle }} · {{ $t('hero.subtitleSuffix') }}</p>
+          <a href="#services" class="hero-copy__button">{{ $t('hero.cta') }}</a>
         </div>
 
         <div class="hero-nav-controls">
@@ -323,7 +321,6 @@ import {
 } from '@ant-design/icons-vue'
 import { useAuthStore } from '~/stores/auth'
 import { useVideosStore } from '~/stores/videos'
-import { useLangStore } from '~/stores/lang'
 
 // Hides the persistent site header on desktop (see site-header--hero-mode in
 // app/layouts/default.vue) since the floating hero card below carries its own
@@ -331,23 +328,31 @@ import { useLangStore } from '~/stores/lang'
 definePageMeta({ hideSiteHeader: true })
 
 const authStore = useAuthStore()
-const langStore = useLangStore()
+
+// useI18n is auto-imported by @nuxtjs/i18n (see nuxt.config.ts). `locales`
+// is the configured list ({code, name}[]), used both for the dropdown
+// itself and to resolve the current locale's display name below.
+const { t, locale, locales, setLocale } = useI18n()
+const currentLocaleName = computed(
+  () => locales.value.find((l) => l.code === locale.value)?.name ?? locale.value
+)
 
 // --- Glass navbar: sliding indicator ----------------------------------
-// heroNavItems is a computed list (not a static array) because two of its
-// entries -- the lang label and the login/profile link -- depend on
-// reactive state (langStore.current, authStore.isAuthenticated), so the DOM
-// node widths the indicator measures can change out from under it.
+// heroNavItems is a computed list (not a static array) because several of
+// its entries -- the translated labels, the lang label, and the
+// login/profile link -- depend on reactive state (locale, currentLocaleName,
+// authStore.isAuthenticated), so the DOM node widths the indicator measures
+// can change out from under it.
 const heroNavItems = computed(() => [
-  { key: 'home', label: 'Home', to: '/' },
-  { key: 'about', label: 'About Us', to: '/about' },
-  { key: 'premium', label: 'Premium', to: '/premium' },
-  { key: 'blogs', label: 'Blogs', to: '/blogs' },
-  { key: 'lang', label: `🌐 ${langStore.current}` },
-  { key: 'explore', label: 'Explore', to: '/explore' },
+  { key: 'home', label: t('nav.home'), to: '/' },
+  { key: 'about', label: t('nav.about'), to: '/about' },
+  { key: 'premium', label: t('nav.premium'), to: '/premium' },
+  { key: 'blogs', label: t('nav.blogs'), to: '/blogs' },
+  { key: 'lang', label: `🌐 ${currentLocaleName.value}` },
+  { key: 'explore', label: t('nav.explore'), to: '/explore' },
   authStore.isAuthenticated
     ? { key: 'login', label: authStore.fullName, to: '/profile' }
-    : { key: 'login', label: 'Login', to: '/login' }
+    : { key: 'login', label: t('nav.login'), to: '/login' }
 ])
 
 const glassNavItemRefs = ref([])

@@ -1,5 +1,6 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
+  IsArray,
   IsDateString,
   IsEnum,
   IsInt,
@@ -17,14 +18,30 @@ export enum ServiceSortBy {
   NEWEST = 'newest',
 }
 
+/** Accepts `?types=HOTEL,TOUR` or repeated `?types=HOTEL&types=TOUR` -- same
+ * convention as HotelSearchDto's own `amenities` transform. */
+function toStringArray({ value }: { value: unknown }): string[] | undefined {
+  if (value === undefined) return undefined;
+  const raw = Array.isArray(value) ? value : [value];
+  return raw.flatMap((entry) => String(entry).split(',')).map((s) => s.trim()).filter(Boolean);
+}
+
 export class SearchServicesQueryDto {
   @IsOptional()
   @IsString()
   location?: string;
 
+  /**
+   * The Explore page's "Categories" filter -- a checkbox group, so this is
+   * an array (any-of), not a single value. Validated as an array of
+   * ServiceType strings rather than IsEnum-per-element so an unknown value
+   * 400s with a clear message instead of silently matching nothing.
+   */
   @IsOptional()
-  @IsEnum(ServiceType)
-  type?: ServiceType;
+  @Transform(toStringArray)
+  @IsArray()
+  @IsEnum(ServiceType, { each: true })
+  types?: ServiceType[];
 
   /**
    * startDate/endDate must be supplied together -- enforced in
@@ -56,6 +73,16 @@ export class SearchServicesQueryDto {
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   maxPrice?: number;
+
+  /** Only services whose average review rating is >= this qualify. Rating
+   * lives on Review, not Service, so this is resolved via a separate
+   * aggregate query -- see ServicesService.getRatingQualifyingServiceIds. */
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @Max(5)
+  minRating?: number;
 
   @IsOptional()
   @IsEnum(ServiceSortBy)

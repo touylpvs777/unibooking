@@ -12,6 +12,7 @@
   "dependencies": {
     "@ant-design-vue/nuxt": "^1.4.6",
     "@ant-design/icons-vue": "^7.0.1",
+    "@nuxtjs/i18n": "^10.6.0",
     "@pinia/nuxt": "^1.0.2",
     "@willsoto/nestjs-prometheus": "^6.1.0",
     "ant-design-vue": "^4.2.6",

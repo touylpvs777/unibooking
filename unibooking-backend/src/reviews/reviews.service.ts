@@ -1,6 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { BookingStatus, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { SupplierOwnershipService } from '../catalog/supplier-ownership.service';
 import type { JwtPayload } from '../auth/strategies/jwt.strategy';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { ReviewsQueryDto } from './dto/reviews-query.dto';
@@ -26,6 +27,11 @@ export interface ReviewsResult {
   reviewCount: number;
 }
 
+export interface SupplierRatingSummary {
+  averageRating: number | null;
+  reviewCount: number;
+}
+
 /**
  * "John D." -- first name plus last-initial, not the full last name. This is
  * a public endpoint (GET /services/:serviceId/reviews needs no auth), so
@@ -45,7 +51,10 @@ function toReviewDto(review: ReviewRow): ReviewDto {
 
 @Injectable()
 export class ReviewsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly supplierOwnership: SupplierOwnershipService,
+  ) {}
 
   /**
    * Review is keyed by bookingItemId (unique), not serviceId -- see the
@@ -115,6 +124,33 @@ export class ReviewsService {
       meta: { page, limit, total, totalPages: Math.ceil(total / limit) },
       averageRating: aggregate._avg.rating === null ? null : Number(aggregate._avg.rating.toFixed(2)),
       reviewCount: total,
+    };
+  }
+
+  /**
+   * Powers the supplier dashboard's "Average Rating" stat -- every review
+   * across every service this supplier owns, not scoped to one service
+   * (unlike findForService above). `requestedSupplierId` is only honoured
+   * for ADMIN, same escape hatch as ServicesService/BookingsService.
+   */
+  async getSupplierSummary(
+    user: JwtPayload,
+    requestedSupplierId?: string,
+  ): Promise<SupplierRatingSummary> {
+    const supplierId = await this.supplierOwnership.resolveSupplierId(
+      user,
+      requestedSupplierId,
+    );
+
+    const aggregate = await this.prisma.review.aggregate({
+      where: { bookingItem: { inventoryPricing: { service: { supplierId } } } },
+      _avg: { rating: true },
+      _count: true,
+    });
+
+    return {
+      averageRating: aggregate._avg.rating === null ? null : Number(aggregate._avg.rating.toFixed(2)),
+      reviewCount: aggregate._count,
     };
   }
 }

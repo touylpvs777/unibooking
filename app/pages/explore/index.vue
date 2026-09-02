@@ -14,17 +14,11 @@
           @search="runSearch"
         />
 
-        <a-radio-group v-model:value="filters.type" button-style="solid" size="large" @change="runSearch">
-          <a-radio-button :value="undefined">ທັງໝົດ</a-radio-button>
-          <a-radio-button value="HOTEL">Room</a-radio-button>
-          <a-radio-button value="TOUR">Tour</a-radio-button>
-          <a-radio-button value="CAR_RENTAL">Car Rental</a-radio-button>
-        </a-radio-group>
-
         <!-- Optional -- price only ever comes back from GET /services/search
              when a date range is given (see priceLabel()'s comment below),
              so picking dates here is what turns "see price in details" into
-             a real per-night rate on every card. -->
+             a real per-night rate on every card, and is also what unlocks
+             the price-range filter in the sidebar (see hasSelectedDates). -->
         <a-range-picker
           v-model:value="filters.dates"
           size="large"
@@ -45,68 +39,134 @@
       @close="exploreStore.error = null"
     />
 
-    <p v-if="!exploreStore.isLoading && exploreStore.services.length" class="explore-page__count">
-      ພົບ {{ exploreStore.meta.total }} ບໍລິການ
-    </p>
-
-    <!-- Loading: a skeleton grid matching the real card grid's shape,
-         instead of a single centered spinner, so the layout doesn't jump
-         once results arrive. -->
-    <a-row v-if="exploreStore.isLoading" :gutter="[24, 24]">
-      <a-col v-for="n in 8" :key="n" :xs="24" :sm="12" :md="8" :lg="6">
-        <a-card :loading="true" class="service-card" />
-      </a-col>
-    </a-row>
-
-    <a-empty
-      v-else-if="!exploreStore.services.length"
-      description="ບໍ່ພົບບໍລິການທີ່ຕົງກັບການຄົ້ນຫາ"
-      class="explore-page__empty"
-    />
-
-    <a-row v-else :gutter="[24, 24]">
-      <a-col v-for="service in exploreStore.services" :key="service.id" :xs="24" :sm="12" :md="8" :lg="6">
-        <a-card class="service-card" :bordered="false" :body-style="{ padding: '16px' }">
-          <template #cover>
-            <img :src="coverImage(service)" :alt="service.name" class="service-card__image">
-          </template>
-
-          <a-tag :color="typeTagMeta(service.type).color" class="service-card__type-tag">
-            {{ typeTagMeta(service.type).text }}
-          </a-tag>
-
-          <h3 class="service-card__title">{{ service.name }}</h3>
-
-          <p class="service-card__location">
-            <EnvironmentOutlined />
-            {{ service.location }}
-          </p>
-
-          <div class="service-card__footer">
-            <span class="service-card__price">{{ priceLabel(service) }}</span>
-            <NuxtLink :to="detailsLink(service)">
-              <a-button type="primary">View Details</a-button>
-            </NuxtLink>
+    <a-row :gutter="[24, 24]">
+      <!-- Filters sidebar -->
+      <a-col :xs="24" :md="7" :lg="6">
+        <a-card title="ໂຕກັ່ນຕອງ" :bordered="false" class="filters-sidebar">
+          <div class="filter-group">
+            <h4 class="filter-group__title">ໝວດໝູ່</h4>
+            <a-checkbox-group v-model:value="filters.types" class="filter-group__checkboxes" @change="runSearch">
+              <a-checkbox value="HOTEL">Room</a-checkbox>
+              <a-checkbox value="TOUR">Tour</a-checkbox>
+              <a-checkbox value="CAR_RENTAL">Car Rental</a-checkbox>
+            </a-checkbox-group>
           </div>
+
+          <a-divider class="filter-group__divider" />
+
+          <div class="filter-group">
+            <h4 class="filter-group__title">ຊ່ວງລາຄາ (ຕໍ່ຄືນ)</h4>
+            <a-slider
+              v-model:value="filters.priceRange"
+              range
+              :min="0"
+              :max="PRICE_SLIDER_MAX"
+              :step="50000"
+              :disabled="!hasSelectedDates"
+              :tip-formatter="(v) => `₭${formatPrice(v)}`"
+              @afterChange="runSearch"
+            />
+            <div class="filter-group__price-labels">
+              <span>₭{{ formatPrice(filters.priceRange[0]) }}</span>
+              <span>₭{{ formatPrice(filters.priceRange[1]) }}</span>
+            </div>
+            <p v-if="!hasSelectedDates" class="filter-group__hint">
+              ເລືອກວັນທີກ່ອນເພື່ອນຳໃຊ້ໂຕກັ່ນຕອງລາຄາ
+            </p>
+          </div>
+
+          <a-divider class="filter-group__divider" />
+
+          <div class="filter-group">
+            <h4 class="filter-group__title">ຄະແນນລີວິວຂັ້ນຕ່ຳ</h4>
+            <a-rate v-model:value="filters.minRating" @change="runSearch" />
+            <p v-if="filters.minRating" class="filter-group__hint">{{ filters.minRating }} ດາວຂຶ້ນໄປ</p>
+          </div>
+
+          <a-button block class="filters-sidebar__reset" @click="resetFilters">ລ້າງໂຕກັ່ນຕອງ</a-button>
         </a-card>
+      </a-col>
+
+      <!-- Results -->
+      <a-col :xs="24" :md="17" :lg="18">
+        <p v-if="!exploreStore.isLoading && exploreStore.services.length" class="explore-page__count">
+          ພົບ {{ exploreStore.meta.total }} ບໍລິການ
+        </p>
+
+        <!-- Loading: a skeleton grid matching the real card grid's shape,
+             instead of a single centered spinner, so the layout doesn't jump
+             once results arrive. -->
+        <a-row v-if="exploreStore.isLoading" :gutter="[24, 24]">
+          <a-col v-for="n in 8" :key="n" :xs="24" :sm="12" :lg="8">
+            <a-card :loading="true" class="service-card" />
+          </a-col>
+        </a-row>
+
+        <a-empty
+          v-else-if="!exploreStore.services.length"
+          description="ບໍ່ພົບບໍລິການທີ່ຕົງກັບການຄົ້ນຫາ"
+          class="explore-page__empty"
+        />
+
+        <a-row v-else :gutter="[24, 24]">
+          <a-col v-for="service in exploreStore.services" :key="service.id" :xs="24" :sm="12" :lg="8">
+            <a-card class="service-card" :bordered="false" :body-style="{ padding: '16px' }">
+              <template #cover>
+                <img :src="coverImage(service)" :alt="service.name" class="service-card__image">
+              </template>
+
+              <a-tag :color="typeTagMeta(service.type).color" class="service-card__type-tag">
+                {{ typeTagMeta(service.type).text }}
+              </a-tag>
+
+              <h3 class="service-card__title">{{ service.name }}</h3>
+
+              <p class="service-card__location">
+                <EnvironmentOutlined />
+                {{ service.location }}
+              </p>
+
+              <div class="service-card__footer">
+                <span class="service-card__price">{{ priceLabel(service) }}</span>
+                <NuxtLink :to="detailsLink(service)">
+                  <a-button type="primary">View Details</a-button>
+                </NuxtLink>
+              </div>
+            </a-card>
+          </a-col>
+        </a-row>
       </a-col>
     </a-row>
   </div>
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { computed, reactive } from 'vue'
 import { EnvironmentOutlined } from '@ant-design/icons-vue'
 import { useExploreStore } from '~/stores/explore'
 
 const exploreStore = useExploreStore()
 
+// ₭5,000,000/night is a generous ceiling for a per-night rate on this
+// platform -- the slider's own max, and also what "untouched" looks like
+// (see runSearch: the upper handle left at this value means "no upper
+// bound", not "cap at exactly 5,000,000").
+const PRICE_SLIDER_MAX = 5000000
+
 const filters = reactive({
   location: '',
-  type: undefined,
+  // Checkbox-group "Categories" filter -- ServiceType values, any-of. Empty
+  // means "all types", matching the old radio-group's "ທັງໝົດ" option.
+  types: [],
   // a-range-picker's v-model is [Dayjs, Dayjs] | [] -- see isoDate() below.
-  dates: []
+  dates: [],
+  priceRange: [0, PRICE_SLIDER_MAX],
+  // a-rate's v-model -- 0 means "no minimum" (allowClear's default lets a
+  // second click on the same star reset back to 0).
+  minRating: 0
 })
+
+const hasSelectedDates = computed(() => (filters.dates || []).length === 2)
 
 // a-range-picker/a-date-picker values are Dayjs instances, which -- like
 // native Date -- expose toISOString(). Same helper as
@@ -117,12 +177,31 @@ function isoDate(value) {
 
 function runSearch() {
   const [start, end] = filters.dates || []
+  const startDate = isoDate(start)
+  const endDate = isoDate(end)
+  const datesSelected = Boolean(startDate && endDate)
+
   exploreStore.search({
     location: filters.location,
-    type: filters.type,
-    startDate: isoDate(start),
-    endDate: isoDate(end)
+    types: filters.types,
+    startDate,
+    endDate,
+    // minPrice/maxPrice require a date range on the backend (price is set
+    // per night, not per service) -- only sent when dates are actually
+    // selected, and only when the slider's been moved off its full range
+    // (an untouched slider means "no price filter" here, not "0 to
+    // PRICE_SLIDER_MAX").
+    minPrice: datesSelected && filters.priceRange[0] > 0 ? filters.priceRange[0] : undefined,
+    maxPrice: datesSelected && filters.priceRange[1] < PRICE_SLIDER_MAX ? filters.priceRange[1] : undefined,
+    minRating: filters.minRating || undefined
   })
+}
+
+function resetFilters() {
+  filters.types = []
+  filters.priceRange = [0, PRICE_SLIDER_MAX]
+  filters.minRating = 0
+  runSearch()
 }
 
 onMounted(runSearch)
@@ -236,6 +315,57 @@ function detailsLink(service) {
 
 .explore-page__empty {
   margin-top: 48px;
+}
+
+.filters-sidebar {
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+  position: sticky;
+  top: 24px;
+}
+
+.filters-sidebar :deep(.ant-card-head-title) {
+  color: #14294f;
+  font-weight: 700;
+}
+
+.filter-group {
+  margin-bottom: 4px;
+}
+
+.filter-group__divider {
+  margin: 16px 0;
+}
+
+.filter-group__title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #14294f;
+  margin: 0 0 12px;
+}
+
+.filter-group__checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-group__price-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.filter-group__hint {
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 8px 0 0;
+}
+
+.filters-sidebar__reset {
+  margin-top: 16px;
 }
 
 .service-card {

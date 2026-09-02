@@ -5,9 +5,9 @@
       <img src="/images/Muaengfuaeng.webp" alt="Luxury lake resort, Laos" class="page-hero__img">
       <div class="page-hero__scrim" aria-hidden="true" />
       <div class="page-hero__content">
-        <span class="page-hero__tag">UNIBOOKING PREMIUM</span>
-        <h1 class="page-hero__title">Travel Laos, Elevated</h1>
-        <p class="page-hero__subtitle">Exclusive rates, curated stays, and priority support for members.</p>
+        <span class="page-hero__tag">{{ $t('premium.heroTag') }}</span>
+        <h1 class="page-hero__title">{{ $t('premium.heroTitle') }}</h1>
+        <p class="page-hero__subtitle">{{ $t('premium.heroSubtitle') }}</p>
       </div>
     </section>
 
@@ -17,54 +17,54 @@
         <a-col :xs="12" :md="6">
           <a-card :bordered="false" class="perk-card">
             <CrownOutlined class="perk-card__icon" />
-            <h3 class="perk-card__title">Exclusive Rates</h3>
-            <p class="perk-card__text">Member-only pricing on top hotels and tours.</p>
+            <h3 class="perk-card__title">{{ $t('premium.perkExclusiveTitle') }}</h3>
+            <p class="perk-card__text">{{ $t('premium.perkExclusiveText') }}</p>
           </a-card>
         </a-col>
         <a-col :xs="12" :md="6">
           <a-card :bordered="false" class="perk-card">
             <CustomerServiceOutlined class="perk-card__icon" />
-            <h3 class="perk-card__title">Priority Support</h3>
-            <p class="perk-card__text">A dedicated line whenever you need help, day or night.</p>
+            <h3 class="perk-card__title">{{ $t('premium.perkSupportTitle') }}</h3>
+            <p class="perk-card__text">{{ $t('premium.perkSupportText') }}</p>
           </a-card>
         </a-col>
         <a-col :xs="12" :md="6">
           <a-card :bordered="false" class="perk-card">
             <StarOutlined class="perk-card__icon" />
-            <h3 class="perk-card__title">Curated Stays</h3>
-            <p class="perk-card__text">Handpicked hotels and villas, vetted for quality.</p>
+            <h3 class="perk-card__title">{{ $t('premium.perkCuratedTitle') }}</h3>
+            <p class="perk-card__text">{{ $t('premium.perkCuratedText') }}</p>
           </a-card>
         </a-col>
         <a-col :xs="12" :md="6">
           <a-card :bordered="false" class="perk-card">
             <SafetyCertificateOutlined class="perk-card__icon" />
-            <h3 class="perk-card__title">Verified Partners</h3>
-            <p class="perk-card__text">Every supplier vetted, every booking protected.</p>
+            <h3 class="perk-card__title">{{ $t('premium.perkVerifiedTitle') }}</h3>
+            <p class="perk-card__text">{{ $t('premium.perkVerifiedText') }}</p>
           </a-card>
         </a-col>
       </a-row>
 
       <!-- Gallery -->
       <section class="showcase-section">
-        <span class="section-eyebrow">EXCLUSIVE EXPERIENCES</span>
-        <h2 class="section-title">Journeys worth upgrading for</h2>
+        <span class="section-eyebrow">{{ $t('premium.showcaseEyebrow') }}</span>
+        <h2 class="section-title">{{ $t('premium.showcaseTitle') }}</h2>
         <a-row :gutter="[24, 24]" class="showcase-section__grid">
           <a-col :xs="24" :sm="8">
             <div class="showcase-tile">
               <img src="/images/9b15055e-7d8a-4e4d-b1b0-b4d433d8378e.jpeg" alt="High-speed rail through Laos' mountains" class="showcase-tile__img">
-              <span class="showcase-tile__caption">Scenic Rail Journeys</span>
+              <span class="showcase-tile__caption">{{ $t('premium.showcaseCaption1') }}</span>
             </div>
           </a-col>
           <a-col :xs="24" :sm="8">
             <div class="showcase-tile">
               <img src="/images/gd_image_30.webp" alt="Golden temple roof detail, Luang Prabang" class="showcase-tile__img">
-              <span class="showcase-tile__caption">Heritage & Culture</span>
+              <span class="showcase-tile__caption">{{ $t('premium.showcaseCaption2') }}</span>
             </div>
           </a-col>
           <a-col :xs="24" :sm="8">
             <div class="showcase-tile">
               <img src="/images/cropped-39.jpg" alt="Patuxay Monument, Vientiane" class="showcase-tile__img">
-              <span class="showcase-tile__caption">Iconic Landmarks</span>
+              <span class="showcase-tile__caption">{{ $t('premium.showcaseCaption3') }}</span>
             </div>
           </a-col>
         </a-row>
@@ -72,14 +72,11 @@
 
       <!-- Waitlist -->
       <a-card :bordered="false" class="waitlist-card">
-        <a-tag color="gold" class="waitlist-card__tag">COMING SOON</a-tag>
-        <h2 class="waitlist-card__title">UniBooking Premium Membership</h2>
-        <p class="waitlist-card__text">
-          We're putting the finishing touches on our membership program.
-          Join the waitlist and be the first to know when it launches.
-        </p>
+        <a-tag color="gold" class="waitlist-card__tag">{{ $t('premium.waitlistTag') }}</a-tag>
+        <h2 class="waitlist-card__title">{{ $t('premium.waitlistTitle') }}</h2>
+        <p class="waitlist-card__text">{{ $t('premium.waitlistText') }}</p>
         <a-button type="primary" size="large" @click="handleJoinWaitlist">
-          Join the Waitlist
+          {{ $t('premium.waitlistButton') }}
         </a-button>
       </a-card>
     </div>

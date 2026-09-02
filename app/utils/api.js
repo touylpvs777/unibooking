@@ -55,6 +55,9 @@ export const API_UPLOAD_MULTIPLE = '/uploads/multiple';
 // Reviews (unibooking-backend/src/reviews/reviews.controller.ts)
 export const API_CREATE_REVIEW = '/reviews';
 export const apiServiceReviews = (serviceId) => `/services/${serviceId}/reviews`;
+// Supplier dashboard's "Average Rating" stat -- across every service the
+// caller's supplier profile owns.
+export const API_SUPPLIER_RATING_SUMMARY = '/reviews/supplier-summary';
 
 // Videos (unibooking-backend/src/videos/videos.controller.ts)
 export const API_LATEST_VIDEOS = '/videos/latest';

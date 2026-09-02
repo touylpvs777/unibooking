@@ -21,16 +21,16 @@
             class="nav-menu nav-menu--desktop"
           >
             <a-menu-item key="home">
-              <NuxtLink to="/">Home</NuxtLink>
+              <NuxtLink to="/">{{ $t('nav.home') }}</NuxtLink>
             </a-menu-item>
             <a-menu-item key="explore">
-              <NuxtLink to="/explore">Explore</NuxtLink>
+              <NuxtLink to="/explore">{{ $t('nav.explore') }}</NuxtLink>
             </a-menu-item>
             <a-menu-item key="hotels">
-              <NuxtLink to="/hotels">Hotels</NuxtLink>
+              <NuxtLink to="/hotels">{{ $t('nav.hotels') }}</NuxtLink>
             </a-menu-item>
             <a-menu-item key="transport">
-              <NuxtLink to="/transport">Transport</NuxtLink>
+              <NuxtLink to="/transport">{{ $t('nav.transport') }}</NuxtLink>
             </a-menu-item>
           </a-menu>
 
@@ -47,15 +47,11 @@
             <a-dropdown placement="bottomRight" class="user-menu-wrapper--desktop">
               <a class="lang-switcher" @click.prevent>
                 <GlobalOutlined />
-                <span class="lang-switcher__label">{{ langStore.current }}</span>
+                <span class="lang-switcher__label">{{ currentLocaleName }}</span>
               </a>
               <template #overlay>
                 <a-menu @click="({ key }) => handleLangChange(key)">
-                  <a-menu-item key="EN">EN</a-menu-item>
-                  <a-menu-item key="Lao">Lao</a-menu-item>
-                  <a-menu-item key="Thai">Thai</a-menu-item>
-                  <a-menu-item key="Cha">Cha</a-menu-item>
-                  <a-menu-item key="Vt">Vt</a-menu-item>
+                  <a-menu-item v-for="loc in locales" :key="loc.code">{{ loc.name }}</a-menu-item>
                 </a-menu>
               </template>
             </a-dropdown>
@@ -68,18 +64,18 @@
               <template #overlay>
                 <a-menu @click="handleMenuClick">
                   <a-menu-item v-if="canAccessSupplierPortal" key="supplier-portal">
-                    <NuxtLink to="/supplier">Supplier Portal</NuxtLink>
+                    <NuxtLink to="/supplier">{{ $t('nav.supplierPortal') }}</NuxtLink>
                   </a-menu-item>
-                  <a-menu-item key="logout">ອອກຈາກລະບົບ</a-menu-item>
+                  <a-menu-item key="logout">{{ $t('nav.logout') }}</a-menu-item>
                 </a-menu>
               </template>
             </a-dropdown>
             <template v-else>
               <NuxtLink to="/login" class="login-link user-menu-wrapper--desktop">
-                Login
+                {{ $t('nav.login') }}
               </NuxtLink>
               <NuxtLink to="/register" class="register-btn user-menu-wrapper--desktop">
-                Register
+                {{ $t('nav.register') }}
               </NuxtLink>
             </template>
           </ClientOnly>
@@ -110,31 +106,27 @@
         <a-dropdown placement="bottomLeft" class="lang-switcher-drawer">
           <a class="lang-switcher" @click.prevent>
             <GlobalOutlined />
-            <span class="lang-switcher__label">{{ langStore.current }}</span>
+            <span class="lang-switcher__label">{{ currentLocaleName }}</span>
           </a>
           <template #overlay>
             <a-menu @click="({ key }) => handleLangChange(key)">
-              <a-menu-item key="EN">EN</a-menu-item>
-              <a-menu-item key="Lao">Lao</a-menu-item>
-              <a-menu-item key="Thai">Thai</a-menu-item>
-              <a-menu-item key="Cha">Cha</a-menu-item>
-              <a-menu-item key="Vt">Vt</a-menu-item>
+              <a-menu-item v-for="loc in locales" :key="loc.code">{{ loc.name }}</a-menu-item>
             </a-menu>
           </template>
         </a-dropdown>
 
         <a-menu mode="vertical" :selectable="false" @click="handleDrawerMenuClick">
           <a-menu-item key="home">
-            <NuxtLink to="/">Home</NuxtLink>
+            <NuxtLink to="/">{{ $t('nav.home') }}</NuxtLink>
           </a-menu-item>
           <a-menu-item key="explore">
-            <NuxtLink to="/explore">Explore</NuxtLink>
+            <NuxtLink to="/explore">{{ $t('nav.explore') }}</NuxtLink>
           </a-menu-item>
           <a-menu-item key="hotels">
-            <NuxtLink to="/hotels">Hotels</NuxtLink>
+            <NuxtLink to="/hotels">{{ $t('nav.hotels') }}</NuxtLink>
           </a-menu-item>
           <a-menu-item key="transport">
-            <NuxtLink to="/transport">Transport</NuxtLink>
+            <NuxtLink to="/transport">{{ $t('nav.transport') }}</NuxtLink>
           </a-menu-item>
 
           <template v-if="authStore.isAuthenticated">
@@ -142,18 +134,18 @@
               <NuxtLink to="/profile">{{ authStore.fullName }}</NuxtLink>
             </a-menu-item>
             <a-menu-item v-if="canAccessSupplierPortal" key="supplier-portal">
-              <NuxtLink to="/supplier">Supplier Portal</NuxtLink>
+              <NuxtLink to="/supplier">{{ $t('nav.supplierPortal') }}</NuxtLink>
             </a-menu-item>
             <a-menu-item key="logout">
-              ອອກຈາກລະບົບ
+              {{ $t('nav.logout') }}
             </a-menu-item>
           </template>
           <template v-else>
             <a-menu-item key="login">
-              <NuxtLink to="/login">Login</NuxtLink>
+              <NuxtLink to="/login">{{ $t('nav.login') }}</NuxtLink>
             </a-menu-item>
             <a-menu-item key="register">
-              <NuxtLink to="/register">Register</NuxtLink>
+              <NuxtLink to="/register">{{ $t('nav.register') }}</NuxtLink>
             </a-menu-item>
           </template>
         </a-menu>
@@ -279,13 +271,21 @@ import {
   MessageFilled
 } from '@ant-design/icons-vue'
 import { useAuthStore } from '~/stores/auth'
-import { useLangStore } from '~/stores/lang'
 
 const route = useRoute()
 
 // Session restore happens in app/plugins/auth.client.js, before mount
 const authStore = useAuthStore()
-const langStore = useLangStore()
+
+// useI18n/useSwitchLocalePath are auto-imported by @nuxtjs/i18n (see
+// nuxt.config.ts). `locale` is the active code ('en'/'lo'/'th'), `locales`
+// is the configured list ({code, name}[] from i18n.locales) used to render
+// the dropdown itself instead of a hardcoded EN/Lao/Thai/Cha/Vt list that
+// only 3 of which ever had real translations behind them.
+const { locale, locales, setLocale } = useI18n()
+const currentLocaleName = computed(
+  () => locales.value.find((l) => l.code === locale.value)?.name ?? locale.value
+)
 
 const userInitial = computed(() => authStore.fullName?.charAt(0).toUpperCase() ?? '?')
 
@@ -337,8 +337,8 @@ onUnmounted(() => {
   document.removeEventListener('click', handleShareOutsideClick)
 })
 
-function handleLangChange(lang) {
-  langStore.setLang(lang)
+function handleLangChange(code) {
+  setLocale(code)
 }
 
 function handleMenuClick({ key }) {

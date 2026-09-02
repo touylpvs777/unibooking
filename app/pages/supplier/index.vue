@@ -30,12 +30,26 @@
       <a-col :xs="24" :sm="12" :md="8">
         <a-card :loading="bookingsStore.isLoading" class="stat-card">
           <a-statistic
+            title="Total Bookings"
+            :value="bookingsStore.bookings.length"
+            :value-style="{ color: '#14294f', fontWeight: 700 }"
+          >
+            <template #prefix>
+              <ScheduleOutlined class="stat-card__icon stat-card__icon--blue" />
+            </template>
+          </a-statistic>
+        </a-card>
+      </a-col>
+
+      <a-col :xs="24" :sm="12" :md="8">
+        <a-card :loading="bookingsStore.isLoading" class="stat-card">
+          <a-statistic
             title="Pending Bookings"
             :value="pendingBookingsCount"
             :value-style="{ color: '#14294f', fontWeight: 700 }"
           >
             <template #prefix>
-              <ScheduleOutlined class="stat-card__icon stat-card__icon--blue" />
+              <ScheduleOutlined class="stat-card__icon stat-card__icon--gold" />
             </template>
           </a-statistic>
         </a-card>
@@ -55,7 +69,40 @@
           </a-statistic>
         </a-card>
       </a-col>
+
+      <a-col :xs="24" :sm="12" :md="8">
+        <a-card :loading="isRatingLoading" class="stat-card">
+          <a-statistic
+            title="Average Rating"
+            :value="formattedAverageRating"
+            :value-style="{ color: '#14294f', fontWeight: 700 }"
+          >
+            <template #prefix>
+              <StarOutlined class="stat-card__icon stat-card__icon--gold" />
+            </template>
+            <template v-if="ratingSummary?.reviewCount" #suffix>
+              <span class="stat-card__review-count">({{ ratingSummary.reviewCount }})</span>
+            </template>
+          </a-statistic>
+        </a-card>
+      </a-col>
     </a-row>
+
+    <a-card :bordered="false" class="status-breakdown-card">
+      <template #title>Bookings by Status</template>
+
+      <div v-for="status in STATUS_ORDER" :key="status" class="status-breakdown__row">
+        <div class="status-breakdown__label">
+          <span>{{ STATUS_TAG_MAP[status].text }}</span>
+          <span class="status-breakdown__count">{{ bookingsByStatus[status] }}</span>
+        </div>
+        <a-progress
+          :percent="statusPercent(status)"
+          :stroke-color="STATUS_COLOR_MAP[status]"
+          :show-info="false"
+        />
+      </div>
+    </a-card>
 
     <a-card :bordered="false" class="recent-bookings-card">
       <template #title>
@@ -103,10 +150,11 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
-import { ScheduleOutlined, DollarCircleOutlined, AppstoreOutlined } from '@ant-design/icons-vue'
+import { computed, onMounted, ref } from 'vue'
+import { ScheduleOutlined, DollarCircleOutlined, AppstoreOutlined, StarOutlined } from '@ant-design/icons-vue'
 import { useInventoryStore } from '~/stores/inventory'
 import { useSupplierBookingsStore } from '~/stores/supplierBookings'
+import { API_SUPPLIER_RATING_SUMMARY } from '~/utils/api'
 
 definePageMeta({ layout: 'supplier', middleware: ['supplier'] })
 
@@ -135,6 +183,20 @@ const STATUS_TAG_MAP = {
 
 function statusTagMeta(status) {
   return STATUS_TAG_MAP[status] || { color: 'default', text: status }
+}
+
+// Backend BookingStatus enum order -- also drives the "Bookings by Status"
+// progress-bar breakdown below.
+const STATUS_ORDER = ['PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED']
+
+// a-progress's stroke-color takes a real color, not an a-tag color keyword
+// (STATUS_TAG_MAP's 'warning'/'processing'/etc above) -- same palette used
+// elsewhere on this page (green/blue already appear on the stat cards).
+const STATUS_COLOR_MAP = {
+  PENDING: '#d4af37',
+  CONFIRMED: '#2563eb',
+  COMPLETED: '#16a34a',
+  CANCELLED: '#dc2626'
 }
 
 function formatPrice(value) {
@@ -180,6 +242,45 @@ const totalRevenue = computed(() =>
 
 const formattedTotalRevenue = computed(() => new Intl.NumberFormat('lo-LA').format(totalRevenue.value))
 
+// Every status this supplier's bookings list can be in, defaulted to 0 so
+// STATUS_ORDER's progress bars always render (not skip a status with no
+// bookings yet).
+const bookingsByStatus = computed(() => {
+  const counts = Object.fromEntries(STATUS_ORDER.map((status) => [status, 0]))
+  for (const booking of bookingsStore.bookings) {
+    if (booking.status in counts) counts[booking.status] += 1
+  }
+  return counts
+})
+
+function statusPercent(status) {
+  const total = bookingsStore.bookings.length
+  return total === 0 ? 0 : Math.round((bookingsByStatus.value[status] / total) * 100)
+}
+
+// GET /reviews/supplier-summary -- no dedicated store, same as this page's
+// sibling pages/admin/index.vue fetching its own stats inline.
+const ratingSummary = ref(null)
+const isRatingLoading = ref(true)
+
+const formattedAverageRating = computed(() =>
+  ratingSummary.value?.averageRating != null ? ratingSummary.value.averageRating.toFixed(1) : '–'
+)
+
+async function fetchRatingSummary() {
+  isRatingLoading.value = true
+  try {
+    const { $unibookingApi } = useNuxtApp()
+    const { data } = await $unibookingApi.get(API_SUPPLIER_RATING_SUMMARY)
+    ratingSummary.value = data
+  } catch {
+    // Non-critical stat -- the card just shows '–' via formattedAverageRating,
+    // no need for its own a-alert alongside inventoryStore/bookingsStore's.
+  } finally {
+    isRatingLoading.value = false
+  }
+}
+
 // GET /bookings/supplier is already ordered by createdAt desc (see
 // BookingsService.findForSupplier), so the first 5 are the most recent.
 const recentBookings = computed(() => bookingsStore.bookings.slice(0, 5))
@@ -187,6 +288,7 @@ const recentBookings = computed(() => bookingsStore.bookings.slice(0, 5))
 onMounted(() => {
   inventoryStore.fetchServices()
   bookingsStore.fetchBookings()
+  fetchRatingSummary()
 })
 </script>
 
@@ -221,9 +323,38 @@ onMounted(() => {
   color: #16a34a;
 }
 
+.stat-card__review-count {
+  font-size: 13px;
+  font-weight: 400;
+  color: #94a3b8;
+  margin-left: 4px;
+}
+
+.status-breakdown-card,
 .recent-bookings-card {
   margin-top: 24px;
   border-radius: 12px;
+}
+
+.status-breakdown__row {
+  margin-bottom: 16px;
+}
+
+.status-breakdown__row:last-child {
+  margin-bottom: 0;
+}
+
+.status-breakdown__label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #334155;
+  margin-bottom: 6px;
+}
+
+.status-breakdown__count {
+  font-weight: 700;
+  color: #14294f;
 }
 
 .supplier-dashboard__guest-email {

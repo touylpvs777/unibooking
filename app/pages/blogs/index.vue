@@ -5,30 +5,30 @@
       <img src="/images/gd_image_6.webp" alt="Elephants at a forest watering hole, Laos" class="page-hero__img">
       <div class="page-hero__scrim" aria-hidden="true" />
       <div class="page-hero__content">
-        <span class="page-hero__tag">STORIES & GUIDES</span>
-        <h1 class="page-hero__title">The UniBooking Blog</h1>
-        <p class="page-hero__subtitle">Travel stories, guides, and inspiration from around Laos.</p>
+        <span class="page-hero__tag">{{ $t('blogs.heroTag') }}</span>
+        <h1 class="page-hero__title">{{ $t('blogs.heroTitle') }}</h1>
+        <p class="page-hero__subtitle">{{ $t('blogs.heroSubtitle') }}</p>
       </div>
     </section>
 
     <div class="container">
       <a-row :gutter="[24, 24]" class="posts-grid">
-        <a-col v-for="post in posts" :key="post.title" :xs="24" :sm="12" :md="8">
+        <a-col v-for="post in posts" :key="post.titleKey" :xs="24" :sm="12" :md="8">
           <a-card :bordered="false" class="post-card">
             <template #cover>
               <div class="post-card__image-wrap">
-                <img :src="post.image" :alt="post.title" class="post-card__image">
-                <a-tag color="gold" class="post-card__badge">COMING SOON</a-tag>
+                <img :src="post.image" :alt="$t(post.titleKey)" class="post-card__image">
+                <a-tag color="gold" class="post-card__badge">{{ $t('blogs.comingSoonBadge') }}</a-tag>
               </div>
             </template>
-            <h3 class="post-card__title">{{ post.title }}</h3>
-            <p class="post-card__excerpt">{{ post.excerpt }}</p>
+            <h3 class="post-card__title">{{ $t(post.titleKey) }}</h3>
+            <p class="post-card__excerpt">{{ $t(post.excerptKey) }}</p>
           </a-card>
         </a-col>
       </a-row>
 
       <a-empty
-        description="More stories are on the way -- check back soon."
+        :description="$t('blogs.emptyDescription')"
         class="posts-grid__more"
       />
     </div>
@@ -37,21 +37,9 @@
 
 <script setup>
 const posts = [
-  {
-    title: 'Adventure Trails: Biking the Northern Highlands',
-    excerpt: 'Gravel roads, mountain air, and views that stop you mid-pedal -- a first look at Laos on two wheels.',
-    image: '/images/gd_image_7.webp'
-  },
-  {
-    title: 'Chasing Sunrise Over the Fields',
-    excerpt: 'Some of the best travel moments happen before the day even starts. Here\'s why it\'s worth the early alarm.',
-    image: '/images/gd_image_16.png'
-  },
-  {
-    title: 'Drifting the River Through Limestone Cliffs',
-    excerpt: 'A slow boat, still water, and karst peaks rising on either side -- river travel at its most peaceful.',
-    image: '/images/gd_image_44.webp'
-  }
+  { titleKey: 'blogs.post1Title', excerptKey: 'blogs.post1Excerpt', image: '/images/gd_image_7.webp' },
+  { titleKey: 'blogs.post2Title', excerptKey: 'blogs.post2Excerpt', image: '/images/gd_image_16.png' },
+  { titleKey: 'blogs.post3Title', excerptKey: 'blogs.post3Excerpt', image: '/images/gd_image_44.webp' }
 ]
 </script>
 

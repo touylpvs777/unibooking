@@ -40,14 +40,31 @@ export const useExploreStore = defineStore('explore', {
   actions: {
     // `location` is the only free-text filter GET /services/search supports
     // (it's a substring match against Service.location -- there's no
-    // name/description search on the backend). `type` is a ServiceType
-    // value ('HOTEL' | 'TOUR' | 'CAR_RENTAL' | ...) or omitted for "all".
-    // `startDate`/`endDate` (ISO 'YYYY-MM-DD') must both be given or both
-    // omitted -- ServicesService.search() 400s otherwise -- and, when
-    // given, only services with stock on EVERY night in the range qualify
-    // at all (see its own doc comment), so every returned row is really
-    // bookable for that range, not just "has some availability".
-    async search({ location, type, startDate, endDate, page = 1, limit = 12 } = {}) {
+    // name/description search on the backend). `types` is an array of
+    // ServiceType values ('HOTEL' | 'TOUR' | 'CAR_RENTAL' | ...), sent
+    // comma-joined (SearchServicesQueryDto's toStringArray accepts either
+    // that or repeated params -- comma-joined is simplest from axios), or
+    // omitted for "all". `startDate`/`endDate` (ISO 'YYYY-MM-DD') must both
+    // be given or both omitted -- ServicesService.search() 400s otherwise --
+    // and, when given, only services with stock on EVERY night in the range
+    // qualify at all (see its own doc comment), so every returned row is
+    // really bookable for that range, not just "has some availability".
+    // `minPrice`/`maxPrice` additionally require a date range (price is set
+    // per night, not per service -- same reason) -- the caller is
+    // responsible for only sending them alongside dates (see
+    // pages/explore/index.vue's runSearch). `minRating` (1-5) has no such
+    // requirement -- rating is independent of dates.
+    async search({
+      location,
+      types,
+      startDate,
+      endDate,
+      minPrice,
+      maxPrice,
+      minRating,
+      page = 1,
+      limit = 12
+    } = {}) {
       this.isLoading = true;
       this.error = null;
 
@@ -56,9 +73,12 @@ export const useExploreStore = defineStore('explore', {
         const { data } = await $unibookingApi.get(API_SEARCH_SERVICES, {
           params: {
             location: location || undefined,
-            type: type || undefined,
+            types: types?.length ? types.join(',') : undefined,
             startDate: startDate || undefined,
             endDate: endDate || undefined,
+            minPrice: minPrice ?? undefined,
+            maxPrice: maxPrice ?? undefined,
+            minRating: minRating || undefined,
             page,
             limit
           }

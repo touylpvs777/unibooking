@@ -265,11 +265,12 @@ export class ServicesService {
   async search(query: SearchServicesQueryDto): Promise<SearchResult> {
     const {
       location,
-      type,
+      types,
       startDate,
       endDate,
       minPrice,
       maxPrice,
+      minRating,
       sortBy,
       page,
       limit,
@@ -303,11 +304,22 @@ export class ServicesService {
 
     const where: Prisma.ServiceWhereInput = {
       isActive: true,
-      ...(type && { type }),
+      ...(types && types.length > 0 && { type: { in: types } }),
       ...(location && {
         location: { contains: location, mode: 'insensitive' },
       }),
     };
+
+    // Rating lives on Review, not Service, so "which services qualify" is
+    // resolved via a separate aggregate query and folded in as an `id: {in}`
+    // constraint -- null means "no rating filter requested" (skip
+    // entirely), as opposed to an empty array (filter requested, nothing
+    // qualifies).
+    const ratingServiceIds = await this.getRatingQualifyingServiceIds(minRating);
+    if (ratingServiceIds !== null) {
+      if (ratingServiceIds.length === 0) return emptyPage(page, limit);
+      where.id = { in: ratingServiceIds };
+    }
 
     if (!startDate || !endDate) {
       return this.searchCatalog(where, page, limit);
@@ -333,6 +345,12 @@ export class ServicesService {
       _avg: { price: true },
     });
 
+    // ratingServiceIds was already folded into `where.id` above, but that
+    // gets fully replaced by `scopedWhere`'s own `id: {in: qualifying}`
+    // below -- re-intersecting here (rather than relying on `where`) is
+    // what keeps both constraints in effect together.
+    const ratingServiceIdSet = ratingServiceIds && new Set(ratingServiceIds);
+
     const qualifying: QualifyingService[] = availability
       .filter((row) => row._count._all === requestedNights)
       .map((row) => ({
@@ -340,7 +358,8 @@ export class ServicesService {
         avgPrice: Number(row._avg.price ?? 0),
       }))
       .filter((row) => minPrice === undefined || row.avgPrice >= minPrice)
-      .filter((row) => maxPrice === undefined || row.avgPrice <= maxPrice);
+      .filter((row) => maxPrice === undefined || row.avgPrice <= maxPrice)
+      .filter((row) => !ratingServiceIdSet || ratingServiceIdSet.has(row.serviceId));
 
     // Nothing has stock across the whole range (or nothing survives the
     // price filter) -- short-circuit rather than hand Prisma an
@@ -387,6 +406,32 @@ export class ServicesService {
       data,
       meta: { page, limit, total, totalPages: Math.ceil(total / limit) },
     };
+  }
+
+  /**
+   * `null` = no rating filter was requested (caller skips this constraint
+   * entirely); an array (possibly empty) = the actual set of qualifying
+   * service ids. Raw SQL, not `prisma.review.groupBy`, because Review has
+   * no `serviceId` column to group by directly -- it only reaches Service
+   * through bookingItem -> inventoryPricing -> service (see the Review
+   * model in schema.prisma), and Prisma's groupBy can't aggregate across a
+   * relation like that. `$queryRaw`'s tagged-template form parameterizes
+   * `minRating` automatically, so this is not raw-SQL-injectable.
+   */
+  private async getRatingQualifyingServiceIds(
+    minRating: number | undefined,
+  ): Promise<string[] | null> {
+    if (minRating === undefined) return null;
+
+    const rows = await this.prisma.$queryRaw<{ serviceId: string }[]>`
+      SELECT ip."serviceId" AS "serviceId"
+      FROM "Review" r
+      JOIN "BookingItem" bi ON bi.id = r."bookingItemId"
+      JOIN "InventoryPricing" ip ON ip.id = bi."inventoryPricingId"
+      GROUP BY ip."serviceId"
+      HAVING AVG(r.rating) >= ${minRating}
+    `;
+    return rows.map((row) => row.serviceId);
   }
 
   /** No date range given -- a plain catalog browse, newest first, no price context to filter/sort by. */
