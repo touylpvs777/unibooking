@@ -47,7 +47,7 @@
             <a-dropdown placement="bottomRight" class="user-menu-wrapper--desktop">
               <a class="lang-switcher" @click.prevent>
                 <GlobalOutlined />
-                <span class="lang-switcher__label">{{ currentLang }}</span>
+                <span class="lang-switcher__label">{{ langStore.current }}</span>
               </a>
               <template #overlay>
                 <a-menu @click="({ key }) => handleLangChange(key)">
@@ -110,7 +110,7 @@
         <a-dropdown placement="bottomLeft" class="lang-switcher-drawer">
           <a class="lang-switcher" @click.prevent>
             <GlobalOutlined />
-            <span class="lang-switcher__label">{{ currentLang }}</span>
+            <span class="lang-switcher__label">{{ langStore.current }}</span>
           </a>
           <template #overlay>
             <a-menu @click="({ key }) => handleLangChange(key)">
@@ -279,11 +279,13 @@ import {
   MessageFilled
 } from '@ant-design/icons-vue'
 import { useAuthStore } from '~/stores/auth'
+import { useLangStore } from '~/stores/lang'
 
 const route = useRoute()
 
 // Session restore happens in app/plugins/auth.client.js, before mount
 const authStore = useAuthStore()
+const langStore = useLangStore()
 
 const userInitial = computed(() => authStore.fullName?.charAt(0).toUpperCase() ?? '?')
 
@@ -335,10 +337,8 @@ onUnmounted(() => {
   document.removeEventListener('click', handleShareOutsideClick)
 })
 
-const currentLang = ref('Lao')
-
 function handleLangChange(lang) {
-  currentLang.value = lang
+  langStore.setLang(lang)
 }
 
 function handleMenuClick({ key }) {

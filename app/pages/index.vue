@@ -26,7 +26,7 @@
                   <a-dropdown v-if="item.key === 'lang'" placement="bottomRight">
                     <a class="glass-navbar__link" @click.prevent="setActiveGlassNav(index)">{{ item.label }}</a>
                     <template #overlay>
-                      <a-menu @click="({ key }) => (heroLang = key)">
+                      <a-menu @click="({ key }) => langStore.setLang(key)">
                         <a-menu-item key="EN">EN</a-menu-item>
                         <a-menu-item key="Lao">Lao</a-menu-item>
                         <a-menu-item key="Thai">Thai</a-menu-item>
@@ -323,6 +323,7 @@ import {
 } from '@ant-design/icons-vue'
 import { useAuthStore } from '~/stores/auth'
 import { useVideosStore } from '~/stores/videos'
+import { useLangStore } from '~/stores/lang'
 
 // Hides the persistent site header on desktop (see site-header--hero-mode in
 // app/layouts/default.vue) since the floating hero card below carries its own
@@ -330,20 +331,20 @@ import { useVideosStore } from '~/stores/videos'
 definePageMeta({ hideSiteHeader: true })
 
 const authStore = useAuthStore()
-const heroLang = ref('Lao')
+const langStore = useLangStore()
 
 // --- Glass navbar: sliding indicator ----------------------------------
 // heroNavItems is a computed list (not a static array) because two of its
 // entries -- the lang label and the login/profile link -- depend on
-// reactive state (heroLang, authStore.isAuthenticated), so the DOM node
-// widths the indicator measures can change out from under it.
+// reactive state (langStore.current, authStore.isAuthenticated), so the DOM
+// node widths the indicator measures can change out from under it.
 const heroNavItems = computed(() => [
   { key: 'home', label: 'Home', to: '/' },
-  { key: 'about', label: 'About Us', href: '#' },
-  { key: 'premium', label: 'Premium', href: '#' },
-  { key: 'blogs', label: 'Blogs', href: '#' },
-  { key: 'lang', label: `🌐 ${heroLang.value}` },
-  { key: 'explore', label: 'Explore', href: '#services' },
+  { key: 'about', label: 'About Us', to: '/about' },
+  { key: 'premium', label: 'Premium', to: '/premium' },
+  { key: 'blogs', label: 'Blogs', to: '/blogs' },
+  { key: 'lang', label: `🌐 ${langStore.current}` },
+  { key: 'explore', label: 'Explore', to: '/explore' },
   authStore.isAuthenticated
     ? { key: 'login', label: authStore.fullName, to: '/profile' }
     : { key: 'login', label: 'Login', to: '/login' }
