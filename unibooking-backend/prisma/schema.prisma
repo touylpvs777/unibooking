@@ -27,6 +27,7 @@ enum ServiceType {
   BUS
   TOUR
   CAR_RENTAL
+  INSURANCE // travel insurance -- generic like PACKAGE below, no dedicated details table
   PACKAGE // legacy/generic -- not targeted by any vertical controller below
 }
 

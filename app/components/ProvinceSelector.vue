@@ -213,14 +213,15 @@ function selectDistrict(district) {
   color: #d4af37;
   font-size: 14px;
   cursor: pointer;
-  transition: background 0.25s ease, color 0.25s ease, transform 0.2s ease, border-color 0.25s ease;
+  transition: all 0.3s ease;
 }
 
 .province-nav:hover {
   background: #d4af37;
   border-color: #d4af37;
   color: #0a0a0a;
-  transform: scale(1.06);
+  transform: scale(1.1);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.5);
 }
 
 .province-nav:active {
@@ -238,20 +239,28 @@ function selectDistrict(district) {
   font-weight: 600;
   white-space: nowrap;
   cursor: pointer;
-  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .province-pill:hover {
   border-color: rgba(212, 175, 55, 0.5);
+  background: rgba(255, 255, 255, 0.09);
   color: #ffffff;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
 .province-pill.is-active {
   background: linear-gradient(135deg, #d4af37, #c5a059);
   border-color: transparent;
   color: #0a0a0a;
-  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+}
+
+/* Active pill keeps its own lift-free glow on hover -- translateY(-2px)
+   from .province-pill:hover above still applies, this only strengthens the
+   glow so re-hovering the already-active pill doesn't feel like a dead end. */
+.province-pill.is-active:hover {
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.55);
 }
 
 .district-panel {

@@ -1662,16 +1662,19 @@ function closeVideo() {
   width: 64px;
   height: 64px;
   margin: 0 auto 20px;
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(197, 160, 89, 0.35);
   border-radius: 50%;
   color: #c5a059;
   font-size: 26px;
-  transition: background 0.3s ease, color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .value-card:hover .value-card__icon {
   background: #c5a059;
   color: #0a0a0a;
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
 }
 
 .value-card__title {
