@@ -20,16 +20,18 @@ const loadingIndicatorColor = 'repeating-linear-gradient(to right, #c5a059 0%, #
 const themeConfig = {
   token: {
     colorPrimary: '#c5a059',
-    borderRadius: 8
+    borderRadius: 8,
+    // Self-hosted Noto Sans Lao -- see --font-sans in app/assets/css/main.css,
+    // which also carries the @font-face rules themselves. Referencing the
+    // CSS custom property here (rather than repeating the font stack) keeps
+    // antd's generated styles and the rest of the site's typography in sync
+    // from one source instead of two that could drift apart.
+    fontFamily: 'var(--font-sans)'
   }
 }
 </script>
 
 <style>
-body, html, #__nuxt, .ant-btn, .ant-input, .ant-menu, .ant-typography, * {
-  font-family: 'Phetsarath OT', sans-serif !important;
-}
-
 /* Sitewide teal-glow backdrop: a soft cyan-teal radial glow anchored near the
    top of the viewport over a deep navy-black base, fixed so it stays put
    while the page scrolls. Every section background below is transparent so

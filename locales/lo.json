@@ -15,14 +15,177 @@
   "hero": {
     "tag": "ສະຖານທີ່ສຳຄັນ",
     "subtitleSuffix": "ຄົ້ນພົບປະເທດລາວຜ່ານສະຖານທີ່ທີ່ຄວນຈົດຈຳ.",
-    "cta": "ເລີ່ມຕົ້ນ"
+    "cta": "ເລີ່ມຕົ້ນ",
+    "prevSlide": "ຈຸດໝາຍກ່ອນໜ້າ",
+    "nextSlide": "ຈຸດໝາຍຕໍ່ໄປ",
+    "slides": {
+      "patuxay": "ປະຕູໄຊ",
+      "phaThatLuang": "ພະທາດຫຼວງ",
+      "tadKuangSi": "ນ້ຳຕົກຕາດກວາງຊີ",
+      "vangVieng": "ວັງວຽງ",
+      "watPhou": "ວັດພູ",
+      "khonePhapheng": "ຄອນພະເພັງ",
+      "muangNgoi": "ເມືອງງອຍ"
+    }
   },
   "common": {
     "bookNow": "ຈອງເລີຍ",
     "confirm": "ຢືນຢັນ",
     "viewDetails": "ເບິ່ງລາຍລະອຽດ",
     "cancel": "ຍົກເລີກ",
-    "search": "ຄົ້ນຫາ"
+    "search": "ຄົ້ນຫາ",
+    "close": "ປິດ"
+  },
+  "search": {
+    "hotelsTab": "ໂຮງແຮມ",
+    "transportTab": "ພາຫະນະ",
+    "locationLabel": "ສະຖານທີ່",
+    "locationPlaceholder": "ນະຄອນຫຼວງວຽງຈັນ",
+    "datesLabel": "ວັນທີເຂົ້າພັກ - ວັນທີອອກ",
+    "guestsLabel": "ຈຳນວນຄົນ",
+    "guestsOption": "{n} ຄົນ",
+    "searchButton": "ຄົ້ນຫາ",
+    "originLabel": "ຕົ້ນທາງ",
+    "originPlaceholder": "ວຽງຈັນ",
+    "destinationLabel": "ປາຍທາງ",
+    "destinationPlaceholder": "ຫຼວງພະບາງ",
+    "travelDateLabel": "ວັນທີເດີນທາງ",
+    "searchFlightsButton": "ຄົ້ນຫາຖ້ຽວລົດ"
+  },
+  "provinceExplorer": {
+    "badge": "ຄົ້ນຫາຕາມແຂວງ",
+    "title": "ຄົ້ນຫາຕາມແຂວງ",
+    "subtitle": "ເລືອກແຂວງ ແລ້ວເລືອກສະຖານທີ່ເດັ່ນເພື່ອເລີ່ມຄົ້ນຫາ",
+    "districtsIn": "ສະຖານທີ່ເດັ່ນໃນ {province}",
+    "selectPrompt": "ເລືອກແຂວງເພື່ອເບິ່ງສະຖານທີ່ເດັ່ນ",
+    "scrollLeft": "ເລື່ອນແຂວງໄປທາງຊ້າຍ",
+    "scrollRight": "ເລື່ອນແຂວງໄປທາງຂວາ"
+  },
+  "provinces": {
+    "vientianeCapital": {
+      "name": "ນະຄອນຫຼວງວຽງຈັນ",
+      "districts": { "chanthabuly": "ຈັນທະບູລີ", "sikhottabong": "ສີໂຄດຕະບອງ", "hadxaifong": "ຫາດຊາຍຟອງ" }
+    },
+    "phongsaly": {
+      "name": "ຜົ້ງສາລີ",
+      "districts": { "phongsalyTown": "ເມືອງຜົ້ງສາລີ", "bounNeua": "ບຸນເໜືອ", "bounTai": "ບຸນໄຕ" }
+    },
+    "luangNamtha": {
+      "name": "ຫຼວງນ້ຳທາ",
+      "districts": { "namthaTown": "ເມືອງຫຼວງນ້ຳທາ", "muangSing": "ເມືອງສິງ", "viengPhoukha": "ວຽງພູຄາ" }
+    },
+    "oudomxay": {
+      "name": "ອຸດົມໄຊ",
+      "districts": { "xayTown": "ເມືອງໄຊ", "beng": "ເບັງ", "laDistrict": "ລາ" }
+    },
+    "bokeo": {
+      "name": "ບໍ່ແກ້ວ",
+      "districts": { "houayxay": "ຫ້ວຍຊາຍ", "tonpheung": "ຕົ້ນເຜິ້ງ", "meungDistrict": "ເມິງ" }
+    },
+    "luangPrabang": {
+      "name": "ຫຼວງພະບາງ",
+      "districts": { "luangPrabangTown": "ເມືອງຫຼວງພະບາງ", "chomphet": "ຈອມເພັດ", "pakOu": "ປາກອູ", "nambak": "ນ້ຳບາກ" }
+    },
+    "huaphanh": {
+      "name": "ຫົວພັນ",
+      "districts": { "xamNeua": "ຊຳເໜືອ", "viengxay": "ວຽງໄຊ" }
+    },
+    "xayaboury": {
+      "name": "ໄຊຍະບູລີ",
+      "districts": { "xayabouryTown": "ເມືອງໄຊຍະບູລີ", "hongsa": "ຫົງສາ" }
+    },
+    "xiengkhuang": {
+      "name": "ຊຽງຂວາງ",
+      "districts": { "phonsavan": "ໂພນສະຫວັນ", "khoun": "ຄູນ" }
+    },
+    "vientianeProvince": {
+      "name": "ວຽງຈັນ",
+      "districts": { "vangVieng": "ວັງວຽງ", "feuang": "ເຟືອງ", "kasi": "ກາສີ" }
+    },
+    "borikhamxay": {
+      "name": "ບໍລິຄຳໄຊ",
+      "districts": { "paksan": "ປາກຊັນ", "khamkeut": "ຄຳເກີດ" }
+    },
+    "khammuane": {
+      "name": "ຄຳມ່ວນ",
+      "districts": { "thakhek": "ທ່າແຂກ", "boualapha": "ບົວລະພາ" }
+    },
+    "savannakhet": {
+      "name": "ສະຫວັນນະເຂດ",
+      "districts": { "kaysonePhomvihane": "ໄກສອນ ພົມວິຫານ", "xepon": "ເຊໂປນ" }
+    },
+    "salavan": {
+      "name": "ສາລະວັນ",
+      "districts": { "salavanTown": "ເມືອງສາລະວັນ", "taoy": "ຕະໂອ້ຍ" }
+    },
+    "sekong": {
+      "name": "ເຊກອງ",
+      "districts": { "lamam": "ລະມາມ", "dakcheung": "ດັກເຈືອງ" }
+    },
+    "champasak": {
+      "name": "ຈຳປາສັກ",
+      "districts": { "pakse": "ປາກເຊ", "champasakTown": "ເມືອງຈຳປາສັກ", "khong": "ສີ່ພັນດອນ", "paksong": "ປາກຊ່ອງ" }
+    },
+    "attapeu": {
+      "name": "ອັດຕະປື",
+      "districts": { "samakhixay": "ສາມັກຄີໄຊ", "sanxay": "ສານໄຊ" }
+    },
+    "xaysomboun": {
+      "name": "ໄຊສົມບູນ",
+      "districts": { "anouvong": "ອານຸວົງ", "longcheng": "ລ້ອງແຈ້ງ" }
+    }
+  },
+  "home": {
+    "modularBadge": "MODULAR TRAVEL SOLUTIONS",
+    "modularTitle": "ການເດີນທາງທີ່ເຊື່ອມຕໍ່ກັນຢ່າງລົງຕົວ",
+    "modularDesc": "ປະຢັດເວລາ ແລະ ເພີ່ມຄວາມສະດວກສະບາຍດ້ວຍແພລດຟອມຂອງພວກເຮົາ. ເຊື່ອມຕໍ່ການເດີນທາງຂອງທ່ານຕັ້ງແຕ່ສະໜາມບິນ, ລົດໄຟ, ລົດຮັບສົ່ງ, ໂຮງແຮມ - ທີພັກ ຈົນຮອດສະຖານທີ່ທ່ອງທ່ຽວ ໄວ້ໃນບ່ອນດຽວ.",
+    "ecosystemLegend": "ເລືອກໝວດໝູ່ລະບົບນິເວດການທ່ອງທ່ຽວ",
+    "ecosystem": {
+      "airport": { "label": "ສະໜາມບິນ", "delta": "ບໍລິການຕະຫຼອດ 24 ຊົ່ວໂມງ" },
+      "carRental": { "label": "ລົດຮັບສົ່ງ / ລົດເຊົ່າ", "delta": "ຄັນລົດພ້ອມໃຫ້ບໍລິການ" },
+      "hotel": { "label": "ໂຮງແຮມ - ຣີສອດ", "delta": "ໂຮງແຮມ ແລະ ຣີສອດທີ່ຄັດສັນ" },
+      "restaurant": { "label": "ຮ້ານອາຫານ", "delta": "ຮ້ານອາຫານທົ່ວທຸກແຂວງ" },
+      "attraction": { "label": "ສະຖານທີ່ທ່ອງທ່ຽວ", "delta": "ສະຖານທີ່ທ່ອງທ່ຽວຍອດນິຍົມ" },
+      "entertainment": { "label": "ສະຖານທີ່ບັນເທີງ", "delta": "ຈຸດບັນເທີງຍາມຄ່ຳຄືນ" }
+    },
+    "servicesBadge": "ບໍລິການຂອງພວກເຮົາ",
+    "servicesTitle": "ເລືອກບໍລິການ",
+    "servicesSubtitle": "ຄົ້ນພົບບໍລິການດິຈິຕອລທີ່ຫຼາກຫຼາຍຂອງພວກເຮົາທີ່ອອກແບບມາເພື່ອຕອບສະໜອງຄວາມຕ້ອງການເດີນທາງຂອງທ່ານ",
+    "servicesLoading": "ກຳລັງໂຫຼດບໍລິການ...",
+    "services": {
+      "hotels": { "title": "ຈອງໂຮງແຮມ & ຣີສອດ", "description": "ຊອກຫາ ແລະ ຈອງທີ່ພັກທົ່ວປະເທດລາວ" },
+      "flights": { "title": "ຈອງປີ້ຍົນ", "description": "ປີ້ຍົນພາຍໃນ ແລະ ຕ່າງປະເທດ" },
+      "transport": { "title": "ລົດຮັບ-ສົ່ງ & ເຊົ່າລົດ", "description": "ບໍລິການລົດຮັບສົ່ງສະໜາມບິນ ແລະ ລົດເຊົ່າ" },
+      "attractions": { "title": "ສະຖານທີ່ທ່ອງທ່ຽວ", "description": "ຈອງປີ້ເຂົ້າຊົມສະຖານທີ່ທ່ອງທ່ຽວຍອດຮິດ" },
+      "insurance": { "title": "ປະກັນໄພການເດີນທາງ", "description": "ເດີນທາງອຸ່ນໃຈດ້ວຍປະກັນໄພຄຸ້ມຄອງ" },
+      "packages": { "title": "ແພັກເກດທົວ", "description": "ທົວຄົບວົງຈອນ ຈັດກຽມທຸກຢ່າງໃຫ້ທ່ານ" }
+    },
+    "valueProps": {
+      "bestProducts": { "title": "ຜະລິດຕະພັນ ແລະ ປະສົບການທີ່ດີທີ່ສຸດ", "desc": "ຄັດສັນສະເພາະປະສົບການ ແລະ ບໍລິການທີ່ດີທີ່ສຸດ" },
+      "payment": { "title": "ຊ່ອງທາງການຊຳລະເງິນ", "desc": "ຮອງຮັບການຊຳລະຫຼາກຫຼາຍຊ່ອງທາງ ປອດໄພ ແລະ ວ່ອງໄວ" },
+      "booking": { "title": "ການຈອງທີ່ງ່າຍດາຍ", "desc": "ຈອງງ່າຍ ພຽງສອງສາມຄລິກ ບໍ່ຫຍຸ້ງຍາກ" },
+      "coverage": { "title": "ຄອບຄຸມທົ່ວປະເທດລາວ", "desc": "ຄອບຄຸມທຸກແຂວງທົ່ວປະເທດລາວ" },
+      "support": { "title": "ບໍລິການທີ່ເອົາໃຈໃສ່", "desc": "ທີມງານພ້ອມໃຫ້ບໍລິການທ່ານຕະຫຼອດ 24 ຊົ່ວໂມງ" }
+    },
+    "curatedForYou": "CURATED FOR YOU",
+    "bestOfLaosTitle": "BEST OF LAOS",
+    "bestOfLaos": {
+      "riverCruise": "ລ່ອງເຮືອທາງແມ່ນ້ຳ",
+      "trainTicketing": "ຈອງປີ້ລົດໄຟ",
+      "carRentals": "ເຊົ່າລົດ"
+    },
+    "exploreKingdom": "EXPLORE THE KINGDOM",
+    "topDestinationsTitle": "TOP DESTINATIONS",
+    "tourCategoriesTitle": "ປະເພດທົວ",
+    "viewAll": "ເບິ່ງລາຍການທັງໝົດ",
+    "tourCategories": {
+      "adventure": "ຜະຈົນໄພ ແລະ ກິລາ",
+      "pilgrimage": "ທົວທຳບຸນ - ນະມັດສະການ",
+      "cycling": "ທົວປັ່ນຈັກກະຍານ"
+    },
+    "followOurJourney": "FOLLOW OUR JOURNEY",
+    "ourLatestVideos": "Our Latest Videos",
+    "videoPlayerTitle": "ຕົວຫຼິ້ນວິດີໂອ"
   },
   "about": {
     "heroTag": "ເລື່ອງລາວຂອງພວກເຮົາ",
@@ -70,6 +233,35 @@
     "waitlistTitle": "ສະມາຊິກ UniBooking Premium",
     "waitlistText": "ພວກເຮົາກຳລັງປັບປຸງໂປຣແກຣມສະມາຊິກໃຫ້ສົມບູນແບບ. ເຂົ້າຮ່ວມລາຍຊື່ລໍຖ້າເພື່ອເປັນຄົນທຳອິດທີ່ຮູ້ເມື່ອເປີດໃຫ້ບໍລິການ.",
     "waitlistButton": "ເຂົ້າຮ່ວມລາຍຊື່ລໍຖ້າ"
+  },
+  "footer": {
+    "aboutText": "ແພລັດຟອມການຈອງທີ່ພັກ ແລະ ການເດີນທາງແບບຄົບວົງຈອນ ສຳລັບການທ່ອງທ່ຽວທົ່ວປະເທດລາວ ດ້ວຍມາດຕະຖານລະດັບພຣີເມ້ຍມ.",
+    "shareAriaLabel": "ແບ່ງປັນ UniBooking",
+    "reservationHeading": "ການຈອງ",
+    "partnershipsHeading": "ຄູ່ຮ່ວມທຸລະກິດ",
+    "manageBookingHeading": "ຈັດການການຈອງ",
+    "supportedByHeading": "ໄດ້ຮັບການສະໜັບສະໜູນໂດຍ",
+    "links": {
+      "bookHotels": "ຈອງໂຮງແຮມ",
+      "bookFlights": "ຈອງປີ້ຍົນ",
+      "carRental": "ລົດເຊົ່າ ແລະ ລົດຮັບສົ່ງ",
+      "tourPackages": "ແພັກເກດທົວ",
+      "becomePartner": "ກາຍເປັນຄູ່ຮ່ວມທຸລະກິດ",
+      "businessCollaboration": "ຮ່ວມມືທຸລະກິດ",
+      "referralProgram": "ໂຄງການແນະນຳລູກຄ້າ",
+      "developerApi": "API ສຳລັບນັກພັດທະນາ",
+      "checkBooking": "ກວດສອບການຈອງ",
+      "cancelChange": "ຍົກເລີກ / ປ່ຽນແປງ",
+      "faq": "ຄຳຖາມທີ່ພົບເລື້ອຍ",
+      "contactUs": "ຕິດຕໍ່ພວກເຮົາ"
+    },
+    "badges": {
+      "travelPartnerNetwork": "Travel Partner Network",
+      "regionalTourismAlliance": "Regional Tourism Alliance",
+      "certifiedBookingPlatform": "Certified Booking Platform",
+      "localTourOperatorsGuild": "Local Tour Operators Guild"
+    },
+    "copyright": "© {year} UniBooking Travel. ສະຫງວນລິຂະສິດ."
   },
   "blogs": {
     "heroTag": "ເລື່ອງລາວ ແລະ ຄູ່ມື",

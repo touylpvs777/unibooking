@@ -15,14 +15,177 @@
   "hero": {
     "tag": "แลนด์มาร์ก",
     "subtitleSuffix": "ค้นพบประเทศลาวผ่านสถานที่ที่ควรค่าแก่การจดจำ",
-    "cta": "เริ่มต้นสำรวจ"
+    "cta": "เริ่มต้นสำรวจ",
+    "prevSlide": "จุดหมายก่อนหน้า",
+    "nextSlide": "จุดหมายถัดไป",
+    "slides": {
+      "patuxay": "ประตูชัย",
+      "phaThatLuang": "พระธาตุหลวง",
+      "tadKuangSi": "น้ำตกตาดกวางซี",
+      "vangVieng": "วังเวียง",
+      "watPhou": "วัดพู",
+      "khonePhapheng": "คอนพะเพ็ง",
+      "muangNgoi": "เมืองงอย"
+    }
   },
   "common": {
     "bookNow": "จองเลย",
     "confirm": "ยืนยัน",
     "viewDetails": "ดูรายละเอียด",
     "cancel": "ยกเลิก",
-    "search": "ค้นหา"
+    "search": "ค้นหา",
+    "close": "ปิด"
+  },
+  "search": {
+    "hotelsTab": "โรงแรม",
+    "transportTab": "การเดินทาง",
+    "locationLabel": "สถานที่",
+    "locationPlaceholder": "นครหลวงเวียงจันทน์",
+    "datesLabel": "วันที่เข้าพัก - วันที่ออก",
+    "guestsLabel": "จำนวนคน",
+    "guestsOption": "{n} คน",
+    "searchButton": "ค้นหา",
+    "originLabel": "ต้นทาง",
+    "originPlaceholder": "เวียงจันทน์",
+    "destinationLabel": "ปลายทาง",
+    "destinationPlaceholder": "หลวงพระบาง",
+    "travelDateLabel": "วันที่เดินทาง",
+    "searchFlightsButton": "ค้นหาเที่ยวเดินทาง"
+  },
+  "provinceExplorer": {
+    "badge": "สำรวจตามแขวง",
+    "title": "สำรวจตามแขวง",
+    "subtitle": "แตะเลือกแขวง แล้วเลือกสถานที่เด่นเพื่อเริ่มค้นหา",
+    "districtsIn": "สถานที่เด่นใน {province}",
+    "selectPrompt": "เลือกแขวงเพื่อดูสถานที่เด่น",
+    "scrollLeft": "เลื่อนแขวงไปทางซ้าย",
+    "scrollRight": "เลื่อนแขวงไปทางขวา"
+  },
+  "provinces": {
+    "vientianeCapital": {
+      "name": "นครหลวงเวียงจันทน์",
+      "districts": { "chanthabuly": "จันทะบูลี", "sikhottabong": "สีโคดตะบอง", "hadxaifong": "หาดซายฟอง" }
+    },
+    "phongsaly": {
+      "name": "พงสาลี",
+      "districts": { "phongsalyTown": "เมืองพงสาลี", "bounNeua": "บุนเหนือ", "bounTai": "บุนไต" }
+    },
+    "luangNamtha": {
+      "name": "หลวงน้ำทา",
+      "districts": { "namthaTown": "เมืองหลวงน้ำทา", "muangSing": "เมืองสิง", "viengPhoukha": "เวียงภูคา" }
+    },
+    "oudomxay": {
+      "name": "อุดมไซ",
+      "districts": { "xayTown": "เมืองไซ", "beng": "เบง", "laDistrict": "ลา" }
+    },
+    "bokeo": {
+      "name": "บ่อแก้ว",
+      "districts": { "houayxay": "ห้วยทราย", "tonpheung": "ต้นผึ้ง", "meungDistrict": "เมิง" }
+    },
+    "luangPrabang": {
+      "name": "หลวงพระบาง",
+      "districts": { "luangPrabangTown": "เมืองหลวงพระบาง", "chomphet": "จอมเพ็ด", "pakOu": "ปากอู", "nambak": "น้ำบาก" }
+    },
+    "huaphanh": {
+      "name": "หัวพัน",
+      "districts": { "xamNeua": "ซำเหนือ", "viengxay": "เวียงไซ" }
+    },
+    "xayaboury": {
+      "name": "ไซยะบุรี",
+      "districts": { "xayabouryTown": "เมืองไซยะบุรี", "hongsa": "หงสา" }
+    },
+    "xiengkhuang": {
+      "name": "เชียงขวาง",
+      "districts": { "phonsavan": "โพนสะหวัน", "khoun": "คูน" }
+    },
+    "vientianeProvince": {
+      "name": "เวียงจันทน์",
+      "districts": { "vangVieng": "วังเวียง", "feuang": "เฟือง", "kasi": "กาสี" }
+    },
+    "borikhamxay": {
+      "name": "บอลิคำไซ",
+      "districts": { "paksan": "ปากซัน", "khamkeut": "คำเกิด" }
+    },
+    "khammuane": {
+      "name": "คำม่วน",
+      "districts": { "thakhek": "ท่าแขก", "boualapha": "บัวละพา" }
+    },
+    "savannakhet": {
+      "name": "สะหวันนะเขต",
+      "districts": { "kaysonePhomvihane": "ไกสอน พมวิหาน", "xepon": "เซโปน" }
+    },
+    "salavan": {
+      "name": "สาละวัน",
+      "districts": { "salavanTown": "เมืองสาละวัน", "taoy": "ตะโอ้ย" }
+    },
+    "sekong": {
+      "name": "เซกอง",
+      "districts": { "lamam": "ละมาม", "dakcheung": "ดักเจือง" }
+    },
+    "champasak": {
+      "name": "จำปาสัก",
+      "districts": { "pakse": "ปากเซ", "champasakTown": "เมืองจำปาสัก", "khong": "สี่พันดอน", "paksong": "ปากซอง" }
+    },
+    "attapeu": {
+      "name": "อัตตะปือ",
+      "districts": { "samakhixay": "สามัคคีไซ", "sanxay": "สานไซ" }
+    },
+    "xaysomboun": {
+      "name": "ไซสมบูรณ์",
+      "districts": { "anouvong": "อานุวง", "longcheng": "ล่องแจ้ง" }
+    }
+  },
+  "home": {
+    "modularBadge": "MODULAR TRAVEL SOLUTIONS",
+    "modularTitle": "การเดินทางที่เชื่อมต่อกันอย่างลงตัว",
+    "modularDesc": "ประหยัดเวลาและเพิ่มความสะดวกสบายด้วยแพลตฟอร์มของเรา เชื่อมต่อการเดินทางของคุณตั้งแต่สนามบิน รถไฟ รถรับส่ง โรงแรม-ที่พัก ไปจนถึงสถานที่ท่องเที่ยว ไว้ในที่เดียว",
+    "ecosystemLegend": "เลือกหมวดหมู่ระบบนิเวศการท่องเที่ยว",
+    "ecosystem": {
+      "airport": { "label": "สนามบิน", "delta": "บริการตลอด 24 ชั่วโมง" },
+      "carRental": { "label": "รถรับส่ง / รถเช่า", "delta": "รถพร้อมให้บริการ" },
+      "hotel": { "label": "โรงแรม - รีสอร์ท", "delta": "โรงแรมและรีสอร์ทที่คัดสรร" },
+      "restaurant": { "label": "ร้านอาหาร", "delta": "ร้านอาหารทั่วทุกแขวง" },
+      "attraction": { "label": "สถานที่ท่องเที่ยว", "delta": "สถานที่ท่องเที่ยวยอดนิยม" },
+      "entertainment": { "label": "สถานบันเทิง", "delta": "จุดบันเทิงยามค่ำคืน" }
+    },
+    "servicesBadge": "บริการของเรา",
+    "servicesTitle": "เลือกบริการ",
+    "servicesSubtitle": "ค้นพบบริการดิจิทัลที่หลากหลายของเราที่ออกแบบมาเพื่อตอบสนองความต้องการในการเดินทางของคุณ",
+    "servicesLoading": "กำลังโหลดบริการ...",
+    "services": {
+      "hotels": { "title": "จองโรงแรม & รีสอร์ท", "description": "ค้นหาและจองที่พักทั่วประเทศลาว" },
+      "flights": { "title": "จองตั๋วเครื่องบิน", "description": "ตั๋วเครื่องบินภายในและต่างประเทศ" },
+      "transport": { "title": "รถรับ-ส่ง & เช่ารถ", "description": "บริการรถรับส่งสนามบินและรถเช่า" },
+      "attractions": { "title": "สถานที่ท่องเที่ยว", "description": "จองตั๋วเข้าชมสถานที่ท่องเที่ยวยอดนิยม" },
+      "insurance": { "title": "ประกันภัยการเดินทาง", "description": "เดินทางอุ่นใจด้วยประกันภัยคุ้มครอง" },
+      "packages": { "title": "แพ็กเกจทัวร์", "description": "ทัวร์ครบวงจร จัดเตรียมทุกอย่างให้คุณ" }
+    },
+    "valueProps": {
+      "bestProducts": { "title": "ผลิตภัณฑ์และประสบการณ์ที่ดีที่สุด", "desc": "คัดสรรเฉพาะประสบการณ์และบริการที่ดีที่สุด" },
+      "payment": { "title": "ช่องทางการชำระเงิน", "desc": "รองรับการชำระเงินหลากหลายช่องทาง ปลอดภัยและรวดเร็ว" },
+      "booking": { "title": "การจองที่ง่ายดาย", "desc": "จองง่ายเพียงไม่กี่คลิก ไม่ยุ่งยาก" },
+      "coverage": { "title": "ครอบคลุมทั่วประเทศลาว", "desc": "ครอบคลุมทุกแขวงทั่วประเทศลาว" },
+      "support": { "title": "บริการที่ใส่ใจ", "desc": "ทีมงานพร้อมให้บริการคุณตลอด 24 ชั่วโมง" }
+    },
+    "curatedForYou": "CURATED FOR YOU",
+    "bestOfLaosTitle": "BEST OF LAOS",
+    "bestOfLaos": {
+      "riverCruise": "ล่องเรือแม่น้ำ",
+      "trainTicketing": "จองตั๋วรถไฟ",
+      "carRentals": "เช่ารถ"
+    },
+    "exploreKingdom": "EXPLORE THE KINGDOM",
+    "topDestinationsTitle": "TOP DESTINATIONS",
+    "tourCategoriesTitle": "ประเภททัวร์",
+    "viewAll": "ดูรายการทั้งหมด",
+    "tourCategories": {
+      "adventure": "ผจญภัยและกีฬา",
+      "pilgrimage": "ทัวร์แสวงบุญ",
+      "cycling": "ทัวร์ปั่นจักรยาน"
+    },
+    "followOurJourney": "FOLLOW OUR JOURNEY",
+    "ourLatestVideos": "Our Latest Videos",
+    "videoPlayerTitle": "ตัวเล่นวิดีโอ"
   },
   "about": {
     "heroTag": "เรื่องราวของเรา",
@@ -70,6 +233,35 @@
     "waitlistTitle": "สมาชิก UniBooking Premium",
     "waitlistText": "เรากำลังเก็บรายละเอียดสุดท้ายของโปรแกรมสมาชิก เข้าร่วมรายชื่อรอเพื่อเป็นคนแรกที่ทราบเมื่อเปิดให้บริการ",
     "waitlistButton": "เข้าร่วมรายชื่อรอ"
+  },
+  "footer": {
+    "aboutText": "แพลตฟอร์มการจองที่พักและการเดินทางแบบครบวงจร สำหรับการท่องเที่ยวทั่วประเทศลาว ด้วยมาตรฐานระดับพรีเมียม",
+    "shareAriaLabel": "แชร์ UniBooking",
+    "reservationHeading": "การจอง",
+    "partnershipsHeading": "พันธมิตรทางธุรกิจ",
+    "manageBookingHeading": "จัดการการจอง",
+    "supportedByHeading": "ได้รับการสนับสนุนโดย",
+    "links": {
+      "bookHotels": "จองโรงแรม",
+      "bookFlights": "จองตั๋วเครื่องบิน",
+      "carRental": "เช่ารถและรถรับส่ง",
+      "tourPackages": "แพ็กเกจทัวร์",
+      "becomePartner": "เป็นพันธมิตรทางธุรกิจ",
+      "businessCollaboration": "ความร่วมมือทางธุรกิจ",
+      "referralProgram": "โปรแกรมแนะนำเพื่อน",
+      "developerApi": "API สำหรับนักพัฒนา",
+      "checkBooking": "ตรวจสอบการจอง",
+      "cancelChange": "ยกเลิก / เปลี่ยนแปลง",
+      "faq": "คำถามที่พบบ่อย",
+      "contactUs": "ติดต่อเรา"
+    },
+    "badges": {
+      "travelPartnerNetwork": "Travel Partner Network",
+      "regionalTourismAlliance": "Regional Tourism Alliance",
+      "certifiedBookingPlatform": "Certified Booking Platform",
+      "localTourOperatorsGuild": "Local Tour Operators Guild"
+    },
+    "copyright": "© {year} UniBooking Travel สงวนลิขสิทธิ์"
   },
   "blogs": {
     "heroTag": "เรื่องราวและคู่มือ",

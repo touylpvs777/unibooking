@@ -1,0 +1,115 @@
+/* Global typography: Noto Sans Lao, self-hosted from public/fonts/ (served
+   at /fonts/... since anything under public/ is served from the root -- see
+   https://nuxt.com/docs/guide/directory-structure/public).
+   Chosen over the previous 'Phetsarath OT' rule (app.vue's old global
+   font-family override) because that name depended on the font already
+   being installed on the visitor's OS; Noto Sans Lao ships with the site
+   instead, so Lao text renders identically everywhere. It also carries its
+   own Latin glyphs (Google's Noto family is designed for cross-script
+   pairing), so a single font-family covers both Lao and English text
+   consistently -- see --font-sans below.
+   One @font-face per weight (files are static, not variable fonts), so the
+   browser can request only the weight actually used on a given page. */
+@font-face {
+  font-family: 'NotoSansLao';
+  src: url('/fonts/NotoSansLao-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NotoSansLao';
+  src: url('/fonts/NotoSansLao-ExtraLight.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NotoSansLao';
+  src: url('/fonts/NotoSansLao-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NotoSansLao';
+  src: url('/fonts/NotoSansLao-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NotoSansLao';
+  src: url('/fonts/NotoSansLao-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NotoSansLao';
+  src: url('/fonts/NotoSansLao-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NotoSansLao';
+  src: url('/fonts/NotoSansLao-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NotoSansLao';
+  src: url('/fonts/NotoSansLao-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NotoSansLao';
+  src: url('/fonts/NotoSansLao-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Inter (loaded via Google Fonts link in nuxt.config.ts) sits behind
+     NotoSansLao purely as a fallback for the brief window before the
+     self-hosted font finishes loading, or if it fails to load at all --
+     not for per-script switching, since NotoSansLao already covers Latin. */
+  --font-sans: 'NotoSansLao', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+html,
+body,
+#__nuxt {
+  font-family: var(--font-sans);
+}
+
+/* Ant Design Vue's own components get their font from the ConfigProvider
+   theme token (token.fontFamily, set in app.vue) -- this is a
+   belt-and-suspenders override for any antd surface that renders outside
+   that provider (teleported overlays, etc.) plus anything else on the page
+   that isn't already inheriting from body/#__nuxt above. */
+body,
+.ant-app,
+.ant-btn,
+.ant-input,
+.ant-select,
+.ant-menu,
+.ant-typography,
+.ant-modal,
+.ant-drawer,
+.ant-table {
+  font-family: var(--font-sans) !important;
+}

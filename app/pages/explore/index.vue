@@ -146,6 +146,7 @@ import { EnvironmentOutlined } from '@ant-design/icons-vue'
 import { useExploreStore } from '~/stores/explore'
 
 const exploreStore = useExploreStore()
+const route = useRoute()
 
 // ₭5,000,000/night is a generous ceiling for a per-night rate on this
 // platform -- the slider's own max, and also what "untouched" looks like
@@ -153,11 +154,19 @@ const exploreStore = useExploreStore()
 // bound", not "cap at exactly 5,000,000").
 const PRICE_SLIDER_MAX = 5000000
 
+// Homepage service-grid cards (see index.vue's serviceGridItems) link here
+// as /explore?category=HOTEL -- seeds the checkbox filter below so the
+// click actually filters results, not just navigates.
+const initialCategory = typeof route.query.category === 'string' ? route.query.category : undefined
+
 const filters = reactive({
   location: '',
   // Checkbox-group "Categories" filter -- ServiceType values, any-of. Empty
   // means "all types", matching the old radio-group's "ທັງໝົດ" option.
-  types: [],
+  // HOTEL/TOUR/CAR_RENTAL show as checked in the sidebar when preset this
+  // way; other ServiceType values (FLIGHT/PACKAGE) still filter the
+  // results even though there's no checkbox for them here.
+  types: initialCategory ? [initialCategory] : [],
   // a-range-picker's v-model is [Dayjs, Dayjs] | [] -- see isoDate() below.
   dates: [],
   priceRange: [0, PRICE_SLIDER_MAX],

@@ -166,8 +166,7 @@
             <img src="/images/unibooking-logo.png" alt="UniBooking Logo" class="footer__logo-img">
           </NuxtLink>
           <p class="footer__about-text">
-            ແພລັດຟອມການຈອງທີ່ພັກ ແລະ ການເດີນທາງແບບຄົບວົງຈອນ ສຳລັບການທ່ອງທ່ຽວທົ່ວປະເທດລາວ
-            ດ້ວຍມາດຕະຖານລະດັບພຣີເມ້ຍມ.
+            {{ $t('footer.aboutText') }}
           </p>
           <div class="footer__social">
             <a href="#" class="footer__social-icon" aria-label="Facebook"><FacebookFilled /></a>
@@ -180,7 +179,7 @@
                 type="button"
                 class="magic-share__toggle"
                 :aria-expanded="isShareOpen"
-                aria-label="Share UniBooking"
+                :aria-label="$t('footer.shareAriaLabel')"
                 @click="isShareOpen = !isShareOpen"
               >
                 <component :is="isShareOpen ? CloseOutlined : ShareAltOutlined" />
@@ -204,42 +203,42 @@
         </div>
 
         <div class="footer__col">
-          <h4 class="footer__heading">Reservation</h4>
+          <h4 class="footer__heading">{{ $t('footer.reservationHeading') }}</h4>
           <ul class="footer__links">
-            <li><NuxtLink to="/hotels">ຈອງໂຮງແຮມ</NuxtLink></li>
-            <li><NuxtLink to="/transport">ຈອງປີ້ຍົນ</NuxtLink></li>
-            <li><NuxtLink to="/transport">ລົດເຊົ່າ ແລະ ລົດຮັບສົ່ງ</NuxtLink></li>
-            <li><NuxtLink to="/">ແພັກເກດທົວ</NuxtLink></li>
+            <li><NuxtLink to="/hotels">{{ $t('footer.links.bookHotels') }}</NuxtLink></li>
+            <li><NuxtLink to="/transport">{{ $t('footer.links.bookFlights') }}</NuxtLink></li>
+            <li><NuxtLink to="/transport">{{ $t('footer.links.carRental') }}</NuxtLink></li>
+            <li><NuxtLink to="/">{{ $t('footer.links.tourPackages') }}</NuxtLink></li>
           </ul>
         </div>
 
         <div class="footer__col">
-          <h4 class="footer__heading">Partnerships</h4>
+          <h4 class="footer__heading">{{ $t('footer.partnershipsHeading') }}</h4>
           <ul class="footer__links">
-            <li><a href="#">ກາຍເປັນຄູ່ຮ່ວມທຸລະກິດ</a></li>
-            <li><a href="#">ຮ່ວມມືທຸລະກິດ</a></li>
-            <li><a href="#">ໂຄງການແນະນຳລູກຄ້າ</a></li>
-            <li><a href="#">API ສຳລັບນັກພັດທະນາ</a></li>
+            <li><a href="#">{{ $t('footer.links.becomePartner') }}</a></li>
+            <li><a href="#">{{ $t('footer.links.businessCollaboration') }}</a></li>
+            <li><a href="#">{{ $t('footer.links.referralProgram') }}</a></li>
+            <li><a href="#">{{ $t('footer.links.developerApi') }}</a></li>
           </ul>
         </div>
 
         <div class="footer__col">
-          <h4 class="footer__heading">Manage Booking</h4>
+          <h4 class="footer__heading">{{ $t('footer.manageBookingHeading') }}</h4>
           <ul class="footer__links">
-            <li><a href="#">ກວດສອບການຈອງ</a></li>
-            <li><a href="#">ຍົກເລີກ / ປ່ຽນແປງ</a></li>
-            <li><a href="#">ຄຳຖາມທີ່ພົບເລື້ອຍ</a></li>
-            <li><a href="#">ຕິດຕໍ່ພວກເຮົາ</a></li>
+            <li><a href="#">{{ $t('footer.links.checkBooking') }}</a></li>
+            <li><a href="#">{{ $t('footer.links.cancelChange') }}</a></li>
+            <li><a href="#">{{ $t('footer.links.faq') }}</a></li>
+            <li><a href="#">{{ $t('footer.links.contactUs') }}</a></li>
           </ul>
         </div>
 
         <div class="footer__col">
-          <h4 class="footer__heading">Supported By</h4>
+          <h4 class="footer__heading">{{ $t('footer.supportedByHeading') }}</h4>
           <ul class="footer__links footer__links--badges">
-            <li>Travel Partner Network</li>
-            <li>Regional Tourism Alliance</li>
-            <li>Certified Booking Platform</li>
-            <li>Local Tour Operators Guild</li>
+            <li>{{ $t('footer.badges.travelPartnerNetwork') }}</li>
+            <li>{{ $t('footer.badges.regionalTourismAlliance') }}</li>
+            <li>{{ $t('footer.badges.certifiedBookingPlatform') }}</li>
+            <li>{{ $t('footer.badges.localTourOperatorsGuild') }}</li>
           </ul>
         </div>
       </div>
@@ -247,7 +246,7 @@
       <div class="footer__container footer__bottom">
         <PaymentMethods />
         <p class="footer__copyright">
-          &copy; {{ new Date().getFullYear() }} UniBooking Travel. All rights reserved.
+          {{ $t('footer.copyright', { year: currentYear }) }}
         </p>
       </div>
     </a-layout-footer>
@@ -288,6 +287,8 @@ const currentLocaleName = computed(
 )
 
 const userInitial = computed(() => authStore.fullName?.charAt(0).toUpperCase() ?? '?')
+
+const currentYear = new Date().getFullYear()
 
 // Matches app/middleware/supplier.js's own allowed-roles check -- kept in
 // sync manually since this is the only other place role-gates the same

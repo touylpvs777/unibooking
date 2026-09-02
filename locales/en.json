@@ -15,14 +15,177 @@
   "hero": {
     "tag": "LANDMARK",
     "subtitleSuffix": "Discover Laos through places worth remembering.",
-    "cta": "Start Exploring"
+    "cta": "Start Exploring",
+    "prevSlide": "Previous destination",
+    "nextSlide": "Next destination",
+    "slides": {
+      "patuxay": "Patuxay Gate",
+      "phaThatLuang": "Pha That Luang",
+      "tadKuangSi": "Kuang Si Waterfall",
+      "vangVieng": "Vang Vieng",
+      "watPhou": "Wat Phou",
+      "khonePhapheng": "Khone Phapheng Falls",
+      "muangNgoi": "Muang Ngoi"
+    }
   },
   "common": {
     "bookNow": "Book Now",
     "confirm": "Confirm",
     "viewDetails": "View Details",
     "cancel": "Cancel",
-    "search": "Search"
+    "search": "Search",
+    "close": "Close"
+  },
+  "search": {
+    "hotelsTab": "Hotels",
+    "transportTab": "Transport",
+    "locationLabel": "Location",
+    "locationPlaceholder": "Vientiane Capital",
+    "datesLabel": "Check-in - Check-out",
+    "guestsLabel": "Guests",
+    "guestsOption": "{n} Guest(s)",
+    "searchButton": "Search",
+    "originLabel": "From",
+    "originPlaceholder": "Vientiane",
+    "destinationLabel": "To",
+    "destinationPlaceholder": "Luang Prabang",
+    "travelDateLabel": "Travel Date",
+    "searchFlightsButton": "Search Trips"
+  },
+  "provinceExplorer": {
+    "badge": "EXPLORE BY PROVINCE",
+    "title": "Explore by Province",
+    "subtitle": "Tap a province, then pick a notable spot to start your search",
+    "districtsIn": "Notable spots in {province}",
+    "selectPrompt": "Select a province to see notable spots",
+    "scrollLeft": "Scroll provinces left",
+    "scrollRight": "Scroll provinces right"
+  },
+  "provinces": {
+    "vientianeCapital": {
+      "name": "Vientiane Capital",
+      "districts": { "chanthabuly": "Chanthabuly", "sikhottabong": "Sikhottabong", "hadxaifong": "Hadxaifong" }
+    },
+    "phongsaly": {
+      "name": "Phongsaly",
+      "districts": { "phongsalyTown": "Phongsaly Town", "bounNeua": "Boun Neua", "bounTai": "Boun Tai" }
+    },
+    "luangNamtha": {
+      "name": "Luang Namtha",
+      "districts": { "namthaTown": "Luang Namtha Town", "muangSing": "Muang Sing", "viengPhoukha": "Vieng Phoukha" }
+    },
+    "oudomxay": {
+      "name": "Oudomxay",
+      "districts": { "xayTown": "Muang Xay", "beng": "Beng", "laDistrict": "La" }
+    },
+    "bokeo": {
+      "name": "Bokeo",
+      "districts": { "houayxay": "Houayxay", "tonpheung": "Tonpheung", "meungDistrict": "Meung" }
+    },
+    "luangPrabang": {
+      "name": "Luang Prabang",
+      "districts": { "luangPrabangTown": "Luang Prabang Town", "chomphet": "Chomphet", "pakOu": "Pak Ou", "nambak": "Nambak" }
+    },
+    "huaphanh": {
+      "name": "Huaphanh",
+      "districts": { "xamNeua": "Xam Neua", "viengxay": "Viengxay" }
+    },
+    "xayaboury": {
+      "name": "Xayaboury",
+      "districts": { "xayabouryTown": "Xayaboury Town", "hongsa": "Hongsa" }
+    },
+    "xiengkhuang": {
+      "name": "Xiengkhuang",
+      "districts": { "phonsavan": "Phonsavan", "khoun": "Khoun" }
+    },
+    "vientianeProvince": {
+      "name": "Vientiane Province",
+      "districts": { "vangVieng": "Vang Vieng", "feuang": "Feuang", "kasi": "Kasi" }
+    },
+    "borikhamxay": {
+      "name": "Borikhamxay",
+      "districts": { "paksan": "Paksan", "khamkeut": "Khamkeut" }
+    },
+    "khammuane": {
+      "name": "Khammuane",
+      "districts": { "thakhek": "Thakhek", "boualapha": "Boualapha" }
+    },
+    "savannakhet": {
+      "name": "Savannakhet",
+      "districts": { "kaysonePhomvihane": "Kaysone Phomvihane", "xepon": "Xepon" }
+    },
+    "salavan": {
+      "name": "Salavan",
+      "districts": { "salavanTown": "Salavan Town", "taoy": "Ta-Oy" }
+    },
+    "sekong": {
+      "name": "Sekong",
+      "districts": { "lamam": "Lamam", "dakcheung": "Dakcheung" }
+    },
+    "champasak": {
+      "name": "Champasak",
+      "districts": { "pakse": "Pakse", "champasakTown": "Champasak Town", "khong": "Si Phan Don", "paksong": "Paksong" }
+    },
+    "attapeu": {
+      "name": "Attapeu",
+      "districts": { "samakhixay": "Samakkhixay", "sanxay": "Sanxay" }
+    },
+    "xaysomboun": {
+      "name": "Xaysomboun",
+      "districts": { "anouvong": "Anouvong", "longcheng": "Longcheng" }
+    }
+  },
+  "home": {
+    "modularBadge": "MODULAR TRAVEL SOLUTIONS",
+    "modularTitle": "Seamlessly Connected Travel",
+    "modularDesc": "Save time and add convenience with our platform. Connect your journey from the airport, trains, transfers, and hotels — all the way to your destinations, in one place.",
+    "ecosystemLegend": "Choose a travel ecosystem category",
+    "ecosystem": {
+      "airport": { "label": "Airport", "delta": "Service available 24 hours" },
+      "carRental": { "label": "Transfers / Car Rental", "delta": "Vehicles ready to serve you" },
+      "hotel": { "label": "Hotels & Resorts", "delta": "Curated hotels and resorts" },
+      "restaurant": { "label": "Restaurants", "delta": "Restaurants across every province" },
+      "attraction": { "label": "Attractions", "delta": "Most popular tourist attractions" },
+      "entertainment": { "label": "Entertainment", "delta": "Nightlife entertainment spots" }
+    },
+    "servicesBadge": "Our Services",
+    "servicesTitle": "Choose a Service",
+    "servicesSubtitle": "Discover our wide range of digital services designed to meet your travel needs",
+    "servicesLoading": "Loading services...",
+    "services": {
+      "hotels": { "title": "Hotel & Resort Booking", "description": "Find and book accommodation across Laos" },
+      "flights": { "title": "Flight Booking", "description": "Domestic and international flight tickets" },
+      "transport": { "title": "Transfers & Car Rental", "description": "Airport transfer service and car rental" },
+      "attractions": { "title": "Tourist Attractions", "description": "Book tickets to top attractions" },
+      "insurance": { "title": "Travel Insurance", "description": "Travel with peace of mind, fully covered" },
+      "packages": { "title": "Tour Packages", "description": "Complete tours, everything arranged for you" }
+    },
+    "valueProps": {
+      "bestProducts": { "title": "Best Products & Experiences", "desc": "Curated selection of the best experiences and services" },
+      "payment": { "title": "Payment Options", "desc": "Supports a wide range of secure and fast payment channels" },
+      "booking": { "title": "Seamless Booking", "desc": "Book easily in just a few clicks, hassle-free" },
+      "coverage": { "title": "Covering All of Laos", "desc": "Covering every province across Laos" },
+      "support": { "title": "Service-Oriented Support", "desc": "Our team is ready to serve you 24 hours a day" }
+    },
+    "curatedForYou": "CURATED FOR YOU",
+    "bestOfLaosTitle": "BEST OF LAOS",
+    "bestOfLaos": {
+      "riverCruise": "River Cruise",
+      "trainTicketing": "Train Ticketing",
+      "carRentals": "Car Rentals"
+    },
+    "exploreKingdom": "EXPLORE THE KINGDOM",
+    "topDestinationsTitle": "TOP DESTINATIONS",
+    "tourCategoriesTitle": "Tour Categories",
+    "viewAll": "View All",
+    "tourCategories": {
+      "adventure": "ADVENTURES & SPORTS",
+      "pilgrimage": "PILGRIMAGE TOURS",
+      "cycling": "CYCLING TOURS"
+    },
+    "followOurJourney": "FOLLOW OUR JOURNEY",
+    "ourLatestVideos": "Our Latest Videos",
+    "videoPlayerTitle": "Video Player"
   },
   "about": {
     "heroTag": "OUR STORY",
@@ -70,6 +233,35 @@
     "waitlistTitle": "UniBooking Premium Membership",
     "waitlistText": "We're putting the finishing touches on our membership program. Join the waitlist and be the first to know when it launches.",
     "waitlistButton": "Join the Waitlist"
+  },
+  "footer": {
+    "aboutText": "A complete accommodation and travel booking platform for tourism across Laos, built to a premium standard.",
+    "shareAriaLabel": "Share UniBooking",
+    "reservationHeading": "Reservation",
+    "partnershipsHeading": "Partnerships",
+    "manageBookingHeading": "Manage Booking",
+    "supportedByHeading": "Supported By",
+    "links": {
+      "bookHotels": "Book Hotels",
+      "bookFlights": "Book Flights",
+      "carRental": "Car Rental & Transfers",
+      "tourPackages": "Tour Packages",
+      "becomePartner": "Become a Business Partner",
+      "businessCollaboration": "Business Collaboration",
+      "referralProgram": "Referral Program",
+      "developerApi": "API for Developers",
+      "checkBooking": "Check Booking",
+      "cancelChange": "Cancel / Change",
+      "faq": "Frequently Asked Questions",
+      "contactUs": "Contact Us"
+    },
+    "badges": {
+      "travelPartnerNetwork": "Travel Partner Network",
+      "regionalTourismAlliance": "Regional Tourism Alliance",
+      "certifiedBookingPlatform": "Certified Booking Platform",
+      "localTourOperatorsGuild": "Local Tour Operators Guild"
+    },
+    "copyright": "© {year} UniBooking Travel. All rights reserved."
   },
   "blogs": {
     "heroTag": "STORIES & GUIDES",

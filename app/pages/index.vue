@@ -56,8 +56,8 @@
         </div>
 
         <div class="hero-nav-controls">
-          <button type="button" aria-label="Previous destination" class="hero-nav-btn" @click="showPreviousHeroSlide">&lt;</button>
-          <button type="button" aria-label="Next destination" class="hero-nav-btn" @click="showNextHeroSlide">&gt;</button>
+          <button type="button" :aria-label="$t('hero.prevSlide')" class="hero-nav-btn" @click="showPreviousHeroSlide">&lt;</button>
+          <button type="button" :aria-label="$t('hero.nextSlide')" class="hero-nav-btn" @click="showNextHeroSlide">&gt;</button>
         </div>
       </div>
     </section>
@@ -66,17 +66,17 @@
       <BookingSearchForm />
     </div>
 
+    <ProvinceSelector />
+
     <!-- Modular Travel Solutions: luxury connected node network -->
     <section class="modular-section">
       <div class="container modular-section__inner">
         <!-- Left: copy -->
         <div class="modular-text">
-          <span class="modular-badge">MODULAR TRAVEL SOLUTIONS</span>
-          <h2 class="modular-title">ການເດີນທາງທີ່ເຊື່ອມຕໍ່ກັນຢ່າງລົງຕົວ</h2>
+          <span class="modular-badge">{{ $t('home.modularBadge') }}</span>
+          <h2 class="modular-title">{{ $t('home.modularTitle') }}</h2>
           <p class="modular-desc">
-            ປະຢັດເວລາ ແລະ ເພີ່ມຄວາມສະດວກສະບາຍດ້ວຍແພລດຟອມຂອງພວກເຮົາ.
-            ເຊື່ອມຕໍ່ການເດີນທາງຂອງທ່ານຕັ້ງແຕ່ສະໜາມບິນ, ລົດໄຟ, ລົດຮັບສົ່ງ, ໂຮງແຮມ - ທີພັກ
-            ຈົນຮອດສະຖານທີ່ທ່ອງທ່ຽວ ໄວ້ໃນບ່ອນດຽວ.
+            {{ $t('home.modularDesc') }}
           </p>
         </div>
 
@@ -92,7 +92,7 @@
           <div class="ecosystem-glow" />
 
           <fieldset class="ecosystem-fieldset" :style="{ '--n': ecosystemModules.length }">
-            <legend class="ecosystem-sr">ເລືອກໝວດໝູ່ລະບົບນິເວດການທ່ອງທ່ຽວ</legend>
+            <legend class="ecosystem-sr">{{ $t('home.ecosystemLegend') }}</legend>
 
             <div class="ecosystem-space">
               <span
@@ -145,15 +145,15 @@
 
       <div class="container services-grid-section__inner">
         <div class="services-grid-header">
-          <span class="services-grid-header__badge">ບໍລິການຂອງພວກເຮົາ</span>
-          <h2 class="services-grid-header__title">ເລືອກບໍລິການ</h2>
+          <span class="services-grid-header__badge">{{ $t('home.servicesBadge') }}</span>
+          <h2 class="services-grid-header__title">{{ $t('home.servicesTitle') }}</h2>
           <p class="services-grid-header__subtitle">
-            ຄົ້ນພົບບໍລິການດິຈິຕອລທີ່ຫຼາກຫຼາຍຂອງພວກເຮົາທີ່ອອກແບບມາເພື່ອຕອບສະໜອງຄວາມຕ້ອງການເດີນທາງຂອງທ່ານ
+            {{ $t('home.servicesSubtitle') }}
           </p>
         </div>
 
         <a-row v-if="isServicesLoading" :gutter="[24, 24]" role="status" aria-busy="true">
-          <span class="services-sr">ກຳລັງໂຫຼດບໍລິການ...</span>
+          <span class="services-sr">{{ $t('home.servicesLoading') }}</span>
           <a-col v-for="(tint, i) in serviceSkeletonTints" :key="i" :xs="24" :sm="12" :lg="8">
             <div class="grid-card grid-card--skeleton" aria-hidden="true">
               <div class="services-sk services-sk--icon" :style="{ '--sk-tint': tint }" />
@@ -165,14 +165,14 @@
         </a-row>
 
         <a-row v-else :gutter="[24, 24]">
-          <a-col v-for="item in serviceGridItems" :key="item.title" :xs="24" :sm="12" :lg="8">
-            <div class="grid-card">
+          <a-col v-for="item in serviceGridItems" :key="item.category" :xs="24" :sm="12" :lg="8">
+            <NuxtLink :to="{ path: '/explore', query: { category: item.category } }" class="grid-card">
               <div class="grid-card__icon">
                 <component :is="item.icon" class="grid-card__icon-glyph" />
               </div>
               <h3 class="grid-card__title">{{ item.title }}</h3>
               <p class="grid-card__desc">{{ item.description }}</p>
-            </div>
+            </NuxtLink>
           </a-col>
         </a-row>
       </div>
@@ -195,8 +195,8 @@
     <section class="best-of-section">
       <div class="container">
         <div class="luxury-header">
-          <span class="luxury-header__label">CURATED FOR YOU</span>
-          <h2 class="luxury-header__title">BEST OF LAOS</h2>
+          <span class="luxury-header__label">{{ $t('home.curatedForYou') }}</span>
+          <h2 class="luxury-header__title">{{ $t('home.bestOfLaosTitle') }}</h2>
         </div>
 
         <div class="best-of-grid">
@@ -221,8 +221,8 @@
     <section class="destinations-section">
       <div class="container">
         <div class="luxury-header">
-          <span class="luxury-header__label">EXPLORE THE KINGDOM</span>
-          <h2 class="luxury-header__title">TOP DESTINATIONS</h2>
+          <span class="luxury-header__label">{{ $t('home.exploreKingdom') }}</span>
+          <h2 class="luxury-header__title">{{ $t('home.topDestinationsTitle') }}</h2>
         </div>
 
         <TopDestinations />
@@ -233,9 +233,9 @@
     <section class="tour-categories-section">
       <div class="container">
         <div class="tour-categories-header">
-          <h2 class="tour-categories-header__title">ປະເພດທົວ</h2>
+          <h2 class="tour-categories-header__title">{{ $t('home.tourCategoriesTitle') }}</h2>
           <a href="#" class="tour-categories-header__link">
-            ເບິ່ງລາຍການທັງໝົດ
+            {{ $t('home.viewAll') }}
             <ArrowRightOutlined class="tour-categories-header__link-icon" />
           </a>
         </div>
@@ -259,8 +259,8 @@
     <section class="media-section">
       <div class="container">
         <div class="luxury-header">
-          <span class="luxury-header__label">FOLLOW OUR JOURNEY</span>
-          <h2 class="luxury-header__title">Our Latest Videos</h2>
+          <span class="luxury-header__label">{{ $t('home.followOurJourney') }}</span>
+          <h2 class="luxury-header__title">{{ $t('home.ourLatestVideos') }}</h2>
         </div>
 
         <!-- YouTube-style video thumbnail grid -- fetched from GET /videos/latest
@@ -281,14 +281,14 @@
     <!-- Luxury video lightbox: plays the clicked video's YouTube embed full-screen -->
     <Teleport to="body">
       <div v-if="isVideoModalOpen" class="video-modal" @click.self="closeVideo">
-        <button type="button" class="video-modal__close" aria-label="Close" @click="closeVideo">
+        <button type="button" class="video-modal__close" :aria-label="$t('common.close')" @click="closeVideo">
           <CloseOutlined />
         </button>
         <div class="video-modal__player">
           <iframe
             v-if="currentVideo"
             :src="`https://www.youtube.com/embed/${currentVideo.youtubeId}?autoplay=1&rel=0&start=${currentVideo.start}&end=${currentVideo.end}`"
-            title="Video player"
+            :title="$t('home.videoPlayerTitle')"
             allow="autoplay; encrypted-media; picture-in-picture"
             allowfullscreen
           />
@@ -387,25 +387,27 @@ function handleGlassNavResize() {
 }
 
 const heroSlide = ref(0)
-const heroSlides = [
-  { index: 0, title: 'ປະຕູໄຊ', subtitle: 'Vientiane', image: '/images/patuxay.jpeg' },
-  { index: 1, title: 'ພະທາດຫຼວງ', subtitle: 'Vientiane', image: '/images/phathartlaung.jpeg' },
-  { index: 2, title: 'ນ້ຳຕົກຕາດກວາງຊີ', subtitle: 'Luang Prabang', image: '/images/Tardkaungse.png' },
-  { index: 3, title: 'ວັງວຽງ', subtitle: 'Vang Vieng', image: '/images/hero-bg.jpg' },
-  { index: 4, title: 'ວັດພູ', subtitle: 'Champasak', image: '/images/Wat-Phu-Laos.jpg' },
-  { index: 5, title: 'ຄອນພະເພັງ', subtitle: 'Champasak', image: '/images/khonephapheng.jpg' },
-  { index: 6, title: 'ເມືອງງອຍ', subtitle: 'Luang Prabang', image: '/images/Muaengngoy.jpg' }
-]
+// Computed (not a plain const) so the landmark titles re-translate when
+// the active locale changes -- see t() calls below.
+const heroSlides = computed(() => [
+  { index: 0, title: t('hero.slides.patuxay'), subtitle: 'Vientiane', image: '/images/patuxay.jpeg' },
+  { index: 1, title: t('hero.slides.phaThatLuang'), subtitle: 'Vientiane', image: '/images/phathartlaung.jpeg' },
+  { index: 2, title: t('hero.slides.tadKuangSi'), subtitle: 'Luang Prabang', image: '/images/Tardkaungse.png' },
+  { index: 3, title: t('hero.slides.vangVieng'), subtitle: 'Vang Vieng', image: '/images/hero-bg.jpg' },
+  { index: 4, title: t('hero.slides.watPhou'), subtitle: 'Champasak', image: '/images/Wat-Phu-Laos.jpg' },
+  { index: 5, title: t('hero.slides.khonePhapheng'), subtitle: 'Champasak', image: '/images/khonephapheng.jpg' },
+  { index: 6, title: t('hero.slides.muangNgoi'), subtitle: 'Luang Prabang', image: '/images/Muaengngoy.jpg' }
+])
 
 // Hero navigation is plain state now -- there's no Swiper instance behind
 // it since the thumbnail strip (the only thing that ever needed Swiper
 // here) was removed; HeroSlider just reacts to heroSlide changing.
 function showPreviousHeroSlide() {
-  heroSlide.value = (heroSlide.value - 1 + heroSlides.length) % heroSlides.length
+  heroSlide.value = (heroSlide.value - 1 + heroSlides.value.length) % heroSlides.value.length
 }
 
 function showNextHeroSlide() {
-  heroSlide.value = (heroSlide.value + 1) % heroSlides.length
+  heroSlide.value = (heroSlide.value + 1) % heroSlides.value.length
 }
 
 // --- Autoplay ---------------------------------------------------------
@@ -466,88 +468,99 @@ const CocktailIcon = makeGlyphIcon('M21 5V3H3v2l8 9v5H6v2h12v-2h-5v-5l8-9zM7.43 
 // (--n) — see .ecosystem-module in <style> — so there's no JS trig/percent
 // math here at all. stat/delta are placeholder headline figures for the
 // center display; swap them for real numbers when available.
-const ecosystemModules = [
+// Computed (not a plain const) so labels/deltas re-translate on locale change.
+const ecosystemModules = computed(() => [
   {
     id: 'airport',
     icon: FlightIcon,
-    label: 'ສະໜາມບິນ',
+    label: t('home.ecosystem.airport.label'),
     stat: '24/7',
-    delta: 'ບໍລິການຕະຫຼອດ 24 ຊົ່ວໂມງ'
+    delta: t('home.ecosystem.airport.delta')
   },
   {
     id: 'car-rental',
     icon: CarOutlined,
-    label: 'ລົດຮັບສົ່ງ / ລົດເຊົ່າ',
+    label: t('home.ecosystem.carRental.label'),
     stat: '50+',
-    delta: 'ຄັນລົດພ້ອມໃຫ້ບໍລິການ'
+    delta: t('home.ecosystem.carRental.delta')
   },
   {
     id: 'hotel',
     icon: HotelIcon,
-    label: 'ໂຮງແຮມ - ຣີສອດ',
+    label: t('home.ecosystem.hotel.label'),
     stat: '150+',
-    delta: 'ໂຮງແຮມ ແລະ ຣີສອດທີ່ຄັດສັນ'
+    delta: t('home.ecosystem.hotel.delta')
   },
   {
     id: 'restaurant',
     icon: RestaurantIcon,
-    label: 'ຮ້ານອາຫານ',
+    label: t('home.ecosystem.restaurant.label'),
     stat: '200+',
-    delta: 'ຮ້ານອາຫານທົ່ວທຸກແຂວງ'
+    delta: t('home.ecosystem.restaurant.delta')
   },
   {
     id: 'attraction',
     icon: CameraOutlined,
-    label: 'ສະຖານທີ່ທ່ອງທ່ຽວ',
+    label: t('home.ecosystem.attraction.label'),
     stat: '80+',
-    delta: 'ສະຖານທີ່ທ່ອງທ່ຽວຍອດນິຍົມ'
+    delta: t('home.ecosystem.attraction.delta')
   },
   {
     id: 'entertainment',
     icon: CocktailIcon,
-    label: 'ສະຖານທີ່ບັນເທີງ',
+    label: t('home.ecosystem.entertainment.label'),
     stat: '30+',
-    delta: 'ຈຸດບັນເທີງຍາມຄ່ຳຄືນ'
+    delta: t('home.ecosystem.entertainment.delta')
   }
-]
+])
 
-const selectedModuleId = ref(ecosystemModules[0].id)
+const selectedModuleId = ref(ecosystemModules.value[0].id)
 const activeModule = computed(
-  () => ecosystemModules.find((module) => module.id === selectedModuleId.value) ?? ecosystemModules[0]
+  () => ecosystemModules.value.find((module) => module.id === selectedModuleId.value) ?? ecosystemModules.value[0]
 )
 
-const serviceGridItems = [
+// Computed (not a plain const) so titles/descriptions re-translate on locale
+// change. `category` is a stable (locale-independent) key -- it's what the
+// card links to on /explore (see the template) and doubles as the :key in
+// the v-for there, since `title` now changes across locales.
+const serviceGridItems = computed(() => [
   {
+    category: 'HOTEL',
     icon: BankOutlined,
-    title: 'ຈອງໂຮງແຮມ & ຣີສອດ',
-    description: 'ຊອກຫາ ແລະ ຈອງທີ່ພັກທົ່ວປະເທດລາວ'
+    title: t('home.services.hotels.title'),
+    description: t('home.services.hotels.description')
   },
   {
+    category: 'FLIGHT',
     icon: SendOutlined,
-    title: 'ຈອງປີ້ຍົນ',
-    description: 'ປີ້ຍົນພາຍໃນ ແລະ ຕ່າງປະເທດ'
+    title: t('home.services.flights.title'),
+    description: t('home.services.flights.description')
   },
   {
+    category: 'CAR_RENTAL',
     icon: CarOutlined,
-    title: 'ລົດຮັບ-ສົ່ງ & ເຊົ່າລົດ',
-    description: 'ບໍລິການລົດຮັບສົ່ງສະໜາມບິນ ແລະ ລົດເຊົ່າ'
+    title: t('home.services.transport.title'),
+    description: t('home.services.transport.description')
   },
   {
+    category: 'TOUR',
     icon: CameraOutlined,
-    title: 'ສະຖານທີ່ທ່ອງທ່ຽວ',
-    description: 'ຈອງປີ້ເຂົ້າຊົມສະຖານທີ່ທ່ອງທ່ຽວຍອດຮິດ'
+    title: t('home.services.attractions.title'),
+    description: t('home.services.attractions.description')
   },
   {
+    category: 'INSURANCE',
     icon: SafetyCertificateOutlined,
-    title: 'ປະກັນໄພການເດີນທາງ',
-    description: 'ເດີນທາງອຸ່ນໃຈດ້ວຍປະກັນໄພຄຸ້ມຄອງ'
+    title: t('home.services.insurance.title'),
+    description: t('home.services.insurance.description')
   },
   {
+    category: 'PACKAGE',
     icon: CompassOutlined,
-    title: 'ແພັກເກດທົວ',
-    description: 'ທົວຄົບວົງຈອນ ຈັດກຽມທຸກຢ່າງໃຫ້ທ່ານ'
+    title: t('home.services.packages.title'),
+    description: t('home.services.packages.description')
   }
-]
+])
 
 // Brief shimmer skeleton on mount so the services grid doesn't pop in blank
 // while its (future API-backed) data resolves -- tints give each card the
@@ -567,33 +580,34 @@ onMounted(() => {
   }, 900)
 })
 
-const valueProps = [
+// Computed (not a plain const) so titles/descriptions re-translate on locale change.
+const valueProps = computed(() => [
   {
     icon: CrownOutlined,
-    title: 'Best Products & Experiences',
-    desc: 'ຄັດສັນສະເພາະປະສົບການ ແລະ ບໍລິການທີ່ດີທີ່ສຸດ'
+    title: t('home.valueProps.bestProducts.title'),
+    desc: t('home.valueProps.bestProducts.desc')
   },
   {
     icon: CreditCardOutlined,
-    title: 'Payment Options',
-    desc: 'ຮອງຮັບການຊຳລະຫຼາກຫຼາຍຊ່ອງທາງ ປອດໄພ ແລະ ວ່ອງໄວ'
+    title: t('home.valueProps.payment.title'),
+    desc: t('home.valueProps.payment.desc')
   },
   {
     icon: ThunderboltOutlined,
-    title: 'Seamless Booking',
-    desc: 'ຈອງງ່າຍ ພຽງສອງສາມຄລິກ ບໍ່ຫຍຸ້ງຍາກ'
+    title: t('home.valueProps.booking.title'),
+    desc: t('home.valueProps.booking.desc')
   },
   {
     icon: GlobalOutlined,
-    title: 'Covering All of Laos',
-    desc: 'ຄອບຄຸມທຸກແຂວງທົ່ວປະເທດລາວ'
+    title: t('home.valueProps.coverage.title'),
+    desc: t('home.valueProps.coverage.desc')
   },
   {
     icon: CustomerServiceOutlined,
-    title: 'Service-Oriented Support',
-    desc: 'ທີມງານພ້ອມໃຫ້ບໍລິການທ່ານຕະຫຼອດ 24 ຊົ່ວໂມງ'
+    title: t('home.valueProps.support.title'),
+    desc: t('home.valueProps.support.desc')
   }
-]
+])
 
 // A category without an `image` falls back to a tinted gradient + ghost icon
 // instead (see .luxury-card--tinted in <style>, and the v-else branch below) --
@@ -607,17 +621,18 @@ const valueProps = [
 // here (e.g. a waterfall behind "Car Rentals") would be the "unrelated
 // destination photo" this file's own previous comment already called out as
 // worth avoiding.
-const bestOfLaos = [
-  { title: 'River Cruise', image: '/images/Muaengngoy.jpg' },
-  { title: 'Train Ticketing', image: '/images/train-ticket.jpg' },
-  { title: 'Car Rentals', image: '/images/car-rental.jpg' }
-]
+// Computed (not a plain const) so titles re-translate on locale change.
+const bestOfLaos = computed(() => [
+  { title: t('home.bestOfLaos.riverCruise'), image: '/images/Muaengngoy.jpg' },
+  { title: t('home.bestOfLaos.trainTicketing'), image: '/images/train-ticket.jpg' },
+  { title: t('home.bestOfLaos.carRentals'), image: '/images/car-rental.jpg' }
+])
 
-const tourCategories = [
-  { title: 'ADVENTURES & SPORTS', image: '/images/khonephapheng.jpg' },
-  { title: 'PILGRIMAGE TOURS', image: '/images/Wat-Phu-Laos.jpg' },
-  { title: 'CYCLING TOURS', image: '/images/Muaengngoy.jpg' }
-]
+const tourCategories = computed(() => [
+  { title: t('home.tourCategories.adventure'), image: '/images/khonephapheng.jpg' },
+  { title: t('home.tourCategories.pilgrimage'), image: '/images/Wat-Phu-Laos.jpg' },
+  { title: t('home.tourCategories.cycling'), image: '/images/Muaengngoy.jpg' }
+])
 
 // "Our Latest Videos" grid: fetched from the backend (GET /videos/latest,
 // sorted createdAt DESC, capped to 8) instead of hardcoded here -- see
@@ -1412,8 +1427,12 @@ function closeVideo() {
   color: rgba(255, 255, 255, 0.65);
 }
 
-/* Premium dark glass card: frosted surface with a gold accent on hover */
+/* Premium dark glass card: frosted surface with a gold accent on hover.
+   Now a NuxtLink (see index.vue's template) rather than a plain div, so it
+   also resets the anchor's default underline/color and shows a pointer
+   cursor -- the visual cues that tell users it's clickable. */
 .grid-card {
+  display: block;
   height: 100%;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -1422,6 +1441,9 @@ function closeVideo() {
   padding: 32px 24px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   text-align: center;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
   transition: all 0.3s ease;
 }
 
@@ -1485,6 +1507,7 @@ function closeVideo() {
   display: flex;
   flex-direction: column;
   align-items: center;
+  cursor: default;
 }
 
 .services-sk {

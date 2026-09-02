@@ -3,6 +3,11 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   modules: ['@pinia/nuxt', '@ant-design-vue/nuxt', '@nuxtjs/i18n'],
+  // Self-hosted Noto Sans Lao @font-face rules + the site's global
+  // font-family (see app/assets/css/main.css) -- registered here so it's
+  // injected on every page instead of only wherever it happens to get
+  // imported from a component.
+  css: ['~/assets/css/main.css'],
   // No global route prefix on the NestJS side (see unibooking-backend/src/main.ts),
   // so routes are POST /auth/login, GET /services/search, etc -- not /v1/*.
   // Override with NUXT_PUBLIC_API_BASE for staging/prod builds.

@@ -2,54 +2,54 @@
   <a-card class="search-form" :bordered="false">
     <a-tabs v-model:activeKey="activeTab">
       <!-- Hotels -->
-      <a-tab-pane key="hotels" tab="ໂຮງແຮມ">
+      <a-tab-pane key="hotels" :tab="$t('search.hotelsTab')">
         <a-row :gutter="[16, 16]" align="bottom">
           <a-col :xs="24" :sm="12" :md="7">
-            <label class="field-label">ສະຖານທີ່</label>
-            <a-input v-model:value="hotelSearch.location" placeholder="ນະຄອນຫຼວງວຽງຈັນ" size="large" />
+            <label class="field-label">{{ $t('search.locationLabel') }}</label>
+            <a-input v-model:value="hotelSearch.location" :placeholder="$t('search.locationPlaceholder')" size="large" />
           </a-col>
 
           <a-col :xs="24" :sm="12" :md="8">
-            <label class="field-label">ວັນທີເຂົ້າພັກ - ວັນທີອອກ</label>
+            <label class="field-label">{{ $t('search.datesLabel') }}</label>
             <a-range-picker v-model:value="hotelSearch.dates" size="large" style="width: 100%" />
           </a-col>
 
           <a-col :xs="24" :sm="12" :md="5">
-            <label class="field-label">ຈຳນວນຄົນ</label>
+            <label class="field-label">{{ $t('search.guestsLabel') }}</label>
             <a-select id="hotel-search-guests" v-model:value="hotelSearch.guests" size="large" style="width: 100%">
-              <a-select-option v-for="n in 6" :key="n" :value="n">{{ n }} ຄົນ</a-select-option>
+              <a-select-option v-for="n in 6" :key="n" :value="n">{{ $t('search.guestsOption', { n }) }}</a-select-option>
             </a-select>
           </a-col>
 
           <a-col :xs="24" :sm="12" :md="4">
             <a-button type="primary" size="large" block @click="handleHotelSearch">
-              ຄົ້ນຫາ
+              {{ $t('search.searchButton') }}
             </a-button>
           </a-col>
         </a-row>
       </a-tab-pane>
 
       <!-- Transport -->
-      <a-tab-pane key="transport" tab="ພາຫະນະ">
+      <a-tab-pane key="transport" :tab="$t('search.transportTab')">
         <a-row :gutter="[16, 16]" align="bottom">
           <a-col :xs="24" :sm="12" :md="6">
-            <label class="field-label">ຕົ້ນທາງ</label>
-            <a-input v-model:value="transportSearch.from" placeholder="ວຽງຈັນ" size="large" />
+            <label class="field-label">{{ $t('search.originLabel') }}</label>
+            <a-input v-model:value="transportSearch.from" :placeholder="$t('search.originPlaceholder')" size="large" />
           </a-col>
 
           <a-col :xs="24" :sm="12" :md="6">
-            <label class="field-label">ປາຍທາງ</label>
-            <a-input v-model:value="transportSearch.to" placeholder="ຫຼວງພະບາງ" size="large" />
+            <label class="field-label">{{ $t('search.destinationLabel') }}</label>
+            <a-input v-model:value="transportSearch.to" :placeholder="$t('search.destinationPlaceholder')" size="large" />
           </a-col>
 
           <a-col :xs="24" :sm="12" :md="7">
-            <label class="field-label">ວັນທີເດີນທາງ</label>
+            <label class="field-label">{{ $t('search.travelDateLabel') }}</label>
             <a-date-picker v-model:value="transportSearch.departureDate" size="large" style="width: 100%" />
           </a-col>
 
           <a-col :xs="24" :sm="12" :md="5">
             <a-button type="primary" size="large" block @click="handleTransportSearch">
-              ຄົ້ນຫາຖ້ຽວລົດ
+              {{ $t('search.searchFlightsButton') }}
             </a-button>
           </a-col>
         </a-row>
@@ -65,8 +65,14 @@ const router = useRouter()
 
 const activeTab = ref('hotels')
 
+// `location` is a shared useState ref (see useSearchLocation) instead of
+// plain local state -- reactive() unwraps top-level ref properties, so
+// reads/writes on hotelSearch.location transparently go through it. This is
+// what lets ProvinceSelector (a sibling component on the homepage) populate
+// this field when a district/village is clicked there.
+const searchLocation = useSearchLocation()
 const hotelSearch = reactive({
-  location: '',
+  location: searchLocation,
   dates: [],
   guests: 1
 })
