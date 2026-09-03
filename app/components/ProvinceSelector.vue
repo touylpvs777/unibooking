@@ -51,24 +51,27 @@
         </button>
       </div>
 
-      <!-- District/village chips for whichever province is active -->
+      <!-- District/village chips for whichever province is active -- only
+           districts with at least one entry in laoAttractions are shown
+           (see visibleDistricts), since a pill for a district with no
+           sites would just be a dead end. -->
       <Transition name="district-fade" mode="out-in">
         <div v-if="activeProvince" :key="activeProvinceKey" class="district-panel">
           <span class="district-panel__label">
             {{ $t('provinceExplorer.districtsIn', { province: $t(`provinces.${activeProvinceKey}.name`) }) }}
           </span>
-          <div class="district-chips">
+          <div v-if="visibleDistricts.length" class="district-chips">
             <a-tag
-              v-for="district in activeProvince.districts"
+              v-for="district in visibleDistricts"
               :key="district.key"
               class="district-chip"
-              :class="{ 'is-selected': selectedDistrictKey === district.key }"
               @click="selectDistrict(district)"
             >
               <EnvironmentOutlined class="district-chip__icon" />
               {{ $t(`provinces.${activeProvinceKey}.districts.${district.key}`) }}
             </a-tag>
           </div>
+          <p v-else class="district-panel__empty">{{ $t('provinceExplorer.noDistricts') }}</p>
         </div>
       </Transition>
     </div>
@@ -79,17 +82,22 @@
 import { ref, computed } from 'vue'
 import { EnvironmentOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons-vue'
 import { laoProvinces } from '~/data/laoProvinces'
+import { laoAttractions } from '~/data/laoAttractions'
 
-const { t } = useI18n()
-const searchLocation = useSearchLocation()
+const router = useRouter()
 
 const provinces = laoProvinces
 const activeProvinceKey = ref(provinces[0].key)
-const selectedDistrictKey = ref(null)
 const scrollContainer = ref(null)
 
 const activeProvince = computed(
   () => provinces.find((province) => province.key === activeProvinceKey.value) ?? null
+)
+
+// Only districts with at least one mapped attraction are worth showing --
+// see laoAttractions.js, the single source of truth for "has sites."
+const visibleDistricts = computed(
+  () => activeProvince.value?.districts.filter((district) => (laoAttractions[district.key]?.length ?? 0) > 0) ?? []
 )
 
 // Arrow-click distance, not a full page -- enough to bring 2-3 more pills
@@ -102,21 +110,13 @@ function scrollProvinces(direction) {
 
 function selectProvince(key) {
   activeProvinceKey.value = key
-  selectedDistrictKey.value = null
 }
 
-// Populates the shared "Location" state the BookingSearchForm above reads
-// from (see useSearchLocation) with this district's name in the current
-// locale, then scrolls the search widget into view so the result is
-// immediately visible -- the whole point of putting this selector directly
-// under the search form.
+// Takes the user straight to that district's attraction grid instead of just
+// filling in the search box -- see pages/destinations/index.vue, which reads
+// this same district key back out of the query string.
 function selectDistrict(district) {
-  selectedDistrictKey.value = district.key
-  searchLocation.value = t(`provinces.${activeProvinceKey.value}.districts.${district.key}`)
-
-  if (import.meta.client) {
-    document.querySelector('.search-form-wrapper')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-  }
+  router.push({ path: '/destinations', query: { district: district.key } })
 }
 </script>
 
@@ -306,14 +306,14 @@ function selectDistrict(district) {
   color: #ffffff;
 }
 
-.district-chip.is-selected {
-  background: rgba(212, 175, 55, 0.18);
-  border-color: #d4af37;
-  color: #ffffff;
-}
-
 .district-chip__icon {
   color: #d4af37;
+  font-size: 13px;
+}
+
+.district-panel__empty {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.5);
   font-size: 13px;
 }
 

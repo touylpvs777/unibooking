@@ -96,6 +96,22 @@ body,
   font-family: var(--font-sans);
 }
 
+/* Browsers apply their own UA-stylesheet font to form controls (button,
+   input, select, textarea) regardless of what body/html declare -- an
+   explicit UA default beats an inherited value in the cascade. Without this,
+   any native form element (including ones nested inside Ant Design Vue
+   components, e.g. the actual <input> under .ant-picker-input, which isn't
+   covered by the .ant-input class rule below) silently falls back to the
+   OS's system font instead of NotoSansLao, which is especially visible with
+   Lao glyphs since the system font rarely has proper Lao coverage. */
+input,
+button,
+select,
+textarea,
+optgroup {
+  font-family: inherit;
+}
+
 /* Ant Design Vue's own components get their font from the ConfigProvider
    theme token (token.fontFamily, set in app.vue) -- this is a
    belt-and-suspenders override for any antd surface that renders outside

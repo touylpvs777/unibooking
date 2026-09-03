@@ -33,6 +33,37 @@
     "prevMonth": "Previous month",
     "nextMonth": "Next month"
   },
+  "visaGuide": {
+    "triggerLabel": "Visa Info",
+    "modalTitle": "Laos Visa & Entry Guide",
+    "tabs": {
+      "eVisa": "e-Visa",
+      "voa": "Visa on Arrival",
+      "documents": "Required Documents"
+    },
+    "eVisa": {
+      "heading": "Apply for an e-Visa",
+      "description": "Citizens of many countries can apply online for a Lao e-Visa before travelling. Processing usually takes 3 business days, so print your approval letter and passport clearly before departure.",
+      "bullet1": "Apply online at least 3 business days in advance",
+      "bullet2": "Single entry only, valid for a stay of up to 30 days",
+      "bullet3": "Entry allowed only at designated international checkpoints"
+    },
+    "voa": {
+      "heading": "Visa on Arrival",
+      "description": "Citizens of many countries can obtain a visa on the spot at major international checkpoints (airports or border crossings) without applying in advance. Have your documents and fee ready before you reach the counter.",
+      "bullet1": "Available immediately at designated international checkpoints",
+      "bullet2": "Fee must be paid in cash (USD), plus one passport photo",
+      "bullet3": "Valid for a stay of up to 30 days, same as the e-Visa"
+    },
+    "documents": {
+      "heading": "Documents to Prepare",
+      "description": "Whichever visa route you choose, have the following documents ready before you travel.",
+      "bullet1": "Passport valid for at least 6 months",
+      "bullet2": "One passport-sized photo (4x6 cm)",
+      "bullet3": "Hotel booking and return/onward ticket (or a travel itinerary)"
+    },
+    "disclaimer": "This guide is for general reference only. Actual requirements may vary -- please check with the Lao embassy/consulate or immigration authority before every trip."
+  },
   "hero": {
     "tag": "LANDMARK",
     "subtitleSuffix": "Discover Laos through places worth remembering.",
@@ -152,9 +183,56 @@
     "title": "Explore by Province",
     "subtitle": "Tap a province, then pick a notable spot to start your search",
     "districtsIn": "Notable spots in {province}",
+    "noDistricts": "No documented tourist sites for this province yet -- check back soon.",
     "selectPrompt": "Select a province to see notable spots",
     "scrollLeft": "Scroll provinces left",
     "scrollRight": "Scroll provinces right"
+  },
+  "destinations": {
+    "badge": "EXPLORE",
+    "heading": "Attractions in {district}",
+    "subtitle": "{province} Province · {count} places to explore",
+    "backHome": "Back to Home",
+    "emptyTitle": "No district selected",
+    "emptyDesc": "Pick a district from the homepage's \"Explore by Province\" section to see its attractions.",
+    "noAttractions": "No attractions listed for this district yet."
+  },
+  "attractions": {
+    "types": {
+      "monument": "Monument",
+      "temple": "Temple",
+      "museum": "Museum",
+      "nature": "Nature",
+      "heritage": "Heritage Site",
+      "culture": "Culture"
+    },
+    "patuxay": { "name": "Patuxay Monument" },
+    "thatLuang": { "name": "Pha That Luang" },
+    "watSokPaLuang": { "name": "Wat Sok Pa Luang" },
+    "buddhaPark": { "name": "Buddha Park (Xieng Khuan)" },
+    "watXiengThong": { "name": "Wat Xieng Thong" },
+    "kuangSiWaterfall": { "name": "Kuang Si Waterfall" },
+    "pakOuCaves": { "name": "Pak Ou Caves" },
+    "muangNgoi": { "name": "Muang Ngoi Neua" },
+    "watPhou": { "name": "Wat Phou" },
+    "khonePhapheng": { "name": "Khone Phapheng Falls" },
+    "tadFaneWaterfall": { "name": "Tad Fane Waterfall" },
+    "kongLorCave": { "name": "Kong Lor Cave" },
+    "phaXaiViewpoint": { "name": "Pha Xai Viewpoint" },
+    "phouFaStupa": { "name": "Phou Fa Stupa" },
+    "namHaProtectedArea": { "name": "Nam Ha National Protected Area" },
+    "phouThatTemple": { "name": "Phou That Temple" },
+    "goldenTriangleViewpoint": { "name": "Golden Triangle Viewpoint" },
+    "viengxayCaves": { "name": "Vieng Xay Caves" },
+    "elephantFestivalGrounds": { "name": "Elephant Festival Grounds" },
+    "plainOfJars": { "name": "Plain of Jars" },
+    "tamChangCave": { "name": "Tham Chang Cave" },
+    "blueLagoon": { "name": "Blue Lagoon" },
+    "phouKhaoKhouayNpa": { "name": "Phou Khao Khouay National Park" },
+    "thatIngHang": { "name": "That Ing Hang" },
+    "tadLoWaterfall": { "name": "Tad Lo Waterfall" },
+    "xeSapNpa": { "name": "Xe Sap National Protected Area" },
+    "tadSamongphak": { "name": "Tad Samongphak Waterfall" }
   },
   "provinces": {
     "vientianeCapital": {

@@ -456,6 +456,7 @@ onUnmounted(() => {
   border-radius: 999px;
   background: rgba(212, 175, 55, 0.1);
   color: #d4af37;
+  font-family: var(--font-sans), 'NotoSansLao', sans-serif !important;
   font-size: 13px;
   font-weight: 600;
   line-height: 1;
@@ -476,10 +477,12 @@ onUnmounted(() => {
 }
 
 .weather-pill__city {
+  font-family: var(--font-sans), 'NotoSansLao', sans-serif !important;
   white-space: nowrap;
 }
 
 .weather-pill__temp {
+  font-family: var(--font-sans), 'NotoSansLao', sans-serif !important;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -511,6 +514,7 @@ onUnmounted(() => {
   -webkit-backdrop-filter: blur(16px);
   box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55);
   color: #ffffff;
+  font-family: var(--font-sans), 'NotoSansLao', sans-serif !important;
 }
 
 .weather-modal__close {

@@ -44,6 +44,8 @@
              together and pushed flush right, plus the hamburger (mobile only) -->
         <div class="site-header__actions">
           <ClientOnly>
+            <VisaGuideModal class="user-menu-wrapper--desktop" />
+
             <a-dropdown placement="bottomRight" class="user-menu-wrapper--desktop">
               <a class="lang-switcher" @click.prevent>
                 <GlobalOutlined />

@@ -31,6 +31,7 @@
                       </a-menu>
                     </template>
                   </a-dropdown>
+                  <VisaGuideModal v-else-if="item.key === 'visa'" variant="light" />
                   <NuxtLink v-else-if="item.to" :to="item.to" class="glass-navbar__link" @click="setActiveGlassNav(index)">
                     {{ item.label }}
                   </NuxtLink>
@@ -52,7 +53,6 @@
           <span class="hero-copy__tag">{{ $t('hero.tag') }}</span>
           <h1 class="hero-copy__title">{{ heroSlides[heroSlide].title }}</h1>
           <p class="hero-copy__subtitle">{{ heroSlides[heroSlide].subtitle }} · {{ $t('hero.subtitleSuffix') }}</p>
-          <a href="#services" class="hero-copy__button">{{ $t('hero.cta') }}</a>
         </div>
 
         <div class="hero-nav-controls">
@@ -62,7 +62,7 @@
       </div>
     </section>
 
-    <div class="search-form-wrapper">
+    <div id="main-search-box" class="search-form-wrapper">
       <BookingSearchForm />
     </div>
 
@@ -349,6 +349,7 @@ const heroNavItems = computed(() => [
   { key: 'premium', label: t('nav.premium'), to: '/premium' },
   { key: 'blogs', label: t('nav.blogs'), to: '/blogs' },
   { key: 'lang', label: `🌐 ${currentLocaleName.value}` },
+  { key: 'visa' },
   { key: 'explore', label: t('nav.explore'), to: '/explore' },
   authStore.isAuthenticated
     ? { key: 'login', label: authStore.fullName, to: '/profile' }
@@ -722,7 +723,7 @@ function closeVideo() {
    card so it never reaches down into the carousel strip at the bottom. */
 .hero-copy {
   position: absolute;
-  top: 130px;
+  top: 210px;
   left: 6%;
   z-index: 4;
   width: min(440px, 40%);
@@ -754,41 +755,6 @@ function closeVideo() {
   font-size: 16px;
   line-height: 1.6;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 2px 10px rgba(0, 0, 0, 0.7);
-}
-
-/* Same frosted-glass texture as .glass-navbar__indicator (see the navbar
-   styles below), tinted with the button's own gold instead of white so the
-   base color survives the blur. */
-.hero-copy__button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 132px;
-  margin-top: 26px;
-  padding: 13px 28px;
-  border-radius: 100px;
-  background: rgba(197, 160, 89, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(15px);
-  box-shadow:
-    inset 0 0 0 rgba(255, 255, 255, 0.1),
-    inset -3px -3px 6px rgba(0, 0, 0, 0.3),
-    inset 0 0 9px rgba(255, 255, 255, 0.2),
-    inset 2px 4px 8px rgba(255, 255, 255, 0.4),
-    inset -6px -12px 18px rgba(0, 0, 0, 0.2),
-    0 6px 12px rgba(0, 0, 0, 0.3);
-  color: #0a0a0a;
-  font-size: 14px;
-  font-weight: 700;
-  text-decoration: none;
-  transition: background 0.25s ease, transform 0.25s ease;
-}
-
-.hero-copy__button:hover {
-  background: rgba(216, 188, 123, 0.85);
-  color: #0a0a0a;
-  transform: translateY(-2px);
 }
 
 /* Bottom-right of the hero card, clear of the copy block and navbar. */
@@ -860,6 +826,7 @@ function closeVideo() {
   width: 100%;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 24px;
   padding: 30px 50px;
   z-index: 10;
@@ -882,14 +849,10 @@ function closeVideo() {
 /* The wrapper: single pill container, neumorphic outer shadow lives here
    only -- items and the indicator sit on top of this surface. */
 .glass-navbar {
-  /* Absolutely centered on the header wrapper (already `position: absolute`,
-     so it's the containing block here) -- this way the pill sits dead
-     center of the hero card regardless of the logo's width, instead of
-     drifting right the way `justify-content: space-between` pushed it. */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  /* A normal flex child of .glass-navbar-wrap now, not absolutely
+     positioned -- .glass-navbar-wrap's `justify-content: space-between`
+     pins the logo left and this pill to the far right instead. */
+  flex: 0 0 auto;
   border-radius: 999px;
   padding: 6px;
   background: linear-gradient(145deg, #f0f0f3, #ffffff);
