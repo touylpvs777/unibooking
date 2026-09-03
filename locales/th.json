@@ -13,7 +13,25 @@
     "supplierPortal": "พอร์ทัลผู้ให้บริการ"
   },
   "weather": {
-    "vientianeTooltip": "สภาพอากาศเวียงจันทน์"
+    "city": "เวียงจันทน์",
+    "conditions": {
+      "clear": "ท้องฟ้าแจ่มใส",
+      "cloudy": "มีเมฆ",
+      "fog": "มีหมอก",
+      "rain": "ฝนตก",
+      "snow": "หิมะ",
+      "thunder": "พายุฝนฟ้าคะนอง"
+    },
+    "humidity": "ความชื้น",
+    "wind": "ลม",
+    "uvIndex": "ดัชนี UV",
+    "modalTitle": "สภาพอากาศทั่วโลก",
+    "searchPlaceholder": "ค้นหาเมือง...",
+    "searching": "กำลังค้นหา...",
+    "noResults": "ไม่พบเมือง",
+    "fetchError": "ไม่สามารถโหลดข้อมูลสภาพอากาศได้ กรุณาลองใหม่",
+    "prevMonth": "เดือนก่อนหน้า",
+    "nextMonth": "เดือนถัดไป"
   },
   "hero": {
     "tag": "แลนด์มาร์ก",

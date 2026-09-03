@@ -13,7 +13,25 @@
     "supplierPortal": "ຜູ້ໃຫ້ບໍລິການ"
   },
   "weather": {
-    "vientianeTooltip": "ສະພາບອາກາດ ນະຄອນຫຼວງວຽງຈັນ"
+    "city": "ວຽງຈັນ",
+    "conditions": {
+      "clear": "ທ້ອງຟ້າແຈ່ມໃສ",
+      "cloudy": "ມີເມກ",
+      "fog": "ໝອກ",
+      "rain": "ຝົນຕົກ",
+      "snow": "ຫິມະ",
+      "thunder": "ພາຍຸຟ້າຮ້ອງ"
+    },
+    "humidity": "ຄວາມຊຸ່ມ",
+    "wind": "ລົມ",
+    "uvIndex": "ດັດຊະນີ UV",
+    "modalTitle": "ສະພາບອາກາດໂລກ",
+    "searchPlaceholder": "ຄົ້ນຫາເມືອງ...",
+    "searching": "ກຳລັງຄົ້ນຫາ...",
+    "noResults": "ບໍ່ພົບເມືອງ",
+    "fetchError": "ບໍ່ສາມາດໂຫຼດຂໍ້ມູນສະພາບອາກາດໄດ້ ກະລຸນາລອງໃໝ່.",
+    "prevMonth": "ເດືອນກ່ອນ",
+    "nextMonth": "ເດືອນຕໍ່ໄປ"
   },
   "hero": {
     "tag": "ສະຖານທີ່ສຳຄັນ",

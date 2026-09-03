@@ -1,6 +1,12 @@
 <template>
   <a-card class="search-form" :bordered="false">
     <a-tabs v-model:activeKey="activeTab">
+      <template #rightExtra>
+        <ClientOnly>
+          <WeatherWidget />
+        </ClientOnly>
+      </template>
+
       <!-- Hotels -->
       <a-tab-pane key="hotels" :tab="$t('search.hotelsTab')">
         <a-row :gutter="[16, 16]" align="bottom">
@@ -195,6 +201,11 @@ function handleTransportSearch() {
   border-color: #e0c05c !important;
   color: #14294f !important;
   transform: scale(1.02);
+}
+
+.search-form :deep(.ant-tabs-extra-content) {
+  display: flex;
+  align-items: center;
 }
 
 .field-label {

@@ -13,7 +13,25 @@
     "supplierPortal": "Supplier Portal"
   },
   "weather": {
-    "vientianeTooltip": "Vientiane Weather"
+    "city": "Vientiane",
+    "conditions": {
+      "clear": "Clear",
+      "cloudy": "Cloudy",
+      "fog": "Fog",
+      "rain": "Rain",
+      "snow": "Snow",
+      "thunder": "Thunderstorm"
+    },
+    "humidity": "Humidity",
+    "wind": "Wind",
+    "uvIndex": "UV Index",
+    "modalTitle": "World Weather",
+    "searchPlaceholder": "Search for a city...",
+    "searching": "Searching...",
+    "noResults": "No cities found",
+    "fetchError": "Couldn't load weather data. Please try again.",
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month"
   },
   "hero": {
     "tag": "LANDMARK",
