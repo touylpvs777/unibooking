@@ -112,7 +112,7 @@
           <a-col v-for="service in exploreStore.services" :key="service.id" :xs="24" :sm="12" :lg="8">
             <a-card class="service-card" :bordered="false" :body-style="{ padding: '16px' }">
               <template #cover>
-                <img :src="coverImage(service)" :alt="service.name" class="service-card__image">
+                <img :src="coverImageFor(service)" :alt="service.name" class="service-card__image">
               </template>
 
               <a-tag :color="typeTagMeta(service.type).color" class="service-card__type-tag">
@@ -145,6 +145,7 @@ import { computed, reactive } from 'vue'
 import { EnvironmentOutlined } from '@ant-design/icons-vue'
 import { useExploreStore } from '~/stores/explore'
 import { formatPrice } from '~/utils/currency'
+import { coverImageFor } from '~/utils/serviceImages'
 
 const { t } = useI18n()
 const exploreStore = useExploreStore()
@@ -245,18 +246,6 @@ function typeTagMeta(type) {
     color: TYPE_COLOR_MAP[type] || 'default',
     text: TYPE_KEY_MAP[type] ? t(`common.serviceTypes.${TYPE_KEY_MAP[type]}`) : type
   }
-}
-
-// Same placehold.co convention as pages/hotels.vue's placeholderImage.
-function placeholderImage(name) {
-  return `https://placehold.co/600x400/f0f9ff/1e40af?text=${encodeURIComponent(name)}`
-}
-
-// `images` is at most 1 row here -- the oldest upload, i.e. the cover photo
-// (see ServicesService's searchResultInclude) -- falling back to the
-// placeholder for a service with no photos uploaded yet.
-function coverImage(service) {
-  return service.images?.[0]?.url || placeholderImage(service.name)
 }
 
 // `inventory` is only present on a result when the search itself carried a

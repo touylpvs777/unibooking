@@ -24,6 +24,7 @@ import { ToursModule } from './tours/tours.module';
 import { CarRentalsModule } from './car-rentals/car-rentals.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { VideosModule } from './videos/videos.module';
+import { WebhooksModule } from './webhooks/webhooks.module';
 
 @Module({
   imports: [
@@ -96,6 +97,7 @@ import { VideosModule } from './videos/videos.module';
     AdminModule,
     ReviewsModule,
     VideosModule,
+    WebhooksModule,
   ],
   controllers: [AppController],
   providers: [

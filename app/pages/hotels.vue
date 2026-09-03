@@ -92,7 +92,7 @@
 
         <div v-else class="hotel-list">
           <div v-for="hotel in bookingStore.services" :key="hotel.id" class="hotel-card">
-            <img :src="placeholderImage(hotel.name)" :alt="hotel.name" class="hotel-card__image" />
+            <img :src="coverImageFor(hotel)" :alt="hotel.name" class="hotel-card__image" />
 
             <div class="hotel-card__body">
               <h3 class="hotel-card__name">{{ hotel.name }}</h3>
@@ -136,6 +136,7 @@ import { reactive, onMounted } from 'vue'
 import { EnvironmentOutlined } from '@ant-design/icons-vue'
 import { useBookingStore } from '~/stores/booking'
 import { formatPrice } from '~/utils/currency'
+import { coverImageFor } from '~/utils/serviceImages'
 
 const { t } = useI18n()
 const bookingStore = useBookingStore()
@@ -220,10 +221,6 @@ onMounted(() => {
 function unitPriceFor(service) {
   const entry = service.inventory?.find((row) => row.date?.slice(0, 10) === filters.checkInDate) ?? service.inventory?.[0]
   return entry ? Number(entry.price) : null
-}
-
-function placeholderImage(name) {
-  return `https://placehold.co/600x400/f0f9ff/1e40af?text=${encodeURIComponent(name)}`
 }
 
 function handleBookNow(hotel) {

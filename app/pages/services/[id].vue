@@ -135,6 +135,7 @@ import { useServiceDetailStore } from '~/stores/serviceDetail'
 import { useBookingStore } from '~/stores/booking'
 import { useReviewsStore } from '~/stores/reviews'
 import { formatPrice } from '~/utils/currency'
+import { defaultImageForType } from '~/utils/serviceImages'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -201,16 +202,13 @@ function typeTagMeta(type) {
   }
 }
 
-function placeholderImage(name) {
-  return `https://placehold.co/1000x500/f0f9ff/1e40af?text=${encodeURIComponent(name)}`
-}
-
 // GET /services/:id includes the full gallery, oldest (cover) first (see
 // ServicesService.findOne's allImagesInclude) -- falls back to a single
-// placeholder entry so the template can always assume at least one image.
+// type-appropriate default entry so the template can always assume at least
+// one image, instead of an external placehold.co box with just the name in it.
 const galleryImages = computed(() => {
   const images = service.value?.images
-  return images?.length ? images : [{ id: 'placeholder', url: placeholderImage(service.value?.name || '') }]
+  return images?.length ? images : [{ id: 'placeholder', url: defaultImageForType(service.value?.type) }]
 })
 
 const hasSelectedDates = computed(() => (selectedDates.value?.length ?? 0) === 2)

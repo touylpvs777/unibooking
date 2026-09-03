@@ -47,6 +47,12 @@ export const API_SUPPLIER_BOOKINGS = '/bookings/supplier';
 export const API_CREATE_CHECKOUT = '/payments/checkout';
 export const apiPaymentStatus = (bookingId) => `/payments/status/${bookingId}`;
 
+// Dev/QA-only mock of the LUD Insurance settlement partner FinTink's payment
+// webhook (unibooking-backend/src/webhooks/webhooks.controller.ts) -- the
+// backend hard-404s this route whenever NODE_ENV=production, so it only
+// ever does anything in development/staging. Not a real FinTink integration.
+export const API_FINTINK_MOCK_WEBHOOK = '/api/webhooks/fintink-mock';
+
 // Uploads (unibooking-backend/src/uploads/uploads.controller.ts) -- raw file
 // bytes only, no domain link. The supplier portal uploads here first, then
 // attaches the returned url(s) to a service via apiServiceImages above.

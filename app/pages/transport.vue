@@ -43,7 +43,7 @@
         <a-col v-for="route in bookingStore.services" :key="route.id" :xs="24" :md="12" :lg="8">
           <a-card hoverable class="route-card">
             <template #cover>
-              <img :src="placeholderImage(route.name)" :alt="route.name" class="route-card__image" />
+              <img :src="coverImageFor(route)" :alt="route.name" class="route-card__image" />
             </template>
 
             <h3 class="route-card__name">{{ route.name }}</h3>
@@ -76,6 +76,7 @@ import { reactive, onMounted } from 'vue'
 import { ArrowRightOutlined } from '@ant-design/icons-vue'
 import { useBookingStore } from '~/stores/booking'
 import { formatPrice } from '~/utils/currency'
+import { coverImageFor } from '~/utils/serviceImages'
 
 const { t } = useI18n()
 const bookingStore = useBookingStore()
@@ -141,10 +142,6 @@ onMounted(() => {
 function unitPriceFor(route) {
   const entry = route.inventory?.find((row) => row.date?.slice(0, 10) === filters.departureDate) ?? route.inventory?.[0]
   return entry ? Number(entry.price) : null
-}
-
-function placeholderImage(name) {
-  return `https://placehold.co/600x400/f8fafc/0369a1?text=${encodeURIComponent(name)}`
 }
 
 function handleBookNow(route) {

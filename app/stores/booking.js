@@ -6,6 +6,7 @@ import {
   API_CREATE_BOOKING,
   API_CREATE_CHECKOUT,
   API_GET_MY_BOOKINGS,
+  API_FINTINK_MOCK_WEBHOOK,
   apiPaymentStatus
 } from '../utils/api';
 
@@ -192,6 +193,24 @@ export const useBookingStore = defineStore('booking', {
     async getPaymentStatus(bookingId) {
       const { $unibookingApi } = useNuxtApp();
       const { data } = await $unibookingApi.get(apiPaymentStatus(bookingId));
+      return data;
+    },
+
+    // Dev/QA-only: simulates the LUD Insurance settlement partner FinTink's
+    // payment webhook so the checkout page's QR flow can be exercised
+    // end-to-end without a real gateway. The backend hard-404s this route
+    // outside development -- see
+    // unibooking-backend/src/webhooks/webhooks.controller.ts.
+    async simulateMockPayment() {
+      if (!this.activeBooking?.id) {
+        throw new Error('No active booking to simulate payment for.');
+      }
+
+      const { $unibookingApi } = useNuxtApp();
+      const { data } = await $unibookingApi.post(API_FINTINK_MOCK_WEBHOOK, {
+        bookingId: this.activeBooking.id,
+        status: 'SUCCESS'
+      });
       return data;
     },
 

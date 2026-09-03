@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(NODE_PATH=\"$\\(pwd\\)/node_modules\" node \"C:\\\\Users\\\\tl_ls\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\d--Booking-LUD-My-Website-Booking-unibooking\\\\b3a9f728-d9dc-493d-ae81-8be76c139b12\\\\scratchpad\\\\test-mock-webhook.cjs\")",
+      "Bash(curl -s -o /tmp/checkout_resp.html -w \"HTTP_STATUS:%{http_code}\\\\n\" -L http://localhost:3000/checkout)",
+      "Bash(tee /tmp/dev-out.log)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/hotels)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/transport)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/explore)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"http://localhost:3000/images/RDPL-34199@PEK_\\(20231016151056\\).jpg\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"http://localhost:3000/images/Gemini_Generated_Image_er2g79er2g79er2g.jpeg\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/checkout)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -sI http://localhost:3000/checkout)"
+    ]
+  }
+}

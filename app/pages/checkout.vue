@@ -84,6 +84,11 @@
           </template>
 
           <template v-else>
+            <img
+              :src="coverImageFor(bookingStore.selectedService)"
+              :alt="bookingStore.selectedService.name"
+              class="summary-card__image"
+            />
             <h3 class="summary-card__name">{{ bookingStore.selectedService.name }}</h3>
             <p class="summary-card__location">{{ bookingStore.selectedService.location }}</p>
             <p v-if="bookingStore.bookingData.startDate && bookingStore.bookingData.endDate" class="summary-card__dates">
@@ -156,6 +161,20 @@
         <a-button v-if="isPolling" type="text" danger @click="closeQrModal">
           {{ $t('common.cancel') }}
         </a-button>
+
+        <!-- Dev/QA-only shortcut: fakes a completed QR payment via the mock
+             FinTink webhook instead of waiting on a real bank app scan.
+             Stripped from production builds -- see isDev in <script>. -->
+        <a-button
+          v-if="isDev"
+          type="dashed"
+          block
+          class="dev-mock-pay-btn"
+          :loading="isSimulatingMockPayment"
+          @click="handleSimulateMockPayment"
+        >
+          <WarningOutlined /> Simulate QR Payment (Dev Mode)
+        </a-button>
       </div>
     </a-modal>
   </div>
@@ -169,10 +188,11 @@
 import { ref, reactive, computed, watch, onMounted, onUnmounted } from 'vue'
 import { Modal, message } from 'ant-design-vue'
 import QRCode from 'qrcode'
-import { QrcodeOutlined, CreditCardOutlined, HomeOutlined, CalendarOutlined } from '@ant-design/icons-vue'
+import { QrcodeOutlined, CreditCardOutlined, HomeOutlined, CalendarOutlined, WarningOutlined } from '@ant-design/icons-vue'
 import { useAuthStore } from '~/stores/auth'
 import { useBookingStore } from '~/stores/booking'
 import { formatPrice } from '~/utils/currency'
+import { coverImageFor } from '~/utils/serviceImages'
 
 // POST /bookings and POST /payments/checkout both require the auth cookie.
 // The actual check now lives in middleware/auth.js (skips on the server --
@@ -189,6 +209,12 @@ const router = useRouter()
 
 const isAuthorized = ref(false)
 const isSubmitting = ref(false)
+
+// Dev-only mock-payment button (see the QR modal below) -- import.meta.dev
+// is a build-time constant, so this whole branch (and the button markup)
+// is stripped from a production build, not just hidden by v-if at runtime.
+const isDev = import.meta.dev
+const isSimulatingMockPayment = ref(false)
 
 onMounted(async () => {
   await authStore.initAuth()
@@ -296,6 +322,28 @@ async function pollUntilConfirmed(bookingId) {
       stopPolling()
     }
   }, POLL_INTERVAL_MS)
+}
+
+// Dev-only: skips waiting on a real QR scan by calling the mock FinTink
+// webhook directly (see stores/booking.js#simulateMockPayment). Stops the
+// real poller first so it can't also fire showBookingConfirmedModal() a
+// moment later; the 1.5s delay stands in for the round-trip a real webhook
+// would take.
+async function handleSimulateMockPayment() {
+  if (!bookingStore.activeBooking?.id) return
+
+  isSimulatingMockPayment.value = true
+  try {
+    await bookingStore.simulateMockPayment()
+    stopPolling()
+    await new Promise((resolve) => setTimeout(resolve, 1500))
+    qrModalVisible.value = false
+    showBookingConfirmedModal()
+  } catch {
+    message.error('Mock payment simulation failed -- check the backend logs.')
+  } finally {
+    isSimulatingMockPayment.value = false
+  }
 }
 
 async function handleConfirmBooking() {
@@ -435,6 +483,14 @@ onUnmounted(stopPolling)
   top: 100px;
 }
 
+.summary-card__image {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
 .summary-card__name {
   font-size: 18px;
   font-weight: 700;
@@ -507,6 +563,22 @@ onUnmounted(stopPolling)
   font-size: 13px;
   color: #64748b;
   margin: 0;
+}
+
+/* Deliberately loud/orange -- this must never be mistaken for a real
+   payment control. Only ever rendered in dev builds (see isDev). */
+.dev-mock-pay-btn {
+  margin-top: 8px;
+  border-color: #f97316 !important;
+  background: rgba(249, 115, 22, 0.08) !important;
+  color: #c2410c !important;
+  font-weight: 700;
+}
+
+.dev-mock-pay-btn:hover {
+  border-color: #ea580c !important;
+  background: rgba(249, 115, 22, 0.16) !important;
+  color: #9a3412 !important;
 }
 
 @media (max-width: 991px) {
