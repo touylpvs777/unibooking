@@ -1,6 +1,6 @@
 <template>
   <div class="supplier-dashboard">
-    <h1 class="supplier-dashboard__title">ພາບລວມຜູ້ໃຫ້ບໍລິການ</h1>
+    <h1 class="supplier-dashboard__title">{{ $t('supplier.dashboardTitle') }}</h1>
 
     <a-alert
       v-if="inventoryStore.error || bookingsStore.error"
@@ -16,7 +16,7 @@
       <a-col :xs="24" :sm="12" :md="8">
         <a-card :loading="inventoryStore.isLoading" class="stat-card">
           <a-statistic
-            title="Total Services"
+            :title="$t('supplier.totalServices')"
             :value="totalServices"
             :value-style="{ color: '#14294f', fontWeight: 700 }"
           >
@@ -30,7 +30,7 @@
       <a-col :xs="24" :sm="12" :md="8">
         <a-card :loading="bookingsStore.isLoading" class="stat-card">
           <a-statistic
-            title="Total Bookings"
+            :title="$t('admin.totalBookings')"
             :value="bookingsStore.bookings.length"
             :value-style="{ color: '#14294f', fontWeight: 700 }"
           >
@@ -44,7 +44,7 @@
       <a-col :xs="24" :sm="12" :md="8">
         <a-card :loading="bookingsStore.isLoading" class="stat-card">
           <a-statistic
-            title="Pending Bookings"
+            :title="$t('supplier.pendingBookings')"
             :value="pendingBookingsCount"
             :value-style="{ color: '#14294f', fontWeight: 700 }"
           >
@@ -58,14 +58,14 @@
       <a-col :xs="24" :sm="12" :md="8">
         <a-card :loading="bookingsStore.isLoading" class="stat-card">
           <a-statistic
-            title="Total Revenue"
+            :title="$t('supplier.totalRevenue')"
             :value="formattedTotalRevenue"
             :value-style="{ color: '#166534', fontWeight: 700 }"
           >
             <template #prefix>
               <DollarCircleOutlined class="stat-card__icon stat-card__icon--green" />
             </template>
-            <template #suffix>ກີບ</template>
+            <template #suffix>{{ $t('common.kip') }}</template>
           </a-statistic>
         </a-card>
       </a-col>
@@ -73,7 +73,7 @@
       <a-col :xs="24" :sm="12" :md="8">
         <a-card :loading="isRatingLoading" class="stat-card">
           <a-statistic
-            title="Average Rating"
+            :title="$t('supplier.averageRating')"
             :value="formattedAverageRating"
             :value-style="{ color: '#14294f', fontWeight: 700 }"
           >
@@ -89,11 +89,11 @@
     </a-row>
 
     <a-card :bordered="false" class="status-breakdown-card">
-      <template #title>Bookings by Status</template>
+      <template #title>{{ $t('admin.bookingsByStatus') }}</template>
 
       <div v-for="status in STATUS_ORDER" :key="status" class="status-breakdown__row">
         <div class="status-breakdown__label">
-          <span>{{ STATUS_TAG_MAP[status].text }}</span>
+          <span>{{ statusTagMeta(status).text }}</span>
           <span class="status-breakdown__count">{{ bookingsByStatus[status] }}</span>
         </div>
         <a-progress
@@ -106,7 +106,7 @@
 
     <a-card :bordered="false" class="recent-bookings-card">
       <template #title>
-        Recent Reservations
+        {{ $t('supplier.recentReservations') }}
       </template>
 
       <a-table
@@ -141,7 +141,7 @@
           </template>
 
           <template v-else-if="column.key === 'totalPrice'">
-            {{ formatPrice(record.totalPrice) }} ກີບ
+            {{ formatPrice(record.totalPrice) }} {{ $t('common.kip') }}
           </template>
         </template>
       </a-table>
@@ -158,31 +158,35 @@ import { API_SUPPLIER_RATING_SUMMARY } from '~/utils/api'
 
 definePageMeta({ layout: 'supplier', middleware: ['supplier'] })
 
+const { t } = useI18n()
 const inventoryStore = useInventoryStore()
 const bookingsStore = useSupplierBookingsStore()
 
 // Same column set as pages/supplier/bookings/index.vue, minus the Actions
 // column -- this is a glanceable preview, not another management surface.
-const columns = [
-  { title: 'ລະຫັດການຈອງ', key: 'bookingReference' },
-  { title: 'ແຂກ', key: 'guest' },
-  { title: 'ບໍລິການ', key: 'serviceName' },
-  { title: 'ວັນທີ', key: 'date' },
-  { title: 'ສະຖານະ', key: 'status' },
-  { title: 'ລາຄາລວມ', key: 'totalPrice' }
-]
+const columns = computed(() => [
+  { title: t('common.columns.bookingReference'), key: 'bookingReference' },
+  { title: t('common.columns.guest'), key: 'guest' },
+  { title: t('common.columns.service'), key: 'serviceName' },
+  { title: t('common.columns.date'), key: 'date' },
+  { title: t('common.columns.status'), key: 'status' },
+  { title: t('common.columns.totalPrice'), key: 'totalPrice' }
+])
 
 // Same BookingStatus mapping as pages/admin/bookings.vue and
 // pages/supplier/bookings/index.vue.
-const STATUS_TAG_MAP = {
-  PENDING: { color: 'warning', text: 'ລໍຖ້າຊຳລະ' },
-  CONFIRMED: { color: 'processing', text: 'ຢືນຢັນແລ້ວ' },
-  COMPLETED: { color: 'success', text: 'ສຳເລັດ' },
-  CANCELLED: { color: 'error', text: 'ຍົກເລີກ' }
+const STATUS_TAG_COLOR_MAP = {
+  PENDING: 'warning',
+  CONFIRMED: 'processing',
+  COMPLETED: 'success',
+  CANCELLED: 'error'
 }
 
 function statusTagMeta(status) {
-  return STATUS_TAG_MAP[status] || { color: 'default', text: status }
+  return {
+    color: STATUS_TAG_COLOR_MAP[status] || 'default',
+    text: t(`common.bookingStatus.${status.toLowerCase()}`, status)
+  }
 }
 
 // Backend BookingStatus enum order -- also drives the "Bookings by Status"

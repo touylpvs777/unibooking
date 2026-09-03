@@ -1,9 +1,9 @@
 <template>
   <div class="write-review">
     <template v-if="!authStore.isAuthenticated">
-      <a-alert type="info" show-icon message="ກະລຸນາເຂົ້າສູ່ລະບົບເພື່ອຂຽນຣີວິວ">
+      <a-alert type="info" show-icon :message="$t('reviews.loginPrompt')">
         <template #action>
-          <NuxtLink to="/login"><a-button size="small" type="primary">ເຂົ້າສູ່ລະບົບ</a-button></NuxtLink>
+          <NuxtLink to="/login"><a-button size="small" type="primary">{{ $t('nav.login') }}</a-button></NuxtLink>
         </template>
       </a-alert>
     </template>
@@ -14,18 +14,18 @@
          serviceId yet, or has already reviewed it. Duplicating that check
          client-side would just be a second source of truth to drift from it. -->
     <a-form v-else layout="vertical" :model="form" @finish="handleSubmit">
-      <a-form-item label="ໃຫ້ຄະແນນ" required>
+      <a-form-item :label="$t('reviews.ratingLabel')" required>
         <a-rate v-model:value="form.rating" />
       </a-form-item>
 
-      <a-form-item label="ຄວາມຄິດເຫັນ (ບໍ່ບັງຄັບ)">
-        <a-textarea v-model:value="form.comment" :maxlength="1000" show-count :rows="4" placeholder="ແບ່ງປັນປະສົບການຂອງທ່ານ..." />
+      <a-form-item :label="$t('reviews.commentLabel')">
+        <a-textarea v-model:value="form.comment" :maxlength="1000" show-count :rows="4" :placeholder="$t('reviews.commentPlaceholder')" />
       </a-form-item>
 
       <a-alert v-if="reviewsStore.error" type="error" show-icon :message="reviewsStore.error" class="write-review__error" />
 
       <a-button type="primary" html-type="submit" :loading="reviewsStore.isSubmitting" :disabled="!form.rating">
-        ສົ່ງຣີວິວ
+        {{ $t('reviews.submitButton') }}
       </a-button>
     </a-form>
   </div>
@@ -42,6 +42,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['submitted'])
 
+const { t } = useI18n()
 const authStore = useAuthStore()
 const reviewsStore = useReviewsStore()
 
@@ -54,7 +55,7 @@ async function handleSubmit() {
       rating: form.rating,
       comment: form.comment
     })
-    message.success('ຂອບໃຈສຳລັບຣີວິວຂອງທ່ານ!')
+    message.success(t('reviews.thankYouMessage'))
     form.rating = 0
     form.comment = ''
     emit('submitted')

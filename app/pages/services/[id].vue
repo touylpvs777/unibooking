@@ -10,7 +10,7 @@
     >
       <template #extra>
         <NuxtLink to="/explore">
-          <a-button type="primary">ກັບໄປໜ້າຄົ້ນຫາ</a-button>
+          <a-button type="primary">{{ $t('serviceDetail.backToSearch') }}</a-button>
         </NuxtLink>
       </template>
     </a-result>
@@ -42,20 +42,20 @@
 
         <p v-if="service.supplier" class="service-detail-page__supplier">
           {{ service.supplier.companyName }}
-          <a-tag v-if="service.supplier.isVerified" color="green">Verified</a-tag>
+          <a-tag v-if="service.supplier.isVerified" color="green">{{ $t('common.verified') }}</a-tag>
         </p>
 
-        <h2 class="service-detail-page__section-title">ລາຍລະອຽດ</h2>
+        <h2 class="service-detail-page__section-title">{{ $t('serviceDetail.detailsHeading') }}</h2>
         <p class="service-detail-page__description">{{ service.description }}</p>
 
         <!-- Type-specific details -->
         <template v-if="service.type === 'HOTEL' && service.hotelDetails">
-          <h2 class="service-detail-page__section-title">ຂໍ້ມູນທີ່ພັກ</h2>
+          <h2 class="service-detail-page__section-title">{{ $t('serviceDetail.hotelInfoHeading') }}</h2>
           <a-descriptions :column="1" bordered size="small" class="service-detail-page__facts">
-            <a-descriptions-item label="ລະດັບດາວ">
+            <a-descriptions-item :label="$t('serviceDetail.starRatingLabel')">
               <a-rate disabled :value="service.hotelDetails.starRating" />
             </a-descriptions-item>
-            <a-descriptions-item label="ປະເພດທີ່ພັກ">{{ service.hotelDetails.propertyType }}</a-descriptions-item>
+            <a-descriptions-item :label="$t('hotels.propertyTypeLabel')">{{ service.hotelDetails.propertyType }}</a-descriptions-item>
           </a-descriptions>
           <div v-if="service.hotelDetails.amenities?.length" class="service-detail-page__amenities">
             <a-tag v-for="amenity in service.hotelDetails.amenities" :key="amenity" color="blue">{{ amenity }}</a-tag>
@@ -63,27 +63,27 @@
         </template>
 
         <template v-else-if="service.type === 'TOUR' && service.tourDetails">
-          <h2 class="service-detail-page__section-title">ຂໍ້ມູນທົວ</h2>
+          <h2 class="service-detail-page__section-title">{{ $t('serviceDetail.tourInfoHeading') }}</h2>
           <a-descriptions :column="1" bordered size="small" class="service-detail-page__facts">
-            <a-descriptions-item label="ໄລຍະເວລາ">{{ service.tourDetails.durationDays }} ວັນ</a-descriptions-item>
-            <a-descriptions-item label="ໝວດໝູ່">{{ service.tourDetails.category }}</a-descriptions-item>
-            <a-descriptions-item label="ລະດັບຄວາມຍາກ">{{ service.tourDetails.difficulty }}</a-descriptions-item>
-            <a-descriptions-item label="ຈຳນວນຄົນ (Group Size)">
-              {{ service.tourDetails.minGroupSize }} - {{ service.tourDetails.maxGroupSize }} ຄົນ
+            <a-descriptions-item :label="$t('serviceDetail.durationLabel')">{{ service.tourDetails.durationDays }} {{ $t('serviceDetail.daysUnit') }}</a-descriptions-item>
+            <a-descriptions-item :label="$t('explore.categoryTitle')">{{ service.tourDetails.category }}</a-descriptions-item>
+            <a-descriptions-item :label="$t('serviceDetail.difficultyLabel')">{{ service.tourDetails.difficulty }}</a-descriptions-item>
+            <a-descriptions-item :label="$t('serviceDetail.groupSizeLabel')">
+              {{ service.tourDetails.minGroupSize }} - {{ service.tourDetails.maxGroupSize }} {{ $t('serviceDetail.peopleUnit') }}
             </a-descriptions-item>
           </a-descriptions>
         </template>
 
         <template v-else-if="service.type === 'CAR_RENTAL' && service.carRentalDetails">
-          <h2 class="service-detail-page__section-title">ຂໍ້ມູນລົດເຊົ່າ</h2>
+          <h2 class="service-detail-page__section-title">{{ $t('serviceDetail.carRentalInfoHeading') }}</h2>
           <a-descriptions :column="1" bordered size="small" class="service-detail-page__facts">
-            <a-descriptions-item label="ປະເພດລົດ">{{ service.carRentalDetails.vehicleType }}</a-descriptions-item>
-            <a-descriptions-item label="ເກຍ">{{ service.carRentalDetails.transmission }}</a-descriptions-item>
-            <a-descriptions-item label="ຈຳນວນບ່ອນນັ່ງ">{{ service.carRentalDetails.seatingCapacity }}</a-descriptions-item>
+            <a-descriptions-item :label="$t('serviceDetail.vehicleTypeLabel')">{{ service.carRentalDetails.vehicleType }}</a-descriptions-item>
+            <a-descriptions-item :label="$t('serviceDetail.transmissionLabel')">{{ service.carRentalDetails.transmission }}</a-descriptions-item>
+            <a-descriptions-item :label="$t('serviceDetail.seatingCapacityLabel')">{{ service.carRentalDetails.seatingCapacity }}</a-descriptions-item>
           </a-descriptions>
         </template>
 
-        <h2 class="service-detail-page__section-title">ຣີວິວ</h2>
+        <h2 class="service-detail-page__section-title">{{ $t('reviews.heading') }}</h2>
         <ReviewsReviewList :service-id="service.id" />
         <a-divider />
         <ReviewsWriteReviewForm :service-id="service.id" @submitted="reviewsStore.fetchReviews(service.id)" />
@@ -92,33 +92,33 @@
       <!-- Reservation card -->
       <a-col :xs="24" :md="8">
         <a-card :bordered="false" class="reservation-card">
-          <h3 class="reservation-card__title">ການຈອງ</h3>
+          <h3 class="reservation-card__title">{{ $t('serviceDetail.reservationHeading') }}</h3>
 
-          <label class="reservation-card__label">ວັນທີ</label>
+          <label class="reservation-card__label">{{ $t('common.columns.date') }}</label>
           <a-range-picker
             v-model:value="selectedDates"
             class="reservation-card__dates"
-            :placeholder="['ວັນທີເລີ່ມ', 'ວັນທີສິ້ນສຸດ']"
+            :placeholder="[$t('explore.startDatePlaceholder'), $t('explore.endDatePlaceholder')]"
             @change="handleDatesChange"
           />
 
           <div v-if="nights > 0" class="reservation-card__price-summary">
             <div class="reservation-card__price-row">
-              <span>₭ {{ formatPrice(nightlyPrice) }} x {{ nights }} ຄືນ</span>
+              <span>₭ {{ formatPrice(nightlyPrice) }} x {{ nights }} {{ $t('serviceDetail.nightsUnit') }}</span>
               <span>₭ {{ formatPrice(totalPrice) }}</span>
             </div>
             <a-divider class="reservation-card__divider" />
             <div class="reservation-card__price-row reservation-card__price-row--total">
-              <span>ລວມທັງໝົດ</span>
+              <span>{{ $t('serviceDetail.totalLabel') }}</span>
               <span>₭ {{ formatPrice(totalPrice) }}</span>
             </div>
           </div>
           <p v-else-if="hasSelectedDates" class="reservation-card__no-price">
-            ບໍ່ພົບລາຄາ/ຫ້ອງວ່າງໃນຊ່ວງວັນທີ່ນີ້
+            {{ $t('serviceDetail.noPriceForDates') }}
           </p>
 
           <a-button type="primary" size="large" block class="reservation-card__book-btn" @click="handleBookNow">
-            Book Now
+            {{ $t('common.bookNow') }}
           </a-button>
         </a-card>
       </a-col>
@@ -135,6 +135,7 @@ import { useServiceDetailStore } from '~/stores/serviceDetail'
 import { useBookingStore } from '~/stores/booking'
 import { useReviewsStore } from '~/stores/reviews'
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const serviceDetailStore = useServiceDetailStore()
@@ -173,18 +174,30 @@ onMounted(fetchWithSelectedDates)
 
 // Backend ServiceType: HOTEL/FLIGHT/TRAIN/BUS/TOUR/CAR_RENTAL/PACKAGE --
 // same map as pages/explore/index.vue.
-const TYPE_TAG_MAP = {
-  HOTEL: { color: 'blue', text: 'Room' },
-  TOUR: { color: 'gold', text: 'Tour' },
-  CAR_RENTAL: { color: 'purple', text: 'Car Rental' },
-  FLIGHT: { color: 'cyan', text: 'Flight' },
-  TRAIN: { color: 'green', text: 'Train' },
-  BUS: { color: 'orange', text: 'Bus' },
-  PACKAGE: { color: 'default', text: 'Package' }
+const TYPE_COLOR_MAP = {
+  HOTEL: 'blue',
+  TOUR: 'gold',
+  CAR_RENTAL: 'purple',
+  FLIGHT: 'cyan',
+  TRAIN: 'green',
+  BUS: 'orange',
+  PACKAGE: 'default'
+}
+const TYPE_KEY_MAP = {
+  HOTEL: 'room',
+  TOUR: 'tour',
+  CAR_RENTAL: 'carRental',
+  FLIGHT: 'flight',
+  TRAIN: 'train',
+  BUS: 'bus',
+  PACKAGE: 'package'
 }
 
 function typeTagMeta(type) {
-  return TYPE_TAG_MAP[type] || { color: 'default', text: type }
+  return {
+    color: TYPE_COLOR_MAP[type] || 'default',
+    text: TYPE_KEY_MAP[type] ? t(`common.serviceTypes.${TYPE_KEY_MAP[type]}`) : type
+  }
 }
 
 function placeholderImage(name) {
@@ -225,7 +238,7 @@ const totalPrice = computed(
 // bookingStore's unitPrice getter expects.
 function handleBookNow() {
   if (!hasSelectedDates.value) {
-    message.warning('ກະລຸນາເລືອກວັນທີກ່ອນຈອງ')
+    message.warning(t('serviceDetail.selectDatesWarning'))
     return
   }
 

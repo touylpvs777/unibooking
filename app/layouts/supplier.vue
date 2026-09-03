@@ -9,7 +9,7 @@
     >
       <NuxtLink to="/" class="supplier-sider__logo">
         <img src="/images/unibooking-logo.png" alt="UniBooking" class="supplier-sider__logo-img">
-        <span v-if="!collapsed" class="supplier-sider__logo-text">Supplier</span>
+        <span v-if="!collapsed" class="supplier-sider__logo-text">{{ $t('layouts.supplierLabel') }}</span>
       </NuxtLink>
 
       <!-- ClientOnly: see layouts/admin.vue for why -- AMenu measures DOM
@@ -25,19 +25,19 @@
           <a-menu-item key="dashboard">
             <NuxtLink to="/supplier">
               <DashboardOutlined />
-              <span>Dashboard</span>
+              <span>{{ $t('layouts.dashboard') }}</span>
             </NuxtLink>
           </a-menu-item>
           <a-menu-item key="inventory">
             <NuxtLink to="/supplier/inventory">
               <AppstoreOutlined />
-              <span>Manage Inventory</span>
+              <span>{{ $t('supplier.inventoryTitle') }}</span>
             </NuxtLink>
           </a-menu-item>
           <a-menu-item key="bookings">
             <NuxtLink to="/supplier/bookings">
               <ScheduleOutlined />
-              <span>Recent Bookings</span>
+              <span>{{ $t('supplier.recentReservations') }}</span>
             </NuxtLink>
           </a-menu-item>
         </a-menu>
@@ -54,7 +54,7 @@
         <div class="supplier-header__user">
           <a-avatar size="small">{{ userInitial }}</a-avatar>
           <span class="supplier-header__name">{{ authStore.fullName }}</span>
-          <a-button size="small" danger @click="handleLogout">ອອກຈາກລະບົບ</a-button>
+          <a-button size="small" danger @click="handleLogout">{{ $t('nav.logout') }}</a-button>
         </div>
       </a-layout-header>
 

@@ -3,12 +3,12 @@
     <div class="glass-card">
       <div class="header">
         <h1 class="title">UniBooking</h1>
-        <p class="subtitle">ເຂົ້າສູ່ລະບົບເພື່ອດຳເນີນການຕໍ່</p>
+        <p class="subtitle">{{ $t('login.subtitle') }}</p>
       </div>
 
       <form @submit.prevent="handleLogin" class="form-container">
         <div class="input-group">
-          <label>ອີເມວ</label>
+          <label>{{ $t('common.emailLabel') }}</label>
           <div class="input-wrapper">
             <span class="icon">📧</span>
             <input type="email" placeholder="you@example.com" required />
@@ -16,7 +16,7 @@
         </div>
 
         <div class="input-group">
-          <label>ລະຫັດຜ່ານ</label>
+          <label>{{ $t('common.passwordLabel') }}</label>
           <div class="input-wrapper">
             <span class="icon">🔒</span>
             <input type="password" placeholder="••••••••" required />
@@ -24,14 +24,14 @@
         </div>
 
         <div class="forgot-password">
-          <a href="#">ລືມລະຫັດຜ່ານ?</a>
+          <a href="#">{{ $t('login.forgotPassword') }}</a>
         </div>
 
-        <button type="submit" class="login-btn">ເຂົ້າສູ່ລະບົບ</button>
+        <button type="submit" class="login-btn">{{ $t('login.submitButton') }}</button>
       </form>
 
       <div class="footer">
-        <p>ຍັງບໍ່ມີບັນຊີ? <a href="#" class="register-link">ສະໝັກສະມາຊິກ</a></p>
+        <p>{{ $t('login.noAccount') }} <a href="#" class="register-link">{{ $t('nav.register') }}</a></p>
         
         <div class="language-selector">
           <button class="lang-btn">EN</button>

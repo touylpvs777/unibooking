@@ -6,7 +6,7 @@
            an <h1> -- the tour's own name below already is one, and a page
            should have exactly one. -->
       <section class="featured-category">
-        <span class="featured-category__eyebrow">ປະເພດທົວ ທີ່ພົ້ນເດັ່ນ</span>
+        <span class="featured-category__eyebrow">{{ $t('tourDetail.featuredCategoryEyebrow') }}</span>
         <p class="featured-category__title">{{ featuredCategory }}</p>
       </section>
 
@@ -16,7 +16,7 @@
           <img src="/images/Wat-Phu-Laos.jpg" alt="ວັດພູ - Wat Phu Champasak">
 
           <button type="button" class="virtual-tour-btn" @click="isMapModalOpen = true">
-            📍 View Location on Map
+            📍 {{ $t('tourDetail.viewLocationButton') }}
           </button>
         </div>
 
@@ -34,7 +34,7 @@
       <Teleport to="body">
         <div v-if="isMapModalOpen" class="vt-modal" @click.self="isMapModalOpen = false">
           <button type="button" class="vt-modal__close" aria-label="Close" @click="isMapModalOpen = false">
-            Close <CloseOutlined />
+            {{ $t('common.close') }} <CloseOutlined />
           </button>
           <div class="vt-modal__frame-wrap">
             <iframe
@@ -55,32 +55,29 @@
       <section class="detail-grid">
         <!-- Left column -->
         <div class="detail-main">
-          <span class="detail-badge">WORLD HERITAGE</span>
-          <h1 class="detail-title">ວັດພູ ຈຳປາສັກ ແລະ ນ້ຳຕົກຄອນພະເພັງ</h1>
+          <span class="detail-badge">{{ $t('tourDetail.worldHeritageBadge') }}</span>
+          <h1 class="detail-title">{{ $t('tourDetail.title') }}</h1>
           <div class="detail-location">
             <EnvironmentOutlined />
-            <span>ແຂວງຈຳປາສັກ, ລາວ (Champasak Province, Laos)</span>
+            <span>{{ $t('tourDetail.location') }}</span>
           </div>
 
           <div class="detail-meta">
             <span class="detail-meta__item">
               <StarFilled />
-              <template v-if="serviceId">{{ reviewsStore.averageRating?.toFixed(1) ?? '–' }} ({{ reviewsStore.reviewCount }} ຣີວິວ)</template>
-              <template v-else>4.9 (312 ຣີວິວ)</template>
+              <template v-if="serviceId">{{ reviewsStore.averageRating?.toFixed(1) ?? '–' }} ({{ $t('reviews.count', { count: reviewsStore.reviewCount }) }})</template>
+              <template v-else>{{ $t('tourDetail.staticReviewsLabel') }}</template>
             </span>
-            <span class="detail-meta__item"><ClockCircleOutlined /> 2 ວັນ 1 ຄືນ</span>
-            <span class="detail-meta__item"><TeamOutlined /> ສູງສຸດ 12 ຄົນ</span>
+            <span class="detail-meta__item"><ClockCircleOutlined /> {{ $t('tourDetail.durationBadge') }}</span>
+            <span class="detail-meta__item"><TeamOutlined /> {{ $t('tourDetail.maxPeopleBadge') }}</span>
           </div>
 
-          <h2 class="detail-section-title">Overview</h2>
+          <h2 class="detail-section-title">{{ $t('tourDetail.overviewHeading') }}</h2>
           <p class="detail-overview">
-            ຄົ້ນຫາຄວາມສະຫງ່າງາມຂອງມໍລະດົກໂລກວັດພູ ວັດຮ້າງບູຮານອາຍຸກວ່າພັນປີທີ່ຕັ້ງຢູ່ຕີນພູກະເບົ້າ
-            ພ້ອມສຳຜັດພະລັງອັນຍິ່ງໃຫຍ່ຂອງນ້ຳຕົກຄອນພະເພັງ ນ້ຳຕົກທີ່ໃຫຍ່ທີ່ສຸດໃນອາຊີຕາເວັນອອກສ່ຽງໃຕ້.
-            ການເດີນທາງນີ້ອອກແບບມາສະເພາະສຳລັບຜູ້ທີ່ຕ້ອງການປະສົບການທ່ອງທ່ຽວລະດັບພຣີເມ້ຍມ
-            ພ້ອມໄກເຊິດທ້ອງຖິ່ນຜູ້ຊ່ຽວຊານ ແລະ ການເດີນທາງທີ່ສະດວກສະບາຍຕະຫຼອດການເດີນທາງ.
+            {{ $t('tourDetail.overviewText') }}
           </p>
 
-          <h2 class="detail-section-title">Location</h2>
+          <h2 class="detail-section-title">{{ $t('tourDetail.locationHeading') }}</h2>
           <div class="detail-map">
             <iframe
               class="detail-map__frame"
@@ -93,7 +90,7 @@
             />
           </div>
 
-          <h2 class="detail-section-title">Inclusions</h2>
+          <h2 class="detail-section-title">{{ $t('tourDetail.inclusionsHeading') }}</h2>
           <ul class="detail-inclusions">
             <li v-for="item in inclusions" :key="item">
               <CheckCircleFilled />
@@ -101,7 +98,7 @@
             </li>
           </ul>
 
-          <h2 class="detail-section-title">ຮູບພາບເພີ່ມເຕີມ</h2>
+          <h2 class="detail-section-title">{{ $t('tourDetail.morePhotosHeading') }}</h2>
           <div class="photo-marquee">
             <ul class="photo-marquee__track photo-marquee__track--a">
               <li v-for="(src, i) in marqueeRowA" :key="'a' + i" class="photo-marquee__tile">
@@ -123,10 +120,10 @@
                this section activates against the real POST /reviews /
                GET /services/:serviceId/reviews endpoints. -->
           <template v-if="serviceId">
-            <h2 class="detail-section-title">ຣີວິວ</h2>
+            <h2 class="detail-section-title">{{ $t('reviews.heading') }}</h2>
             <ReviewsReviewList :service-id="serviceId" class="detail-reviews" />
 
-            <h2 class="detail-section-title">ຂຽນຣີວິວ</h2>
+            <h2 class="detail-section-title">{{ $t('common.writeReview') }}</h2>
             <ReviewsWriteReviewForm :service-id="serviceId" @submitted="reviewsStore.fetchReviews(serviceId)" />
           </template>
         </div>
@@ -135,17 +132,17 @@
         <aside class="booking-widget">
           <div class="booking-widget__price">
             <span class="booking-widget__price-amount">$189</span>
-            <span class="booking-widget__price-unit">/ ຄົນ</span>
+            <span class="booking-widget__price-unit">{{ $t('tourDetail.priceUnitLabel') }}</span>
           </div>
 
-          <label class="booking-widget__label">ວັນທີເດີນທາງ</label>
+          <label class="booking-widget__label">{{ $t('search.travelDateLabel') }}</label>
           <a-date-picker
             v-model:value="selectedDate"
             class="booking-widget__input"
-            placeholder="ເລືອກວັນທີ"
+            :placeholder="$t('tourDetail.datePickerPlaceholder')"
           />
 
-          <label class="booking-widget__label">ຈຳນວນແຂກ</label>
+          <label class="booking-widget__label">{{ $t('tourDetail.guestCountLabel') }}</label>
           <a-select
             id="tour-detail-guest-count"
             v-model:value="guestCount"
@@ -154,7 +151,7 @@
           />
 
           <button type="button" class="booking-widget__btn">
-            Book Now
+            {{ $t('common.bookNow') }}
           </button>
         </aside>
       </section>
@@ -176,13 +173,14 @@ import { useReviewsStore } from '~/stores/reviews'
 
 // useRoute() is a Nuxt 3 auto-import -- no explicit import needed, same as
 // definePageMeta() elsewhere in this app.
+const { t } = useI18n()
 const route = useRoute()
 
 // Populated from the ?category= query param a Tour Categories card sets
 // when linking here (see tour-categories-grid in index.vue). Falls back to
 // generic copy for any other entry point into this page (e.g. the Best of
 // Laos cards, which don't set this param).
-const featuredCategory = computed(() => route.query.category || 'ທົວແນະນຳ')
+const featuredCategory = computed(() => route.query.category || t('tourDetail.defaultCategory'))
 
 // Optional real Service id -- see the Reviews section comment below.
 // ReviewsReviewList (mounted only when this is set) owns fetching
@@ -199,21 +197,21 @@ const mapEmbedUrl = 'https://www.google.com/maps?q=Wat+Phou+Champasak,+Laos&outp
 const selectedDate = ref(null)
 const guestCount = ref(2)
 
-const guestOptions = [
-  { value: 1, label: '1 ຄົນ' },
-  { value: 2, label: '2 ຄົນ' },
-  { value: 3, label: '3 ຄົນ' },
-  { value: 4, label: '4 ຄົນ' },
-  { value: 5, label: '5+ ຄົນ' }
-]
+const guestOptions = computed(() => [
+  { value: 1, label: t('tourDetail.guestOption', { n: 1 }) },
+  { value: 2, label: t('tourDetail.guestOption', { n: 2 }) },
+  { value: 3, label: t('tourDetail.guestOption', { n: 3 }) },
+  { value: 4, label: t('tourDetail.guestOption', { n: 4 }) },
+  { value: 5, label: t('tourDetail.guestOption5Plus') }
+])
 
-const inclusions = [
-  'ລົດຮັບ-ສົ່ງ ຕະຫຼອດການເດີນທາງ',
-  'ໄກເຊິດທ້ອງຖິ່ນເວົ້າພາສາອັງກິດ',
-  'ຄ່າເຂົ້າຊົມສະຖານທີ່ທັງໝົດ',
-  'ອາຫານທ່ຽງ ແລະ ນ້ຳດື່ມ',
-  'ປະກັນໄພການເດີນທາງ'
-]
+const inclusions = computed(() => [
+  t('tourDetail.inclusion1'),
+  t('tourDetail.inclusion2'),
+  t('tourDetail.inclusion3'),
+  t('tourDetail.inclusion4'),
+  t('tourDetail.inclusion5')
+])
 
 // Each row is duplicated so the CSS keyframe (translateX to -50%) loops seamlessly
 const marqueeA = ['/images/Wat-Phu-Laos.jpg', '/images/khonephapheng.jpg', '/images/Tardkaungse.png', '/images/patuxay.jpeg']

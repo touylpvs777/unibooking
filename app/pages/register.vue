@@ -1,47 +1,47 @@
 <template>
   <div class="register-page">
     <a-card class="register-card" :bordered="false">
-      <h1 class="register-title">ສະໝັກສະມາຊິກ</h1>
+      <h1 class="register-title">{{ $t('register.title') }}</h1>
 
       <a-form ref="formRef" layout="vertical" :model="form" @finish="handleSubmit">
         <a-row :gutter="16">
           <a-col :xs="24" :sm="12">
             <a-form-item
-              label="ຊື່"
+              :label="$t('register.firstNameLabel')"
               name="firstName"
-              :rules="[{ required: true, message: 'ກະລຸນາປ້ອນຊື່' }]"
+              :rules="[{ required: true, message: $t('register.firstNameRequired') }]"
             >
-              <a-input v-model:value="form.firstName" size="large" placeholder="ຊື່" />
+              <a-input v-model:value="form.firstName" size="large" :placeholder="$t('register.firstNamePlaceholder')" />
             </a-form-item>
           </a-col>
           <a-col :xs="24" :sm="12">
             <a-form-item
-              label="ນາມສະກຸນ"
+              :label="$t('register.lastNameLabel')"
               name="lastName"
-              :rules="[{ required: true, message: 'ກະລຸນາປ້ອນນາມສະກຸນ' }]"
+              :rules="[{ required: true, message: $t('register.lastNameRequired') }]"
             >
-              <a-input v-model:value="form.lastName" size="large" placeholder="ນາມສະກຸນ" />
+              <a-input v-model:value="form.lastName" size="large" :placeholder="$t('register.lastNamePlaceholder')" />
             </a-form-item>
           </a-col>
         </a-row>
 
         <a-form-item
-          label="ອີເມວ"
+          :label="$t('common.emailLabel')"
           name="email"
           :rules="[
-            { required: true, message: 'ກະລຸນາປ້ອນອີເມວ' },
-            { type: 'email', message: 'ຮູບແບບອີເມວບໍ່ຖືກຕ້ອງ' }
+            { required: true, message: $t('register.emailRequired') },
+            { type: 'email', message: $t('register.emailInvalid') }
           ]"
         >
           <a-input v-model:value="form.email" size="large" placeholder="you@example.com" />
         </a-form-item>
 
         <a-form-item
-          label="ລະຫັດຜ່ານ"
+          :label="$t('common.passwordLabel')"
           name="password"
           :rules="[
-            { required: true, message: 'ກະລຸນາປ້ອນລະຫັດຜ່ານ' },
-            { min: 8, message: 'ລະຫັດຜ່ານຕ້ອງມີຢ່າງໜ້ອຍ 8 ຕົວອັກສອນ' }
+            { required: true, message: $t('register.passwordRequired') },
+            { min: 8, message: $t('register.passwordMinLength') }
           ]"
         >
           <a-input-password
@@ -53,7 +53,7 @@
         </a-form-item>
 
         <a-form-item
-          label="ຢືນຢັນລະຫັດຜ່ານ"
+          :label="$t('register.confirmPasswordLabel')"
           name="confirmPassword"
           :rules="[{ validator: validateConfirmPassword, trigger: 'change' }]"
         >
@@ -75,12 +75,12 @@
           block
           :loading="authStore.isLoading"
         >
-          ສະໝັກສະມາຊິກ
+          {{ $t('register.submitButton') }}
         </a-button>
 
         <p class="register-login-hint">
-          ມີບັນຊີແລ້ວ?
-          <NuxtLink to="/login">ເຂົ້າສູ່ລະບົບ</NuxtLink>
+          {{ $t('register.haveAccount') }}
+          <NuxtLink to="/login">{{ $t('nav.login') }}</NuxtLink>
         </p>
       </a-form>
     </a-card>
@@ -91,6 +91,7 @@
 import { message } from 'ant-design-vue'
 
 // Nuxt/Pinia auto-imports: reactive, ref, useAuthStore, useRouter
+const { t } = useI18n()
 const authStore = useAuthStore()
 const router = useRouter()
 
@@ -106,10 +107,10 @@ const form = reactive({
 
 async function validateConfirmPassword(_rule, value) {
   if (!value) {
-    return Promise.reject('ກະລຸນາຢືນຢັນລະຫັດຜ່ານ')
+    return Promise.reject(t('register.confirmPasswordRequired'))
   }
   if (value !== form.password) {
-    return Promise.reject('ລະຫັດຜ່ານບໍ່ຕົງກັນ')
+    return Promise.reject(t('register.passwordMismatch'))
   }
   return Promise.resolve()
 }
@@ -131,7 +132,7 @@ async function handleSubmit() {
       firstName: form.firstName,
       lastName: form.lastName
     })
-    message.success('ສະໝັກສະມາຊິກສຳເລັດ! ກະລຸນາເຂົ້າສູ່ລະບົບ.')
+    message.success(t('register.successMessage'))
     router.push('/login')
   } catch {
     // authStore.error ຖືກຕັ້ງຄ່າແລ້ວພາຍໃນ store ແລະສະແດງຜ່ານ a-alert ຂ້າງເທິງ

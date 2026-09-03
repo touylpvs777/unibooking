@@ -28,7 +28,7 @@
       <!-- Stats -->
       <a-row :gutter="[24, 24]" class="stats-section">
         <a-col :xs="12" :md="6">
-          <a-statistic :title="$t('about.statsDestinations')" :value="18" suffix="ແຂວງ" />
+          <a-statistic :title="$t('about.statsDestinations')" :value="18" :suffix="$t('about.statsDestinationsSuffix')" />
         </a-col>
         <a-col :xs="12" :md="6">
           <a-statistic :title="$t('about.statsPartners')" :value="200" suffix="+" />

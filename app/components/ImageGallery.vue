@@ -1,33 +1,33 @@
 <template>
   <div class="bento-gallery">
     <div class="bento-gallery__card bento-gallery__card--large">
-      <img src="/images/Wat-Phu-Laos.jpg" alt="Wat Phu, Champasak" class="bento-gallery__img">
+      <img src="/images/Wat-Phu-Laos.jpg" :alt="$t('imageGallery.watPhu')" class="bento-gallery__img">
       <div class="bento-gallery__overlay">
-        <span class="bento-gallery__caption">Wat Phu, Champasak</span>
+        <span class="bento-gallery__caption">{{ $t('imageGallery.watPhu') }}</span>
       </div>
     </div>
     <div class="bento-gallery__card">
-      <img src="/images/patuxay.jpeg" alt="Patuxay, Vientiane" class="bento-gallery__img">
+      <img src="/images/patuxay.jpeg" :alt="$t('imageGallery.patuxay')" class="bento-gallery__img">
       <div class="bento-gallery__overlay">
-        <span class="bento-gallery__caption">Patuxay, Vientiane</span>
+        <span class="bento-gallery__caption">{{ $t('imageGallery.patuxay') }}</span>
       </div>
     </div>
     <div class="bento-gallery__card">
-      <img src="/images/phathartlaung.jpeg" alt="Pha That Luang, Vientiane" class="bento-gallery__img">
+      <img src="/images/phathartlaung.jpeg" :alt="$t('imageGallery.phaThatLuang')" class="bento-gallery__img">
       <div class="bento-gallery__overlay">
-        <span class="bento-gallery__caption">Pha That Luang, Vientiane</span>
+        <span class="bento-gallery__caption">{{ $t('imageGallery.phaThatLuang') }}</span>
       </div>
     </div>
     <div class="bento-gallery__card">
-      <img src="/images/khonephapheng.jpg" alt="Khone Phapheng Falls, Champasak" class="bento-gallery__img">
+      <img src="/images/khonephapheng.jpg" :alt="$t('imageGallery.khonePhapheng')" class="bento-gallery__img">
       <div class="bento-gallery__overlay">
-        <span class="bento-gallery__caption">Khone Phapheng Falls, Champasak</span>
+        <span class="bento-gallery__caption">{{ $t('imageGallery.khonePhapheng') }}</span>
       </div>
     </div>
     <div class="bento-gallery__card">
-      <img src="/images/Muaengngoy.jpg" alt="Muang Ngoi, Luang Prabang" class="bento-gallery__img">
+      <img src="/images/Muaengngoy.jpg" :alt="$t('imageGallery.muangNgoi')" class="bento-gallery__img">
       <div class="bento-gallery__overlay">
-        <span class="bento-gallery__caption">Muang Ngoi, Luang Prabang</span>
+        <span class="bento-gallery__caption">{{ $t('imageGallery.muangNgoi') }}</span>
       </div>
     </div>
   </div>

@@ -9,7 +9,7 @@
     >
       <NuxtLink to="/" class="admin-sider__logo">
         <img src="/images/unibooking-logo.png" alt="UniBooking" class="admin-sider__logo-img">
-        <span v-if="!collapsed" class="admin-sider__logo-text">Admin</span>
+        <span v-if="!collapsed" class="admin-sider__logo-text">{{ $t('layouts.adminLabel') }}</span>
       </NuxtLink>
 
       <!-- ClientOnly: Ant Design Vue's Menu measures DOM nodes that don't
@@ -29,19 +29,19 @@
           <a-menu-item key="dashboard">
             <NuxtLink to="/admin">
               <DashboardOutlined />
-              <span>Dashboard</span>
+              <span>{{ $t('layouts.dashboard') }}</span>
             </NuxtLink>
           </a-menu-item>
           <a-menu-item key="bookings">
             <NuxtLink to="/admin/bookings">
               <ScheduleOutlined />
-              <span>Bookings</span>
+              <span>{{ $t('layouts.bookings') }}</span>
             </NuxtLink>
           </a-menu-item>
           <a-menu-item key="users">
             <NuxtLink to="/admin/users">
               <TeamOutlined />
-              <span>Users</span>
+              <span>{{ $t('layouts.users') }}</span>
             </NuxtLink>
           </a-menu-item>
         </a-menu>
@@ -58,7 +58,7 @@
         <div class="admin-header__user">
           <a-avatar size="small">{{ userInitial }}</a-avatar>
           <span class="admin-header__name">{{ authStore.fullName }}</span>
-          <a-button size="small" danger @click="handleLogout">ອອກຈາກລະບົບ</a-button>
+          <a-button size="small" danger @click="handleLogout">{{ $t('nav.logout') }}</a-button>
         </div>
       </a-layout-header>
 

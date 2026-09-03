@@ -3,35 +3,35 @@
     <a-card class="result-card" :bordered="false">
       <template v-if="isChecking">
         <a-spin size="large" />
-        <p class="result-card__hint">ກຳລັງກວດສອບຜົນການຊຳລະເງິນ...</p>
+        <p class="result-card__hint">{{ $t('checkoutResult.checking') }}</p>
       </template>
 
       <template v-else-if="bookingStatus === 'CONFIRMED'">
         <CheckCircleFilled class="result-card__icon result-card__icon--success" />
-        <h1 class="result-card__title">ຊຳລະເງິນສຳເລັດແລ້ວ!</h1>
-        <p class="result-card__hint">ຂອບໃຈທີ່ໃຊ້ບໍລິການ UniBooking. ການຈອງຂອງທ່ານຖືກຢືນຢັນແລ້ວ.</p>
+        <h1 class="result-card__title">{{ $t('checkout.paymentSuccessTitle') }}</h1>
+        <p class="result-card__hint">{{ $t('checkoutResult.successHint') }}</p>
         <a-button type="primary" size="large" @click="router.push('/profile')">
-          ໄປທີ່ໜ້າໂປຣໄຟລ໌
+          {{ $t('checkout.goToProfileButton') }}
         </a-button>
       </template>
 
       <template v-else-if="bookingStatus === 'PENDING'">
         <ClockCircleOutlined class="result-card__icon result-card__icon--pending" />
-        <h1 class="result-card__title">ກຳລັງລໍຖ້າການຢືນຢັນ</h1>
+        <h1 class="result-card__title">{{ $t('checkoutResult.pendingTitle') }}</h1>
         <p class="result-card__hint">
-          ຖ້າທ່ານຫາກໍ່ຊຳລະເງິນ ອາດໃຊ້ເວລາຄູ່ໜຶ່ງນາທີເພື່ອຢືນຢັນ. ກົດປຸ່ມລຸ່ມນີ້ເພື່ອກວດສອບອີກຄັ້ງ.
+          {{ $t('checkoutResult.pendingHint') }}
         </p>
         <a-button type="primary" size="large" :loading="isChecking" @click="checkStatus">
-          ກວດສອບອີກຄັ້ງ
+          {{ $t('checkoutResult.checkAgainButton') }}
         </a-button>
       </template>
 
       <template v-else>
         <CloseCircleFilled class="result-card__icon result-card__icon--failed" />
-        <h1 class="result-card__title">ການຊຳລະເງິນບໍ່ສຳເລັດ</h1>
-        <p class="result-card__hint">ການຈອງນີ້ຖືກຍົກເລີກ ຫຼື ການຊຳລະເງິນລົ້ມເຫຼວ. ກະລຸນາລອງຈອງໃໝ່.</p>
+        <h1 class="result-card__title">{{ $t('checkoutResult.failedTitle') }}</h1>
+        <p class="result-card__hint">{{ $t('checkoutResult.failedHint') }}</p>
         <a-button type="primary" size="large" @click="router.push('/hotels')">
-          ກັບໄປໜ້າໂຮງແຮມ
+          {{ $t('checkout.backToHotelsButton') }}
         </a-button>
       </template>
     </a-card>

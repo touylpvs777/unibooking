@@ -30,7 +30,8 @@ export default defineNuxtPlugin((nuxtApp) => {
       return response;
     },
     (error) => {
-      let errorMessage = 'ເກີດຂໍ້ຜິດພາດທີ່ບໍ່ຮູ້ຈັກ ກະລຸນາລອງໃໝ່ພາຍຫຼັງ.';
+      const { t } = nuxtApp.$i18n;
+      let errorMessage = t('errors.generic');
 
       if (error.response) {
         const status = error.response.status;
@@ -44,7 +45,7 @@ export default defineNuxtPlugin((nuxtApp) => {
           status === 401 && AUTH_ENDPOINTS_WITH_EXPECTED_401.includes(error.config?.url);
 
         if (status === 401 && !isExpectedAuthFailure) {
-          errorMessage = 'ເຊດຊັນຂອງທ່ານໝົດອາຍຸແລ້ວ ກະລຸນາລັອກອິນໃໝ່.';
+          errorMessage = t('errors.sessionExpired');
 
           // Cookie ໝົດອາຍຸ/ບໍ່ຖືກຕ້ອງ: ສົ່ງກັບໄປໜ້າ Login
           // (ບໍ່ມີ token ໃນ localStorage ໃຫ້ລ້າງອີກຕໍ່ໄປ -- cookie ຖືກ server ຈັດການ;
@@ -53,14 +54,14 @@ export default defineNuxtPlugin((nuxtApp) => {
             window.location.href = '/login';
           }
         }
-        else if (status === 403) errorMessage = 'ທ່ານບໍ່ມີສິດເຂົ້າເຖິງຂໍ້ມູນນີ້.';
-        else if (status === 404) errorMessage = 'ບໍ່ພົບຂໍ້ມູນບໍລິການທີ່ທ່ານຕ້ອງການ.';
-        else if (status === 422) errorMessage = 'ຂໍ້ມູນທີ່ປ້ອນບໍ່ຖືກຕ້ອງ ກະລຸນາກວດສອບຄືນ.';
-        else if (status === 500) errorMessage = 'ລະບົບເຊີບເວີຂັດຂ້ອງຊົ່ວຄາວ.';
+        else if (status === 403) errorMessage = t('errors.forbidden');
+        else if (status === 404) errorMessage = t('errors.notFound');
+        else if (status === 422) errorMessage = t('errors.validationError');
+        else if (status === 500) errorMessage = t('errors.serverError');
 
         errorMessage = error.response.data?.message || errorMessage;
       } else if (error.request) {
-        errorMessage = 'ບໍ່ສາມາດເຊື່ອມຕໍ່ຫາເຊີບເວີໄດ້ ກະລຸນາກວດສອບອິນເຕີເນັດ.';
+        errorMessage = t('errors.networkError');
       }
 
       // ແຈ້ງເຕືອນ Error (ໃຊ້ alert ໄປກ່ອນ ດຽວເຮົາຄ່ອຍເຊື່ອມ Ant Design) — ຍົກເວັ້ນ 401 ເພາະຈະ redirect ຢູ່ແລ້ວ

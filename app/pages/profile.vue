@@ -11,14 +11,14 @@
       </div>
 
       <a-button danger @click="handleLogout">
-        ອອກຈາກລະບົບ
+        {{ $t('nav.logout') }}
       </a-button>
     </a-card>
 
     <a-card class="profile-tabs-card">
       <a-tabs default-active-key="history">
         <!-- Tab 1: Booking History -->
-        <a-tab-pane key="history" tab="ປະຫວັດການຈອງ">
+        <a-tab-pane key="history" :tab="$t('profile.historyTab')">
           <a-table
             :columns="historyColumns"
             :data-source="bookingStore.bookingHistory"
@@ -39,14 +39,14 @@
                 </a-tag>
               </template>
               <template v-else-if="column.key === 'totalPrice'">
-                {{ formatPrice(record.totalPrice) }} ກີບ
+                {{ formatPrice(record.totalPrice) }} {{ $t('common.kip') }}
               </template>
               <template v-else-if="column.key === 'action'">
                 <a-button type="link" @click="handleViewDetail(record)">
-                  ເບິ່ງລາຍລະອຽດ
+                  {{ $t('common.viewDetails') }}
                 </a-button>
                 <a-button v-if="record.status === 'COMPLETED'" type="link" @click="handleWriteReview(record)">
-                  ຂຽນຣີວິວ
+                  {{ $t('common.writeReview') }}
                 </a-button>
               </template>
             </template>
@@ -54,10 +54,10 @@
         </a-tab-pane>
 
         <!-- Tab 2: Personal Info -->
-        <a-tab-pane key="info" tab="ຂໍ້ມູນສ່ວນຕົວ">
+        <a-tab-pane key="info" :tab="$t('profile.infoTab')">
           <a-descriptions :column="1" bordered size="middle">
-            <a-descriptions-item label="ຊື່">{{ authStore.fullName }}</a-descriptions-item>
-            <a-descriptions-item label="ອີເມວ">{{ authStore.user?.email }}</a-descriptions-item>
+            <a-descriptions-item :label="$t('common.columns.name')">{{ authStore.fullName }}</a-descriptions-item>
+            <a-descriptions-item :label="$t('common.emailLabel')">{{ authStore.user?.email }}</a-descriptions-item>
           </a-descriptions>
         </a-tab-pane>
       </a-tabs>
@@ -66,18 +66,18 @@
     <!-- Booking Detail Modal -->
     <a-modal
       v-model:open="isModalVisible"
-      title="ລາຍລະອຽດການຈອງ"
+      :title="$t('profile.bookingDetailModalTitle')"
       :footer="null"
     >
       <a-descriptions v-if="selectedBooking" :column="1" bordered size="middle">
-        <a-descriptions-item label="ລະຫັດການຈອງ">{{ selectedBooking.bookingReference }}</a-descriptions-item>
-        <a-descriptions-item label="ຊື່ບໍລິການ">{{ firstItem(selectedBooking)?.inventoryPricing?.service?.name || '-' }}</a-descriptions-item>
-        <a-descriptions-item label="ວັນທີ">{{ formatDate(firstItem(selectedBooking)?.inventoryPricing?.date) }}</a-descriptions-item>
-        <a-descriptions-item label="ຈຳນວນ (ຫ້ອງ/ບ່ອນນັ່ງ)">
+        <a-descriptions-item :label="$t('common.columns.bookingReference')">{{ selectedBooking.bookingReference }}</a-descriptions-item>
+        <a-descriptions-item :label="$t('profile.serviceNameColumn')">{{ firstItem(selectedBooking)?.inventoryPricing?.service?.name || '-' }}</a-descriptions-item>
+        <a-descriptions-item :label="$t('common.columns.date')">{{ formatDate(firstItem(selectedBooking)?.inventoryPricing?.date) }}</a-descriptions-item>
+        <a-descriptions-item :label="$t('profile.quantityLabel')">
           {{ totalUnits(selectedBooking) }}
         </a-descriptions-item>
-        <a-descriptions-item label="ລາຄາລວມ">{{ formatPrice(selectedBooking.totalPrice) }} ກີບ</a-descriptions-item>
-        <a-descriptions-item label="ສະຖານະ">
+        <a-descriptions-item :label="$t('common.columns.totalPrice')">{{ formatPrice(selectedBooking.totalPrice) }} {{ $t('common.kip') }}</a-descriptions-item>
+        <a-descriptions-item :label="$t('common.columns.status')">
           <a-tag :color="statusTagMeta(selectedBooking.status).color">
             {{ statusTagMeta(selectedBooking.status).text }}
           </a-tag>
@@ -85,14 +85,14 @@
       </a-descriptions>
 
       <div class="modal-actions">
-        <a-button @click="isModalVisible = false">ປິດ</a-button>
+        <a-button @click="isModalVisible = false">{{ $t('common.close') }}</a-button>
       </div>
     </a-modal>
 
     <!-- Write Review Modal -->
     <a-modal
       v-model:open="isReviewModalVisible"
-      title="ຂຽນຣີວິວ"
+      :title="$t('common.writeReview')"
       :footer="null"
     >
       <p v-if="reviewingBooking" class="review-modal__service">
@@ -121,6 +121,7 @@
 definePageMeta({ middleware: ['auth'] })
 
 // Nuxt/Pinia auto-imports: computed, onMounted, ref, useAuthStore, useBookingStore, navigateTo
+const { t } = useI18n()
 const authStore = useAuthStore()
 const bookingStore = useBookingStore()
 
@@ -139,25 +140,28 @@ onMounted(async () => {
   bookingStore.fetchBookingHistory()
 })
 
-const historyColumns = [
-  { title: 'ລະຫັດການຈອງ', dataIndex: 'bookingReference', key: 'bookingReference' },
-  { title: 'ຊື່ບໍລິການ', key: 'serviceName' },
-  { title: 'ວັນທີ', key: 'date' },
-  { title: 'ລາຄາລວມ', dataIndex: 'totalPrice', key: 'totalPrice' },
-  { title: 'ສະຖານະ', dataIndex: 'status', key: 'status' },
-  { title: 'ຈັດການ', key: 'action' }
-]
+const historyColumns = computed(() => [
+  { title: t('common.columns.bookingReference'), dataIndex: 'bookingReference', key: 'bookingReference' },
+  { title: t('profile.serviceNameColumn'), key: 'serviceName' },
+  { title: t('common.columns.date'), key: 'date' },
+  { title: t('common.columns.totalPrice'), dataIndex: 'totalPrice', key: 'totalPrice' },
+  { title: t('common.columns.status'), dataIndex: 'status', key: 'status' },
+  { title: t('common.columns.actions'), key: 'action' }
+])
 
-// ແປ status ຈາກ backend (Prisma BookingStatus: PENDING/CONFIRMED/CANCELLED/COMPLETED) ເປັນສີ+ຂໍ້ຄວາມ Lao
-const STATUS_TAG_MAP = {
-  PENDING: { color: 'warning', text: 'ລໍຖ້າຊຳລະ' },
-  CONFIRMED: { color: 'processing', text: 'ຢືນຢັນແລ້ວ' },
-  COMPLETED: { color: 'success', text: 'ສຳເລັດ' },
-  CANCELLED: { color: 'error', text: 'ຍົກເລີກ' }
+// Backend BookingStatus: PENDING/CONFIRMED/CANCELLED/COMPLETED
+const STATUS_COLOR_MAP = {
+  PENDING: 'warning',
+  CONFIRMED: 'processing',
+  COMPLETED: 'success',
+  CANCELLED: 'error'
 }
 
 function statusTagMeta(status) {
-  return STATUS_TAG_MAP[status] || { color: 'default', text: status }
+  return {
+    color: STATUS_COLOR_MAP[status] || 'default',
+    text: t(`common.bookingStatus.${status.toLowerCase()}`, status)
+  }
 }
 
 function formatPrice(value) {

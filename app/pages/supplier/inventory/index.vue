@@ -1,10 +1,10 @@
 <template>
   <div class="supplier-inventory">
     <div class="supplier-inventory__header">
-      <h1 class="supplier-inventory__title">ຈັດການສິນຄ້າ</h1>
+      <h1 class="supplier-inventory__title">{{ $t('supplier.inventoryTitle') }}</h1>
       <a-button type="primary" @click="openAddModal">
         <template #icon><PlusOutlined /></template>
-        Add Item
+        {{ $t('supplier.addItemButton') }}
       </a-button>
     </div>
 
@@ -33,16 +33,16 @@
           </template>
 
           <template v-else-if="column.key === 'price'">
-            {{ nextAvailability(record) ? `${formatPrice(nextAvailability(record).price)} ກີບ` : '—' }}
+            {{ nextAvailability(record) ? `${formatPrice(nextAvailability(record).price)} ${$t('common.kip')}` : '—' }}
           </template>
 
           <template v-else-if="column.key === 'availableUnits'">
-            {{ nextAvailability(record) ? `${nextAvailability(record).availableUnits} ໜ່ວຍ` : 'ຍັງບໍ່ໄດ້ຕັ້ງລາຄາ' }}
+            {{ nextAvailability(record) ? `${nextAvailability(record).availableUnits} ${$t('supplier.unitsSuffix')}` : $t('supplier.priceNotSet') }}
           </template>
 
           <template v-else-if="column.key === 'isActive'">
             <a-tag :color="record.isActive ? 'success' : 'default'">
-              {{ record.isActive ? 'ເປີດໃຫ້ຈອງ' : 'ປິດຮັບຈອງ' }}
+              {{ record.isActive ? $t('supplier.openForBooking') : $t('supplier.closedForBooking') }}
             </a-tag>
           </template>
 
@@ -50,16 +50,16 @@
             <a-space>
               <a-button size="small" @click="openImagesModal(record)">
                 <template #icon><PictureOutlined /></template>
-                Images
+                {{ $t('supplier.imagesButton') }}
               </a-button>
               <a-button size="small" @click="handleEdit">
                 <template #icon><EditOutlined /></template>
-                Edit
+                {{ $t('common.edit') }}
               </a-button>
               <a-popconfirm
-                title="ລຶບສິນຄ້ານີ້ອອກຈາກລາຍການ?"
-                ok-text="ລຶບ"
-                cancel-text="ຍົກເລີກ"
+                :title="$t('supplier.deleteConfirmTitle')"
+                :ok-text="$t('common.delete')"
+                :cancel-text="$t('common.cancel')"
                 @confirm="handleDelete(record)"
               >
                 <a-button
@@ -68,7 +68,7 @@
                   :loading="inventoryStore.deactivatingId === record.id"
                 >
                   <template #icon><DeleteOutlined /></template>
-                  Delete
+                  {{ $t('common.delete') }}
                 </a-button>
               </a-popconfirm>
             </a-space>
@@ -79,77 +79,77 @@
 
     <a-modal
       v-model:open="isAddModalOpen"
-      title="Add Item"
+      :title="$t('supplier.addItemButton')"
       :confirm-loading="inventoryStore.isSubmitting"
-      ok-text="ບັນທຶກ"
-      cancel-text="ຍົກເລີກ"
+      :ok-text="$t('common.save')"
+      :cancel-text="$t('common.cancel')"
       @ok="handleSubmit"
       @cancel="closeAddModal"
     >
       <a-form ref="formRef" layout="vertical" :model="form">
-        <a-form-item label="ປະເພດສິນຄ້າ" name="type" :rules="[{ required: true, message: 'ກະລຸນາເລືອກປະເພດ' }]">
-          <a-select v-model:value="form.type" placeholder="ເລືອກປະເພດ">
-            <a-select-option value="HOTEL">Room</a-select-option>
-            <a-select-option value="TOUR">Tour</a-select-option>
-            <a-select-option value="CAR_RENTAL">Car Rental</a-select-option>
+        <a-form-item :label="$t('supplier.itemTypeLabel')" name="type" :rules="[{ required: true, message: $t('supplier.itemTypeRequired') }]">
+          <a-select v-model:value="form.type" :placeholder="$t('supplier.selectTypePlaceholder')">
+            <a-select-option value="HOTEL">{{ $t('common.serviceTypes.room') }}</a-select-option>
+            <a-select-option value="TOUR">{{ $t('common.serviceTypes.tour') }}</a-select-option>
+            <a-select-option value="CAR_RENTAL">{{ $t('common.serviceTypes.carRental') }}</a-select-option>
           </a-select>
         </a-form-item>
 
         <a-form-item
-          label="ຊື່"
+          :label="$t('common.columns.name')"
           name="name"
           :rules="[
-            { required: true, message: 'ກະລຸນາປ້ອນຊື່' },
-            { min: 3, message: 'ຊື່ຕ້ອງມີຢ່າງໜ້ອຍ 3 ຕົວອັກສອນ' }
+            { required: true, message: $t('supplier.nameRequired') },
+            { min: 3, message: $t('supplier.nameMinLength') }
           ]"
         >
-          <a-input v-model:value="form.name" placeholder="ຕົວຢ່າງ: Deluxe Double Room" />
+          <a-input v-model:value="form.name" :placeholder="$t('supplier.namePlaceholder')" />
         </a-form-item>
 
         <a-form-item
-          label="ລາຍລະອຽດ"
+          :label="$t('supplier.descriptionLabel')"
           name="description"
           :rules="[
-            { required: true, message: 'ກະລຸນາປ້ອນລາຍລະອຽດ' },
-            { min: 10, message: 'ລາຍລະອຽດຕ້ອງມີຢ່າງໜ້ອຍ 10 ຕົວອັກສອນ' }
+            { required: true, message: $t('supplier.descriptionRequired') },
+            { min: 10, message: $t('supplier.descriptionMinLength') }
           ]"
         >
-          <a-textarea v-model:value="form.description" :rows="3" placeholder="ອະທິບາຍສິນຄ້ານີ້..." />
+          <a-textarea v-model:value="form.description" :rows="3" :placeholder="$t('supplier.descriptionPlaceholder')" />
         </a-form-item>
 
-        <a-form-item label="ສະຖານທີ່" name="location" :rules="[{ required: true, message: 'ກະລຸນາປ້ອນສະຖານທີ່' }]">
-          <a-input v-model:value="form.location" placeholder="ຕົວຢ່າງ: Vientiane, Laos" />
+        <a-form-item :label="$t('search.locationLabel')" name="location" :rules="[{ required: true, message: $t('supplier.locationRequired') }]">
+          <a-input v-model:value="form.location" :placeholder="$t('supplier.locationPlaceholder')" />
         </a-form-item>
 
         <template v-if="form.type === 'HOTEL'">
           <a-row :gutter="16">
             <a-col :span="12">
               <a-form-item
-                label="ລະດັບດາວ"
+                :label="$t('serviceDetail.starRatingLabel')"
                 name="starRating"
-                :rules="[{ required: true, type: 'number', min: 1, max: 5, message: '1-5 ດາວ' }]"
+                :rules="[{ required: true, type: 'number', min: 1, max: 5, message: $t('supplier.starRatingHint') }]"
               >
                 <a-input-number v-model:value="form.starRating" :min="1" :max="5" style="width: 100%" />
               </a-form-item>
             </a-col>
             <a-col :span="12">
               <a-form-item
-                label="ປະເພດທີ່ພັກ"
+                :label="$t('hotels.propertyTypeLabel')"
                 name="propertyType"
-                :rules="[{ required: true, message: 'ກະລຸນາເລືອກປະເພດທີ່ພັກ' }]"
+                :rules="[{ required: true, message: $t('supplier.propertyTypeRequired') }]"
               >
-                <a-select v-model:value="form.propertyType" placeholder="ເລືອກ">
-                  <a-select-option value="HOTEL">Hotel</a-select-option>
-                  <a-select-option value="RESORT">Resort</a-select-option>
-                  <a-select-option value="VILLA">Villa</a-select-option>
-                  <a-select-option value="GUESTHOUSE">Guesthouse</a-select-option>
+                <a-select v-model:value="form.propertyType" :placeholder="$t('supplier.selectPlaceholder')">
+                  <a-select-option value="HOTEL">{{ $t('common.propertyTypes.hotel') }}</a-select-option>
+                  <a-select-option value="RESORT">{{ $t('common.propertyTypes.resort') }}</a-select-option>
+                  <a-select-option value="VILLA">{{ $t('common.propertyTypes.villa') }}</a-select-option>
+                  <a-select-option value="GUESTHOUSE">{{ $t('common.propertyTypes.guesthouse') }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
           </a-row>
 
-          <a-form-item label="ສິ່ງອຳນວຍຄວາມສະດວກ (ບໍ່ບັງຄັບ)" name="amenities">
-            <a-select v-model:value="form.amenities" mode="tags" placeholder="ພິມແລ້ວກົດ Enter ເພື່ອເພີ່ມ" />
+          <a-form-item :label="$t('supplier.amenitiesLabel')" name="amenities">
+            <a-select v-model:value="form.amenities" mode="tags" :placeholder="$t('supplier.amenitiesPlaceholder')" />
           </a-form-item>
         </template>
 
@@ -157,49 +157,49 @@
           <a-row :gutter="16">
             <a-col :span="12">
               <a-form-item
-                label="ໄລຍະເວລາ (ວັນ)"
+                :label="$t('supplier.durationDaysLabel')"
                 name="durationDays"
-                :rules="[{ required: true, type: 'number', min: 1, message: 'ຢ່າງໜ້ອຍ 1 ວັນ' }]"
+                :rules="[{ required: true, type: 'number', min: 1, message: $t('supplier.durationRequired') }]"
               >
                 <a-input-number v-model:value="form.durationDays" :min="1" style="width: 100%" />
               </a-form-item>
             </a-col>
             <a-col :span="12">
               <a-form-item
-                label="ໝວດໝູ່"
+                :label="$t('explore.categoryTitle')"
                 name="category"
-                :rules="[{ required: true, message: 'ກະລຸນາປ້ອນໝວດໝູ່' }]"
+                :rules="[{ required: true, message: $t('supplier.categoryRequired') }]"
               >
-                <a-input v-model:value="form.category" placeholder="ຕົວຢ່າງ: Adventure" />
+                <a-input v-model:value="form.category" :placeholder="$t('supplier.categoryPlaceholder')" />
               </a-form-item>
             </a-col>
           </a-row>
 
           <a-form-item
-            label="ລະດັບຄວາມຍາກ"
+            :label="$t('serviceDetail.difficultyLabel')"
             name="difficulty"
-            :rules="[{ required: true, message: 'ກະລຸນາເລືອກລະດັບຄວາມຍາກ' }]"
+            :rules="[{ required: true, message: $t('supplier.difficultyRequired') }]"
           >
-            <a-select v-model:value="form.difficulty" placeholder="ເລືອກ">
-              <a-select-option value="EASY">Easy</a-select-option>
-              <a-select-option value="MODERATE">Moderate</a-select-option>
-              <a-select-option value="HARD">Hard</a-select-option>
+            <a-select v-model:value="form.difficulty" :placeholder="$t('supplier.selectPlaceholder')">
+              <a-select-option value="EASY">{{ $t('common.difficulties.easy') }}</a-select-option>
+              <a-select-option value="MODERATE">{{ $t('common.difficulties.moderate') }}</a-select-option>
+              <a-select-option value="HARD">{{ $t('common.difficulties.hard') }}</a-select-option>
             </a-select>
           </a-form-item>
 
           <a-row :gutter="16">
             <a-col :span="12">
               <a-form-item
-                label="ຈຳນວນຄົນຕ່ຳສຸດ"
+                :label="$t('supplier.minGroupSizeLabel')"
                 name="minGroupSize"
-                :rules="[{ required: true, type: 'number', min: 1, message: 'ຢ່າງໜ້ອຍ 1 ຄົນ' }]"
+                :rules="[{ required: true, type: 'number', min: 1, message: $t('supplier.minGroupSizeRequired') }]"
               >
                 <a-input-number v-model:value="form.minGroupSize" :min="1" style="width: 100%" />
               </a-form-item>
             </a-col>
             <a-col :span="12">
               <a-form-item
-                label="ຈຳນວນຄົນສູງສຸດ"
+                :label="$t('supplier.maxGroupSizeLabel')"
                 name="maxGroupSize"
                 :rules="[{ required: true, validator: validateMaxGroupSize }]"
               >
@@ -213,37 +213,37 @@
           <a-row :gutter="16">
             <a-col :span="12">
               <a-form-item
-                label="ປະເພດລົດ"
+                :label="$t('serviceDetail.vehicleTypeLabel')"
                 name="vehicleType"
-                :rules="[{ required: true, message: 'ກະລຸນາເລືອກປະເພດລົດ' }]"
+                :rules="[{ required: true, message: $t('supplier.vehicleTypeRequired') }]"
               >
-                <a-select v-model:value="form.vehicleType" placeholder="ເລືອກ">
-                  <a-select-option value="SEDAN">Sedan</a-select-option>
-                  <a-select-option value="SUV">SUV</a-select-option>
-                  <a-select-option value="VAN">Van</a-select-option>
-                  <a-select-option value="PICKUP">Pickup</a-select-option>
-                  <a-select-option value="MOTORBIKE">Motorbike</a-select-option>
+                <a-select v-model:value="form.vehicleType" :placeholder="$t('supplier.selectPlaceholder')">
+                  <a-select-option value="SEDAN">{{ $t('common.vehicleTypes.sedan') }}</a-select-option>
+                  <a-select-option value="SUV">{{ $t('common.vehicleTypes.suv') }}</a-select-option>
+                  <a-select-option value="VAN">{{ $t('common.vehicleTypes.van') }}</a-select-option>
+                  <a-select-option value="PICKUP">{{ $t('common.vehicleTypes.pickup') }}</a-select-option>
+                  <a-select-option value="MOTORBIKE">{{ $t('common.vehicleTypes.motorbike') }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
             <a-col :span="12">
               <a-form-item
-                label="ເກຍ"
+                :label="$t('serviceDetail.transmissionLabel')"
                 name="transmission"
-                :rules="[{ required: true, message: 'ກະລຸນາເລືອກເກຍ' }]"
+                :rules="[{ required: true, message: $t('supplier.transmissionRequired') }]"
               >
-                <a-select v-model:value="form.transmission" placeholder="ເລືອກ">
-                  <a-select-option value="MANUAL">Manual</a-select-option>
-                  <a-select-option value="AUTOMATIC">Automatic</a-select-option>
+                <a-select v-model:value="form.transmission" :placeholder="$t('supplier.selectPlaceholder')">
+                  <a-select-option value="MANUAL">{{ $t('common.transmissions.manual') }}</a-select-option>
+                  <a-select-option value="AUTOMATIC">{{ $t('common.transmissions.automatic') }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
           </a-row>
 
           <a-form-item
-            label="ຈຳນວນບ່ອນນັ່ງ"
+            :label="$t('serviceDetail.seatingCapacityLabel')"
             name="seatingCapacity"
-            :rules="[{ required: true, type: 'number', min: 1, message: 'ຢ່າງໜ້ອຍ 1 ບ່ອນນັ່ງ' }]"
+            :rules="[{ required: true, type: 'number', min: 1, message: $t('supplier.seatingCapacityRequired') }]"
           >
             <a-input-number v-model:value="form.seatingCapacity" :min="1" style="width: 100%" />
           </a-form-item>
@@ -253,7 +253,7 @@
 
     <a-modal
       v-model:open="isImagesModalOpen"
-      title="ຈັດການຮູບພາບ"
+      :title="$t('supplier.imagesModalTitle')"
       :footer="null"
       @cancel="closeImagesModal"
     >
@@ -268,14 +268,14 @@
           @close="inventoryStore.error = null"
         />
 
-        <a-empty v-if="!activeService.images?.length" description="ຍັງບໍ່ມີຮູບພາບ" />
+        <a-empty v-if="!activeService.images?.length" :description="$t('supplier.noImages')" />
         <div v-else class="image-manager__grid">
           <div v-for="img in activeService.images" :key="img.id" class="image-manager__item">
             <img :src="img.url" :alt="activeService.name" class="image-manager__thumb">
             <a-popconfirm
-              title="ລຶບຮູບນີ້?"
-              ok-text="ລຶບ"
-              cancel-text="ຍົກເລີກ"
+              :title="$t('supplier.deleteImageConfirm')"
+              :ok-text="$t('common.delete')"
+              :cancel-text="$t('common.cancel')"
               @confirm="handleRemoveImage(img.id)"
             >
               <a-button
@@ -307,7 +307,7 @@
           @click="fileInputRef?.click()"
         >
           <template #icon><UploadOutlined /></template>
-          ອັບໂຫລດຮູບພາບ (ສູງສຸດ 5 ຮູບຕໍ່ຄັ້ງ)
+          {{ $t('supplier.uploadButton') }}
         </a-button>
       </div>
     </a-modal>
@@ -322,33 +322,46 @@ import { useInventoryStore } from '~/stores/inventory'
 
 definePageMeta({ layout: 'supplier', middleware: ['supplier'] })
 
+const { t } = useI18n()
 const inventoryStore = useInventoryStore()
 
-const columns = [
-  { title: 'ຊື່', dataIndex: 'name', key: 'name' },
-  { title: 'ປະເພດ', key: 'type' },
-  { title: 'ລາຄາ', key: 'price' },
-  { title: 'ຈຳນວນທີ່ວ່າງ', key: 'availableUnits' },
-  { title: 'ສະຖານະ', key: 'isActive' },
-  { title: 'ຈັດການ', key: 'actions' }
-]
+const columns = computed(() => [
+  { title: t('common.columns.name'), dataIndex: 'name', key: 'name' },
+  { title: t('common.columns.type'), key: 'type' },
+  { title: t('supplier.priceColumn'), key: 'price' },
+  { title: t('supplier.availableUnitsColumn'), key: 'availableUnits' },
+  { title: t('common.columns.status'), key: 'isActive' },
+  { title: t('common.columns.actions'), key: 'actions' }
+])
 
 // Backend ServiceType: HOTEL/FLIGHT/TRAIN/BUS/TOUR/CAR_RENTAL/PACKAGE. Only
 // HOTEL/TOUR/CAR_RENTAL are creatable from this form (see form.type's
 // options below) -- the rest are shown here only in case a FLIGHT/TRAIN/BUS/
 // PACKAGE service already exists from elsewhere and shows up in the table.
-const TYPE_TAG_MAP = {
-  HOTEL: { color: 'blue', text: 'Room' },
-  TOUR: { color: 'gold', text: 'Tour' },
-  CAR_RENTAL: { color: 'purple', text: 'Car Rental' },
-  FLIGHT: { color: 'cyan', text: 'Flight' },
-  TRAIN: { color: 'green', text: 'Train' },
-  BUS: { color: 'orange', text: 'Bus' },
-  PACKAGE: { color: 'default', text: 'Package' }
+const TYPE_COLOR_MAP = {
+  HOTEL: 'blue',
+  TOUR: 'gold',
+  CAR_RENTAL: 'purple',
+  FLIGHT: 'cyan',
+  TRAIN: 'green',
+  BUS: 'orange',
+  PACKAGE: 'default'
+}
+const TYPE_KEY_MAP = {
+  HOTEL: 'room',
+  TOUR: 'tour',
+  CAR_RENTAL: 'carRental',
+  FLIGHT: 'flight',
+  TRAIN: 'train',
+  BUS: 'bus',
+  PACKAGE: 'package'
 }
 
 function typeTagMeta(type) {
-  return TYPE_TAG_MAP[type] || { color: 'default', text: type }
+  return {
+    color: TYPE_COLOR_MAP[type] || 'default',
+    text: TYPE_KEY_MAP[type] ? t(`common.serviceTypes.${TYPE_KEY_MAP[type]}`) : type
+  }
 }
 
 function formatPrice(value) {
@@ -392,10 +405,10 @@ const form = reactive({ ...EMPTY_FORM })
 
 async function validateMaxGroupSize(_rule, value) {
   if (value === undefined || value === null) {
-    return Promise.reject('ກະລຸນາປ້ອນຈຳນວນຄົນສູງສຸດ')
+    return Promise.reject(t('supplier.maxGroupSizeRequired'))
   }
   if (form.minGroupSize !== undefined && value < form.minGroupSize) {
-    return Promise.reject('ຈຳນວນຄົນສູງສຸດຕ້ອງບໍ່ໜ້ອຍກວ່າຈຳນວນຄົນຕ່ຳສຸດ')
+    return Promise.reject(t('supplier.maxGroupSizeInvalid'))
   }
   return Promise.resolve()
 }
@@ -456,7 +469,7 @@ async function handleSubmit() {
 
   try {
     await inventoryStore.createService(form.type, buildPayload())
-    message.success('ເພີ່ມສິນຄ້າສຳເລັດ')
+    message.success(t('supplier.itemAddedMessage'))
     closeAddModal()
   } catch {
     // inventoryStore.error is already set and shown via the a-alert above
@@ -468,13 +481,13 @@ async function handleSubmit() {
 // No PATCH/edit-service endpoint exists yet -- honest placeholder, same
 // "not ready yet" pattern as checkout.vue's disabled payment channels.
 function handleEdit() {
-  message.info('ຄຸນສົມບັດນີ້ຍັງບໍ່ພ້ອມໃຊ້ງານ.')
+  message.info(t('common.notReadyYet'))
 }
 
 async function handleDelete(record) {
   try {
     await inventoryStore.deactivateService(record.id)
-    message.success('ລຶບສິນຄ້ານີ້ແລ້ວ')
+    message.success(t('supplier.itemDeletedMessage'))
   } catch {
     // inventoryStore.error is already set and shown via the a-alert above
   }
@@ -509,7 +522,7 @@ async function handleFilesSelected(event) {
 
   try {
     await inventoryStore.uploadServiceImages(activeServiceId.value, files)
-    message.success('ອັບໂຫລດຮູບພາບສຳເລັດ')
+    message.success(t('supplier.imagesUploadedMessage'))
   } catch {
     // inventoryStore.error is already set and shown via the a-alert above
   } finally {
@@ -522,7 +535,7 @@ async function handleRemoveImage(imageId) {
 
   try {
     await inventoryStore.removeServiceImage(activeServiceId.value, imageId)
-    message.success('ລຶບຮູບພາບແລ້ວ')
+    message.success(t('supplier.imageDeletedMessage'))
   } catch {
     // inventoryStore.error is already set and shown via the a-alert above
   }

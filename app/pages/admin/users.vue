@@ -1,6 +1,6 @@
 <template>
   <div class="admin-users">
-    <h1 class="admin-users__title">ຈັດການຜູ້ໃຊ້</h1>
+    <h1 class="admin-users__title">{{ $t('admin.usersTitle') }}</h1>
 
     <a-alert
       v-if="error"
@@ -42,8 +42,8 @@
             <a-switch
               :checked="record.isActive"
               :disabled="isSelf(record) || pendingIds.has(record.id)"
-              checked-children="Active"
-              un-checked-children="Suspended"
+              :checked-children="$t('admin.statusActive')"
+              :un-checked-children="$t('admin.statusSuspended')"
               @change="(checked) => handleStatusChange(record, checked)"
             />
           </template>
@@ -58,11 +58,12 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { API_USERS, apiAdminUpdateUserRole, apiAdminUpdateUserStatus } from '~/utils/api'
 
 definePageMeta({ layout: 'admin' })
 
+const { t } = useI18n()
 const authStore = useAuthStore()
 
 // SafeUser[] from GET /users (ADMIN-only listing, unibooking-backend/src/users/users.controller.ts)
@@ -73,12 +74,12 @@ const error = ref(null)
 // controls so a second click can't fire before the first one resolves.
 const pendingIds = ref(new Set())
 
-const columns = [
-  { title: 'ຊື່', key: 'name' },
-  { title: 'ບົດບາດ', key: 'role' },
-  { title: 'ສະຖານະ', key: 'isActive' },
-  { title: 'ສະໝັກເມື່ອ', key: 'createdAt' }
-]
+const columns = computed(() => [
+  { title: t('common.columns.name'), key: 'name' },
+  { title: t('admin.roleColumn'), key: 'role' },
+  { title: t('common.columns.status'), key: 'isActive' },
+  { title: t('admin.joinedColumn'), key: 'createdAt' }
+])
 
 function fullName(user) {
   return [user.firstName, user.lastName].filter(Boolean).join(' ') || user.email
@@ -105,7 +106,7 @@ async function fetchUsers() {
     const { data } = await $unibookingApi.get(API_USERS)
     users.value = data
   } catch {
-    error.value = 'ບໍ່ສາມາດດຶງຂໍ້ມູນຜູ້ໃຊ້ໄດ້'
+    error.value = t('admin.fetchUsersError')
   } finally {
     isLoading.value = false
   }

@@ -4,12 +4,12 @@
       <div class="review-list__score">{{ reviewsStore.averageRating?.toFixed(1) ?? '–' }}</div>
       <div>
         <a-rate disabled :value="reviewsStore.averageRating ?? 0" allow-half class="review-list__rate" />
-        <p class="review-list__count">{{ reviewsStore.reviewCount }} ຣີວິວ</p>
+        <p class="review-list__count">{{ $t('reviews.count', { count: reviewsStore.reviewCount }) }}</p>
       </div>
     </div>
 
     <a-spin :spinning="reviewsStore.isLoading">
-      <a-empty v-if="!reviewsStore.isLoading && !reviewsStore.reviews.length" description="ຍັງບໍ່ມີຣີວິວສຳລັບບໍລິການນີ້" />
+      <a-empty v-if="!reviewsStore.isLoading && !reviewsStore.reviews.length" :description="$t('reviews.noReviews')" />
 
       <div v-else class="review-list__items">
         <div v-for="review in reviewsStore.reviews" :key="review.id" class="review-item">
@@ -23,7 +23,7 @@
       </div>
 
       <div v-if="reviewsStore.meta && reviewsStore.meta.page < reviewsStore.meta.totalPages" class="review-list__more">
-        <a-button :loading="reviewsStore.isLoading" @click="loadMore">ເບິ່ງຣີວິວເພີ່ມເຕີມ</a-button>
+        <a-button :loading="reviewsStore.isLoading" @click="loadMore">{{ $t('reviews.loadMore') }}</a-button>
       </div>
     </a-spin>
   </div>

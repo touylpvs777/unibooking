@@ -1,12 +1,12 @@
 <template>
   <div class="admin-dashboard">
-    <h1 class="admin-dashboard__title">ພາບລວມລະບົບ</h1>
+    <h1 class="admin-dashboard__title">{{ $t('admin.dashboardTitle') }}</h1>
 
     <a-row :gutter="[24, 24]">
       <a-col :xs="24" :sm="12" :md="8">
         <a-card :loading="isLoading" class="stat-card">
           <a-statistic
-            title="ຈຳນວນຜູ້ໃຊ້ທັງໝົດ"
+            :title="$t('admin.totalUsers')"
             :value="stats?.totalUsers ?? 0"
             :value-style="{ color: '#14294f', fontWeight: 700 }"
           >
@@ -20,7 +20,7 @@
       <a-col :xs="24" :sm="12" :md="8">
         <a-card :loading="isLoading" class="stat-card">
           <a-statistic
-            title="ຈຳນວນການຈອງທັງໝົດ"
+            :title="$t('admin.totalBookings')"
             :value="stats?.totalBookings ?? 0"
             :value-style="{ color: '#14294f', fontWeight: 700 }"
           >
@@ -34,14 +34,14 @@
       <a-col :xs="24" :sm="12" :md="8">
         <a-card :loading="isLoading" class="stat-card">
           <a-statistic
-            title="ລາຍຮັບລວມ (ຈາກການຈອງທີ່ຢືນຢັນ/ສຳເລັດແລ້ວ)"
+            :title="$t('admin.totalRevenue')"
             :value="formattedRevenue"
             :value-style="{ color: '#166534', fontWeight: 700 }"
           >
             <template #prefix>
               <DollarCircleOutlined class="stat-card__icon stat-card__icon--green" />
             </template>
-            <template #suffix>ກີບ</template>
+            <template #suffix>{{ $t('common.kip') }}</template>
           </a-statistic>
         </a-card>
       </a-col>
@@ -49,7 +49,7 @@
       <a-col :xs="24" :sm="12" :md="8">
         <a-card :loading="isLoading" class="stat-card">
           <a-statistic
-            title="ຄະແນນລີວິວສະເລ່ຍ"
+            :title="$t('admin.averageRating')"
             :value="formattedAverageRating"
             :value-style="{ color: '#14294f', fontWeight: 700 }"
           >
@@ -70,11 +70,11 @@
     />
 
     <a-card :loading="isLoading" :bordered="false" class="status-breakdown-card">
-      <template #title>Bookings by Status</template>
+      <template #title>{{ $t('admin.bookingsByStatus') }}</template>
 
       <div v-for="status in STATUS_ORDER" :key="status" class="status-breakdown__row">
         <div class="status-breakdown__label">
-          <span>{{ STATUS_LABEL_MAP[status] }}</span>
+          <span>{{ $t(`common.bookingStatus.${STATUS_KEY_MAP[status]}`) }}</span>
           <span class="status-breakdown__count">{{ stats?.bookingsByStatus?.[status] ?? 0 }}</span>
         </div>
         <a-progress
@@ -94,6 +94,8 @@ import { API_ADMIN_STATS } from '~/utils/api'
 
 definePageMeta({ layout: 'admin' })
 
+const { t } = useI18n()
+
 // AdminStats from GET /admin/stats: { totalUsers, totalBookings,
 // totalRevenue, averageRating, bookingsByStatus }
 const stats = ref(null)
@@ -107,11 +109,11 @@ const formattedAverageRating = computed(() =>
 
 // Same BookingStatus set/order as pages/supplier/index.vue's own breakdown.
 const STATUS_ORDER = ['PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED']
-const STATUS_LABEL_MAP = {
-  PENDING: 'ລໍຖ້າຊຳລະ',
-  CONFIRMED: 'ຢືນຢັນແລ້ວ',
-  COMPLETED: 'ສຳເລັດ',
-  CANCELLED: 'ຍົກເລີກ'
+const STATUS_KEY_MAP = {
+  PENDING: 'pending',
+  CONFIRMED: 'confirmed',
+  COMPLETED: 'completed',
+  CANCELLED: 'cancelled'
 }
 const STATUS_COLOR_MAP = {
   PENDING: '#d4af37',
@@ -134,7 +136,7 @@ async function fetchStats() {
     const { data } = await $unibookingApi.get(API_ADMIN_STATS)
     stats.value = data
   } catch {
-    error.value = 'ບໍ່ສາມາດດຶງຂໍ້ມູນສະຖິຕິໄດ້'
+    error.value = t('admin.fetchStatsError')
   } finally {
     isLoading.value = false
   }

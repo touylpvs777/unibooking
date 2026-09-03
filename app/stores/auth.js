@@ -9,18 +9,19 @@ import { API_LOGIN, API_LOGOUT, API_ME, API_REGISTER } from '../utils/api';
 // API being down, where err.response is undefined) are three different
 // problems with three different fixes from the user's side.
 function resolveLoginErrorMessage(err) {
+  const { t } = useNuxtApp().$i18n;
   const status = err.response?.status;
 
   if (status === 401) {
-    return err.response?.data?.message || 'ອີເມວ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ.';
+    return err.response?.data?.message || t('errors.invalidCredentials');
   }
   if (status >= 500) {
-    return 'ລະບົບເຊີບເວີຂັດຂ້ອງຊົ່ວຄາວ ກະລຸນາລອງໃໝ່ພາຍຫຼັງ.';
+    return t('errors.serverErrorRetry');
   }
   if (!err.response) {
-    return 'ບໍ່ສາມາດເຊື່ອມຕໍ່ຫາເຊີບເວີໄດ້ ກະລຸນາກວດສອບອິນເຕີເນັດ.';
+    return t('errors.networkError');
   }
-  return err.response?.data?.message || 'ເຂົ້າສູ່ລະບົບບໍ່ສຳເລັດ ກະລຸນາລອງໃໝ່.';
+  return err.response?.data?.message || t('errors.loginFailed');
 }
 
 // Same branching idea as resolveLoginErrorMessage, but for POST /auth/register:
@@ -28,23 +29,24 @@ function resolveLoginErrorMessage(err) {
 // 400 is a class-validator failure from the global ValidationPipe, whose `message`
 // is an array of per-field strings rather than one string.
 function resolveRegisterErrorMessage(err) {
+  const { t } = useNuxtApp().$i18n;
   const status = err.response?.status;
   const data = err.response?.data;
 
   if (status === 409) {
-    return data?.message || 'ອີເມວນີ້ຖືກນຳໃຊ້ແລ້ວ ກະລຸນາໃຊ້ອີເມວອື່ນ.';
+    return data?.message || t('errors.emailTaken');
   }
   if (status === 400) {
     const msg = data?.message;
-    return Array.isArray(msg) ? msg.join(' ') : msg || 'ຂໍ້ມູນທີ່ປ້ອນບໍ່ຖືກຕ້ອງ ກະລຸນາກວດສອບອີກຄັ້ງ.';
+    return Array.isArray(msg) ? msg.join(' ') : msg || t('errors.validationError');
   }
   if (status >= 500) {
-    return 'ລະບົບເຊີບເວີຂັດຂ້ອງຊົ່ວຄາວ ກະລຸນາລອງໃໝ່ພາຍຫຼັງ.';
+    return t('errors.serverErrorRetry');
   }
   if (!err.response) {
-    return 'ບໍ່ສາມາດເຊື່ອມຕໍ່ຫາເຊີບເວີໄດ້ ກະລຸນາກວດສອບອິນເຕີເນັດ.';
+    return t('errors.networkError');
   }
-  return data?.message || 'ສະໝັກສະມາຊິກບໍ່ສຳເລັດ ກະລຸນາລອງໃໝ່.';
+  return data?.message || t('errors.registrationFailed');
 }
 
 export const useAuthStore = defineStore('auth', {

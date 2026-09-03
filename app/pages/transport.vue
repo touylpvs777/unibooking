@@ -1,43 +1,43 @@
 <template>
   <div class="container">
-    <h1 class="page-title">ເລືອກຖ້ຽວການເດີນທາງຂອງທ່ານ</h1>
+    <h1 class="page-title">{{ $t('transport.title') }}</h1>
 
     <a-card class="filter-card" :bordered="false">
       <a-row :gutter="16">
         <a-col :xs="24" :sm="12" :md="4">
-          <label class="field-label">ປະເພດ</label>
-          <a-select v-model:value="filters.mode" size="large" style="width: 100%" allow-clear placeholder="ທັງໝົດ">
-            <a-select-option v-for="mode in modeOptions" :key="mode" :value="mode">{{ mode }}</a-select-option>
+          <label class="field-label">{{ $t('common.columns.type') }}</label>
+          <a-select v-model:value="filters.mode" size="large" style="width: 100%" allow-clear :placeholder="$t('common.allOption')">
+            <a-select-option v-for="mode in modeOptions" :key="mode" :value="mode">{{ modeLabel(mode) }}</a-select-option>
           </a-select>
         </a-col>
         <a-col :xs="24" :sm="12" :md="5">
-          <label class="field-label">ຕົ້ນທາງ</label>
-          <a-input v-model:value="filters.origin" size="large" placeholder="ວຽງຈັນ" />
+          <label class="field-label">{{ $t('search.originLabel') }}</label>
+          <a-input v-model:value="filters.origin" size="large" :placeholder="$t('search.originPlaceholder')" />
         </a-col>
         <a-col :xs="24" :sm="12" :md="5">
-          <label class="field-label">ປາຍທາງ</label>
-          <a-input v-model:value="filters.destination" size="large" placeholder="ຫຼວງພະບາງ" />
+          <label class="field-label">{{ $t('search.destinationLabel') }}</label>
+          <a-input v-model:value="filters.destination" size="large" :placeholder="$t('search.destinationPlaceholder')" />
         </a-col>
         <a-col :xs="24" :sm="12" :md="4">
-          <label class="field-label">ວັນທີ່ເດີນທາງ</label>
+          <label class="field-label">{{ $t('search.travelDateLabel') }}</label>
           <a-input v-model:value="filters.departureDate" type="date" size="large" />
         </a-col>
         <a-col :xs="24" :sm="12" :md="3">
-          <label class="field-label">ຊັ້ນທີ່ນັ່ງ</label>
-          <a-select v-model:value="filters.seatClass" size="large" style="width: 100%" allow-clear placeholder="ທັງໝົດ">
-            <a-select-option v-for="cls in seatClassOptions" :key="cls" :value="cls">{{ cls }}</a-select-option>
+          <label class="field-label">{{ $t('transport.seatClassLabel') }}</label>
+          <a-select v-model:value="filters.seatClass" size="large" style="width: 100%" allow-clear :placeholder="$t('common.allOption')">
+            <a-select-option v-for="cls in seatClassOptions" :key="cls" :value="cls">{{ seatClassLabel(cls) }}</a-select-option>
           </a-select>
         </a-col>
         <a-col :xs="24" :md="3" class="filter-card__search-col">
           <a-button type="primary" block size="large" :loading="bookingStore.isLoading" @click="runSearch">
-            ຄົ້ນຫາ
+            {{ $t('common.search') }}
           </a-button>
         </a-col>
       </a-row>
     </a-card>
 
     <a-spin :spinning="bookingStore.isLoading">
-      <a-empty v-if="!bookingStore.isLoading && !bookingStore.services.length" description="ບໍ່ພົບຖ້ຽວການເດີນທາງທີ່ຕົງກັບການຄົ້ນຫາ" />
+      <a-empty v-if="!bookingStore.isLoading && !bookingStore.services.length" :description="$t('transport.noResults')" />
 
       <a-row v-else :gutter="[24, 24]">
         <a-col v-for="route in bookingStore.services" :key="route.id" :xs="24" :md="12" :lg="8">
@@ -47,8 +47,8 @@
             </template>
 
             <h3 class="route-card__name">{{ route.name }}</h3>
-            <a-tag color="blue" class="route-card__type">{{ route.type }}</a-tag>
-            <a-tag v-if="route.transportDetails?.seatClass" color="gold">{{ route.transportDetails.seatClass }}</a-tag>
+            <a-tag color="blue" class="route-card__type">{{ modeLabel(route.type) }}</a-tag>
+            <a-tag v-if="route.transportDetails?.seatClass" color="gold">{{ seatClassLabel(route.transportDetails.seatClass) }}</a-tag>
             <p class="route-card__route">
               {{ route.transportDetails?.origin ?? route.location }}
               <ArrowRightOutlined />
@@ -56,13 +56,13 @@
             </p>
             <p class="route-card__price">
               <template v-if="unitPriceFor(route) != null">
-                {{ formatPrice(unitPriceFor(route)) }} ກີບ / ບ່ອນນັ່ງ
+                {{ formatPrice(unitPriceFor(route)) }} {{ $t('common.kip') }} {{ $t('transport.priceUnit') }}
               </template>
-              <template v-else>ບໍ່ມີບ່ອນນັ່ງວ່າງມື້ນີ້</template>
+              <template v-else>{{ $t('transport.noSeatsToday') }}</template>
             </p>
 
             <a-button type="primary" block :disabled="unitPriceFor(route) == null" @click="handleBookNow(route)">
-              ຈອງປີ້
+              {{ $t('transport.bookTicketButton') }}
             </a-button>
           </a-card>
         </a-col>
@@ -76,12 +76,23 @@ import { reactive, onMounted } from 'vue'
 import { ArrowRightOutlined } from '@ant-design/icons-vue'
 import { useBookingStore } from '~/stores/booking'
 
+const { t } = useI18n()
 const bookingStore = useBookingStore()
 const router = useRouter()
 const route = useRoute()
 
 const modeOptions = ['FLIGHT', 'TRAIN', 'BUS']
 const seatClassOptions = ['ECONOMY', 'BUSINESS', 'FIRST']
+
+const MODE_KEY_MAP = { FLIGHT: 'flight', TRAIN: 'train', BUS: 'bus' }
+function modeLabel(mode) {
+  return t(`common.serviceTypes.${MODE_KEY_MAP[mode] ?? mode}`, mode)
+}
+
+const SEAT_CLASS_KEY_MAP = { ECONOMY: 'economy', BUSINESS: 'business', FIRST: 'first' }
+function seatClassLabel(cls) {
+  return t(`common.seatClasses.${SEAT_CLASS_KEY_MAP[cls] ?? cls}`, cls)
+}
 
 function isoDate(date) {
   return date.toISOString().slice(0, 10)
@@ -94,11 +105,17 @@ function isoDate(date) {
 // Seeded from the homepage SearchForm's ?origin=&destination=&departureDate=
 // query params when present, so a search on `/` actually filters results
 // here instead of just landing on the page with today's date.
+//
+// departureDate starts empty so SSR and the pre-hydration client render the
+// same thing -- "today" depends on the reader's clock, which onMounted below
+// fills in once we're client-side only, avoiding a hydration mismatch if the
+// server and client happen to straddle a UTC day boundary between render and
+// hydration.
 const filters = reactive({
   mode: undefined,
   origin: route.query.origin ?? '',
   destination: route.query.destination ?? '',
-  departureDate: route.query.departureDate ?? isoDate(new Date()),
+  departureDate: route.query.departureDate ?? '',
   seatClass: undefined
 })
 
@@ -113,7 +130,12 @@ function runSearch() {
   })
 }
 
-onMounted(runSearch)
+onMounted(() => {
+  if (!filters.departureDate) {
+    filters.departureDate = isoDate(new Date())
+  }
+  runSearch()
+})
 
 function unitPriceFor(route) {
   const entry = route.inventory?.find((row) => row.date?.slice(0, 10) === filters.departureDate) ?? route.inventory?.[0]

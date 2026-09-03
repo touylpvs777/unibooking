@@ -1,6 +1,6 @@
 <template>
   <div class="admin-bookings">
-    <h1 class="admin-bookings__title">ການຈອງທັງໝົດ</h1>
+    <h1 class="admin-bookings__title">{{ $t('admin.bookingsTitle') }}</h1>
 
     <a-alert
       v-if="error"
@@ -36,7 +36,7 @@
           </template>
 
           <template v-else-if="column.key === 'totalPrice'">
-            {{ formatPrice(record.totalPrice) }} ກີບ
+            {{ formatPrice(record.totalPrice) }} {{ $t('common.kip') }}
           </template>
         </template>
       </a-table>
@@ -45,10 +45,12 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { API_ADMIN_BOOKINGS } from '~/utils/api'
 
 definePageMeta({ layout: 'admin' })
+
+const { t } = useI18n()
 
 // AdminBooking[] from GET /admin/bookings?page&limit -- see
 // unibooking-backend/src/admin/admin.service.ts's adminBookingInclude.
@@ -63,24 +65,27 @@ const pagination = reactive({
   showSizeChanger: false
 })
 
-const columns = [
-  { title: 'ລະຫັດການຈອງ', key: 'bookingReference' },
-  { title: 'ຜູ້ໃຊ້', key: 'user' },
-  { title: 'ສະຖານະ', key: 'status' },
-  { title: 'ລາຄາລວມ', key: 'totalPrice' }
-]
+const columns = computed(() => [
+  { title: t('common.columns.bookingReference'), key: 'bookingReference' },
+  { title: t('common.columns.user'), key: 'user' },
+  { title: t('common.columns.status'), key: 'status' },
+  { title: t('common.columns.totalPrice'), key: 'totalPrice' }
+])
 
 // Backend BookingStatus: PENDING/CONFIRMED/CANCELLED/COMPLETED -- same
 // mapping as app/pages/profile.vue's own booking history table.
-const STATUS_TAG_MAP = {
-  PENDING: { color: 'warning', text: 'ລໍຖ້າຊຳລະ' },
-  CONFIRMED: { color: 'processing', text: 'ຢືນຢັນແລ້ວ' },
-  COMPLETED: { color: 'success', text: 'ສຳເລັດ' },
-  CANCELLED: { color: 'error', text: 'ຍົກເລີກ' }
+const STATUS_COLOR_MAP = {
+  PENDING: 'warning',
+  CONFIRMED: 'processing',
+  COMPLETED: 'success',
+  CANCELLED: 'error'
 }
 
 function statusTagMeta(status) {
-  return STATUS_TAG_MAP[status] || { color: 'default', text: status }
+  return {
+    color: STATUS_COLOR_MAP[status] || 'default',
+    text: t(`common.bookingStatus.${status.toLowerCase()}`, status)
+  }
 }
 
 function formatPrice(value) {
@@ -105,7 +110,7 @@ async function fetchBookings() {
     bookings.value = data.data
     pagination.total = data.meta.total
   } catch {
-    error.value = 'ບໍ່ສາມາດດຶງຂໍ້ມູນການຈອງໄດ້'
+    error.value = t('admin.fetchBookingsError')
   } finally {
     isLoading.value = false
   }

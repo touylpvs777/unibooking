@@ -1,14 +1,14 @@
 <template>
   <div class="explore-page">
     <div class="explore-page__header">
-      <h1 class="explore-page__title">ຄົ້ນຫາບໍລິການ</h1>
-      <p class="explore-page__subtitle">ຄົ້ນຫາທີ່ພັກ, ທົວ ແລະ ລົດເຊົ່າຈາກທົ່ວປະເທດລາວ</p>
+      <h1 class="explore-page__title">{{ $t('explore.title') }}</h1>
+      <p class="explore-page__subtitle">{{ $t('explore.subtitle') }}</p>
 
       <div class="explore-page__controls">
         <a-input-search
           v-model:value="filters.location"
           size="large"
-          placeholder="ຄົ້ນຫາຕາມສະຖານທີ່ (ເຊັ່ນ: Vientiane, Luang Prabang...)"
+          :placeholder="$t('explore.locationSearchPlaceholder')"
           allow-clear
           class="explore-page__search"
           @search="runSearch"
@@ -23,7 +23,7 @@
           v-model:value="filters.dates"
           size="large"
           class="explore-page__dates"
-          :placeholder="['ວັນທີເລີ່ມ', 'ວັນທີສິ້ນສຸດ']"
+          :placeholder="[$t('explore.startDatePlaceholder'), $t('explore.endDatePlaceholder')]"
           @change="runSearch"
         />
       </div>
@@ -42,20 +42,20 @@
     <a-row :gutter="[24, 24]">
       <!-- Filters sidebar -->
       <a-col :xs="24" :md="7" :lg="6">
-        <a-card title="ໂຕກັ່ນຕອງ" :bordered="false" class="filters-sidebar">
+        <a-card :title="$t('explore.filtersTitle')" :bordered="false" class="filters-sidebar">
           <div class="filter-group">
-            <h4 class="filter-group__title">ໝວດໝູ່</h4>
+            <h4 class="filter-group__title">{{ $t('explore.categoryTitle') }}</h4>
             <a-checkbox-group v-model:value="filters.types" class="filter-group__checkboxes" @change="runSearch">
-              <a-checkbox value="HOTEL">Room</a-checkbox>
-              <a-checkbox value="TOUR">Tour</a-checkbox>
-              <a-checkbox value="CAR_RENTAL">Car Rental</a-checkbox>
+              <a-checkbox value="HOTEL">{{ $t('common.serviceTypes.room') }}</a-checkbox>
+              <a-checkbox value="TOUR">{{ $t('common.serviceTypes.tour') }}</a-checkbox>
+              <a-checkbox value="CAR_RENTAL">{{ $t('common.serviceTypes.carRental') }}</a-checkbox>
             </a-checkbox-group>
           </div>
 
           <a-divider class="filter-group__divider" />
 
           <div class="filter-group">
-            <h4 class="filter-group__title">ຊ່ວງລາຄາ (ຕໍ່ຄືນ)</h4>
+            <h4 class="filter-group__title">{{ $t('explore.priceRangeTitle') }}</h4>
             <a-slider
               v-model:value="filters.priceRange"
               range
@@ -71,26 +71,26 @@
               <span>₭{{ formatPrice(filters.priceRange[1]) }}</span>
             </div>
             <p v-if="!hasSelectedDates" class="filter-group__hint">
-              ເລືອກວັນທີກ່ອນເພື່ອນຳໃຊ້ໂຕກັ່ນຕອງລາຄາ
+              {{ $t('explore.priceFilterHint') }}
             </p>
           </div>
 
           <a-divider class="filter-group__divider" />
 
           <div class="filter-group">
-            <h4 class="filter-group__title">ຄະແນນລີວິວຂັ້ນຕ່ຳ</h4>
+            <h4 class="filter-group__title">{{ $t('explore.minRatingTitle') }}</h4>
             <a-rate v-model:value="filters.minRating" @change="runSearch" />
-            <p v-if="filters.minRating" class="filter-group__hint">{{ filters.minRating }} ດາວຂຶ້ນໄປ</p>
+            <p v-if="filters.minRating" class="filter-group__hint">{{ $t('explore.starsAndUp', { n: filters.minRating }) }}</p>
           </div>
 
-          <a-button block class="filters-sidebar__reset" @click="resetFilters">ລ້າງໂຕກັ່ນຕອງ</a-button>
+          <a-button block class="filters-sidebar__reset" @click="resetFilters">{{ $t('explore.resetFilters') }}</a-button>
         </a-card>
       </a-col>
 
       <!-- Results -->
       <a-col :xs="24" :md="17" :lg="18">
         <p v-if="!exploreStore.isLoading && exploreStore.services.length" class="explore-page__count">
-          ພົບ {{ exploreStore.meta.total }} ບໍລິການ
+          {{ $t('explore.resultsCount', { count: exploreStore.meta.total }) }}
         </p>
 
         <!-- Loading: a skeleton grid matching the real card grid's shape,
@@ -104,7 +104,7 @@
 
         <a-empty
           v-else-if="!exploreStore.services.length"
-          description="ບໍ່ພົບບໍລິການທີ່ຕົງກັບການຄົ້ນຫາ"
+          :description="$t('explore.noResults')"
           class="explore-page__empty"
         />
 
@@ -129,7 +129,7 @@
               <div class="service-card__footer">
                 <span class="service-card__price">{{ priceLabel(service) }}</span>
                 <NuxtLink :to="detailsLink(service)">
-                  <a-button type="primary">View Details</a-button>
+                  <a-button type="primary">{{ $t('common.viewDetails') }}</a-button>
                 </NuxtLink>
               </div>
             </a-card>
@@ -145,6 +145,7 @@ import { computed, reactive } from 'vue'
 import { EnvironmentOutlined } from '@ant-design/icons-vue'
 import { useExploreStore } from '~/stores/explore'
 
+const { t } = useI18n()
 const exploreStore = useExploreStore()
 const route = useRoute()
 
@@ -219,18 +220,30 @@ onMounted(runSearch)
 // only HOTEL/TOUR/CAR_RENTAL are filterable from this page's radio group
 // (same 3-type convention as the supplier portal's Add Item form), the
 // rest are shown here only in case one turns up in unfiltered results.
-const TYPE_TAG_MAP = {
-  HOTEL: { color: 'blue', text: 'Room' },
-  TOUR: { color: 'gold', text: 'Tour' },
-  CAR_RENTAL: { color: 'purple', text: 'Car Rental' },
-  FLIGHT: { color: 'cyan', text: 'Flight' },
-  TRAIN: { color: 'green', text: 'Train' },
-  BUS: { color: 'orange', text: 'Bus' },
-  PACKAGE: { color: 'default', text: 'Package' }
+const TYPE_COLOR_MAP = {
+  HOTEL: 'blue',
+  TOUR: 'gold',
+  CAR_RENTAL: 'purple',
+  FLIGHT: 'cyan',
+  TRAIN: 'green',
+  BUS: 'orange',
+  PACKAGE: 'default'
+}
+const TYPE_KEY_MAP = {
+  HOTEL: 'room',
+  TOUR: 'tour',
+  CAR_RENTAL: 'carRental',
+  FLIGHT: 'flight',
+  TRAIN: 'train',
+  BUS: 'bus',
+  PACKAGE: 'package'
 }
 
 function typeTagMeta(type) {
-  return TYPE_TAG_MAP[type] || { color: 'default', text: type }
+  return {
+    color: TYPE_COLOR_MAP[type] || 'default',
+    text: TYPE_KEY_MAP[type] ? t(`common.serviceTypes.${TYPE_KEY_MAP[type]}`) : type
+  }
 }
 
 // Same placehold.co convention as pages/hotels.vue's placeholderImage.
@@ -255,7 +268,7 @@ function formatPrice(value) {
 // so this honestly falls back instead of showing a fabricated price.
 function priceLabel(service) {
   const entry = service.inventory?.[0]
-  return entry ? `₭ ${formatPrice(Number(entry.price))} / ຄືນ` : 'ເບິ່ງລາຄາໃນລາຍລະອຽດ'
+  return entry ? `₭ ${formatPrice(Number(entry.price))} ${t('common.perNight')}` : t('explore.priceSeeDetails')
 }
 
 // Hands the selected dates to the Service Details page via query params

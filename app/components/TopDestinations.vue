@@ -16,13 +16,17 @@
 </template>
 
 <script setup>
-const destinations = [
-  { title: 'Vang Vieng', subtitle: 'ວັງວຽງ', image: '/images/hero-bg.jpg' },
-  { title: 'Luang Prabang', subtitle: 'ຫຼວງພະບາງ', image: '/images/Tardkaungse.png' },
-  { title: 'Vientiane', subtitle: 'ວຽງຈັນ', image: '/images/patuxay.jpeg' },
-  { title: 'Champasak', subtitle: 'ຈຳປາສັກ', image: '/images/Wat-Phu-Laos.jpg' },
-  { title: 'Pakse', subtitle: 'ປາກເຊ', image: '/images/khonephapheng.jpg' }
-]
+import { computed } from 'vue'
+
+const { t } = useI18n()
+
+const destinations = computed(() => [
+  { title: t('topDestinations.vangVieng.title'), subtitle: t('topDestinations.vangVieng.subtitle'), image: '/images/hero-bg.jpg' },
+  { title: t('topDestinations.luangPrabang.title'), subtitle: t('topDestinations.luangPrabang.subtitle'), image: '/images/Tardkaungse.png' },
+  { title: t('topDestinations.vientiane.title'), subtitle: t('topDestinations.vientiane.subtitle'), image: '/images/patuxay.jpeg' },
+  { title: t('topDestinations.champasak.title'), subtitle: t('topDestinations.champasak.subtitle'), image: '/images/Wat-Phu-Laos.jpg' },
+  { title: t('topDestinations.pakse.title'), subtitle: t('topDestinations.pakse.subtitle'), image: '/images/khonephapheng.jpg' }
+])
 </script>
 
 <style scoped>

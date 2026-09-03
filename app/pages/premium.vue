@@ -92,10 +92,12 @@ import {
   SafetyCertificateOutlined
 } from '@ant-design/icons-vue'
 
+const { t } = useI18n()
+
 // No waitlist endpoint exists yet -- honest placeholder, same "not ready
 // yet" pattern as pages/supplier/inventory/index.vue's handleEdit.
 function handleJoinWaitlist() {
-  message.info('ຄຸນສົມບັດນີ້ຍັງບໍ່ພ້ອມໃຊ້ງານ.')
+  message.info(t('common.notReadyYet'))
 }
 </script>
 

@@ -4,7 +4,7 @@
       <!-- Left: contact info + dates/units + payment method -->
       <a-col :xs="24" :lg="16">
         <a-card class="section-card" :bordered="false">
-          <h2 class="section-card__title">ຂໍ້ມູນຜູ້ຕິດຕໍ່</h2>
+          <h2 class="section-card__title">{{ $t('checkout.contactInfoHeading') }}</h2>
 
           <!-- Display-only: the booking is tied to the logged-in account
                (POST /bookings reads the user from the JWT cookie), and
@@ -15,18 +15,18 @@
             <a-row :gutter="16">
               <a-col :xs="24" :sm="12">
                 <a-form-item
-                  label="ຊື່ ແລະ ນາມສະກຸນ"
+                  :label="$t('checkout.fullNameLabel')"
                   name="fullName"
-                  :rules="[{ required: true, message: 'ກະລຸນາເຂົ້າສູ່ລະບົບກ່ອນ' }]"
+                  :rules="[{ required: true, message: $t('checkout.loginRequiredMessage') }]"
                 >
                   <a-input v-model:value="contactInfo.fullName" size="large" disabled />
                 </a-form-item>
               </a-col>
               <a-col :xs="24" :sm="12">
                 <a-form-item
-                  label="ອີເມວ"
+                  :label="$t('common.emailLabel')"
                   name="email"
-                  :rules="[{ required: true, message: 'ກະລຸນາເຂົ້າສູ່ລະບົບກ່ອນ' }]"
+                  :rules="[{ required: true, message: $t('checkout.loginRequiredMessage') }]"
                 >
                   <a-input v-model:value="contactInfo.email" size="large" disabled />
                 </a-form-item>
@@ -36,26 +36,26 @@
         </a-card>
 
         <a-card class="section-card" :bordered="false">
-          <h2 class="section-card__title">ວັນທີ່ ແລະ ຈຳນວນ</h2>
+          <h2 class="section-card__title">{{ $t('checkout.datesUnitsHeading') }}</h2>
 
           <a-row :gutter="16">
             <a-col :xs="24" :sm="8">
-              <label class="field-label">ວັນທີ່ເລີ່ມ</label>
+              <label class="field-label">{{ $t('checkout.startDateLabel') }}</label>
               <a-input v-model:value="bookingStore.bookingData.startDate" type="date" size="large" />
             </a-col>
             <a-col :xs="24" :sm="8">
-              <label class="field-label">ວັນທີ່ສິ້ນສຸດ</label>
+              <label class="field-label">{{ $t('checkout.endDateLabel') }}</label>
               <a-input v-model:value="bookingStore.bookingData.endDate" type="date" size="large" />
             </a-col>
             <a-col :xs="24" :sm="8">
-              <label class="field-label">ຈຳນວນ (ຫ້ອງ / ບ່ອນນັ່ງ)</label>
+              <label class="field-label">{{ $t('checkout.quantityLabel') }}</label>
               <a-input-number v-model:value="bookingStore.bookingData.units" :min="1" size="large" style="width: 100%" />
             </a-col>
           </a-row>
         </a-card>
 
         <a-card class="section-card" :bordered="false">
-          <h2 class="section-card__title">ຊ່ອງທາງຊຳລະເງິນ</h2>
+          <h2 class="section-card__title">{{ $t('checkout.paymentMethodHeading') }}</h2>
 
           <a-radio-group v-model:value="paymentMethod" class="payment-options">
             <a-radio
@@ -76,9 +76,9 @@
       <a-col :xs="24" :lg="8">
         <a-card class="summary-card" :bordered="false">
           <template v-if="!bookingStore.selectedService">
-            <a-empty description="ຍັງບໍ່ໄດ້ເລືອກບໍລິການ">
+            <a-empty :description="$t('checkout.noServiceSelected')">
               <a-button type="primary" @click="router.push('/hotels')">
-                ກັບໄປໜ້າໂຮງແຮມ
+                {{ $t('checkout.backToHotelsButton') }}
               </a-button>
             </a-empty>
           </template>
@@ -94,22 +94,22 @@
             <a-divider />
 
             <div class="price-row">
-              <span>ລາຄາຕໍ່ໜ່ວຍ x {{ bookingStore.bookingData.units }}</span>
+              <span>{{ $t('checkout.unitPriceLabel') }} x {{ bookingStore.bookingData.units }}</span>
               <span>₭ {{ formatPrice(basePrice) }}</span>
             </div>
             <div class="price-row">
-              <span>ພາສີ ແລະ ຄ່າທຳນຽມ (10%)</span>
+              <span>{{ $t('checkout.taxAndFees') }}</span>
               <span>₭ {{ formatPrice(taxAmount) }}</span>
             </div>
 
             <a-divider />
 
             <div class="price-row price-row--total">
-              <span>ລາຄາລວມ</span>
+              <span>{{ $t('common.columns.totalPrice') }}</span>
               <span class="price-row__total-value">₭ {{ formatPrice(totalWithTax) }}</span>
             </div>
 
-            <a-alert v-if="!bookingStore.isBookingReady" type="warning" show-icon message="ກະລຸນາປ້ອນວັນທີ່ ແລະ ຈຳນວນໃຫ້ຄົບຖ້ວນ" class="ready-alert" />
+            <a-alert v-if="!bookingStore.isBookingReady" type="warning" show-icon :message="$t('checkout.incompleteWarning')" class="ready-alert" />
             <a-alert
               v-if="bookingStore.error"
               type="error"
@@ -129,7 +129,7 @@
               :loading="isSubmitting"
               @click="handleConfirmBooking"
             >
-              ຢືນຢັນການຈອງ
+              {{ $t('checkout.confirmButton') }}
             </a-button>
           </template>
         </a-card>
@@ -141,7 +141,7 @@
          back the way Stripe's success_url does -- this polls instead. -->
     <a-modal
       v-model:open="qrModalVisible"
-      title="ສະແກນ QR ເພື່ອຊຳລະເງິນ"
+      :title="$t('checkout.qrModalTitle')"
       :footer="null"
       :closable="!isPolling"
       :mask-closable="false"
@@ -150,11 +150,11 @@
       <div class="qr-modal">
         <img v-if="qrImageSrc" :src="qrImageSrc" alt="Payment QR code" class="qr-modal__image">
         <p class="qr-modal__hint">
-          ເປີດແອັບທະນາຄານຂອງທ່ານ ແລ້ວສະແກນ QR ນີ້ເພື່ອຊຳລະເງິນ. ໜ້ານີ້ຈະອັບເດດອັດຕະໂນມັດເມື່ອຈ່າຍສຳເລັດ.
+          {{ $t('checkout.qrHint') }}
         </p>
         <a-spin v-if="isPolling" size="small" />
         <a-button v-if="isPolling" type="text" danger @click="closeQrModal">
-          ຍົກເລີກ
+          {{ $t('common.cancel') }}
         </a-button>
       </div>
     </a-modal>
@@ -181,6 +181,7 @@ import { useBookingStore } from '~/stores/booking'
 // flashes the real order summary/payment form before that check resolves.
 definePageMeta({ middleware: ['auth'] })
 
+const { t } = useI18n()
 const authStore = useAuthStore()
 const bookingStore = useBookingStore()
 const router = useRouter()
@@ -217,11 +218,11 @@ watch(
 // faked as success.
 const PAYMENT_METHOD_MAP = { qr: 'LAO_QR_GATEWAY', card: 'STRIPE_CARD' }
 
-const paymentOptions = [
-  { value: 'qr', label: 'BCEL One / QR Pay', icon: QrcodeOutlined },
-  { value: 'card', label: 'Credit/Debit Card', icon: CreditCardOutlined },
-  { value: 'hotel', label: 'Pay at Hotel (coming soon)', icon: HomeOutlined, disabled: true }
-]
+const paymentOptions = computed(() => [
+  { value: 'qr', label: t('checkout.paymentQr'), icon: QrcodeOutlined },
+  { value: 'card', label: t('checkout.paymentCard'), icon: CreditCardOutlined },
+  { value: 'hotel', label: t('checkout.paymentHotel'), icon: HomeOutlined, disabled: true }
+])
 const paymentMethod = ref('qr')
 
 const basePrice = computed(() => bookingStore.totalPrice)
@@ -258,9 +259,9 @@ function closeQrModal() {
 
 function showBookingConfirmedModal() {
   Modal.success({
-    title: 'ຊຳລະເງິນສຳເລັດແລ້ວ!',
-    content: `ລະຫັດການຈອງ: ${bookingStore.activeBooking.bookingReference}. ຂອບໃຈທີ່ໃຊ້ບໍລິການ UniBooking.`,
-    okText: 'ໄປທີ່ໜ້າໂປຣໄຟລ໌',
+    title: t('checkout.paymentSuccessTitle'),
+    content: t('checkout.paymentSuccessContent', { reference: bookingStore.activeBooking.bookingReference }),
+    okText: t('checkout.goToProfileButton'),
     onOk: () => {
       bookingStore.resetBooking()
       router.push('/profile')
@@ -286,7 +287,7 @@ async function pollUntilConfirmed(bookingId) {
       if (bookingStatus === 'CANCELLED' || paymentStatus === 'FAILED') {
         stopPolling()
         qrModalVisible.value = false
-        message.error('ການຊຳລະເງິນລົ້ມເຫຼວ ຫຼື ໝົດເວລາ ກະລຸນາລອງໃໝ່ອີກຄັ້ງ')
+        message.error(t('checkout.paymentFailedMessage'))
         return
       }
     } catch {
@@ -302,13 +303,13 @@ async function pollUntilConfirmed(bookingId) {
 
 async function handleConfirmBooking() {
   if (!bookingStore.isBookingReady) {
-    message.error('ກະລຸນາປ້ອນວັນທີ່ ແລະ ຈຳນວນໃຫ້ຄົບຖ້ວນ')
+    message.error(t('checkout.incompleteWarning'))
     return
   }
 
   const method = PAYMENT_METHOD_MAP[paymentMethod.value]
   if (!method) {
-    message.warning('ຊ່ອງທາງນີ້ຍັງບໍ່ພ້ອມໃຊ້ງານ ກະລຸນາເລືອກຊ່ອງທາງອື່ນ')
+    message.warning(t('checkout.paymentMethodNotReady'))
     return
   }
 

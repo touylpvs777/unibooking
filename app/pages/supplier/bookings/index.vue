@@ -1,6 +1,6 @@
 <template>
   <div class="supplier-bookings">
-    <h1 class="supplier-bookings__title">ການຈອງທັງໝົດ</h1>
+    <h1 class="supplier-bookings__title">{{ $t('admin.bookingsTitle') }}</h1>
 
     <a-alert
       v-if="bookingsStore.error"
@@ -44,7 +44,7 @@
           </template>
 
           <template v-else-if="column.key === 'totalPrice'">
-            {{ formatPrice(record.totalPrice) }} ກີບ
+            {{ formatPrice(record.totalPrice) }} {{ $t('common.kip') }}
           </template>
 
           <template v-else-if="column.key === 'actions'">
@@ -54,7 +54,7 @@
               type="primary"
               @click="handleConfirm(record)"
             >
-              Confirm Booking
+              {{ $t('supplier.confirmBookingButton') }}
             </a-button>
           </template>
         </template>
@@ -64,35 +64,39 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
 import { useSupplierBookingsStore } from '~/stores/supplierBookings'
 
 definePageMeta({ layout: 'supplier', middleware: ['supplier'] })
 
+const { t } = useI18n()
 const bookingsStore = useSupplierBookingsStore()
 
-const columns = [
-  { title: 'ລະຫັດການຈອງ', key: 'bookingReference' },
-  { title: 'ແຂກ', key: 'guest' },
-  { title: 'ບໍລິການ', key: 'serviceName' },
-  { title: 'ວັນທີ', key: 'date' },
-  { title: 'ສະຖານະ', key: 'status' },
-  { title: 'ລາຄາລວມ', key: 'totalPrice' },
-  { title: 'ຈັດການ', key: 'actions' }
-]
+const columns = computed(() => [
+  { title: t('common.columns.bookingReference'), key: 'bookingReference' },
+  { title: t('common.columns.guest'), key: 'guest' },
+  { title: t('common.columns.service'), key: 'serviceName' },
+  { title: t('common.columns.date'), key: 'date' },
+  { title: t('common.columns.status'), key: 'status' },
+  { title: t('common.columns.totalPrice'), key: 'totalPrice' },
+  { title: t('common.columns.actions'), key: 'actions' }
+])
 
 // Same BookingStatus mapping as pages/admin/bookings.vue and
 // pages/supplier/index.vue's own recent-reservations widget.
-const STATUS_TAG_MAP = {
-  PENDING: { color: 'warning', text: 'ລໍຖ້າຊຳລະ' },
-  CONFIRMED: { color: 'processing', text: 'ຢືນຢັນແລ້ວ' },
-  COMPLETED: { color: 'success', text: 'ສຳເລັດ' },
-  CANCELLED: { color: 'error', text: 'ຍົກເລີກ' }
+const STATUS_COLOR_MAP = {
+  PENDING: 'warning',
+  CONFIRMED: 'processing',
+  COMPLETED: 'success',
+  CANCELLED: 'error'
 }
 
 function statusTagMeta(status) {
-  return STATUS_TAG_MAP[status] || { color: 'default', text: status }
+  return {
+    color: STATUS_COLOR_MAP[status] || 'default',
+    text: t(`common.bookingStatus.${status.toLowerCase()}`, status)
+  }
 }
 
 function formatPrice(value) {
@@ -130,7 +134,7 @@ function dateRange(record) {
 // placeholder, same "not ready yet" pattern as the inventory page's Edit
 // button and checkout.vue's disabled payment channels.
 function handleConfirm() {
-  message.info('ຄຸນສົມບັດນີ້ຍັງບໍ່ພ້ອມໃຊ້ງານ.')
+  message.info(t('common.notReadyYet'))
 }
 
 onMounted(() => bookingsStore.fetchBookings())
