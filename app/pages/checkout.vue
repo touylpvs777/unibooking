@@ -172,6 +172,7 @@ import QRCode from 'qrcode'
 import { QrcodeOutlined, CreditCardOutlined, HomeOutlined, CalendarOutlined } from '@ant-design/icons-vue'
 import { useAuthStore } from '~/stores/auth'
 import { useBookingStore } from '~/stores/booking'
+import { formatPrice } from '~/utils/currency'
 
 // POST /bookings and POST /payments/checkout both require the auth cookie.
 // The actual check now lives in middleware/auth.js (skips on the server --
@@ -228,10 +229,6 @@ const paymentMethod = ref('qr')
 const basePrice = computed(() => bookingStore.totalPrice)
 const taxAmount = computed(() => Math.round(basePrice.value * 0.1))
 const totalWithTax = computed(() => basePrice.value + taxAmount.value)
-
-function formatPrice(value) {
-  return new Intl.NumberFormat('lo-LA').format(value ?? 0)
-}
 
 // QR flow state: the customer completes payment on their own banking app,
 // so this page finds out by polling GET /payments/status/:bookingId rather

@@ -112,6 +112,9 @@
 </template>
 
 <script setup>
+import { formatPrice } from '~/utils/currency'
+import { formatDate } from '~/utils/date'
+
 // The actual check now lives in middleware/auth.js (skips on the server --
 // see its own comment for why a hard refresh here previously always
 // bounced to /login even when already logged in). isAuthorized below is
@@ -162,15 +165,6 @@ function statusTagMeta(status) {
     color: STATUS_COLOR_MAP[status] || 'default',
     text: t(`common.bookingStatus.${status.toLowerCase()}`, status)
   }
-}
-
-function formatPrice(value) {
-  return new Intl.NumberFormat('lo-LA').format(value || 0)
-}
-
-function formatDate(value) {
-  if (!value) return '-'
-  return new Date(value).toLocaleDateString('lo-LA')
 }
 
 // GET /bookings/me nests everything under items[].inventoryPricing.service --

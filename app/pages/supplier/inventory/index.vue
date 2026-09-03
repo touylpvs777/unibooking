@@ -319,6 +319,7 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { PlusOutlined, EditOutlined, DeleteOutlined, PictureOutlined, UploadOutlined } from '@ant-design/icons-vue'
 import { useInventoryStore } from '~/stores/inventory'
+import { formatPrice } from '~/utils/currency'
 
 definePageMeta({ layout: 'supplier', middleware: ['supplier'] })
 
@@ -362,10 +363,6 @@ function typeTagMeta(type) {
     color: TYPE_COLOR_MAP[type] || 'default',
     text: TYPE_KEY_MAP[type] ? t(`common.serviceTypes.${TYPE_KEY_MAP[type]}`) : type
   }
-}
-
-function formatPrice(value) {
-  return new Intl.NumberFormat('lo-LA').format(value || 0)
 }
 
 // GET /services/me includes at most one InventoryPricing row per service --

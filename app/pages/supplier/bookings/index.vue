@@ -67,6 +67,7 @@
 import { computed, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
 import { useSupplierBookingsStore } from '~/stores/supplierBookings'
+import { formatPrice } from '~/utils/currency'
 
 definePageMeta({ layout: 'supplier', middleware: ['supplier'] })
 
@@ -97,10 +98,6 @@ function statusTagMeta(status) {
     color: STATUS_COLOR_MAP[status] || 'default',
     text: t(`common.bookingStatus.${status.toLowerCase()}`, status)
   }
-}
-
-function formatPrice(value) {
-  return new Intl.NumberFormat('lo-LA').format(value || 0)
 }
 
 function guestName(record) {

@@ -144,6 +144,7 @@
 import { computed, reactive } from 'vue'
 import { EnvironmentOutlined } from '@ant-design/icons-vue'
 import { useExploreStore } from '~/stores/explore'
+import { formatPrice } from '~/utils/currency'
 
 const { t } = useI18n()
 const exploreStore = useExploreStore()
@@ -256,10 +257,6 @@ function placeholderImage(name) {
 // placeholder for a service with no photos uploaded yet.
 function coverImage(service) {
   return service.images?.[0]?.url || placeholderImage(service.name)
-}
-
-function formatPrice(value) {
-  return new Intl.NumberFormat('lo-LA').format(value)
 }
 
 // `inventory` is only present on a result when the search itself carried a

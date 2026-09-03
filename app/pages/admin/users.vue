@@ -60,6 +60,7 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { API_USERS, apiAdminUpdateUserRole, apiAdminUpdateUserStatus } from '~/utils/api'
+import { formatDate } from '~/utils/date'
 
 definePageMeta({ layout: 'admin' })
 
@@ -83,11 +84,6 @@ const columns = computed(() => [
 
 function fullName(user) {
   return [user.firstName, user.lastName].filter(Boolean).join(' ') || user.email
-}
-
-function formatDate(value) {
-  if (!value) return '-'
-  return new Date(value).toLocaleDateString('lo-LA')
 }
 
 // AdminService rejects both /admin/users/:id/role and /admin/users/:id/status

@@ -155,6 +155,7 @@ import { ScheduleOutlined, DollarCircleOutlined, AppstoreOutlined, StarOutlined 
 import { useInventoryStore } from '~/stores/inventory'
 import { useSupplierBookingsStore } from '~/stores/supplierBookings'
 import { API_SUPPLIER_RATING_SUMMARY } from '~/utils/api'
+import { formatPrice } from '~/utils/currency'
 
 definePageMeta({ layout: 'supplier', middleware: ['supplier'] })
 
@@ -203,10 +204,6 @@ const STATUS_COLOR_MAP = {
   CANCELLED: '#dc2626'
 }
 
-function formatPrice(value) {
-  return new Intl.NumberFormat('lo-LA').format(value || 0)
-}
-
 function guestName(record) {
   const user = record.user
   if (!user) return '-'
@@ -244,7 +241,7 @@ const totalRevenue = computed(() =>
     .reduce((sum, booking) => sum + Number(booking.totalPrice), 0)
 )
 
-const formattedTotalRevenue = computed(() => new Intl.NumberFormat('lo-LA').format(totalRevenue.value))
+const formattedTotalRevenue = computed(() => formatPrice(totalRevenue.value))
 
 // Every status this supplier's bookings list can be in, defaulted to 0 so
 // STATUS_ORDER's progress bars always render (not skip a status with no

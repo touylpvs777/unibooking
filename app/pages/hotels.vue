@@ -135,6 +135,7 @@
 import { reactive, onMounted } from 'vue'
 import { EnvironmentOutlined } from '@ant-design/icons-vue'
 import { useBookingStore } from '~/stores/booking'
+import { formatPrice } from '~/utils/currency'
 
 const { t } = useI18n()
 const bookingStore = useBookingStore()
@@ -223,14 +224,6 @@ function unitPriceFor(service) {
 
 function placeholderImage(name) {
   return `https://placehold.co/600x400/f0f9ff/1e40af?text=${encodeURIComponent(name)}`
-}
-
-// 'lo-LA' grouping separator disagrees between Node's and Chromium's bundled
-// ICU/CLDR data (period vs comma) -- causes a real hydration mismatch on this
-// page's always-server-rendered price-range display. 'en-US' is stable across
-// runtimes, so pin that instead of the ambiguous locale.
-function formatPrice(value) {
-  return new Intl.NumberFormat('en-US').format(value)
 }
 
 function handleBookNow(hotel) {

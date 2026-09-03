@@ -47,6 +47,7 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
 import { API_ADMIN_BOOKINGS } from '~/utils/api'
+import { formatPrice } from '~/utils/currency'
 
 definePageMeta({ layout: 'admin' })
 
@@ -86,10 +87,6 @@ function statusTagMeta(status) {
     color: STATUS_COLOR_MAP[status] || 'default',
     text: t(`common.bookingStatus.${status.toLowerCase()}`, status)
   }
-}
-
-function formatPrice(value) {
-  return new Intl.NumberFormat('lo-LA').format(value || 0)
 }
 
 function fullName(user) {

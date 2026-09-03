@@ -134,6 +134,7 @@ import { EnvironmentOutlined } from '@ant-design/icons-vue'
 import { useServiceDetailStore } from '~/stores/serviceDetail'
 import { useBookingStore } from '~/stores/booking'
 import { useReviewsStore } from '~/stores/reviews'
+import { formatPrice } from '~/utils/currency'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -211,10 +212,6 @@ const galleryImages = computed(() => {
   const images = service.value?.images
   return images?.length ? images : [{ id: 'placeholder', url: placeholderImage(service.value?.name || '') }]
 })
-
-function formatPrice(value) {
-  return new Intl.NumberFormat('lo-LA').format(value || 0)
-}
 
 const hasSelectedDates = computed(() => (selectedDates.value?.length ?? 0) === 2)
 

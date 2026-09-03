@@ -32,6 +32,7 @@
 <script setup>
 import { onMounted, watch } from 'vue'
 import { useReviewsStore } from '~/stores/reviews'
+import { formatDate } from '~/utils/date'
 
 const props = defineProps({
   serviceId: { type: String, required: true }
@@ -57,9 +58,6 @@ function loadMore() {
   })
 }
 
-function formatDate(value) {
-  return new Date(value).toLocaleDateString('lo-LA')
-}
 </script>
 
 <style scoped>

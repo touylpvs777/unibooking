@@ -75,6 +75,7 @@
 import { reactive, onMounted } from 'vue'
 import { ArrowRightOutlined } from '@ant-design/icons-vue'
 import { useBookingStore } from '~/stores/booking'
+import { formatPrice } from '~/utils/currency'
 
 const { t } = useI18n()
 const bookingStore = useBookingStore()
@@ -144,10 +145,6 @@ function unitPriceFor(route) {
 
 function placeholderImage(name) {
   return `https://placehold.co/600x400/f8fafc/0369a1?text=${encodeURIComponent(name)}`
-}
-
-function formatPrice(value) {
-  return new Intl.NumberFormat('lo-LA').format(value)
 }
 
 function handleBookNow(route) {

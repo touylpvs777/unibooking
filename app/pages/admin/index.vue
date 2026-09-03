@@ -91,6 +91,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { TeamOutlined, ScheduleOutlined, DollarCircleOutlined, StarOutlined } from '@ant-design/icons-vue'
 import { API_ADMIN_STATS } from '~/utils/api'
+import { formatPrice } from '~/utils/currency'
 
 definePageMeta({ layout: 'admin' })
 
@@ -102,7 +103,7 @@ const stats = ref(null)
 const isLoading = ref(true)
 const error = ref(null)
 
-const formattedRevenue = computed(() => new Intl.NumberFormat('lo-LA').format(stats.value?.totalRevenue ?? 0))
+const formattedRevenue = computed(() => formatPrice(stats.value?.totalRevenue))
 const formattedAverageRating = computed(() =>
   stats.value?.averageRating != null ? stats.value.averageRating.toFixed(1) : '–'
 )
