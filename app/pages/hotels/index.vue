@@ -1,5 +1,11 @@
 <template>
   <div class="hotels-page">
+    <ModuleBanner
+      :image="bannerImage"
+      :title="$t('home.services.hotels.title')"
+      :subtitle="$t('home.services.hotels.description')"
+    />
+
     <a-row :gutter="24">
       <!-- Filter sidebar -->
       <a-col :xs="24" :md="7" :lg="6">
@@ -92,24 +98,32 @@
 
         <div v-else class="hotel-list">
           <div v-for="hotel in bookingStore.services" :key="hotel.id" class="hotel-card">
-            <img :src="coverImageFor(hotel)" :alt="hotel.name" class="hotel-card__image" />
+            <!-- Clicking the photo/details area navigates to this hotel's own
+                 detail page (/hotels/:id) -- coverImageFor(hotel) guarantees the
+                 image shown here is this specific hotel's own cover photo (or a
+                 HOTEL-type default), never another listing's or the homepage
+                 hero's art. "Book Now" stays a separate sibling control so its
+                 click doesn't also trigger this link's navigation. -->
+            <NuxtLink :to="detailsLink(hotel)" class="hotel-card__link">
+              <img :src="coverImageFor(hotel)" :alt="hotel.name" class="hotel-card__image" />
 
-            <div class="hotel-card__body">
-              <h3 class="hotel-card__name">{{ hotel.name }}</h3>
-              <a-rate v-if="hotel.hotelDetails?.starRating" disabled :value="hotel.hotelDetails.starRating" class="hotel-card__rate" />
-              <p class="hotel-card__supplier">
-                {{ hotel.supplier?.companyName }}
-                <a-tag v-if="hotel.supplier?.isVerified" color="green" class="hotel-card__verified">{{ $t('common.verified') }}</a-tag>
-              </p>
-              <p class="hotel-card__location">
-                <EnvironmentOutlined />
-                {{ hotel.location }}
-              </p>
-              <p class="hotel-card__description">{{ hotel.description }}</p>
-              <div v-if="hotel.hotelDetails?.amenities?.length" class="hotel-card__amenities">
-                <a-tag v-for="amenity in hotel.hotelDetails.amenities" :key="amenity" color="blue">{{ amenity }}</a-tag>
+              <div class="hotel-card__body">
+                <h3 class="hotel-card__name">{{ hotel.name }}</h3>
+                <a-rate v-if="hotel.hotelDetails?.starRating" disabled :value="hotel.hotelDetails.starRating" class="hotel-card__rate" />
+                <p class="hotel-card__supplier">
+                  {{ hotel.supplier?.companyName }}
+                  <a-tag v-if="hotel.supplier?.isVerified" color="green" class="hotel-card__verified">{{ $t('common.verified') }}</a-tag>
+                </p>
+                <p class="hotel-card__location">
+                  <EnvironmentOutlined />
+                  {{ hotel.location }}
+                </p>
+                <p class="hotel-card__description">{{ hotel.description }}</p>
+                <div v-if="hotel.hotelDetails?.amenities?.length" class="hotel-card__amenities">
+                  <a-tag v-for="amenity in hotel.hotelDetails.amenities" :key="amenity" color="blue">{{ amenity }}</a-tag>
+                </div>
               </div>
-            </div>
+            </NuxtLink>
 
             <div class="hotel-card__action">
               <template v-if="unitPriceFor(hotel) != null">
@@ -136,9 +150,10 @@ import { reactive, onMounted } from 'vue'
 import { EnvironmentOutlined } from '@ant-design/icons-vue'
 import { useBookingStore } from '~/stores/booking'
 import { formatPrice } from '~/utils/currency'
-import { coverImageFor } from '~/utils/serviceImages'
+import { coverImageFor, defaultImageForType } from '~/utils/serviceImages'
 
 const { t } = useI18n()
+const bannerImage = defaultImageForType('HOTEL')
 const bookingStore = useBookingStore()
 const router = useRouter()
 const route = useRoute()
@@ -221,6 +236,19 @@ onMounted(() => {
 function unitPriceFor(service) {
   const entry = service.inventory?.find((row) => row.date?.slice(0, 10) === filters.checkInDate) ?? service.inventory?.[0]
   return entry ? Number(entry.price) : null
+}
+
+// Hands the selected dates to /hotels/:id (pages/hotels/[id].vue, backed by
+// components/ServiceDetail/DetailView.vue) via query params, same convention
+// as pages/explore/index.vue's own detailsLink() -- only when both dates are
+// actually set, so a range chosen here doesn't have to be re-picked there.
+function detailsLink(hotel) {
+  return {
+    path: `/hotels/${hotel.id}`,
+    query: filters.checkInDate && filters.checkOutDate
+      ? { startDate: filters.checkInDate, endDate: filters.checkOutDate }
+      : undefined
+  }
 }
 
 function handleBookNow(hotel) {
@@ -307,6 +335,18 @@ function handleBookNow(hotel) {
 .hotel-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 16px 32px rgba(15, 23, 42, 0.12);
+}
+
+/* Wraps the image + body so the whole photo/details area is one clickable
+   link to this hotel's own detail page -- flex/gap mirrors .hotel-card's own
+   so the visual layout is unchanged from before it was a link. */
+.hotel-card__link {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  gap: 20px;
+  color: inherit;
+  text-decoration: none;
 }
 
 .hotel-card__image {
@@ -402,6 +442,10 @@ function handleBookNow(hotel) {
   }
 
   .hotel-card {
+    flex-direction: column;
+  }
+
+  .hotel-card__link {
     flex-direction: column;
   }
 

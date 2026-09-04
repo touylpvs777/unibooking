@@ -34,7 +34,8 @@ const destinations = computed(() => [
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  gap: 20px;
+  row-gap: 20px;
+  column-gap: 2rem;
   height: 600px;
 }
 

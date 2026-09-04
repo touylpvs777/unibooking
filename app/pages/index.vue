@@ -166,7 +166,7 @@
 
         <a-row v-else :gutter="[24, 24]">
           <a-col v-for="item in serviceGridItems" :key="item.category" :xs="24" :sm="12" :lg="8">
-            <NuxtLink :to="{ path: '/explore', query: { category: item.category } }" class="grid-card">
+            <NuxtLink :to="moduleLinkFor(item.category)" class="grid-card">
               <div class="grid-card__icon">
                 <component :is="item.icon" class="grid-card__icon-glyph" />
               </div>
@@ -562,6 +562,23 @@ const serviceGridItems = computed(() => [
     description: t('home.services.packages.description')
   }
 ])
+
+// Each category now has its own dedicated module page (see pages/hotels,
+// pages/flights, pages/cars, pages/tours, pages/insurance -- all backed by
+// their own vertical search endpoint, see stores/booking.js) instead of
+// landing on the generic /explore search. PACKAGE has no dedicated page yet,
+// so it keeps going through /explore's generic multi-category search.
+const CATEGORY_MODULE_PATHS = {
+  HOTEL: '/hotels',
+  FLIGHT: '/flights',
+  CAR_RENTAL: '/cars',
+  TOUR: '/tours',
+  INSURANCE: '/insurance'
+}
+function moduleLinkFor(category) {
+  const path = CATEGORY_MODULE_PATHS[category]
+  return path ? { path } : { path: '/explore', query: { category } }
+}
 
 // Brief shimmer skeleton on mount so the services grid doesn't pop in blank
 // while its (future API-backed) data resolves -- tints give each card the
@@ -998,7 +1015,7 @@ function closeVideo() {
 .modular-section {
   position: relative;
   width: 100%;
-  padding: 100px 0;
+  padding: 64px 0;
   overflow: hidden;
   background: transparent;
 }
@@ -1325,7 +1342,7 @@ function closeVideo() {
   overflow: hidden;
   width: 100%;
   background: transparent;
-  padding: 80px 0;
+  padding: 64px 0;
 }
 
 /* Faint rotated blurred squares for texture */
@@ -1363,7 +1380,7 @@ function closeVideo() {
 .services-grid-header {
   text-align: center;
   max-width: 640px;
-  margin: 0 auto 48px;
+  margin: 0 auto 32px;
 }
 
 .services-grid-header__badge {
@@ -1539,7 +1556,7 @@ function closeVideo() {
   }
 
   .modular-section {
-    padding: 64px 0;
+    padding: 40px 0;
     text-align: center;
   }
 
@@ -1593,7 +1610,7 @@ function closeVideo() {
   }
 
   .services-grid-section {
-    padding: 64px 0;
+    padding: 40px 0;
   }
 }
 
@@ -1605,7 +1622,7 @@ function closeVideo() {
 .value-section {
   width: 100%;
   background: transparent;
-  padding: 72px 0;
+  padding: 64px 0;
 }
 
 .value-section__inner {
@@ -1658,7 +1675,7 @@ function closeVideo() {
 .luxury-header {
   text-align: center;
   max-width: 640px;
-  margin: 0 auto 40px;
+  margin: 0 auto 32px;
 }
 
 .luxury-header__label {
@@ -1756,13 +1773,14 @@ function closeVideo() {
 .best-of-section {
   width: 100%;
   background: transparent;
-  padding: 80px 0;
+  padding: 64px 0;
 }
 
 .best-of-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  row-gap: 24px;
+  column-gap: 2rem;
 }
 
 /* Top Destinations section wrapper — the mosaic grid itself now lives in
@@ -1770,19 +1788,30 @@ function closeVideo() {
 .destinations-section {
   width: 100%;
   background: transparent;
-  padding: 80px 0;
+  padding: 64px 0;
+}
+
+/* Best of Laos / Top Destinations: these two grids span the section's full
+   width instead of being capped at the shared 1200px .container -- only
+   their own .container loses the cap, every other section on the page
+   keeps it. .container's own horizontal edge padding (0 24px, 0 16px on
+   mobile) is untouched, so cards still get breathing room from the
+   viewport edge -- this only removes the 1200px ceiling. */
+.best-of-section .container,
+.destinations-section .container {
+  max-width: none;
 }
 
 /* Tour Categories: curated category grid with premium image cards */
 .tour-categories-section {
   width: 100%;
   background: transparent;
-  padding: 80px 0;
+  padding: 64px 0;
 }
 
 .tour-categories-header {
   text-align: center;
-  margin: 0 auto 40px;
+  margin: 0 auto 32px;
 }
 
 .tour-categories-header__title {
@@ -1891,7 +1920,31 @@ function closeVideo() {
 .media-section {
   width: 100%;
   background: transparent;
-  padding: 80px 0;
+  padding: 64px 0;
+}
+
+/* Targeted spacing fix -- Modular Travel / Services Grid / Value Props /
+   Best of Laos / Top Destinations / Tour Types / Videos. Forces a single
+   tight, consistent gap across every section wrapper on this page
+   (horizontal padding is untouched -- these only ever set top/bottom,
+   .container below still owns left/right). Two adjacent sections each at
+   the old 64px padding stacked into a 128px gap -- .best-of-section and
+   friends were fixed once already, but .modular-section/.services-grid-
+   section/.value-section were the ones actually producing the visible
+   gap. The !important guards against any of these regressing back to a
+   large value without a loud, obvious diff. .hero-section is deliberately
+   NOT included here -- it needs padding: 0 for its full-bleed image. */
+.modular-section,
+.services-grid-section,
+.value-section,
+.best-of-section,
+.destinations-section,
+.tour-categories-section,
+.media-section {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 3rem !important;
+  padding-bottom: 3rem !important;
 }
 
 /* YouTube-style thumbnail grid: 4 across on desktop */
@@ -1983,7 +2036,7 @@ function closeVideo() {
 
 @media (max-width: 767px) {
   .value-section {
-    padding: 56px 0;
+    padding: 40px 0;
   }
 
   .value-section__inner {
@@ -1995,7 +2048,7 @@ function closeVideo() {
   .destinations-section,
   .media-section,
   .tour-categories-section {
-    padding: 56px 0;
+    padding: 40px 0;
   }
 
   .best-of-grid {

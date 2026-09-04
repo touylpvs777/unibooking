@@ -1,6 +1,10 @@
 <template>
   <div class="container">
-    <h1 class="page-title">{{ $t('transport.title') }}</h1>
+    <ModuleBanner
+      :image="bannerImage"
+      :title="$t('transport.title')"
+      :subtitle="$t('home.services.flights.description')"
+    />
 
     <a-card class="filter-card" :bordered="false">
       <a-row :gutter="16">
@@ -43,23 +47,33 @@
         <a-col v-for="route in bookingStore.services" :key="route.id" :xs="24" :md="12" :lg="8">
           <a-card hoverable class="route-card">
             <template #cover>
-              <img :src="coverImageFor(route)" :alt="route.name" class="route-card__image" />
+              <!-- Clicking the photo/details area navigates to this route's own
+                   detail page (/transport/:id) -- coverImageFor(route) guarantees
+                   the image shown here is this specific flight/train/bus's own
+                   cover photo (or a type-appropriate default), never another
+                   listing's or the homepage hero's art. "Book Ticket" stays a
+                   separate sibling control so its click doesn't also navigate. -->
+              <NuxtLink :to="detailsLink(route)" class="route-card__cover-link">
+                <img :src="coverImageFor(route)" :alt="route.name" class="route-card__image" />
+              </NuxtLink>
             </template>
 
-            <h3 class="route-card__name">{{ route.name }}</h3>
-            <a-tag color="blue" class="route-card__type">{{ modeLabel(route.type) }}</a-tag>
-            <a-tag v-if="route.transportDetails?.seatClass" color="gold">{{ seatClassLabel(route.transportDetails.seatClass) }}</a-tag>
-            <p class="route-card__route">
-              {{ route.transportDetails?.origin ?? route.location }}
-              <ArrowRightOutlined />
-              {{ route.transportDetails?.destination }}
-            </p>
-            <p class="route-card__price">
-              <template v-if="unitPriceFor(route) != null">
-                {{ formatPrice(unitPriceFor(route)) }} {{ $t('common.kip') }} {{ $t('transport.priceUnit') }}
-              </template>
-              <template v-else>{{ $t('transport.noSeatsToday') }}</template>
-            </p>
+            <NuxtLink :to="detailsLink(route)" class="route-card__link">
+              <h3 class="route-card__name">{{ route.name }}</h3>
+              <a-tag color="blue" class="route-card__type">{{ modeLabel(route.type) }}</a-tag>
+              <a-tag v-if="route.transportDetails?.seatClass" color="gold">{{ seatClassLabel(route.transportDetails.seatClass) }}</a-tag>
+              <p class="route-card__route">
+                {{ route.transportDetails?.origin ?? route.location }}
+                <ArrowRightOutlined />
+                {{ route.transportDetails?.destination }}
+              </p>
+              <p class="route-card__price">
+                <template v-if="unitPriceFor(route) != null">
+                  {{ formatPrice(unitPriceFor(route)) }} {{ $t('common.kip') }} {{ $t('transport.priceUnit') }}
+                </template>
+                <template v-else>{{ $t('transport.noSeatsToday') }}</template>
+              </p>
+            </NuxtLink>
 
             <a-button type="primary" block :disabled="unitPriceFor(route) == null" @click="handleBookNow(route)">
               {{ $t('transport.bookTicketButton') }}
@@ -72,11 +86,11 @@
 </template>
 
 <script setup>
-import { reactive, onMounted } from 'vue'
+import { reactive, computed, onMounted } from 'vue'
 import { ArrowRightOutlined } from '@ant-design/icons-vue'
 import { useBookingStore } from '~/stores/booking'
 import { formatPrice } from '~/utils/currency'
-import { coverImageFor } from '~/utils/serviceImages'
+import { coverImageFor, defaultImageForType } from '~/utils/serviceImages'
 
 const { t } = useI18n()
 const bookingStore = useBookingStore()
@@ -84,6 +98,11 @@ const router = useRouter()
 const route = useRoute()
 
 const modeOptions = ['FLIGHT', 'TRAIN', 'BUS']
+
+// Reflects whichever mode is currently selected in the filter bar -- FLIGHT's
+// default photo (a real airport/plane shot) is the generic fallback since no
+// mode is selected by default.
+const bannerImage = computed(() => defaultImageForType(filters.mode || 'FLIGHT'))
 const seatClassOptions = ['ECONOMY', 'BUSINESS', 'FIRST']
 
 const MODE_KEY_MAP = { FLIGHT: 'flight', TRAIN: 'train', BUS: 'bus' }
@@ -144,6 +163,18 @@ function unitPriceFor(route) {
   return entry ? Number(entry.price) : null
 }
 
+// Hands the selected departure date to /transport/:id (pages/transport/[id].vue,
+// backed by components/ServiceDetail/DetailView.vue) via query params, same
+// convention as pages/explore/index.vue's own detailsLink() -- transport is a
+// same-day service, so departureDate doubles as both startDate and endDate
+// (mirrors handleBookNow below).
+function detailsLink(route) {
+  return {
+    path: `/transport/${route.id}`,
+    query: filters.departureDate ? { startDate: filters.departureDate, endDate: filters.departureDate } : undefined
+  }
+}
+
 function handleBookNow(route) {
   bookingStore.selectedService = route
   bookingStore.bookingData.startDate = filters.departureDate
@@ -153,11 +184,11 @@ function handleBookNow(route) {
 </script>
 
 <style scoped>
-.page-title {
-  font-size: 24px;
-  font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 16px;
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  width: 100%;
 }
 
 .filter-card {
@@ -184,10 +215,20 @@ function handleBookNow(route) {
   overflow: hidden;
 }
 
+.route-card__cover-link {
+  display: block;
+}
+
 .route-card__image {
   width: 100%;
   height: 180px;
   object-fit: cover;
+}
+
+.route-card__link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
 }
 
 .route-card__name {
@@ -215,5 +256,11 @@ function handleBookNow(route) {
   font-weight: 700;
   color: #0369a1;
   margin-bottom: 16px;
+}
+
+@media (max-width: 767px) {
+  .container {
+    padding: 24px 16px;
+  }
 }
 </style>

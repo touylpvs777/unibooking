@@ -238,7 +238,8 @@ const TYPE_KEY_MAP = {
   FLIGHT: 'flight',
   TRAIN: 'train',
   BUS: 'bus',
-  PACKAGE: 'package'
+  PACKAGE: 'package',
+  INSURANCE: 'insurance'
 }
 
 function typeTagMeta(type) {

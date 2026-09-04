@@ -123,7 +123,8 @@
       "flight": "ຖ້ຽວບິນ",
       "train": "ລົດໄຟ",
       "bus": "ລົດເມ",
-      "package": "ແພັກເກັດທົວ"
+      "package": "ແພັກເກັດທົວ",
+      "insurance": "ປະກັນໄພ"
     },
     "propertyTypes": {
       "hotel": "ໂຮງແຮມ",
@@ -565,6 +566,28 @@
     "priceUnit": "/ ບ່ອນນັ່ງ",
     "noSeatsToday": "ບໍ່ມີບ່ອນນັ່ງວ່າງມື້ນີ້",
     "bookTicketButton": "ຈອງປີ້"
+  },
+  "flights": {
+    "noResults": "ບໍ່ພົບຖ້ຽວບິນທີ່ຕົງກັບການຄົ້ນຫາ"
+  },
+  "cars": {
+    "priceRangeLabel": "ຊ່ວງລາຄາ / ມື້",
+    "pickupDateLabel": "ວັນຮັບ / ວັນສົ່ງລົດ",
+    "minSeatsLabel": "ຈຳນວນບ່ອນນັ່ງຂັ້ນຕ່ຳ",
+    "resultsCount": "ພົບ {count} ຄັນ",
+    "noResults": "ບໍ່ພົບລົດເຊົ່າທີ່ຕົງກັບການຄົ້ນຫາ",
+    "noAvailability": "ບໍ່ມີລົດວ່າງໃນວັນທີ່ນີ້",
+    "priceUnit": "/ ມື້"
+  },
+  "tours": {
+    "startDateLabel": "ວັນທີ່ອອກເດີນທາງ",
+    "noResults": "ບໍ່ພົບທົວທີ່ຕົງກັບການຄົ້ນຫາ",
+    "noAvailability": "ບໍ່ມີຮອບອອກເດີນທາງໃນວັນທີ່ນີ້",
+    "priceUnit": "/ ຄົນ"
+  },
+  "insurance": {
+    "noResults": "ບໍ່ພົບແຜນປະກັນໄພທີ່ຕົງກັບການຄົ້ນຫາ",
+    "priceUnit": "/ ແຜນ"
   },
   "login": {
     "subtitle": "ເຂົ້າສູ່ລະບົບເພື່ອດຳເນີນການຕໍ່",

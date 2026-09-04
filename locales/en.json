@@ -123,7 +123,8 @@
       "flight": "Flight",
       "train": "Train",
       "bus": "Bus",
-      "package": "Package"
+      "package": "Package",
+      "insurance": "Insurance"
     },
     "propertyTypes": {
       "hotel": "Hotel",
@@ -565,6 +566,28 @@
     "priceUnit": "/ seat",
     "noSeatsToday": "No seats available today",
     "bookTicketButton": "Book Ticket"
+  },
+  "flights": {
+    "noResults": "No flights match your search"
+  },
+  "cars": {
+    "priceRangeLabel": "Price Range / day",
+    "pickupDateLabel": "Pick-up / Return Dates",
+    "minSeatsLabel": "Minimum Seats",
+    "resultsCount": "Found {count} cars",
+    "noResults": "No cars match your search",
+    "noAvailability": "No cars available for these dates",
+    "priceUnit": "/ day"
+  },
+  "tours": {
+    "startDateLabel": "Departure Date",
+    "noResults": "No tours match your search",
+    "noAvailability": "No departures available for this date",
+    "priceUnit": "/ person"
+  },
+  "insurance": {
+    "noResults": "No insurance plans match your search",
+    "priceUnit": "/ plan"
   },
   "login": {
     "subtitle": "Log in to continue",

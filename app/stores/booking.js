@@ -3,6 +3,8 @@ import {
   API_SEARCH_SERVICES,
   API_SEARCH_HOTELS,
   API_SEARCH_TRANSPORT,
+  API_SEARCH_TOURS,
+  API_SEARCH_CAR_RENTALS,
   API_CREATE_BOOKING,
   API_CREATE_CHECKOUT,
   API_GET_MY_BOOKINGS,
@@ -118,6 +120,54 @@ export const useBookingStore = defineStore('booking', {
         return data;
       } catch (err) {
         this.error = 'ບໍ່ສາມາດດຶງຂໍ້ມູນຖ້ຽວການເດີນທາງໄດ້';
+        throw err;
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    // ຄົ້ນຫາທົວທ່ອງທ່ຽວ (GET /tours/search) -- startDate ເປັນວັນທີ່ອອກເດີນທາງແບບຄົງທີ່
+    // (ບໍ່ແມ່ນ check-in/check-out), category/difficulty/groupSize ຖືກກອງຢູ່ backend
+    // ຜ່ານ TourDetails relation (ບໍ່ແມ່ນ client-side filter)
+    async searchTours({ location, startDate, minDurationDays, maxDurationDays, category, difficulty, groupSize, minPrice, maxPrice, sortBy, page = 1, limit = 20 } = {}) {
+      this.isLoading = true;
+      this.error = null;
+
+      try {
+        const { $unibookingApi } = useNuxtApp();
+        const { data } = await $unibookingApi.get(API_SEARCH_TOURS, {
+          params: { location, startDate, minDurationDays, maxDurationDays, category, difficulty, groupSize, minPrice, maxPrice, sortBy, page, limit }
+        });
+
+        this.services = data.data;
+        this.servicesMeta = data.meta;
+        return data;
+      } catch (err) {
+        this.error = 'ບໍ່ສາມາດດຶງຂໍ້ມູນທົວທ່ອງທ່ຽວໄດ້';
+        throw err;
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    // ຄົ້ນຫາລົດເຊົ່າ (GET /car-rentals/search) -- pickupDate/returnDate ຄືກັບ
+    // check-in/check-out ຂອງໂຮງແຮມ, vehicleType/transmission/minSeatingCapacity
+    // ຖືກກອງຢູ່ backend ຜ່ານ CarRentalDetails relation
+    async searchCarRentals({ location, pickupDate, returnDate, vehicleType, transmission, minSeatingCapacity, minPrice, maxPrice, sortBy, page = 1, limit = 20 } = {}) {
+      this.isLoading = true;
+      this.error = null;
+
+      try {
+        const { $unibookingApi } = useNuxtApp();
+        const { data } = await $unibookingApi.get(API_SEARCH_CAR_RENTALS, {
+          params: { location, pickupDate, returnDate, vehicleType, transmission, minSeatingCapacity, minPrice, maxPrice, sortBy, page, limit }
+        });
+
+        this.services = data.data;
+        this.servicesMeta = data.meta;
+        return data;
+      } catch (err) {
+        this.error = 'ບໍ່ສາມາດດຶງຂໍ້ມູນລົດເຊົ່າໄດ້';
         throw err;
       } finally {
         this.isLoading = false;

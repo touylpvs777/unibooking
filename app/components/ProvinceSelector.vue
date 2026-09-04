@@ -127,7 +127,7 @@ function selectDistrict(district) {
    photo or scrim of its own. */
 .province-explorer {
   width: 100%;
-  padding: 40px 0 64px;
+  padding: 40px 0 48px;
 }
 
 .province-explorer__inner {
@@ -337,7 +337,7 @@ function selectDistrict(district) {
 
 @media (max-width: 767px) {
   .province-explorer {
-    padding: 32px 0 48px;
+    padding: 32px 0 40px;
   }
 
   .province-toolbox {

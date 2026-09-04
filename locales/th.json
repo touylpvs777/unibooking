@@ -123,7 +123,8 @@
       "flight": "เที่ยวบิน",
       "train": "รถไฟ",
       "bus": "รถบัส",
-      "package": "แพ็กเกจทัวร์"
+      "package": "แพ็กเกจทัวร์",
+      "insurance": "ประกันภัย"
     },
     "propertyTypes": {
       "hotel": "โรงแรม",
@@ -565,6 +566,28 @@
     "priceUnit": "/ ที่นั่ง",
     "noSeatsToday": "ไม่มีที่นั่งว่างวันนี้",
     "bookTicketButton": "จองตั๋ว"
+  },
+  "flights": {
+    "noResults": "ไม่พบเที่ยวบินที่ตรงกับการค้นหา"
+  },
+  "cars": {
+    "priceRangeLabel": "ช่วงราคา / วัน",
+    "pickupDateLabel": "วันรับรถ / คืนรถ",
+    "minSeatsLabel": "จำนวนที่นั่งขั้นต่ำ",
+    "resultsCount": "พบ {count} คัน",
+    "noResults": "ไม่พบรถเช่าที่ตรงกับการค้นหา",
+    "noAvailability": "ไม่มีรถว่างในวันที่นี้",
+    "priceUnit": "/ วัน"
+  },
+  "tours": {
+    "startDateLabel": "วันที่ออกเดินทาง",
+    "noResults": "ไม่พบทัวร์ที่ตรงกับการค้นหา",
+    "noAvailability": "ไม่มีรอบออกเดินทางในวันที่นี้",
+    "priceUnit": "/ คน"
+  },
+  "insurance": {
+    "noResults": "ไม่พบแผนประกันภัยที่ตรงกับการค้นหา",
+    "priceUnit": "/ แผน"
   },
   "login": {
     "subtitle": "เข้าสู่ระบบเพื่อดำเนินการต่อ",
