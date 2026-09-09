@@ -1,4 +1,4 @@
-import { Booking } from '@prisma/client';
+import { Booking, Payment } from '@prisma/client';
 
 /**
  * One entry per selectable payment method on the frontend (checkout.vue's
@@ -47,6 +47,19 @@ export interface NormalizedPaymentEvent {
   bookingId?: string;
 }
 
+/**
+ * Result of fully refunding whatever was captured for one Payment.
+ * `'refunded'` means real money actually moved back to the customer through
+ * the gateway; `'skipped'` is for a gateway with no real refund API to call
+ * yet (see LaoQrGateway) -- PaymentsService.refundPayment still marks the
+ * Payment row REFUNDED either way, since from this platform's point of view
+ * the booking is being cancelled regardless of which gateway processed it.
+ */
+export interface RefundResult {
+  refundId?: string;
+  status: 'refunded' | 'skipped';
+}
+
 export interface PaymentGateway {
   readonly method: PaymentMethod;
 
@@ -63,4 +76,12 @@ export interface PaymentGateway {
     rawBody: Buffer,
     headers: Record<string, string | string[] | undefined>,
   ): NormalizedPaymentEvent;
+
+  /**
+   * Fully refunds whatever was captured for this payment. Only ever called
+   * for a Payment already at SUCCESS (see PaymentsService.refundPayment) --
+   * not responsible for updating Payment.status itself, the caller does
+   * that once this resolves without throwing.
+   */
+  refund(payment: Payment): Promise<RefundResult>;
 }

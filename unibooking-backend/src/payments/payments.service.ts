@@ -251,6 +251,51 @@ export class PaymentsService {
     return { received: true };
   }
 
+  /**
+   * Called from BookingsService.cancelBooking for a CONFIRMED (paid)
+   * booking, before it flips the booking to CANCELLED. Deliberately takes
+   * no `user` -- ownership was already checked there, and this also has to
+   * run for an ADMIN cancelling someone else's booking.
+   *
+   * Errors are deliberately NOT caught here -- StripeGateway.refund already
+   * catches the raw Stripe SDK error and rethrows a clean BadRequestException
+   * (see that file), and letting it propagate out of this method is what
+   * stops BookingsService.cancelBooking before it touches the DB. Swallowing
+   * it here instead would be the actual bug this design avoids: the booking
+   * would end up CANCELLED (inventory released) even though the refund
+   * never happened.
+   */
+  async refundPayment(bookingId: string): Promise<void> {
+    const payment = await this.prisma.payment.findUnique({
+      where: { bookingId },
+    });
+
+    if (!payment) {
+      // e.g. this booking was confirmed through the dev-only FinTink mock
+      // webhook, which never creates a Payment row (see WebhooksService) --
+      // nothing on file to refund through a real gateway.
+      this.logger.warn(
+        `No payment on file for booking ${bookingId} -- nothing to refund.`,
+      );
+      return;
+    }
+
+    if (payment.status !== PaymentStatus.SUCCESS) {
+      this.logger.warn(
+        `Payment ${payment.id} for booking ${bookingId} is ${payment.status}, not SUCCESS -- skipping refund.`,
+      );
+      return;
+    }
+
+    const gateway = this.getGateway(payment.method);
+    await gateway.refund(payment);
+
+    await this.prisma.payment.update({
+      where: { bookingId },
+      data: { status: PaymentStatus.REFUNDED },
+    });
+  }
+
   /** Prefers an explicit bookingId; otherwise resolves it via the Payment row the gateway's transactionId points back to. */
   private async resolveBookingId(event: NormalizedPaymentEvent): Promise<string> {
     if (event.bookingId) {

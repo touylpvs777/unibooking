@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Payment } from '@prisma/client';
 import Stripe from 'stripe';
 import {
   CreateCheckoutParams,
@@ -7,6 +8,7 @@ import {
   PaymentGateway,
   PaymentGatewaySession,
   PaymentMethod,
+  RefundResult,
 } from './payment-gateway.interface';
 
 /**
@@ -127,9 +129,21 @@ export class StripeGateway implements PaymentGateway {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
+        const paymentIntentId =
+          typeof session.payment_intent === 'string'
+            ? session.payment_intent
+            : session.payment_intent?.id;
         return {
           status: 'succeeded',
-          transactionId: session.metadata?.transactionId,
+          // Stripe's own PaymentIntent id -- not our internally generated
+          // transactionId -- so refund() below has something real to pass
+          // to stripe.refunds.create({ payment_intent }). Falls back to our
+          // own id only if Stripe ever omits payment_intent on a completed
+          // payment-mode session, which shouldn't normally happen.
+          // PaymentsService.applyPaymentEvent already overwrites
+          // Payment.transactionId with whatever this returns once the
+          // booking confirms.
+          transactionId: paymentIntentId ?? session.metadata?.transactionId,
           bookingId: session.metadata?.bookingId ?? session.client_reference_id ?? undefined,
         };
       }
@@ -148,6 +162,35 @@ export class StripeGateway implements PaymentGateway {
       default:
         this.logger.debug(`Ignoring unhandled Stripe event: ${event.type}`);
         return { status: 'ignored' };
+    }
+  }
+
+  /**
+   * `payment.transactionId` is Stripe's real PaymentIntent id by this point
+   * (see verifyWebhook's checkout.session.completed branch above) -- never
+   * the transactionId this app originally generated for the checkout, which
+   * only ever existed to correlate our own metadata.
+   */
+  async refund(payment: Payment): Promise<RefundResult> {
+    if (!payment.transactionId) {
+      throw new BadRequestException(
+        'This payment has no Stripe payment_intent on file -- cannot refund.',
+      );
+    }
+
+    try {
+      const refund = await this.stripe.refunds.create({
+        payment_intent: payment.transactionId,
+      });
+      return { refundId: refund.id, status: 'refunded' };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.error(
+        `Stripe refund failed for payment ${payment.id} (payment_intent ${payment.transactionId}): ${message}`,
+      );
+      throw new BadRequestException(
+        'The refund could not be processed by Stripe -- please try again or contact support.',
+      );
     }
   }
 }

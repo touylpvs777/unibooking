@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { Role } from '@prisma/client';
 import {
   BookingsService,
@@ -32,6 +42,20 @@ export class BookingsController {
   @Get('me')
   findMine(@CurrentUser() user: JwtPayload): Promise<BookingWithItems[]> {
     return this.bookingsService.findMine(user);
+  }
+
+  // Any authenticated account may cancel its own booking; ADMIN may cancel
+  // any booking -- see BookingsService.cancelBooking for that check (same
+  // reasoning as createBooking above for why this isn't role-restricted at
+  // the route level). PATCH, not POST -- same "partial status update"
+  // convention as PATCH /services/:id/deactivate.
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/cancel')
+  cancelBooking(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: JwtPayload,
+  ): Promise<BookingWithItems> {
+    return this.bookingsService.cancelBooking(id, user);
   }
 
   // Supplier portal's bookings table. `supplierId` is only honoured for

@@ -1,12 +1,14 @@
 import { createHmac } from 'crypto';
 import { Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Payment } from '@prisma/client';
 import {
   CreateCheckoutParams,
   NormalizedPaymentEvent,
   PaymentGateway,
   PaymentGatewaySession,
   PaymentMethod,
+  RefundResult,
 } from './payment-gateway.interface';
 
 /**
@@ -153,5 +155,25 @@ export class LaoQrGateway implements PaymentGateway {
       status: payload.status === 'SUCCESS' ? 'succeeded' : 'failed',
       transactionId: payload.orderId,
     };
+  }
+
+  /**
+   * *** Not a real refund -- same placeholder status as the rest of this
+   * file (see the header comment). There is no verified Lao QR provider
+   * integration to call a refund API on, so this cannot move real money
+   * back. Per product decision, cancelling a LAO_QR_GATEWAY booking still
+   * proceeds (PaymentsService.refundPayment marks the Payment REFUNDED in
+   * our own records regardless of this method's result) rather than
+   * blocking cancellation on a gateway that isn't finished yet -- but the
+   * actual refund has to be done manually until it is. This log line is
+   * that handoff.
+   */
+  refund(payment: Payment): Promise<RefundResult> {
+    this.logger.warn(
+      `MANUAL REFUND REQUIRED: payment ${payment.id} (amount ${payment.amount.toString()} LAK, ` +
+        `transactionId ${payment.transactionId}) was paid via LAO_QR_GATEWAY, which has no ` +
+        'real refund API yet. Process the refund manually with the provider/bank.',
+    );
+    return Promise.resolve({ status: 'skipped' });
   }
 }

@@ -4,6 +4,7 @@ import { BookingStatus, Prisma, Role } from '@prisma/client';
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import { PrismaService } from '../prisma/prisma.service';
 import { SupplierOwnershipService } from '../catalog/supplier-ownership.service';
+import { PaymentsService } from '../payments/payments.service';
 import {
   createPrismaMock,
   mockPrismaTransactions,
@@ -43,9 +44,12 @@ describe('BookingsService', () => {
   let service: BookingsService;
   let prismaMock: MockPrisma;
 
+  let paymentsServiceMock: { refundPayment: jest.Mock };
+
   beforeEach(async () => {
     prismaMock = createPrismaMock();
     mockPrismaTransactions(prismaMock);
+    paymentsServiceMock = { refundPayment: jest.fn() };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -55,6 +59,11 @@ describe('BookingsService', () => {
         // so this behaves identically to the inline lookup it replaced.
         SupplierOwnershipService,
         { provide: PrismaService, useValue: prismaMock },
+        // Mocked -- cancelBooking's own tests below assert refundPayment was
+        // called correctly; nothing else in this file needs real refund
+        // behavior, and a real PaymentsService would need its own Stripe/
+        // gateway config just to construct.
+        { provide: PaymentsService, useValue: paymentsServiceMock },
       ],
     }).compile();
 

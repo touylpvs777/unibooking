@@ -27,7 +27,7 @@ enum ServiceType {
   BUS
   TOUR
   CAR_RENTAL
-  INSURANCE // travel insurance -- generic like PACKAGE below, no dedicated details table
+  INSURANCE // travel insurance -- see InsuranceDetails below
   PACKAGE // legacy/generic -- not targeted by any vertical controller below
 }
 
@@ -61,6 +61,12 @@ enum VehicleType {
 enum TransmissionType {
   MANUAL
   AUTOMATIC
+}
+
+enum InsurancePlanTier {
+  BASIC
+  STANDARD
+  PREMIUM
 }
 
 enum BookingStatus {
@@ -138,6 +144,7 @@ model Service {
   transportDetails TransportDetails?
   tourDetails      TourDetails?
   carRentalDetails CarRentalDetails?
+  insuranceDetails InsuranceDetails?
   images           Image[]
 }
 
@@ -202,6 +209,25 @@ model CarRentalDetails {
   service         Service           @relation(fields: [serviceId], references: [id], onDelete: Cascade)
 
   @@index([vehicleType])
+}
+
+// 3e. InsuranceDetails: attributes specific to ServiceType.INSURANCE. One
+// Service row = one sellable plan (e.g. "AIA Comprehensive Travel, Premium"),
+// same one-row-per-sellable-unit convention as TransportDetails/
+// CarRentalDetails -- a provider selling three tiers lists three Services.
+// Per-day premium still lives on the shared InventoryPricing (priced per day
+// of trip coverage, mirroring how hotel/car rows are priced per night) --
+// not duplicated here.
+model InsuranceDetails {
+  serviceId           String            @id
+  provider            String // underwriting insurer, e.g. "AIA Laos" -- distinct from Supplier (the seller/agent on this platform)
+  planTier            InsurancePlanTier
+  coverageAmount      Decimal           @db.Decimal(12, 2) // max payout / sum insured
+  maxTripDurationDays Int // longest single trip this plan covers
+
+  service             Service           @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([planTier])
 }
 
 // 4. InventoryPricing: ຈັດການຈຳນວນວ່າງ ແລະ ລາຄາລາຍວັນ (ຫົວໃຈຫຼັກຂອງ OTA)

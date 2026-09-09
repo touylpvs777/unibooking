@@ -1631,6 +1631,19 @@ function closeVideo() {
   gap: 32px;
 }
 
+@media (max-width: 900px) {
+  .value-section__inner {
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 32px;
+  }
+}
+
+@media (max-width: 560px) {
+  .value-section__inner {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 .value-card {
   text-align: center;
 }
@@ -1747,6 +1760,7 @@ function closeVideo() {
   font-size: 18px;
   font-weight: 700;
   color: #ffffff;
+  overflow-wrap: break-word;
 }
 
 .luxury-card__subtitle {
@@ -1781,6 +1795,18 @@ function closeVideo() {
   grid-template-columns: repeat(3, 1fr);
   row-gap: 24px;
   column-gap: 2rem;
+}
+
+@media (max-width: 900px) {
+  .best-of-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .best-of-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Top Destinations section wrapper — the mosaic grid itself now lives in
@@ -1822,6 +1848,20 @@ function closeVideo() {
   margin-bottom: 12px;
 }
 
+/* Section header typography: these sit at desktop-tuned sizes (2rem/2.25rem)
+   with no mobile step-down anywhere else in the file -- shrink them below
+   tablet width so a long translated heading (English/Thai run noticeably
+   longer than the Lao original) still fits in 2-3 lines instead of
+   dominating the viewport on a phone. */
+@media (max-width: 600px) {
+  .modular-title,
+  .services-grid-header__title,
+  .luxury-header__title,
+  .tour-categories-header__title {
+    font-size: 1.5rem;
+  }
+}
+
 .tour-categories-header__link {
   display: inline-flex;
   align-items: center;
@@ -1853,6 +1893,18 @@ function closeVideo() {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .tour-categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .tour-categories-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Cards are <NuxtLink>s (anchors); reset the browser's default inline/underlined/blue-link

@@ -208,6 +208,17 @@ function handleTransportSearch() {
   align-items: center;
 }
 
+/* Below ~480px, the tab labels + WeatherWidget pill no longer fit on one
+   row -- letting the tab nav wrap (instead of staying a fixed-height flex
+   row that squeezes both) drops the widget to its own line rather than
+   truncating/overlapping the "Hotels"/"Transport" tab text. */
+@media (max-width: 480px) {
+  .search-form :deep(.ant-tabs-nav-wrap) {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+}
+
 .field-label {
   display: block;
   margin-bottom: 4px;

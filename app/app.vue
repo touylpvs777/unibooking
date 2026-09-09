@@ -43,5 +43,12 @@ html, body {
     linear-gradient(180deg, #0b1420 0%, #0a121c 55%, #070c14 100%);
   background-attachment: fixed;
   background-size: 100% 100%;
+  /* Belt-and-suspenders against horizontal scroll on mobile -- several
+     sections use full-bleed decorative elements (footer glow/shimmer,
+     hero overlap, magic-share icons fanning out via translate()) that can
+     bleed a few px past the viewport edge on narrow screens. Every such
+     element is already positioned to stay within its own section, so
+     clipping the overflow here never hides real content, just stray edges. */
+  overflow-x: hidden;
 }
 </style>

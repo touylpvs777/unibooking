@@ -80,6 +80,7 @@ const destinations = computed(() => [
   font-size: 18px;
   font-weight: 700;
   color: #ffffff;
+  overflow-wrap: break-word;
 }
 
 .top-destinations__subtitle {

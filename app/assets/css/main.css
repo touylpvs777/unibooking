@@ -96,6 +96,18 @@ body,
   font-family: var(--font-sans);
 }
 
+/* Long unbroken titles/descriptions (supplier-entered hotel/tour names,
+   Lao-script text with few natural break points) can overflow a card's
+   fixed-width column instead of wrapping -- this is the "ຕົກແຖວ" (text
+   falling out of its row) symptom on narrow screens. A global wrap safety
+   net on text elements is cheaper and more consistent than adding
+   word-break to every card class individually, and never changes desktop
+   layout since it only takes effect when a line would otherwise overflow. */
+h1, h2, h3, h4, h5, h6, p {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
 /* Browsers apply their own UA-stylesheet font to form controls (button,
    input, select, textarea) regardless of what body/html declare -- an
    explicit UA default beats an inherited value in the cascade. Without this,

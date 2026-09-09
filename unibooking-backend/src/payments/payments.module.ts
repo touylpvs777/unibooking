@@ -28,5 +28,8 @@ import { PAYMENT_GATEWAYS, PaymentGateway } from './gateways/payment-gateway.int
       inject: [StripeGateway, LaoQrGateway],
     },
   ],
+  // BookingsService needs refundPayment() for cancel-with-refund -- see
+  // BookingsModule's imports.
+  exports: [PaymentsService],
 })
 export class PaymentsModule {}

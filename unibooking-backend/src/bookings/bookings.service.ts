@@ -1,8 +1,14 @@
 import { randomBytes } from 'crypto';
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { BookingStatus, Prisma } from '@prisma/client';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { BookingStatus, Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { SupplierOwnershipService } from '../catalog/supplier-ownership.service';
+import { PaymentsService } from '../payments/payments.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import type { JwtPayload } from '../auth/strategies/jwt.strategy';
 
@@ -71,6 +77,7 @@ export class BookingsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly supplierOwnership: SupplierOwnershipService,
+    private readonly paymentsService: PaymentsService,
   ) {}
 
   /**
@@ -204,6 +211,82 @@ export class BookingsService {
       },
       include: supplierBookingInclude,
       orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  /**
+   * Customer-initiated (or ADMIN-on-behalf-of) cancellation. Unlike the
+   * expiry cron's releaseBooking (src/tasks/bookings-cron.service.ts), this
+   * can hit a CONFIRMED (paid) booking, so a refund has to happen first.
+   */
+  async cancelBooking(id: string, user: JwtPayload): Promise<BookingWithItems> {
+    const booking = await this.prisma.booking.findUnique({
+      where: { id },
+      include: { items: true },
+    });
+
+    if (!booking) {
+      throw new NotFoundException(`Booking with id "${id}" not found.`);
+    }
+    if (booking.userId !== user.sub && user.role !== Role.ADMIN) {
+      throw new ForbiddenException('This booking does not belong to you.');
+    }
+    if (booking.status === BookingStatus.CANCELLED) {
+      throw new BadRequestException('This booking is already cancelled.');
+    }
+    if (booking.status === BookingStatus.COMPLETED) {
+      throw new BadRequestException(
+        'A completed booking can no longer be cancelled.',
+      );
+    }
+
+    // Refund BEFORE touching the DB, and outside any transaction -- a
+    // gateway call is a real network round trip, which must never hold a
+    // Postgres transaction/row lock open. If it throws (declined refund,
+    // gateway outage, etc.), that propagates straight out of this method:
+    // the booking stays exactly as it was -- still CONFIRMED, nothing
+    // released -- so the caller sees a clear error and can safely retry,
+    // instead of the booking silently ending up CANCELLED with the
+    // customer's money never actually returned.
+    //
+    // Double-cancel race: if two cancel requests for the same booking
+    // somehow overlap, both reach here and both call refundPayment. That's
+    // safe in practice -- Stripe itself rejects a second full refund of an
+    // already-fully-refunded PaymentIntent, so the loser gets a clear error
+    // from StripeGateway.refund() rather than silently refunding twice.
+    if (booking.status === BookingStatus.CONFIRMED) {
+      await this.paymentsService.refundPayment(booking.id);
+    }
+
+    return this.prisma.$transaction(async (tx) => {
+      // Guarded on the status just validated above, not a blind update --
+      // same pattern as BookingsCronService.releaseBooking and
+      // PaymentsService.applyPaymentEvent: if something else (the expiry
+      // cron, a webhook) changed this booking's status in between, this
+      // affects 0 rows instead of overwriting a state transition that
+      // already happened.
+      const result = await tx.booking.updateMany({
+        where: { id: booking.id, status: booking.status },
+        data: { status: BookingStatus.CANCELLED },
+      });
+
+      if (result.count === 0) {
+        throw new BadRequestException(
+          'This booking was already updated by another request -- please refresh and try again.',
+        );
+      }
+
+      for (const item of booking.items) {
+        await tx.inventoryPricing.update({
+          where: { id: item.inventoryPricingId },
+          data: { availableUnits: { increment: item.quantity } },
+        });
+      }
+
+      return tx.booking.findUniqueOrThrow({
+        where: { id: booking.id },
+        include: bookingInclude,
+      });
     });
   }
 }
