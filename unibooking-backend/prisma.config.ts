@@ -7,6 +7,11 @@ import { defineConfig, env } from 'prisma/config';
 export default defineConfig({
   schema: 'prisma/schema.prisma',
   datasource: {
-    url: env('DATABASE_URL'),
+    // CLI operations (push/migrate) need a session-capable connection --
+    // the pgbouncer transaction-mode pooler in DATABASE_URL doesn't support
+    // the advisory locks the schema engine relies on and hangs instead of
+    // erroring. DIRECT_URL is the session-mode/direct connection reserved
+    // for exactly this in .env.
+    url: env('DIRECT_URL'),
   },
 });
