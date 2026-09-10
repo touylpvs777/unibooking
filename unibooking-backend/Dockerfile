@@ -88,7 +88,12 @@ EXPOSE 3000
 # (AppController's unguarded GET /) as a "the process is alive and
 # accepting HTTP" signal. Worth replacing with a real /health endpoint
 # (e.g. one that also pings Postgres/Redis) as a follow-up.
+#
+# Shell form (not exec array), so $PORT is expanded at check time via
+# `sh -c` -- hosts like Render assign PORT at runtime, and main.ts listens
+# on whatever that is, so a hardcoded port here would silently stop
+# matching and report false unhealthy status.
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/ || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:${PORT:-3000}/ || exit 1
 
 ENTRYPOINT ["./docker-entrypoint.sh"]

@@ -47,6 +47,12 @@ async function bootstrap() {
   const prismaService = app.get(PrismaService);
   prismaService.enableShutdownHooks(app);
 
-  await app.listen(process.env.PORT ?? 3000);
+  // Render (and most PaaS hosts) health-check by scanning for an open port
+  // from outside the container -- binding without a host defaults to the
+  // IPv6 loopback (::1) on some Node/container network configs, which is
+  // unreachable from outside and leaves the health check hanging forever.
+  const port = process.env.PORT ?? 3000;
+  await app.listen(port, '0.0.0.0');
+  console.log(`Application is running on: ${await app.getUrl()}`);
 }
 void bootstrap();
