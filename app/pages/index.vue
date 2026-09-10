@@ -9,44 +9,6 @@
           <NuxtLink to="/" class="glass-navbar-wrap__logo">
             <img src="/images/unibooking-logo.png" alt="UniBooking" class="glass-navbar-wrap__logo-img">
           </NuxtLink>
-
-          <!-- Single pill-shaped nav: the neumorphic outer shadow lives on
-               .glass-navbar only, items stay transparent, and .glass-navbar__indicator
-               slides beneath whichever item is active (see moveGlassIndicatorTo). -->
-          <ClientOnly>
-            <nav class="glass-navbar">
-              <ul class="glass-navbar__list">
-                <li
-                  v-for="(item, index) in heroNavItems"
-                  :key="item.key"
-                  :ref="(el) => setGlassNavItemRef(el, index)"
-                  class="glass-navbar__item"
-                  :class="{ 'is-active': activeGlassNavIndex === index }"
-                >
-                  <a-dropdown v-if="item.key === 'lang'" placement="bottomRight">
-                    <a class="glass-navbar__link" @click.prevent="setActiveGlassNav(index)">{{ item.label }}</a>
-                    <template #overlay>
-                      <a-menu @click="({ key }) => setLocale(key)">
-                        <a-menu-item v-for="loc in locales" :key="loc.code">{{ loc.name }}</a-menu-item>
-                      </a-menu>
-                    </template>
-                  </a-dropdown>
-                  <VisaGuideModal v-else-if="item.key === 'visa'" variant="light" />
-                  <NuxtLink v-else-if="item.to" :to="item.to" class="glass-navbar__link" @click="setActiveGlassNav(index)">
-                    {{ item.label }}
-                  </NuxtLink>
-                  <a v-else :href="item.href" class="glass-navbar__link" @click="setActiveGlassNav(index)">
-                    {{ item.label }}
-                  </a>
-                </li>
-                <div class="glass-navbar__indicator" :style="glassIndicatorStyle" aria-hidden="true" />
-              </ul>
-            </nav>
-
-            <template #fallback>
-              <div class="glass-navbar glass-navbar--fallback" />
-            </template>
-          </ClientOnly>
         </header>
 
         <div class="hero-copy">
@@ -62,8 +24,51 @@
       </div>
     </section>
 
-    <div id="main-search-box" class="search-form-wrapper">
-      <BookingSearchForm />
+    <!-- Nav pill relocated here (out of the hero card's top header) to sit
+         perched on the search widget's top edge instead of floating over
+         the photo -- see .hero-search-stack below. Its own visual CSS
+         (.glass-navbar's pill shape/gradient/neumorphic shadow and
+         .glass-navbar__indicator's glass slider) is untouched; only the
+         wrapper around it changed. -->
+    <div class="hero-search-stack">
+      <ClientOnly>
+        <nav class="glass-navbar hero-search-stack__nav">
+          <ul class="glass-navbar__list">
+            <li
+              v-for="(item, index) in heroNavItems"
+              :key="item.key"
+              :ref="(el) => setGlassNavItemRef(el, index)"
+              class="glass-navbar__item"
+              :class="{ 'is-active': activeGlassNavIndex === index }"
+            >
+              <a-dropdown v-if="item.key === 'lang'" placement="bottomRight">
+                <a class="glass-navbar__link" @click.prevent="setActiveGlassNav(index)">{{ item.label }}</a>
+                <template #overlay>
+                  <a-menu @click="({ key }) => setLocale(key)">
+                    <a-menu-item v-for="loc in locales" :key="loc.code">{{ loc.name }}</a-menu-item>
+                  </a-menu>
+                </template>
+              </a-dropdown>
+              <VisaGuideModal v-else-if="item.key === 'visa'" variant="light" />
+              <NuxtLink v-else-if="item.to" :to="item.to" class="glass-navbar__link" @click="setActiveGlassNav(index)">
+                {{ item.label }}
+              </NuxtLink>
+              <a v-else :href="item.href" class="glass-navbar__link" @click="setActiveGlassNav(index)">
+                {{ item.label }}
+              </a>
+            </li>
+            <div class="glass-navbar__indicator" :style="glassIndicatorStyle" aria-hidden="true" />
+          </ul>
+        </nav>
+
+        <template #fallback>
+          <div class="glass-navbar glass-navbar--fallback hero-search-stack__nav" />
+        </template>
+      </ClientOnly>
+
+      <div id="main-search-box" class="search-form-wrapper">
+        <BookingSearchForm />
+      </div>
     </div>
 
     <ProvinceSelector />
@@ -803,16 +808,62 @@ function closeVideo() {
   border-color: #c5a059;
 }
 
-/* Original white search card, pulled up to overlap the hero's bottom edge.
-   Kept shy of .hero-nav-controls (bottom:32px, 32px tall -- occupies the
-   32-64px band above the hero's bottom edge): -20px leaves a clear ~12px
-   gap instead of burying the arrows under the card. */
-.search-form-wrapper {
+/* Groups the relocated nav pill with the search card so they move/overlap
+   together as one stack: this wrapper owns the overlap onto the hero
+   card's bottom edge (same -20px pull-up .search-form-wrapper used to do
+   alone -- kept shy of .hero-nav-controls, see the old comment this
+   replaced), and centers the pill above the card via flex. */
+.hero-search-stack {
   position: relative;
   z-index: 50;
   width: 100%;
   max-width: 1200px;
   margin: -20px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Matches the search card's own width exactly (both are 100%-width
+   children of .hero-search-stack, which caps them at the same 1200px) so
+   the two boxes' left/right edges line up perfectly, with zero margin so
+   they sit truly flush. Bottom corners flatten to meet the card's flat
+   top corners; top corners use a modest 20px instead of the pill's
+   original 999px, which at this element's full 1200px width read as
+   barely-there at the top edge and mismatched the card's own 12px bottom
+   corners.
+   Compound selector (.glass-navbar.hero-search-stack__nav), not just
+   .hero-search-stack__nav, is required here, not stylistic: both this
+   rule and .glass-navbar's own rule below are single-class selectors --
+   equal specificity -- and .glass-navbar's happens to sit later in this
+   file, so on a specificity tie it was silently winning the cascade and
+   this override never actually applied (verified via getComputedStyle:
+   border-radius stayed 999px, box-shadow stayed the original two-sided
+   neumorphic shadow, ignoring everything below). The compound selector's
+   higher specificity (two classes) wins outright regardless of source
+   order -- cleaner than !important and doesn't leave a cascade landmine
+   for the next edit to fight. Also matches the ClientOnly fallback below,
+   which already carries both classes.
+   box-shadow here isn't a new property (glass-navbar's shadow itself is
+   still untouched) -- it's the same shadow with only the downward-casting
+   component's Y-sign flipped, so it no longer bleeds onto the search card
+   now that the two sit flush; color/blur/opacity/the light-highlight side
+   are identical to the original. */
+.glass-navbar.hero-search-stack__nav {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  margin-bottom: 0;
+  border-radius: 20px 20px 0 0;
+  box-shadow:
+    8px -8px 16px rgba(0, 0, 0, 0.2),
+    -8px -8px 16px rgba(255, 255, 255, 0.7);
+}
+
+.search-form-wrapper {
+  position: relative;
+  z-index: 1;
+  width: 100%;
 }
 
 /* Same frosted-glass texture as .glass-navbar__indicator (see the navbar
@@ -821,7 +872,10 @@ function closeVideo() {
 .search-form-wrapper :deep(.search-form.ant-card) {
   background: rgba(20, 41, 79, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
+  /* Flat top corners meet the nav pill's now-flat bottom corners
+     (.hero-search-stack__nav) flush above -- the pair reads as one
+     module instead of two separately-rounded boxes touching. */
+  border-radius: 0 0 12px 12px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(15px);
   box-shadow:
@@ -878,14 +932,20 @@ function closeVideo() {
     -8px -8px 16px rgba(255, 255, 255, 0.7);
 }
 
+/* The list is a block <ul>, so it already fills .glass-navbar's full
+   width once that's stretched to 100% (.hero-search-stack__nav) --
+   center + a generous gap spreads the items evenly across that width
+   instead of leaving them clumped at the left like before, when the pill
+   was only ever as wide as its content. */
 .glass-navbar__list {
   position: relative;
   display: flex;
   align-items: center;
+  justify-content: center;
   list-style: none;
   margin: 0;
   padding: 0;
-  gap: 2px;
+  gap: clamp(8px, 3vw, 32px);
 }
 
 /* Items stay fully transparent -- no background, padding-background, or
@@ -951,6 +1011,13 @@ function closeVideo() {
   .glass-navbar-wrap {
     display: none;
   }
+
+  /* Same reasoning as .glass-navbar-wrap above -- the persistent site
+     header's hamburger drawer is what mobile visitors use instead, now
+     that the pill lives here rather than inside .glass-navbar-wrap. */
+  .hero-search-stack__nav {
+    display: none;
+  }
 }
 
 @media (max-width: 1200px) {
@@ -1000,7 +1067,7 @@ function closeVideo() {
 
   /* Arrows here occupy the 16-48px band above the hero's bottom edge --
      shrink the overlap further so the card doesn't creep back under them. */
-  .search-form-wrapper {
+  .hero-search-stack {
     margin-top: -10px;
   }
 }

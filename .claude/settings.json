@@ -95,7 +95,12 @@
       "Bash(rm -f /tmp/backend-dev.log /tmp/cookies.txt)",
       "Bash(curl -s -o /dev/null -w \"frontend:%{http_code}\\\\n\" http://localhost:3000/)",
       "Bash(node \"C:/Users/tl_ls/AppData/Local/Temp/claude/d--Booking-LUD-My-Website-Booking-unibooking/5c41a871-a139-4a3c-945b-aa7962bca44a/scratchpad/check-header-i18n.js\")",
-      "Bash(awk -F'scrollW=| clientW=' '{if \\($2+0 > $3+0\\) print \"OVERFLOW:\", $0}')"
+      "Bash(awk -F'scrollW=| clientW=' '{if \\($2+0 > $3+0\\) print \"OVERFLOW:\", $0}')",
+      "Bash(node \"C:/Users/tl_ls/AppData/Local/Temp/claude/d--Booking-LUD-My-Website-Booking-unibooking/5c41a871-a139-4a3c-945b-aa7962bca44a/scratchpad/check-hero-nav.js\")",
+      "Read(//d//**)",
+      "Bash(find 'C:\\\\Users\\\\tl_ls' -iname *fbf621*)",
+      "Bash(node \"C:/Users/tl_ls/AppData/Local/Temp/claude/d--Booking-LUD-My-Website-Booking-unibooking/5c41a871-a139-4a3c-945b-aa7962bca44a/scratchpad/check-hero-width.js\")",
+      "Bash(node \"C:/Users/tl_ls/AppData/Local/Temp/claude/d--Booking-LUD-My-Website-Booking-unibooking/5c41a871-a139-4a3c-945b-aa7962bca44a/scratchpad/inspect-computed.js\")"
     ],
     "additionalDirectories": [
       "d:\\Booking.LUD\\My Website Booking\\unibooking\\app\\components"
