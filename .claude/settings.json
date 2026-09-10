@@ -127,7 +127,8 @@
       "Bash(curl -s -m 5 -X POST http://localhost:3001/auth/login -H 'Content-Type: application/json' -d '{\"email\":\"supplier@unibooking.test\",\"password\":\"password123\"}' -c /c/Users/tl_ls/AppData/Local/Temp/claude/d--Booking-LUD-My-Website-Booking-unibooking/dc4a498f-6bc4-4863-83a4-c5640673fa4f/scratchpad/cookies.txt -o /dev/null -w 'login HTTP:%{http_code}\\\\n')",
       "Bash(curl -s -m 8 -X POST http://localhost:3001/apartments -H 'Content-Type: application/json' -b /c/Users/tl_ls/AppData/Local/Temp/claude/d--Booking-LUD-My-Website-Booking-unibooking/dc4a498f-6bc4-4863-83a4-c5640673fa4f/scratchpad/cookies.txt -d '{\"name\":\"Test Vientiane Studio\",\"description\":\"A quick smoke-test apartment listing.\",\"location\":\"Vientiane, Laos\",\"bedrooms\":1,\"bathrooms\":1,\"maxGuests\":2,\"hasKitchen\":true,\"amenities\":[\"WiFi\"]}' -w '\\\\ncreate HTTP:%{http_code}\\\\n')",
       "Bash(curl -s -m 8 -X PATCH http://localhost:3001/services/642f15ae-373c-45f3-8196-a34e8157b857/deactivate -b /c/Users/tl_ls/AppData/Local/Temp/claude/d--Booking-LUD-My-Website-Booking-unibooking/dc4a498f-6bc4-4863-83a4-c5640673fa4f/scratchpad/cookies.txt -w '\\\\ndeactivate HTTP:%{http_code}\\\\n')",
-      "Bash(rm -f /c/Users/tl_ls/AppData/Local/Temp/claude/d--Booking-LUD-My-Website-Booking-unibooking/dc4a498f-6bc4-4863-83a4-c5640673fa4f/scratchpad/cookies.txt)"
+      "Bash(rm -f /c/Users/tl_ls/AppData/Local/Temp/claude/d--Booking-LUD-My-Website-Booking-unibooking/dc4a498f-6bc4-4863-83a4-c5640673fa4f/scratchpad/cookies.txt)",
+      "PowerShell(Test-NetConnection -ComputerName aws-0-ap-southeast-1.pooler.supabase.com -Port 6543 -WarningAction SilentlyContinue)"
     ],
     "additionalDirectories": [
       "d:\\Booking.LUD\\My Website Booking\\unibooking\\app\\components",
