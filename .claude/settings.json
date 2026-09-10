@@ -100,7 +100,8 @@
       "Read(//d//**)",
       "Bash(find 'C:\\\\Users\\\\tl_ls' -iname *fbf621*)",
       "Bash(node \"C:/Users/tl_ls/AppData/Local/Temp/claude/d--Booking-LUD-My-Website-Booking-unibooking/5c41a871-a139-4a3c-945b-aa7962bca44a/scratchpad/check-hero-width.js\")",
-      "Bash(node \"C:/Users/tl_ls/AppData/Local/Temp/claude/d--Booking-LUD-My-Website-Booking-unibooking/5c41a871-a139-4a3c-945b-aa7962bca44a/scratchpad/inspect-computed.js\")"
+      "Bash(node \"C:/Users/tl_ls/AppData/Local/Temp/claude/d--Booking-LUD-My-Website-Booking-unibooking/5c41a871-a139-4a3c-945b-aa7962bca44a/scratchpad/inspect-computed.js\")",
+      "Bash(git fetch *)"
     ],
     "additionalDirectories": [
       "d:\\Booking.LUD\\My Website Booking\\unibooking\\app\\components"
