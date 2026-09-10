@@ -27,7 +27,7 @@ RUN npm ci
 # without this, the build fails.
 COPY prisma.config.ts ./
 COPY prisma ./prisma
-RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" npx prisma generate
+RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" DIRECT_URL="postgresql://dummy:dummy@localhost:5432/dummy" npx prisma generate
 
 COPY tsconfig*.json nest-cli.json ./
 COPY src ./src
