@@ -47,6 +47,7 @@
             <h4 class="filter-group__title">{{ $t('explore.categoryTitle') }}</h4>
             <a-checkbox-group v-model:value="filters.types" class="filter-group__checkboxes" @change="runSearch">
               <a-checkbox value="HOTEL">{{ $t('common.serviceTypes.room') }}</a-checkbox>
+              <a-checkbox value="APARTMENT">{{ $t('common.serviceTypes.apartment') }}</a-checkbox>
               <a-checkbox value="TOUR">{{ $t('common.serviceTypes.tour') }}</a-checkbox>
               <a-checkbox value="CAR_RENTAL">{{ $t('common.serviceTypes.carRental') }}</a-checkbox>
             </a-checkbox-group>
@@ -224,6 +225,7 @@ onMounted(runSearch)
 // rest are shown here only in case one turns up in unfiltered results.
 const TYPE_COLOR_MAP = {
   HOTEL: 'blue',
+  APARTMENT: 'geekblue',
   TOUR: 'gold',
   CAR_RENTAL: 'purple',
   FLIGHT: 'cyan',
@@ -233,6 +235,7 @@ const TYPE_COLOR_MAP = {
 }
 const TYPE_KEY_MAP = {
   HOTEL: 'room',
+  APARTMENT: 'apartment',
   TOUR: 'tour',
   CAR_RENTAL: 'carRental',
   FLIGHT: 'flight',

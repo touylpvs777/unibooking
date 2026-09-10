@@ -5,6 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import {
+  ApartmentDetails,
   CarRentalDetails,
   HotelDetails,
   Image,
@@ -49,6 +50,7 @@ const allImagesInclude = {
 // nearest upcoming InventoryPricing row (see findMyServices).
 export type ServiceWithDetails = Service & {
   hotelDetails: HotelDetails | null;
+  apartmentDetails: ApartmentDetails | null;
   tourDetails: TourDetails | null;
   carRentalDetails: CarRentalDetails | null;
   transportDetails: TransportDetails | null;
@@ -66,6 +68,7 @@ export type ServiceWithDetails = Service & {
 export type ServiceDetail = Service & {
   supplier: { companyName: string; isVerified: boolean };
   hotelDetails: HotelDetails | null;
+  apartmentDetails: ApartmentDetails | null;
   tourDetails: TourDetails | null;
   carRentalDetails: CarRentalDetails | null;
   transportDetails: TransportDetails | null;
@@ -141,6 +144,7 @@ export class ServicesService {
       where: { supplierId },
       include: {
         hotelDetails: true,
+        apartmentDetails: true,
         tourDetails: true,
         carRentalDetails: true,
         transportDetails: true,
@@ -533,6 +537,7 @@ export class ServicesService {
       include: {
         supplier: { select: { companyName: true, isVerified: true } },
         hotelDetails: true,
+        apartmentDetails: true,
         tourDetails: true,
         carRentalDetails: true,
         transportDetails: true,

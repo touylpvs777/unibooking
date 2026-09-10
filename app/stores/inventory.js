@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import {
   API_MY_SERVICES,
   API_CREATE_HOTEL,
+  API_CREATE_APARTMENT,
   API_CREATE_TOUR,
   API_CREATE_CAR_RENTAL,
   API_UPLOAD_MULTIPLE,
@@ -12,10 +13,11 @@ import {
 
 // Which vertical endpoint creates a Service of this type -- each atomically
 // creates the parent Service row plus its own detail row (HotelDetails/
-// TourDetails/CarRentalDetails). No generic "type" field is sent to any of
-// them; the endpoint itself sets it server-side.
+// ApartmentDetails/TourDetails/CarRentalDetails). No generic "type" field is
+// sent to any of them; the endpoint itself sets it server-side.
 const CREATE_ENDPOINT_BY_TYPE = {
   HOTEL: API_CREATE_HOTEL,
+  APARTMENT: API_CREATE_APARTMENT,
   TOUR: API_CREATE_TOUR,
   CAR_RENTAL: API_CREATE_CAR_RENTAL
 };

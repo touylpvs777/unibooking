@@ -3,6 +3,7 @@
     "home": "หน้าแรก",
     "explore": "สำรวจ",
     "hotels": "โรงแรม",
+    "apartments": "อพาร์ทเมนท์",
     "transport": "การเดินทาง",
     "about": "เกี่ยวกับเรา",
     "premium": "พรีเมียม",
@@ -98,6 +99,8 @@
     "delete": "ลบ",
     "edit": "แก้ไข",
     "allOption": "ทั้งหมด",
+    "yes": "ใช่",
+    "no": "ไม่ใช่",
     "bookingStatus": {
       "pending": "รอชำระเงิน",
       "confirmed": "ยืนยันแล้ว",
@@ -118,6 +121,7 @@
     },
     "serviceTypes": {
       "room": "ห้องพัก",
+      "apartment": "อพาร์ทเมนท์",
       "tour": "ทัวร์",
       "carRental": "รถเช่า",
       "flight": "เที่ยวบิน",
@@ -165,6 +169,7 @@
   },
   "search": {
     "hotelsTab": "โรงแรม",
+    "apartmentsTab": "อพาร์ทเมนท์",
     "transportTab": "การเดินทาง",
     "locationLabel": "สถานที่",
     "locationPlaceholder": "นครหลวงเวียงจันทน์",
@@ -318,6 +323,7 @@
       "airport": { "label": "สนามบิน", "delta": "บริการตลอด 24 ชั่วโมง" },
       "carRental": { "label": "รถรับส่ง / รถเช่า", "delta": "รถพร้อมให้บริการ" },
       "hotel": { "label": "โรงแรม - รีสอร์ท", "delta": "โรงแรมและรีสอร์ทที่คัดสรร" },
+      "apartment": { "label": "อพาร์ทเมนท์", "delta": "อพาร์ทเมนท์ส่วนตัวสำหรับการพักที่ยาวนานกว่า" },
       "restaurant": { "label": "ร้านอาหาร", "delta": "ร้านอาหารทั่วทุกแขวง" },
       "attraction": { "label": "สถานที่ท่องเที่ยว", "delta": "สถานที่ท่องเที่ยวยอดนิยม" },
       "entertainment": { "label": "สถานบันเทิง", "delta": "จุดบันเทิงยามค่ำคืน" }
@@ -328,6 +334,7 @@
     "servicesLoading": "กำลังโหลดบริการ...",
     "services": {
       "hotels": { "title": "จองโรงแรม & รีสอร์ท", "description": "ค้นหาและจองที่พักทั่วประเทศลาว" },
+      "apartments": { "title": "เช่าอพาร์ทเมนท์", "description": "อพาร์ทเมนท์ส่วนตัวสำหรับการพักที่อบอุ่นและยาวนานกว่า" },
       "flights": { "title": "จองตั๋วเครื่องบิน", "description": "ตั๋วเครื่องบินภายในและต่างประเทศ" },
       "transport": { "title": "รถรับ-ส่ง & เช่ารถ", "description": "บริการรถรับส่งสนามบินและรถเช่า" },
       "attractions": { "title": "สถานที่ท่องเที่ยว", "description": "จองตั๋วเข้าชมสถานที่ท่องเที่ยวยอดนิยม" },
@@ -503,6 +510,9 @@
     "selectPlaceholder": "เลือก",
     "amenitiesLabel": "สิ่งอำนวยความสะดวก (ไม่บังคับ)",
     "amenitiesPlaceholder": "พิมพ์แล้วกด Enter เพื่อเพิ่ม",
+    "bedroomsRequired": "กรุณากรอกจำนวนห้องนอน",
+    "bathroomsRequired": "อย่างน้อย 1 ห้องน้ำ",
+    "maxGuestsRequired": "อย่างน้อย 1 คน",
     "durationDaysLabel": "ระยะเวลา (วัน)",
     "durationRequired": "อย่างน้อย 1 วัน",
     "categoryRequired": "กรุณากรอกหมวดหมู่",
@@ -558,6 +568,22 @@
     "noResults": "ไม่พบโรงแรมที่ตรงกับการค้นหา",
     "priceIncludesTax": "รวมภาษีและค่าธรรมเนียมแล้ว",
     "noAvailability": "ไม่มีห้องว่างในช่วงวันที่นี้"
+  },
+  "apartments": {
+    "filtersTitle": "ตัวกรอง",
+    "locationPlaceholder": "เวียงจันทน์, หลวงพระบาง...",
+    "priceRangeLabel": "ช่วงราคา / คืน",
+    "checkInDatesLabel": "วันที่เข้าพัก",
+    "bedroomsLabel": "ห้องนอน (ขั้นต่ำ)",
+    "anyBedrooms": "ทั้งหมด",
+    "guestsLabel": "จำนวนแขก",
+    "anyGuests": "ทั้งหมด",
+    "resultsCount": "พบ {count} อพาร์ทเมนท์",
+    "noResults": "ไม่พบอพาร์ทเมนท์ที่ตรงกับการค้นหา",
+    "noAvailability": "ไม่มีอพาร์ทเมนท์ว่างในช่วงวันที่นี้",
+    "bedroomsCount": "{n} ห้องนอน",
+    "bathroomsCount": "{n} ห้องน้ำ",
+    "guestsCount": "พักได้สูงสุด {n} คน"
   },
   "transport": {
     "title": "เลือกเที่ยวการเดินทางของคุณ",
@@ -661,6 +687,11 @@
     "detailsHeading": "รายละเอียด",
     "hotelInfoHeading": "ข้อมูลที่พัก",
     "starRatingLabel": "ระดับดาว",
+    "apartmentInfoHeading": "ข้อมูลอพาร์ทเมนท์",
+    "bedroomsLabel": "ห้องนอน",
+    "bathroomsLabel": "ห้องน้ำ",
+    "maxGuestsLabel": "จำนวนแขกสูงสุด",
+    "kitchenLabel": "ห้องครัว",
     "tourInfoHeading": "ข้อมูลทัวร์",
     "durationLabel": "ระยะเวลา",
     "daysUnit": "วัน",

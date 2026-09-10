@@ -101,10 +101,37 @@
       "Bash(find 'C:\\\\Users\\\\tl_ls' -iname *fbf621*)",
       "Bash(node \"C:/Users/tl_ls/AppData/Local/Temp/claude/d--Booking-LUD-My-Website-Booking-unibooking/5c41a871-a139-4a3c-945b-aa7962bca44a/scratchpad/check-hero-width.js\")",
       "Bash(node \"C:/Users/tl_ls/AppData/Local/Temp/claude/d--Booking-LUD-My-Website-Booking-unibooking/5c41a871-a139-4a3c-945b-aa7962bca44a/scratchpad/inspect-computed.js\")",
-      "Bash(git fetch *)"
+      "Bash(git fetch *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('locales/en.json','utf8'\\)\\); console.log\\('en.json OK'\\)\")",
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('locales/lo.json','utf8'\\)\\); console.log\\('lo.json OK'\\)\")",
+      "Bash(powershell -Command \"Get-Process -Id 38708 | Select-Object Id,ProcessName,Path\")",
+      "Bash(curl -s -m 5 http://localhost:3001/ -w \"\\\\nHTTP_STATUS:%{http_code}\\\\n\")",
+      "Bash(curl -s -m 5 \"http://localhost:3001/apartments/search\" -w \"\\\\nHTTP_STATUS:%{http_code}\\\\n\")",
+      "Bash(curl -s -m 8 http://localhost:3000/apartments -w \"\\\\nHTTP_STATUS:%{http_code}\\\\n\")",
+      "Bash(curl -s -m 8 http://localhost:3000/apartments)",
+      "Bash(curl -s -m 8 http://localhost:3000/)",
+      "Bash(curl -s -m 5 \"http://localhost:3001/services/fa7a005c-6ef0-43f0-856a-a983c766d937\")",
+      "Bash(curl -s -m 5 \"http://localhost:3001/services/search?types=APARTMENT\" -w \"\\\\nHTTP_STATUS:%{http_code}\\\\n\")",
+      "Bash(curl -s -m 5 -X POST \"http://localhost:3001/auth/login\" -H \"Content-Type: application/json\" -d '{\"email\":\"customer@unibooking.test\",\"password\":\"password123\"}' -c /tmp/cookies.txt -w \"\\\\nHTTP:%{http_code}\\\\n\")",
+      "Bash(node -e \"console.log\\(new Date\\(\\).toISOString\\(\\).slice\\(0,10\\)\\)\")",
+      "Bash(node -e \"console.log\\(new Date\\(Date.now\\(\\)+86400000\\).toISOString\\(\\).slice\\(0,10\\)\\)\")",
+      "Bash(curl -s -m 8 -X POST http://localhost:3001/bookings -H 'Content-Type: application/json' -b /tmp/cookies.txt -d '{\"serviceId\":\"fa7a005c-6ef0-43f0-856a-a983c766d937\",\"startDate\":\"__CMDSUB_OUTPUT__\",\"endDate\":\"__TRACKED_VAR__\",\"units\":1}' -w '\\\\nHTTP_STATUS:%{http_code}\\\\n')",
+      "Bash(curl -s -m 8 \"http://localhost:3001/apartments/search\" -w \"\\\\nHTTP_STATUS:%{http_code}\\\\n\")",
+      "Bash(rm -f /tmp/apartments_page.html /tmp/home_page.html /tmp/apt_detail.html /tmp/hotel_detail.html /tmp/cookies.txt)",
+      "Bash(curl -s -m 5 -X POST \"http://localhost:3001/auth/login\" -H \"Content-Type: application/json\" -d '{\"email\":\"supplier@unibooking.test\",\"password\":\"password123\"}' -c /tmp2_cookies.txt -o /dev/null -w \"login HTTP:%{http_code}\\\\n\")",
+      "Bash(curl -s -m 8 -X POST http://localhost:3001/apartments -H 'Content-Type: application/json' -b /tmp2_cookies.txt -d '{\"name\":\"Test Vientiane Studio\",\"description\":\"A quick smoke-test apartment listing.\",\"location\":\"Vientiane, Laos\",\"bedrooms\":1,\"bathrooms\":1,\"maxGuests\":2,\"hasKitchen\":true,\"amenities\":[\"WiFi\"]}' -w '\\\\ncreate HTTP:%{http_code}\\\\n')",
+      "Bash(curl -s -v -m 5 -X POST \"http://localhost:3001/auth/login\" -H \"Content-Type: application/json\" -d '{\"email\":\"supplier@unibooking.test\",\"password\":\"password123\"}' -c /tmp2_cookies.txt)",
+      "Bash(mkdir -p /c/Users/tl_ls/AppData/Local/Temp/claude/d--Booking-LUD-My-Website-Booking-unibooking/dc4a498f-6bc4-4863-83a4-c5640673fa4f/scratchpad)",
+      "Bash(curl -s -m 5 -X POST http://localhost:3001/auth/login -H 'Content-Type: application/json' -d '{\"email\":\"supplier@unibooking.test\",\"password\":\"password123\"}' -c /c/Users/tl_ls/AppData/Local/Temp/claude/d--Booking-LUD-My-Website-Booking-unibooking/dc4a498f-6bc4-4863-83a4-c5640673fa4f/scratchpad/cookies.txt -o /dev/null -w 'login HTTP:%{http_code}\\\\n')",
+      "Bash(curl -s -m 8 -X POST http://localhost:3001/apartments -H 'Content-Type: application/json' -b /c/Users/tl_ls/AppData/Local/Temp/claude/d--Booking-LUD-My-Website-Booking-unibooking/dc4a498f-6bc4-4863-83a4-c5640673fa4f/scratchpad/cookies.txt -d '{\"name\":\"Test Vientiane Studio\",\"description\":\"A quick smoke-test apartment listing.\",\"location\":\"Vientiane, Laos\",\"bedrooms\":1,\"bathrooms\":1,\"maxGuests\":2,\"hasKitchen\":true,\"amenities\":[\"WiFi\"]}' -w '\\\\ncreate HTTP:%{http_code}\\\\n')",
+      "Bash(curl -s -m 8 -X PATCH http://localhost:3001/services/642f15ae-373c-45f3-8196-a34e8157b857/deactivate -b /c/Users/tl_ls/AppData/Local/Temp/claude/d--Booking-LUD-My-Website-Booking-unibooking/dc4a498f-6bc4-4863-83a4-c5640673fa4f/scratchpad/cookies.txt -w '\\\\ndeactivate HTTP:%{http_code}\\\\n')",
+      "Bash(rm -f /c/Users/tl_ls/AppData/Local/Temp/claude/d--Booking-LUD-My-Website-Booking-unibooking/dc4a498f-6bc4-4863-83a4-c5640673fa4f/scratchpad/cookies.txt)"
     ],
     "additionalDirectories": [
-      "d:\\Booking.LUD\\My Website Booking\\unibooking\\app\\components"
+      "d:\\Booking.LUD\\My Website Booking\\unibooking\\app\\components",
+      "\\tmp"
     ]
   }
 }

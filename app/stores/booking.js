@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import {
   API_SEARCH_SERVICES,
   API_SEARCH_HOTELS,
+  API_SEARCH_APARTMENTS,
   API_SEARCH_TRANSPORT,
   API_SEARCH_TOURS,
   API_SEARCH_CAR_RENTALS,
@@ -98,6 +99,29 @@ export const useBookingStore = defineStore('booking', {
         return data;
       } catch (err) {
         this.error = 'ບໍ່ສາມາດດຶງຂໍ້ມູນໂຮງແຮມໄດ້';
+        throw err;
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    // ຄົ້ນຫາອາພາດເມັນ (GET /apartments/search) -- bedrooms/maxGuests/amenities
+    // ຖືກກອງຢູ່ backend ຜ່ານ ApartmentDetails relation (ບໍ່ແມ່ນ client-side filter)
+    async searchApartments({ location, checkInDate, checkOutDate, minPrice, maxPrice, bedrooms, maxGuests, amenities, sortBy, page = 1, limit = 20 } = {}) {
+      this.isLoading = true;
+      this.error = null;
+
+      try {
+        const { $unibookingApi } = useNuxtApp();
+        const { data } = await $unibookingApi.get(API_SEARCH_APARTMENTS, {
+          params: { location, checkInDate, checkOutDate, minPrice, maxPrice, bedrooms, maxGuests, amenities: amenities?.join(','), sortBy, page, limit }
+        });
+
+        this.services = data.data;
+        this.servicesMeta = data.meta;
+        return data;
+      } catch (err) {
+        this.error = 'ບໍ່ສາມາດດຶງຂໍ້ມູນອາພາດເມັນໄດ້';
         throw err;
       } finally {
         this.isLoading = false;

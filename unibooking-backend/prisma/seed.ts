@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import * as bcrypt from 'bcrypt';
 import {
+  ApartmentDetails,
   CarRentalDetails,
   HotelDetails,
   PrismaClient,
@@ -220,6 +221,51 @@ async function seedHotel(
   return { ...service, hotelDetails };
 }
 
+async function seedApartment(
+  prisma: PrismaClient,
+  supplierId: string,
+): Promise<Service & { apartmentDetails: ApartmentDetails }> {
+  const name = 'Luang Prabang Old Town Apartment';
+  const existing = await findFixtureService(prisma, supplierId, name);
+
+  const service =
+    existing ??
+    (await prisma.service.create({
+      data: {
+        supplierId,
+        type: ServiceType.APARTMENT,
+        name,
+        description:
+          'A self-contained 2-bedroom apartment in the Luang Prabang old town, walking distance to the night market and the Mekong riverfront.',
+        location: 'Luang Prabang, Laos',
+      },
+    }));
+
+  const apartmentDetails = await prisma.apartmentDetails.upsert({
+    where: { serviceId: service.id },
+    create: {
+      serviceId: service.id,
+      bedrooms: 2,
+      bathrooms: 1,
+      hasKitchen: true,
+      maxGuests: 4,
+      amenities: ['WiFi', 'Air Conditioning', 'Parking'],
+    },
+    update: {
+      bedrooms: 2,
+      bathrooms: 1,
+      hasKitchen: true,
+      maxGuests: 4,
+      amenities: ['WiFi', 'Air Conditioning', 'Parking'],
+    },
+  });
+
+  // 280,000 LAK/night, 2 units/night.
+  await seedInventoryForRange(prisma, service.id, 280_000, 2);
+
+  return { ...service, apartmentDetails };
+}
+
 async function seedCarRental(
   prisma: PrismaClient,
   supplierId: string,
@@ -319,11 +365,12 @@ async function main(): Promise<void> {
     const supplierId = await seedSupplierProfile(prisma, userIdByRole[Role.SUPPLIER]);
 
     await seedHotel(prisma, supplierId);
+    await seedApartment(prisma, supplierId);
     await seedCarRental(prisma, supplierId);
     await seedTour(prisma, supplierId);
 
     console.log(
-      `Seeded 1 hotel, 1 car rental, and 1 tour under supplier ${supplierId}, ` +
+      `Seeded 1 hotel, 1 apartment, 1 car rental, and 1 tour under supplier ${supplierId}, ` +
         `each with ${FIXTURE_DATE_RANGE_DAYS} days of availability starting today.`,
     );
   } finally {

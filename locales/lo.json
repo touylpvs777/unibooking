@@ -3,6 +3,7 @@
     "home": "ໜ້າຫຼັກ",
     "explore": "ຄົ້ນຫາ",
     "hotels": "ໂຮງແຮມ",
+    "apartments": "ອາພາດເມັນ",
     "transport": "ການເດີນທາງ",
     "about": "ກ່ຽວກັບພວກເຮົາ",
     "premium": "ພຣີມ້ຽມ",
@@ -98,6 +99,8 @@
     "delete": "ລຶບ",
     "edit": "ແກ້ໄຂ",
     "allOption": "ທັງໝົດ",
+    "yes": "ແມ່ນ",
+    "no": "ບໍ່",
     "bookingStatus": {
       "pending": "ລໍຖ້າຊຳລະ",
       "confirmed": "ຢືນຢັນແລ້ວ",
@@ -118,6 +121,7 @@
     },
     "serviceTypes": {
       "room": "ຫ້ອງພັກ",
+      "apartment": "ອາພາດເມັນ",
       "tour": "ທົວ",
       "carRental": "ລົດເຊົ່າ",
       "flight": "ຖ້ຽວບິນ",
@@ -165,6 +169,7 @@
   },
   "search": {
     "hotelsTab": "ໂຮງແຮມ",
+    "apartmentsTab": "ອາພາດເມັນ",
     "transportTab": "ພາຫະນະ",
     "locationLabel": "ສະຖານທີ່",
     "locationPlaceholder": "ນະຄອນຫຼວງວຽງຈັນ",
@@ -318,6 +323,7 @@
       "airport": { "label": "ສະໜາມບິນ", "delta": "ບໍລິການຕະຫຼອດ 24 ຊົ່ວໂມງ" },
       "carRental": { "label": "ລົດຮັບສົ່ງ / ລົດເຊົ່າ", "delta": "ຄັນລົດພ້ອມໃຫ້ບໍລິການ" },
       "hotel": { "label": "ໂຮງແຮມ - ຣີສອດ", "delta": "ໂຮງແຮມ ແລະ ຣີສອດທີ່ຄັດສັນ" },
+      "apartment": { "label": "ອາພາດເມັນ", "delta": "ອາພາດເມັນສ່ວນຕົວສຳລັບການພັກທີ່ຍາວນານກວ່າ" },
       "restaurant": { "label": "ຮ້ານອາຫານ", "delta": "ຮ້ານອາຫານທົ່ວທຸກແຂວງ" },
       "attraction": { "label": "ສະຖານທີ່ທ່ອງທ່ຽວ", "delta": "ສະຖານທີ່ທ່ອງທ່ຽວຍອດນິຍົມ" },
       "entertainment": { "label": "ສະຖານທີ່ບັນເທີງ", "delta": "ຈຸດບັນເທີງຍາມຄ່ຳຄືນ" }
@@ -328,6 +334,7 @@
     "servicesLoading": "ກຳລັງໂຫຼດບໍລິການ...",
     "services": {
       "hotels": { "title": "ຈອງໂຮງແຮມ & ຣີສອດ", "description": "ຊອກຫາ ແລະ ຈອງທີ່ພັກທົ່ວປະເທດລາວ" },
+      "apartments": { "title": "ເຊົ່າອາພາດເມັນ", "description": "ອາພາດເມັນສ່ວນຕົວສຳລັບການພັກອາໄສທີ່ອົບອຸ່ນ ແລະ ຍາວນານກວ່າ" },
       "flights": { "title": "ຈອງປີ້ຍົນ", "description": "ປີ້ຍົນພາຍໃນ ແລະ ຕ່າງປະເທດ" },
       "transport": { "title": "ລົດຮັບ-ສົ່ງ & ເຊົ່າລົດ", "description": "ບໍລິການລົດຮັບສົ່ງສະໜາມບິນ ແລະ ລົດເຊົ່າ" },
       "attractions": { "title": "ສະຖານທີ່ທ່ອງທ່ຽວ", "description": "ຈອງປີ້ເຂົ້າຊົມສະຖານທີ່ທ່ອງທ່ຽວຍອດຮິດ" },
@@ -503,6 +510,9 @@
     "selectPlaceholder": "ເລືອກ",
     "amenitiesLabel": "ສິ່ງອຳນວຍຄວາມສະດວກ (ບໍ່ບັງຄັບ)",
     "amenitiesPlaceholder": "ພິມແລ້ວກົດ Enter ເພື່ອເພີ່ມ",
+    "bedroomsRequired": "ກະລຸນາປ້ອນຈຳນວນຫ້ອງນອນ",
+    "bathroomsRequired": "ຢ່າງໜ້ອຍ 1 ຫ້ອງນ້ຳ",
+    "maxGuestsRequired": "ຢ່າງໜ້ອຍ 1 ຄົນ",
     "durationDaysLabel": "ໄລຍະເວລາ (ວັນ)",
     "durationRequired": "ຢ່າງໜ້ອຍ 1 ວັນ",
     "categoryRequired": "ກະລຸນາປ້ອນໝວດໝູ່",
@@ -558,6 +568,22 @@
     "noResults": "ບໍ່ພົບໂຮງແຮມທີ່ຕົງກັບການຄົ້ນຫາ",
     "priceIncludesTax": "ລວມພາສີ ແລະ ຄ່າທຳນຽມແລ້ວ",
     "noAvailability": "ບໍ່ມີຫ້ອງວ່າງໃນຊ່ວງວັນທີ່ນີ້"
+  },
+  "apartments": {
+    "filtersTitle": "ຕົວກອງ",
+    "locationPlaceholder": "ວຽງຈັນ, ຫຼວງພະບາງ...",
+    "priceRangeLabel": "ຊ່ວງລາຄາ / ຄືນ",
+    "checkInDatesLabel": "ວັນທີ່ເຂົ້າພັກ",
+    "bedroomsLabel": "ຫ້ອງນອນ (ຂັ້ນຕ່ຳ)",
+    "anyBedrooms": "ທັງໝົດ",
+    "guestsLabel": "ຈຳນວນແຂກ",
+    "anyGuests": "ທັງໝົດ",
+    "resultsCount": "ພົບ {count} ອາພາດເມັນ",
+    "noResults": "ບໍ່ພົບອາພາດເມັນທີ່ຕົງກັບການຄົ້ນຫາ",
+    "noAvailability": "ບໍ່ມີອາພາດເມັນວ່າງໃນຊ່ວງວັນທີ່ນີ້",
+    "bedroomsCount": "{n} ຫ້ອງນອນ",
+    "bathroomsCount": "{n} ຫ້ອງນ້ຳ",
+    "guestsCount": "ພັກໄດ້ເຖິງ {n} ຄົນ"
   },
   "transport": {
     "title": "ເລືອກຖ້ຽວການເດີນທາງຂອງທ່ານ",
@@ -661,6 +687,11 @@
     "detailsHeading": "ລາຍລະອຽດ",
     "hotelInfoHeading": "ຂໍ້ມູນທີ່ພັກ",
     "starRatingLabel": "ລະດັບດາວ",
+    "apartmentInfoHeading": "ຂໍ້ມູນອາພາດເມັນ",
+    "bedroomsLabel": "ຫ້ອງນອນ",
+    "bathroomsLabel": "ຫ້ອງນ້ຳ",
+    "maxGuestsLabel": "ຈຳນວນແຂກສູງສຸດ",
+    "kitchenLabel": "ຫ້ອງຄົວ",
     "tourInfoHeading": "ຂໍ້ມູນທົວ",
     "durationLabel": "ໄລຍະເວລາ",
     "daysUnit": "ວັນ",

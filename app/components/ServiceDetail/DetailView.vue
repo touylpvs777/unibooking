@@ -83,6 +83,21 @@
           </a-descriptions>
         </template>
 
+        <template v-else-if="service.type === 'APARTMENT' && service.apartmentDetails">
+          <h2 class="service-detail-page__section-title">{{ $t('serviceDetail.apartmentInfoHeading') }}</h2>
+          <a-descriptions :column="1" bordered size="small" class="service-detail-page__facts">
+            <a-descriptions-item :label="$t('serviceDetail.bedroomsLabel')">{{ service.apartmentDetails.bedrooms }}</a-descriptions-item>
+            <a-descriptions-item :label="$t('serviceDetail.bathroomsLabel')">{{ service.apartmentDetails.bathrooms }}</a-descriptions-item>
+            <a-descriptions-item :label="$t('serviceDetail.maxGuestsLabel')">{{ service.apartmentDetails.maxGuests }}</a-descriptions-item>
+            <a-descriptions-item :label="$t('serviceDetail.kitchenLabel')">
+              {{ service.apartmentDetails.hasKitchen ? $t('common.yes') : $t('common.no') }}
+            </a-descriptions-item>
+          </a-descriptions>
+          <div v-if="service.apartmentDetails.amenities?.length" class="service-detail-page__amenities">
+            <a-tag v-for="amenity in service.apartmentDetails.amenities" :key="amenity" color="blue">{{ amenity }}</a-tag>
+          </div>
+        </template>
+
         <h2 class="service-detail-page__section-title">{{ $t('reviews.heading') }}</h2>
         <ReviewsReviewList :service-id="service.id" />
         <a-divider />
@@ -184,6 +199,7 @@ watch(() => route.params.id, fetchWithSelectedDates)
 // same map as pages/explore/index.vue.
 const TYPE_COLOR_MAP = {
   HOTEL: 'blue',
+  APARTMENT: 'geekblue',
   TOUR: 'gold',
   CAR_RENTAL: 'purple',
   FLIGHT: 'cyan',
@@ -193,6 +209,7 @@ const TYPE_COLOR_MAP = {
 }
 const TYPE_KEY_MAP = {
   HOTEL: 'room',
+  APARTMENT: 'apartment',
   TOUR: 'tour',
   CAR_RENTAL: 'carRental',
   FLIGHT: 'flight',

@@ -19,6 +19,7 @@ import { PaymentsModule } from './payments/payments.module';
 import { UploadsModule } from './uploads/uploads.module';
 import { AdminModule } from './admin/admin.module';
 import { HotelsModule } from './hotels/hotels.module';
+import { ApartmentsModule } from './apartments/apartments.module';
 import { TransportModule } from './transport/transport.module';
 import { ToursModule } from './tours/tours.module';
 import { CarRentalsModule } from './car-rentals/car-rentals.module';
@@ -87,6 +88,7 @@ import { WebhooksModule } from './webhooks/webhooks.module';
     // engine all four of these (and ServicesModule, unrefactored so far)
     // build on.
     HotelsModule,
+    ApartmentsModule,
     TransportModule,
     ToursModule,
     CarRentalsModule,

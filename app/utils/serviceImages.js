@@ -6,6 +6,7 @@
 // physical thing to photograph), so it always shows this banner.
 const DEFAULT_SERVICE_IMAGES = {
   HOTEL: '/images/9112_ho_00_p_2048x1536.jpg',
+  APARTMENT: '/images/laos-hotel-vang-vieng-riverside-boutique-resort-1024.jpg',
   FLIGHT: '/images/RDPL-34199@PEK_(20231016151056).jpg',
   TRAIN: '/images/Train.jpeg',
   BUS: '/images/book-taxi.png',

@@ -22,6 +22,7 @@ enum Role {
 
 enum ServiceType {
   HOTEL
+  APARTMENT
   FLIGHT
   TRAIN
   BUS
@@ -141,6 +142,7 @@ model Service {
   // not by a DB constraint, since Prisma has no native "exactly one of these
   // relations" check across separate 1:1 tables.
   hotelDetails     HotelDetails?
+  apartmentDetails ApartmentDetails?
   transportDetails TransportDetails?
   tourDetails      TourDetails?
   carRentalDetails CarRentalDetails?
@@ -164,6 +166,24 @@ model HotelDetails {
 
   @@index([starRating])
   @@index([propertyType])
+}
+
+// 3a-2. ApartmentDetails: attributes specific to ServiceType.APARTMENT --
+// self-contained units (own kitchen/entrance), split out from HotelDetails
+// since an apartment's defining facts (bedroom/bathroom count, kitchen) don't
+// map onto a hotel's (star rating, property type). Nightly price/availability
+// still lives on the shared InventoryPricing, same as every other vertical.
+model ApartmentDetails {
+  serviceId  String   @id
+  bedrooms   Int      @db.SmallInt
+  bathrooms  Int      @db.SmallInt
+  hasKitchen Boolean  @default(true)
+  maxGuests  Int
+  amenities  String[] // Postgres text[] -- same free-form convention as HotelDetails.amenities
+
+  service    Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([bedrooms])
 }
 
 // 3b. TransportDetails: attributes specific to FLIGHT/TRAIN/BUS. One Service

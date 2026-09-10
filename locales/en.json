@@ -3,6 +3,7 @@
     "home": "Home",
     "explore": "Explore",
     "hotels": "Hotels",
+    "apartments": "Apartments",
     "transport": "Transport",
     "about": "About Us",
     "premium": "Premium",
@@ -98,6 +99,8 @@
     "delete": "Delete",
     "edit": "Edit",
     "allOption": "All",
+    "yes": "Yes",
+    "no": "No",
     "bookingStatus": {
       "pending": "Pending",
       "confirmed": "Confirmed",
@@ -118,6 +121,7 @@
     },
     "serviceTypes": {
       "room": "Room",
+      "apartment": "Apartment",
       "tour": "Tour",
       "carRental": "Car Rental",
       "flight": "Flight",
@@ -165,6 +169,7 @@
   },
   "search": {
     "hotelsTab": "Hotels",
+    "apartmentsTab": "Apartments",
     "transportTab": "Transport",
     "locationLabel": "Location",
     "locationPlaceholder": "Vientiane Capital",
@@ -318,6 +323,7 @@
       "airport": { "label": "Airport", "delta": "Service available 24 hours" },
       "carRental": { "label": "Transfers / Car Rental", "delta": "Vehicles ready to serve you" },
       "hotel": { "label": "Hotels & Resorts", "delta": "Curated hotels and resorts" },
+      "apartment": { "label": "Apartments", "delta": "Self-contained apartments for longer stays" },
       "restaurant": { "label": "Restaurants", "delta": "Restaurants across every province" },
       "attraction": { "label": "Attractions", "delta": "Most popular tourist attractions" },
       "entertainment": { "label": "Entertainment", "delta": "Nightlife entertainment spots" }
@@ -328,6 +334,7 @@
     "servicesLoading": "Loading services...",
     "services": {
       "hotels": { "title": "Hotel & Resort Booking", "description": "Find and book accommodation across Laos" },
+      "apartments": { "title": "Apartment Rentals", "description": "Self-contained apartments for a longer, homelier stay" },
       "flights": { "title": "Flight Booking", "description": "Domestic and international flight tickets" },
       "transport": { "title": "Transfers & Car Rental", "description": "Airport transfer service and car rental" },
       "attractions": { "title": "Tourist Attractions", "description": "Book tickets to top attractions" },
@@ -503,6 +510,9 @@
     "selectPlaceholder": "Select",
     "amenitiesLabel": "Amenities (optional)",
     "amenitiesPlaceholder": "Type and press Enter to add",
+    "bedroomsRequired": "Please enter the number of bedrooms",
+    "bathroomsRequired": "At least 1 bathroom",
+    "maxGuestsRequired": "At least 1 guest",
     "durationDaysLabel": "Duration (days)",
     "durationRequired": "At least 1 day",
     "categoryRequired": "Please enter a category",
@@ -558,6 +568,22 @@
     "noResults": "No hotels match your search",
     "priceIncludesTax": "Taxes and fees included",
     "noAvailability": "No rooms available for these dates"
+  },
+  "apartments": {
+    "filtersTitle": "Filters",
+    "locationPlaceholder": "Vientiane, Luang Prabang...",
+    "priceRangeLabel": "Price Range / night",
+    "checkInDatesLabel": "Check-in Dates",
+    "bedroomsLabel": "Bedrooms (minimum)",
+    "anyBedrooms": "Any",
+    "guestsLabel": "Guests",
+    "anyGuests": "Any",
+    "resultsCount": "Found {count} apartments",
+    "noResults": "No apartments match your search",
+    "noAvailability": "No apartments available for these dates",
+    "bedroomsCount": "{n} bed(s)",
+    "bathroomsCount": "{n} bath(s)",
+    "guestsCount": "up to {n} guests"
   },
   "transport": {
     "title": "Choose Your Trip",
@@ -661,6 +687,11 @@
     "detailsHeading": "Details",
     "hotelInfoHeading": "Hotel Information",
     "starRatingLabel": "Star Rating",
+    "apartmentInfoHeading": "Apartment Information",
+    "bedroomsLabel": "Bedrooms",
+    "bathroomsLabel": "Bathrooms",
+    "maxGuestsLabel": "Max Guests",
+    "kitchenLabel": "Kitchen",
     "tourInfoHeading": "Tour Information",
     "durationLabel": "Duration",
     "daysUnit": "days",

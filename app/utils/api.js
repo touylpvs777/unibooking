@@ -26,12 +26,14 @@ export const apiServiceDetail = (serviceId) => `/services/${serviceId}`;
 // Service row plus its vertical detail row (HotelDetails/TourDetails/
 // CarRentalDetails). Used by the supplier portal's "Add Item" form.
 export const API_CREATE_HOTEL = '/hotels';
+export const API_CREATE_APARTMENT = '/apartments';
 export const API_CREATE_TOUR = '/tours';
 export const API_CREATE_CAR_RENTAL = '/car-rentals';
 
 // Vertical search APIs -- each targets Service+InventoryPricing with its own
-// filter set (unibooking-backend/src/{hotels,transport,tours,car-rentals}/)
+// filter set (unibooking-backend/src/{hotels,apartments,transport,tours,car-rentals}/)
 export const API_SEARCH_HOTELS = '/hotels/search';
+export const API_SEARCH_APARTMENTS = '/apartments/search';
 export const API_SEARCH_TRANSPORT = '/transport/search';
 export const API_SEARCH_TOURS = '/tours/search';
 export const API_SEARCH_CAR_RENTALS = '/car-rentals/search';

@@ -86,7 +86,7 @@
         </div>
 
         <!-- Right: a radial hub-and-spoke ecosystem menu (adapted from
-             CodeFronts' "Mission Hub" circular menu, MIT licensed) — six
+             CodeFronts' "Mission Hub" circular menu, MIT licensed) —
              clickable modules in orbit (see ecosystemModules in the
              script) around a live center that shows the selected module's
              headline stat. Each module's angle is computed purely in CSS
@@ -498,6 +498,13 @@ const ecosystemModules = computed(() => [
     delta: t('home.ecosystem.hotel.delta')
   },
   {
+    id: 'apartment',
+    icon: HomeOutlined,
+    label: t('home.ecosystem.apartment.label'),
+    stat: '40+',
+    delta: t('home.ecosystem.apartment.delta')
+  },
+  {
     id: 'restaurant',
     icon: RestaurantIcon,
     label: t('home.ecosystem.restaurant.label'),
@@ -535,6 +542,12 @@ const serviceGridItems = computed(() => [
     icon: BankOutlined,
     title: t('home.services.hotels.title'),
     description: t('home.services.hotels.description')
+  },
+  {
+    category: 'APARTMENT',
+    icon: HomeOutlined,
+    title: t('home.services.apartments.title'),
+    description: t('home.services.apartments.description')
   },
   {
     category: 'FLIGHT',
@@ -575,6 +588,7 @@ const serviceGridItems = computed(() => [
 // so it keeps going through /explore's generic multi-category search.
 const CATEGORY_MODULE_PATHS = {
   HOTEL: '/hotels',
+  APARTMENT: '/apartments',
   FLIGHT: '/flights',
   CAR_RENTAL: '/cars',
   TOUR: '/tours',
@@ -595,7 +609,8 @@ const serviceSkeletonTints = [
   'rgba(212, 175, 55, 0.20)',
   'rgba(255, 255, 255, 0.08)',
   'rgba(197, 160, 89, 0.16)',
-  'rgba(212, 175, 55, 0.12)'
+  'rgba(212, 175, 55, 0.12)',
+  'rgba(255, 255, 255, 0.10)'
 ]
 onMounted(() => {
   setTimeout(() => {

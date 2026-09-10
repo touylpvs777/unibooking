@@ -29,6 +29,9 @@
             <a-menu-item key="hotels">
               <NuxtLink to="/hotels">{{ $t('nav.hotels') }}</NuxtLink>
             </a-menu-item>
+            <a-menu-item key="apartments">
+              <NuxtLink to="/apartments">{{ $t('nav.apartments') }}</NuxtLink>
+            </a-menu-item>
             <a-menu-item key="transport">
               <NuxtLink to="/transport">{{ $t('nav.transport') }}</NuxtLink>
             </a-menu-item>
@@ -126,6 +129,9 @@
           </a-menu-item>
           <a-menu-item key="hotels">
             <NuxtLink to="/hotels">{{ $t('nav.hotels') }}</NuxtLink>
+          </a-menu-item>
+          <a-menu-item key="apartments">
+            <NuxtLink to="/apartments">{{ $t('nav.apartments') }}</NuxtLink>
           </a-menu-item>
           <a-menu-item key="transport">
             <NuxtLink to="/transport">{{ $t('nav.transport') }}</NuxtLink>

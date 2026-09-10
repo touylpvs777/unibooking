@@ -90,6 +90,7 @@
         <a-form-item :label="$t('supplier.itemTypeLabel')" name="type" :rules="[{ required: true, message: $t('supplier.itemTypeRequired') }]">
           <a-select v-model:value="form.type" :placeholder="$t('supplier.selectTypePlaceholder')">
             <a-select-option value="HOTEL">{{ $t('common.serviceTypes.room') }}</a-select-option>
+            <a-select-option value="APARTMENT">{{ $t('common.serviceTypes.apartment') }}</a-select-option>
             <a-select-option value="TOUR">{{ $t('common.serviceTypes.tour') }}</a-select-option>
             <a-select-option value="CAR_RENTAL">{{ $t('common.serviceTypes.carRental') }}</a-select-option>
           </a-select>
@@ -207,6 +208,46 @@
               </a-form-item>
             </a-col>
           </a-row>
+        </template>
+
+        <template v-else-if="form.type === 'APARTMENT'">
+          <a-row :gutter="16">
+            <a-col :span="8">
+              <a-form-item
+                :label="$t('serviceDetail.bedroomsLabel')"
+                name="bedrooms"
+                :rules="[{ required: true, type: 'number', min: 0, message: $t('supplier.bedroomsRequired') }]"
+              >
+                <a-input-number v-model:value="form.bedrooms" :min="0" style="width: 100%" />
+              </a-form-item>
+            </a-col>
+            <a-col :span="8">
+              <a-form-item
+                :label="$t('serviceDetail.bathroomsLabel')"
+                name="bathrooms"
+                :rules="[{ required: true, type: 'number', min: 1, message: $t('supplier.bathroomsRequired') }]"
+              >
+                <a-input-number v-model:value="form.bathrooms" :min="1" style="width: 100%" />
+              </a-form-item>
+            </a-col>
+            <a-col :span="8">
+              <a-form-item
+                :label="$t('serviceDetail.maxGuestsLabel')"
+                name="maxGuests"
+                :rules="[{ required: true, type: 'number', min: 1, message: $t('supplier.maxGuestsRequired') }]"
+              >
+                <a-input-number v-model:value="form.maxGuests" :min="1" style="width: 100%" />
+              </a-form-item>
+            </a-col>
+          </a-row>
+
+          <a-form-item name="hasKitchen">
+            <a-checkbox v-model:checked="form.hasKitchen">{{ $t('serviceDetail.kitchenLabel') }}</a-checkbox>
+          </a-form-item>
+
+          <a-form-item :label="$t('supplier.amenitiesLabel')" name="amenities">
+            <a-select v-model:value="form.amenities" mode="tags" :placeholder="$t('supplier.amenitiesPlaceholder')" />
+          </a-form-item>
         </template>
 
         <template v-else-if="form.type === 'CAR_RENTAL'">
@@ -341,6 +382,7 @@ const columns = computed(() => [
 // PACKAGE service already exists from elsewhere and shows up in the table.
 const TYPE_COLOR_MAP = {
   HOTEL: 'blue',
+  APARTMENT: 'geekblue',
   TOUR: 'gold',
   CAR_RENTAL: 'purple',
   FLIGHT: 'cyan',
@@ -350,6 +392,7 @@ const TYPE_COLOR_MAP = {
 }
 const TYPE_KEY_MAP = {
   HOTEL: 'room',
+  APARTMENT: 'apartment',
   TOUR: 'tour',
   CAR_RENTAL: 'carRental',
   FLIGHT: 'flight',
@@ -386,6 +429,11 @@ const EMPTY_FORM = {
   starRating: undefined,
   propertyType: undefined,
   amenities: [],
+  // APARTMENT
+  bedrooms: undefined,
+  bathrooms: undefined,
+  hasKitchen: true,
+  maxGuests: undefined,
   // TOUR
   durationDays: undefined,
   category: '',
@@ -435,6 +483,16 @@ function buildPayload() {
       ...base,
       starRating: form.starRating,
       propertyType: form.propertyType,
+      ...(form.amenities?.length ? { amenities: form.amenities } : {})
+    }
+  }
+  if (form.type === 'APARTMENT') {
+    return {
+      ...base,
+      bedrooms: form.bedrooms,
+      bathrooms: form.bathrooms,
+      hasKitchen: form.hasKitchen,
+      maxGuests: form.maxGuests,
       ...(form.amenities?.length ? { amenities: form.amenities } : {})
     }
   }

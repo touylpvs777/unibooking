@@ -35,6 +35,34 @@
         </a-row>
       </a-tab-pane>
 
+      <!-- Apartments -->
+      <a-tab-pane key="apartments" :tab="$t('search.apartmentsTab')">
+        <a-row :gutter="[16, 16]" align="bottom">
+          <a-col :xs="24" :sm="12" :md="7">
+            <label class="field-label">{{ $t('search.locationLabel') }}</label>
+            <a-input v-model:value="apartmentSearch.location" :placeholder="$t('search.locationPlaceholder')" size="large" />
+          </a-col>
+
+          <a-col :xs="24" :sm="12" :md="8">
+            <label class="field-label">{{ $t('search.datesLabel') }}</label>
+            <a-range-picker v-model:value="apartmentSearch.dates" size="large" style="width: 100%" />
+          </a-col>
+
+          <a-col :xs="24" :sm="12" :md="5">
+            <label class="field-label">{{ $t('search.guestsLabel') }}</label>
+            <a-select id="apartment-search-guests" v-model:value="apartmentSearch.guests" size="large" style="width: 100%">
+              <a-select-option v-for="n in 6" :key="n" :value="n">{{ $t('search.guestsOption', { n }) }}</a-select-option>
+            </a-select>
+          </a-col>
+
+          <a-col :xs="24" :sm="12" :md="4">
+            <a-button type="primary" size="large" block @click="handleApartmentSearch">
+              {{ $t('search.searchButton') }}
+            </a-button>
+          </a-col>
+        </a-row>
+      </a-tab-pane>
+
       <!-- Transport -->
       <a-tab-pane key="transport" :tab="$t('search.transportTab')">
         <a-row :gutter="[16, 16]" align="bottom">
@@ -83,6 +111,12 @@ const hotelSearch = reactive({
   guests: 1
 })
 
+const apartmentSearch = reactive({
+  location: '',
+  dates: [],
+  guests: 1
+})
+
 const transportSearch = reactive({
   from: '',
   to: '',
@@ -111,6 +145,24 @@ function handleHotelSearch() {
       checkInDate: isoDate(startDate),
       checkOutDate: isoDate(endDate),
       guests: hotelSearch.guests
+    }
+  })
+}
+
+function handleApartmentSearch() {
+  const [startDate, endDate] = apartmentSearch.dates
+
+  bookingStore.bookingData.startDate = startDate ?? null
+  bookingStore.bookingData.endDate = endDate ?? null
+  bookingStore.bookingData.guests = apartmentSearch.guests
+
+  router.push({
+    path: '/apartments',
+    query: {
+      location: apartmentSearch.location || undefined,
+      checkInDate: isoDate(startDate),
+      checkOutDate: isoDate(endDate),
+      guests: apartmentSearch.guests
     }
   })
 }
