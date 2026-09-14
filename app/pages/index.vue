@@ -763,7 +763,11 @@ function closeVideo() {
   top: 210px;
   left: 6%;
   z-index: 4;
-  width: min(440px, 40%);
+  /* Wide enough that the longest destination title (e.g. "Khone Phapheng
+     Falls") fits on one line instead of wrapping -- bounded by viewport
+     width so it never pushes into .hero-nav-controls on the right. */
+  width: min(860px, 82%);
+  max-width: 82vw;
   color: #fff;
   text-align: left;
 }
@@ -783,10 +787,17 @@ function closeVideo() {
   font-size: clamp(2.5rem, 5vw, 4.5rem);
   line-height: 1.05;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9), 0 4px 18px rgba(0, 0, 0, 0.7);
+  /* Keep titles on a single line on tablet/desktop now that .hero-copy is
+     wide enough to hold them; overridden back to normal under 900px where
+     .hero-copy collapses to a full-width mobile block (see media query
+     below) so long titles wrap instead of overflowing the viewport. */
+  white-space: nowrap;
 }
 
 .hero-copy__subtitle {
-  max-width: 390px;
+  /* Match the widened .hero-copy block instead of the old fixed 390px,
+     which was the other source of premature wrapping. */
+  max-width: 100%;
   margin: 0;
   color: rgba(255, 255, 255, 0.92);
   font-size: 16px;
@@ -1037,7 +1048,8 @@ function closeVideo() {
 
 @media (max-width: 1200px) {
   .hero-copy {
-    width: min(380px, 46%);
+    width: min(620px, 70%);
+    max-width: 70vw;
   }
 
   .hero-copy__title {
@@ -1073,6 +1085,13 @@ function closeVideo() {
     max-width: none;
     padding: 0 24px;
     margin-bottom: 32px;
+  }
+
+  /* Restore natural wrapping on mobile now that the desktop/tablet rule
+     forces white-space: nowrap -- a full destination title at this width
+     needs to wrap, not overflow the viewport. */
+  .hero-copy__title {
+    white-space: normal;
   }
 
   .hero-nav-controls {
