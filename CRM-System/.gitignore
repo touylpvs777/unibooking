@@ -1,6 +1,9 @@
-@"
 __pycache__/
 *.pyc
 .vscode/
 dk_service.db
-"@ | Out-File .gitignore -Encoding utf8
+
+# Secrets — never commit real values, only *.example templates
+.env
+.env.*
+!.env.example

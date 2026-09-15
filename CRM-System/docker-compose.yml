@@ -6,9 +6,12 @@ services:
       context: .
       dockerfile: Dockerfile.backend
     container_name: dk-backend
+    # Loaded first (base config for local/non-Docker runs), then the
+    # `environment:` keys below override it with the Compose-managed values.
     env_file: ./backend/.env
     environment:
-      - DATABASE_URL=postgresql+asyncpg://dk_user:dk_pass_2025@db:5432/dk_crm
+      - DATABASE_URL=postgresql+asyncpg://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
+      - SECRET_KEY=${SECRET_KEY}
       - DEBUG=false
     ports:
       - "8000:8000"
@@ -37,16 +40,19 @@ services:
     image: postgres:16-alpine
     container_name: dk-db
     environment:
-      POSTGRES_USER: dk_user
-      POSTGRES_PASSWORD: dk_pass_2025
-      POSTGRES_DB: dk_crm
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      # Bound to localhost only — the backend container reaches this over
+      # the internal Compose network regardless. Drop this entirely once
+      # no host tool (psql/pgAdmin) needs a direct connection.
+      - "127.0.0.1:5432:5432"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U dk_user -d dk_crm"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
       timeout: 5s
       retries: 5

@@ -5,3 +5,8 @@
 **/venv
 **/node_modules
 **/.git
+
+# Secrets — must never end up baked into an image layer
+**/.env
+**/.env.*
+!**/.env.example

@@ -1,0 +1,149 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum RentalContractStatus {
+  RESERVATION
+  DRAFT
+  PENDING_APPROVAL
+  APPROVED
+  REVISION
+  DELIVERING
+  ACTIVE
+  OVERDUE
+  RETURNING
+  INSPECTING
+  SETTLING
+  CLOSED
+  CANCELLED
+}
+
+enum AssetStatus {
+  AVAILABLE
+  RENTED
+  IN_MAINTENANCE
+}
+
+enum DispatchStatus {
+  SCHEDULED
+  DISPATCHED
+  IN_TRANSIT
+  DELIVERED
+  INBOUND
+  RETURNED
+  CANCELLED
+}
+
+enum ServiceRequestStatus {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+  CANCELLED
+}
+
+model Customer {
+  id   String @id @default(uuid())
+  name String
+
+  rentalContracts RentalContract[]
+
+  @@map("customers")
+}
+
+model Equipment {
+  id         String      @id @default(uuid())
+  assetNumber String     @unique
+  name       String
+  status     AssetStatus @default(AVAILABLE)
+
+  rentalContracts RentalContract[]
+  dispatches      EquipmentDispatch[]
+  serviceRequests ServiceRequest[]
+
+  @@map("equipment")
+}
+
+model RentalContract {
+  id            String               @id @default(uuid())
+  contractNumber String              @unique
+  customerId    String
+  equipmentId   String
+  status        RentalContractStatus @default(RESERVATION)
+  startDate     DateTime
+  endDate       DateTime?
+  rentalRate    Decimal?
+  depositAmount Decimal?
+  notes         String?
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+
+  customer     Customer           @relation(fields: [customerId], references: [id])
+  equipment    Equipment          @relation(fields: [equipmentId], references: [id])
+  dispatches   EquipmentDispatch[]
+  inspections  InspectionRecord[]
+
+  @@map("rental_contracts")
+}
+
+model EquipmentDispatch {
+  id             String         @id @default(uuid())
+  contractId     String
+  equipmentId    String
+  dispatchedBy   String?
+  dispatchDate   DateTime       @default(now())
+  status         DispatchStatus @default(DISPATCHED)
+  fromLocation   String?
+  toLocation     String?
+  notes          String?
+  serviceRequestId String?      @unique
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  contract       RentalContract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  equipment      Equipment      @relation(fields: [equipmentId], references: [id])
+  serviceRequest ServiceRequest? @relation(fields: [serviceRequestId], references: [id])
+  inspections    InspectionRecord[]
+
+  @@map("equipment_dispatches")
+}
+
+model InspectionRecord {
+  id              String   @id @default(uuid())
+  contractId      String?
+  dispatchId      String?
+  equipmentId     String?
+  inspectedBy     String?
+  inspectionDate  DateTime @default(now())
+  conditionStatus String?  @default("PENDING")
+  findings        String?
+  nextAction      String?
+  createdAt       DateTime @default(now())
+
+  contract        RentalContract?    @relation(fields: [contractId], references: [id], onDelete: SetNull)
+  dispatch        EquipmentDispatch? @relation(fields: [dispatchId], references: [id], onDelete: SetNull)
+  equipment       Equipment?         @relation(fields: [equipmentId], references: [id], onDelete: SetNull)
+
+  @@map("inspection_records")
+}
+
+model ServiceRequest {
+  id          String               @id @default(uuid())
+  equipmentId String
+  dispatchId  String?              @unique
+  title       String
+  description String
+  requestType String               @default("RETURN_INSPECTION")
+  status      ServiceRequestStatus @default(OPEN)
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  equipment  Equipment         @relation(fields: [equipmentId], references: [id])
+  dispatch   EquipmentDispatch? @relation(fields: [dispatchId], references: [id], onDelete: SetNull)
+
+  @@map("service_requests")
+}

@@ -174,7 +174,12 @@
       "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('detail' in str\\(d\\)\\); print\\(d\\)\")",
       "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('exchange_rate:', d['exchange_rate']\\); print\\('bank_details:', d['bank_details']\\)\")",
       "Bash(curl -s -X POST http://127.0.0.1:8150/api/v1/quotations/ -H 'Authorization: Bearer __CMDSUB_OUTPUT__' -H 'Content-Type: application/json' -d '{ *)",
-      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('currency:', d['currency']\\); print\\('exchange_rate:', d['exchange_rate']\\); print\\('bank_details:', d['bank_details']\\)\")"
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('currency:', d['currency']\\); print\\('exchange_rate:', d['exchange_rate']\\); print\\('bank_details:', d['bank_details']\\)\")",
+      "Bash(sed -E 's/\\(PASSWORD|SECRET|KEY|TOKEN\\)=.+/\\\\1=<redacted>/')",
+      "Bash(awk -F: '{sum+=$2; print} END{print \"TOTAL:\", sum}')",
+      "Bash(gh repo *)",
+      "Bash(python3 -c \"import yaml; yaml.safe_load\\(open\\('CRM-System/docker-compose.yml', encoding='utf-8'\\)\\)\")",
+      "Bash(python -c \"import yaml; yaml.safe_load\\(open\\('CRM-System/docker-compose.yml', encoding='utf-8'\\)\\)\")"
     ],
     "additionalDirectories": [
       "\\tmp",
