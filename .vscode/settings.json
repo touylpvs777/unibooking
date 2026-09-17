@@ -1,6 +1,6 @@
 {
-  "python.defaultInterpreterPath": "${workspaceFolder}\\CRM-System\\venv\\Scripts\\python.exe",
-  "python.pythonPath": "${workspaceFolder}\\CRM-System\\venv\\Scripts\\python.exe",
+  "python.defaultInterpreterPath": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+  "python.pythonPath": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
   "[python]": {
     "editor.formatOnSave": true
   }

@@ -1,13 +1,9 @@
-node_modules/
 __pycache__/
-.venv/
-.venv-*/
-venv/
-.pytest_cache/
+*.pyc
+.vscode/
+dk_service.db
 
-.claude/settings.local.json
-backups/
-
-Upload/
-uploads/
-*.xlsx
+# Secrets — never commit real values, only *.example templates
+.env
+.env.*
+!.env.example
