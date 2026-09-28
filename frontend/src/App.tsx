@@ -70,6 +70,9 @@ const SettingsPage = lazy(() => import('@/pages/Settings/Settings'))
 const ChangePasswordPage = lazy(() => import('@/pages/Settings/ChangePasswordPage'))
 const ProfilePage = lazy(() => import('@/pages/Profile/ProfilePage'))
 const RentalMvpDashboard = lazy(() => import('@/pages/RentalMvp/RentalDashboard'))
+const ForkliftStorePage = lazy(() => import('@/pages/Forklift/StorePage'))
+const ClientFleetDashboardPage = lazy(() => import('@/pages/Forklift/ClientDashboardPage'))
+const WorkshopServicesPage = lazy(() => import('@/pages/Forklift/ServicesPage'))
 
 function PageLoader() {
   return (
@@ -113,6 +116,9 @@ export default function App() {
 
             <Route path="/equipment"              element={<Suspense fallback={<PageLoader />}><EquipmentRegistryPage /></Suspense>} />
             <Route path="/equipment/:id"          element={<Suspense fallback={<PageLoader />}><ForkliftDetailPage /></Suspense>} />
+            <Route path="/forklift-store" element={<Suspense fallback={<PageLoader />}><ForkliftStorePage /></Suspense>} />
+<Route path="/client-fleet" element={<Suspense fallback={<PageLoader />}><ClientFleetDashboardPage /></Suspense>} />
+<Route path="/workshop-4s" element={<Suspense fallback={<PageLoader />}><WorkshopServicesPage /></Suspense>} />
 
             <Route path="/quotations"             element={<Suspense fallback={<PageLoader />}><QuotationListPage /></Suspense>} />
             <Route path="/quotations/new"         element={<Suspense fallback={<PageLoader />}><QuotationEditorPage /></Suspense>} />

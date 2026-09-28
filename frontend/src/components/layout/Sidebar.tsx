@@ -56,6 +56,15 @@ const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
+    id: 'forklift_modules',
+    labelKey: 'ລົດຟອກລິບ & ບໍລິການ',
+    items: [
+      { to: '/forklift-store', labelKey: 'ຮ້ານຄ້າລົດຟອກລິບ', icon: ShoppingCart },
+      { to: '/client-fleet', labelKey: 'ຕິດຕາມລົດ (Client)', icon: Car },
+      { to: '/workshop-4s', labelKey: 'ສູນບໍລິການ 4S', icon: Wrench },
+    ],
+  },
+  {
     id: 'crm',
     labelKey: 'nav.groups.crm',
     items: [

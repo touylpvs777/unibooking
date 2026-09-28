@@ -1,0 +1,355 @@
+export interface CustomerClient {
+  id: string;
+  nameLo: string;
+  nameEn: string;
+  fullNameLo: string;
+  fullNameEn: string;
+  category: "beverage_fmcg" | "mining_energy" | "logistics" | "infrastructure";
+  categoryLo: string;
+  categoryEn: string;
+  logoSrc: string;
+  serviceTypeLo: string;
+  serviceTypeEn: string;
+  scaleBadgeLo: string;
+  scaleBadgeEn: string;
+}
+
+export const ENTERPRISE_CUSTOMERS: CustomerClient[] = [
+  // 1. Beverage & FMCG
+  {
+    id: "beerlao",
+    nameLo: "ເບຍລາວ (Beerlao)",
+    nameEn: "Beerlao (LBC)",
+    fullNameLo: "ບໍລິສັດ ເບຍລາວ ຈຳກັດ (Lao Brewery Co., Ltd.)",
+    fullNameEn: "Lao Brewery Co., Ltd. (Beerlao)",
+    category: "beverage_fmcg",
+    categoryLo: "ອຸດສາຫະກຳເຄື່ອງດື່ມ & ສິນຄ້າອຸປະໂພກ",
+    categoryEn: "Beverage & FMCG",
+    logoSrc: "/images/customers/beerlao.png",
+    serviceTypeLo: "ເຊົ່າລົດຍົກໄຟຟ້າ & ດີເຊວ ພ້ອມສັນຍາ Fleet Care 24/7",
+    serviceTypeEn: "Electric & Diesel Fleet Lease + 24/7 SLA",
+    scaleBadgeLo: "ອັນດັບ 1 ຂອງປະເທດລາວ",
+    scaleBadgeEn: "National Leading Brewery"
+  },
+  {
+    id: "pepsi",
+    nameLo: "ແປັບຊີ (Pepsi)",
+    nameEn: "Pepsi Laos",
+    fullNameLo: "ບໍລິສັດ ເຄື່ອງດື່ມນ້ຳຫວານລາວ ຈຳກັດ (Lao Soft Drink Co., Ltd.)",
+    fullNameEn: "Lao Soft Drink Co., Ltd. (Pepsi Bottler)",
+    category: "beverage_fmcg",
+    categoryLo: "ອຸດສາຫະກຳເຄື່ອງດື່ມ & ສິນຄ້າອຸປະໂພກ",
+    categoryEn: "Beverage & FMCG",
+    logoSrc: "/images/customers/pepsi.png",
+    serviceTypeLo: "ລົດຍົກສາງສິນຄ້າ & ບຳລຸງຮັກສາ PM ຕາມຮອບຊົ່ວໂມງ",
+    serviceTypeEn: "Warehouse Reach Trucks & Scheduled PM",
+    scaleBadgeLo: "ໂຮງງານບັນຈຸຂວດມາດຕະຖານສາກົນ",
+    scaleBadgeEn: "Global Bottling Facility"
+  },
+  {
+    id: "coca-cola",
+    nameLo: "ໂຄຄາ-ໂຄລາ (Coca-Cola)",
+    nameEn: "Coca-Cola Laos",
+    fullNameLo: "ບໍລິສັດ ລາວ ໂຄຄາ-ໂຄລາ ບັອດຕລີ້ງ ຈຳກັດ",
+    fullNameEn: "Lao Coca-Cola Bottling Co., Ltd.",
+    category: "beverage_fmcg",
+    categoryLo: "ອຸດສາຫະກຳເຄື່ອງດື່ມ & ສິນຄ້າອຸປະໂພກ",
+    categoryEn: "Beverage & FMCG",
+    logoSrc: "/images/customers/coca-cola.png",
+    serviceTypeLo: "ເຊົ່າລົດຍົກ 0 CAPEX + ອາໄຫຼ່ OEM ແລະ ຢາງຕັນ Non-Marking",
+    serviceTypeEn: "0-CAPEX Fleet Lease + Non-Marking Solid Tires",
+    scaleBadgeLo: "ລະບົບສາງສິນຄ້າ Food-Grade",
+    scaleBadgeEn: "Food-Grade Plant"
+  },
+  {
+    id: "heineken",
+    nameLo: "ໄຮເນເກັນ (Heineken)",
+    nameEn: "Heineken Laos",
+    fullNameLo: "ບໍລິສັດ ໄຮເນເກັນ ລາວ ຈຳກັດ",
+    fullNameEn: "Heineken Lao Brewery Co., Ltd.",
+    category: "beverage_fmcg",
+    categoryLo: "ອຸດສາຫະກຳເຄື່ອງດື່ມ & ສິນຄ້າອຸປະໂພກ",
+    categoryEn: "Beverage & FMCG",
+    logoSrc: "/images/customers/heineken.png",
+    serviceTypeLo: "ລົດຍົກໄຟຟ້າ Lithium-Ion ມາດຕະຖານສິ່ງແວດລ້ອມສູງ",
+    serviceTypeEn: "Eco-Friendly Lithium-Ion Forklift Operations",
+    scaleBadgeLo: "ມາດຕະຖານໂຮງງານລະດັບໂລກ",
+    scaleBadgeEn: "Global Manufacturing Standards"
+  },
+  {
+    id: "tiger-beer",
+    nameLo: "ເບຍໄທເກີ (Tiger Beer)",
+    nameEn: "Tiger Beer",
+    fullNameLo: "ບໍລິສັດ ເບຍໄທເກີ ລາວ ຈຳກັດ",
+    fullNameEn: "Tiger Beer Lao Logistics Hub",
+    category: "beverage_fmcg",
+    categoryLo: "ອຸດສາຫະກຳເຄື່ອງດື່ມ & ສິນຄ້າອຸປະໂພກ",
+    categoryEn: "Beverage & FMCG",
+    logoSrc: "/images/customers/tiger-beer.png",
+    serviceTypeLo: "ບໍລິການສ້ອມບຳລຸງດ່ວນ Mobile Service & ອາໄຫຼ່ແທ້",
+    serviceTypeEn: "Rapid Mobile Tech Support & Genuine Parts",
+    scaleBadgeLo: "ສູນກະຈາຍສິນຄ້າພາກກາງ",
+    scaleBadgeEn: "Regional Distribution Hub"
+  },
+  {
+    id: "lao-tobacco",
+    nameLo: "ຢາສູບລາວ (Lao Tobacco)",
+    nameEn: "Lao Tobacco Limited",
+    fullNameLo: "ບໍລິສັດ ຢາສູບລາວ ຈຳກັດ (Lao Tobacco Limited)",
+    fullNameEn: "Lao Tobacco Limited",
+    category: "beverage_fmcg",
+    categoryLo: "ອຸດສາຫະກຳເຄື່ອງດື່ມ & ສິນຄ້າອຸປະໂພກ",
+    categoryEn: "Beverage & FMCG",
+    logoSrc: "/images/customers/lao-tobacco.png",
+    serviceTypeLo: "ສັນຍາເຊົ່າໄລຍະຍາວ ພ້ອມລະບົບຄວາມປອດໄພ Plant Safety",
+    serviceTypeEn: "Long-Term Lease with Plant Safety Suite",
+    scaleBadgeLo: "ອຸດສາຫະກຳປຸງແຕ່ງຂະໜາດໃຫຍ່",
+    scaleBadgeEn: "Large Scale Manufacturing"
+  },
+  {
+    id: "cpf",
+    nameLo: "ຊີພີ ລາວ (CPF Laos)",
+    nameEn: "C.P. Laos (CPF)",
+    fullNameLo: "ບໍລິສັດ ຊີພີ ລາວ ຈຳກັດ (Charoen Pokphand Foods)",
+    fullNameEn: "C.P. Laos Co., Ltd. (Charoen Pokphand Group)",
+    category: "beverage_fmcg",
+    categoryLo: "ອຸດສາຫະກຳເຄື່ອງດື່ມ & ສິນຄ້າອຸປະໂພກ",
+    categoryEn: "Beverage & FMCG",
+    logoSrc: "/images/customers/cpf.png",
+    serviceTypeLo: "ລົດຍົກຫ້ອງເຢັນ (Cold Storage) & ຢາງຕັນທົນຄວາມເຢັນ",
+    serviceTypeEn: "Cold Storage Forklifts & Freeze-Resistant Tires",
+    scaleBadgeLo: "ຜູ້ນຳກະສິກຳ-ອຸດສາຫະກຳອາຫານ",
+    scaleBadgeEn: "Agro-Industrial Leader"
+  },
+  {
+    id: "betagro",
+    nameLo: "ເບທາໂກ້ (Betagro)",
+    nameEn: "Betagro Laos",
+    fullNameLo: "ບໍລິສັດ ເບທາໂກ້ (ລາວ) ຈຳກັດ (Betagro Agro-Industry)",
+    fullNameEn: "Betagro (Laos) Co., Ltd.",
+    category: "beverage_fmcg",
+    categoryLo: "ອຸດສາຫະກຳອາຫານ & ກະສິກຳ",
+    categoryEn: "Agro-Industry & Food",
+    logoSrc: "/images/customers/betagro.png",
+    serviceTypeLo: "ເຊົ່າກອງລົດຍົກ 0-CAPEX ພ້ອມລົດສຳຮອງປ່ຽນທັນທີ Zero Downtime",
+    serviceTypeEn: "0-CAPEX Fleet Lease + Guaranteed Standby Replacement Units",
+    scaleBadgeLo: "ຜູ້ນຳອຸດສາຫະກຳກະສິກຳ ແລະ ອາຫານສາກົນ",
+    scaleBadgeEn: "Leading International Agro-Industrial Giant"
+  },
+  {
+    id: "hoya",
+    nameLo: "ໂຮ້ຢາ ເລນສ໌ (HOYA Lens)",
+    nameEn: "HOYA Lens Laos",
+    fullNameLo: "ບໍລິສັດ ໂຮ້ຢາ ແກ້ວຕາລາວ ຈຳກັດ (HOYA Lens Laos)",
+    fullNameEn: "HOYA Lens Laos Co., Ltd.",
+    category: "infrastructure",
+    categoryLo: "ອຸດສາຫະກຳເທັກໂນໂລຢີສູງ & ຫ້ອງສະອາດ",
+    categoryEn: "High-Tech Optical & Cleanroom",
+    logoSrc: "/images/customers/hoya.png",
+    serviceTypeLo: "ລົດຍົກໄຟຟ້າ Lithium-Ion ຫ້ອງສະອາດ (Cleanroom) ພ້ອມຢາງຕັນຂາວ Non-Marking",
+    serviceTypeEn: "Cleanroom Lithium-Ion Electric Fleet + White Non-Marking Solid Tires",
+    scaleBadgeLo: "ໂຮງງານຜະລິດເລນສ໌ລະດັບໂລກໃນເຂດເສດຖະກິດພິເສດ",
+    scaleBadgeEn: "World-Class High-Precision Optical Facility"
+  },
+
+  // 2. Mining & Energy
+  {
+    id: "mmg-sepon",
+    nameLo: "ບໍ່ຄຳ/ບໍ່ທອງເຊໂປນ (MMG)",
+    nameEn: "MMG Sepon",
+    fullNameLo: "ບໍລິສັດ ລ້ານຊ້າງ ມີເນໂຣສ໌ ຈຳກັດ (MMG Sepon Mine)",
+    fullNameEn: "Lane Xang Minerals Limited (MMG Sepon)",
+    category: "mining_energy",
+    categoryLo: "ບໍ່ແຮ່, ພະລັງງານ & ສຳປະທານ",
+    categoryEn: "Mining & Energy",
+    logoSrc: "/images/customers/mmg-sepon.png",
+    serviceTypeLo: "ລົດຍົກໜັກ Heavy-Duty 5-10T & ສາງອາໄຫຼ່ Consignment ໃນບໍ່ແຮ່",
+    serviceTypeEn: "5-10T Heavy Duty Fleet & On-Site Consignment Spares",
+    scaleBadgeLo: "ໂຄງການບໍ່ແຮ່ລະດັບໂລກ",
+    scaleBadgeEn: "World-Class Mining Concession"
+  },
+  {
+    id: "phu-bia-mining",
+    nameLo: "ພູເບ້ຍ ມາຍນີ່ງ (Phu Bia Mining)",
+    nameEn: "Phu Bia Mining",
+    fullNameLo: "ບໍລິສັດ ພູເບ້ຍ ມາຍນີ່ງ ຈຳກັດ (PanAust)",
+    fullNameEn: "Phu Bia Mining Limited (PanAust Group)",
+    category: "mining_energy",
+    categoryLo: "ບໍ່ແຮ່, ພະລັງງານ & ສຳປະທານ",
+    categoryEn: "Mining & Energy",
+    logoSrc: "/images/customers/phu-bia-mining.png",
+    serviceTypeLo: "ລົດຍົກພິເສດສະເພາະງານບໍ່ແຮ່ & ຊ່າງປະຈຳໄຊທ໌ງານ",
+    serviceTypeEn: "Mining-Grade Machinery & Dedicated Site Techs",
+    scaleBadgeLo: "ບໍ່ແຮ່ທອງ ແລະ ຄຳຊັ້ນນຳ",
+    scaleBadgeEn: "Premier Gold & Copper Producer"
+  },
+  {
+    id: "ntpc",
+    nameLo: "ນ້ຳເທີນ 2 (NTPC)",
+    nameEn: "Nam Theun 2 (NTPC)",
+    fullNameLo: "ບໍລິສັດ ໄຟຟ້ານ້ຳເທີນ 2 ຈຳກັດ (Nam Theun 2 Power Company)",
+    fullNameEn: "Nam Theun 2 Power Company Limited",
+    category: "mining_energy",
+    categoryLo: "ບໍ່ແຮ່, ພະລັງງານ & ສຳປະທານ",
+    categoryEn: "Mining & Energy",
+    logoSrc: "/images/customers/ntpc.png",
+    serviceTypeLo: "ລົດຍົກບຳລຸງຮັກສາເຂື່ອນໄຟຟ້າ & ກວດເຊັກຄວາມປອດໄພ 100%",
+    serviceTypeEn: "Hydro Dam Maintenance Fleet & Safety Audit",
+    scaleBadgeLo: "ເຂື່ອນໄຟຟ້າພະລັງນ້ຳຍຸດທະສາດ",
+    scaleBadgeEn: "Strategic Hydropower Plant"
+  },
+  {
+    id: "thpc",
+    nameLo: "ນ້ຳເທີນ-ຫິນບູນ (THPC)",
+    nameEn: "Theun-Hinboun (THPC)",
+    fullNameLo: "ບໍລິສັດ ໄຟຟ້າ ເທີນ-ຫິນບູນ ຈຳກັດ (Theun-Hinboun Power Company)",
+    fullNameEn: "Theun-Hinboun Power Company Limited",
+    category: "mining_energy",
+    categoryLo: "ບໍ່ແຮ່, ພະລັງງານ & ສຳປະທານ",
+    categoryEn: "Mining & Energy",
+    logoSrc: "/images/customers/thpc.png",
+    serviceTypeLo: "ອຸປະກອນຍົກຍ້າຍອຸດສາຫະກຳ & ອາໄຫຼ່ OEM ທົນທານສູງ",
+    serviceTypeEn: "Heavy Lifting Equipment & OEM Certified Spares",
+    scaleBadgeLo: "ຜູ້ຜະລິດໄຟຟ້າສົ່ງອອກຫຼັກ",
+    scaleBadgeEn: "Major Energy Exporter"
+  },
+  {
+    id: "phonesack-group",
+    nameLo: "ພອນສັກກຣຸບ (Phonesack)",
+    nameEn: "Phonesack Group",
+    fullNameLo: "ກຸ່ມບໍລິສັດ ພອນສັກ ຈຳກັດຜູ້ດຽວ (Phonesack Group Co., Ltd.)",
+    fullNameEn: "Phonesack Group Co., Ltd.",
+    category: "mining_energy",
+    categoryLo: "ບໍ່ແຮ່, ພະລັງງານ & ສຳປະທານ",
+    categoryEn: "Mining & Energy",
+    logoSrc: "/images/customers/phonesack-group.png",
+    serviceTypeLo: "ຄຸ້ມຄອງກອງລົດຍົກຂະໜາດໃຫຍ່ (Total Fleet Management)",
+    serviceTypeEn: "Enterprise Total Fleet Management",
+    scaleBadgeLo: "ກຸ່ມທຸລະກິດໃຫຍ່ອັນດັບຕົ້ນຂອງລາວ",
+    scaleBadgeEn: "Leading Conglomerate in Laos"
+  },
+  {
+    id: "ptt",
+    nameLo: "ປຕທ. ລາວ (PTT Lao)",
+    nameEn: "PTT Lao",
+    fullNameLo: "ບໍລິສັດ ປຕທ. ນ້ຳມັນ ແລະ ການຄ້າປີກ ລາວ ຈຳກັດ",
+    fullNameEn: "PTT (Lao) Co., Ltd.",
+    category: "mining_energy",
+    categoryLo: "ບໍ່ແຮ່, ພະລັງງານ & ສຳປະທານ",
+    categoryEn: "Mining & Energy",
+    logoSrc: "/images/customers/ptt.png",
+    serviceTypeLo: "ລົດຍົກສາງນ້ຳມັນ & ລະບົບປ້ອງກັນການເກີດປະກາຍໄຟ",
+    serviceTypeEn: "Petroleum Depot Machinery & Explosion-Proof Care",
+    scaleBadgeLo: "ຜູ້ນຳດ້ານພະລັງງານ ແລະ ນ້ຳມັນເຊື້ອເພີງ",
+    scaleBadgeEn: "Energy & Fuel Network Leader"
+  },
+
+  // 3. Logistics & Supply Chain
+  {
+    id: "dhl",
+    nameLo: "ດີເອສແອລ (DHL Supply Chain)",
+    nameEn: "DHL Supply Chain",
+    fullNameLo: "ບໍລິສັດ ດີເອສແອລ ຊັບພລາຍເຊນ (ລາວ) ຈຳກັດ",
+    fullNameEn: "DHL Supply Chain Laos",
+    category: "logistics",
+    categoryLo: "ໂລຈິສຕິກ, ສາງສິນຄ້າ & ຂົນສົ່ງ",
+    categoryEn: "Logistics & Supply Chain",
+    logoSrc: "/images/customers/dhl.png",
+    serviceTypeLo: "ເຊົ່າລົດ Reach Truck & High-Rack Stackers ມາດຕະຖານສາກົນ",
+    serviceTypeEn: "Global Spec Reach Trucks & High-Rack Stackers",
+    scaleBadgeLo: "ຜູ້ນຳໂລຈິສຕິກລະດັບໂລກ",
+    scaleBadgeEn: "Global Logistics Leader"
+  },
+  {
+    id: "savan-logistics",
+    nameLo: "ສະຫວັນ ໂລຈິສຕິກ (Savan Logistics)",
+    nameEn: "Savan Logistics",
+    fullNameLo: "ບໍລິສັດ ສະຫວັນ ໂລຈິສຕິກ ຈຳກັດ (SEZ Savan-Seno)",
+    fullNameEn: "Savan Logistics Co., Ltd. (Savan Park SEZ)",
+    category: "logistics",
+    categoryLo: "ໂລຈິສຕິກ, ສາງສິນຄ້າ & ຂົນສົ່ງ",
+    categoryEn: "Logistics & Supply Chain",
+    logoSrc: "/images/customers/savan-logistics.png",
+    serviceTypeLo: "ກອງລົດຍົກຕູ້ຄອນເທນເນີ & ສູນບໍລິການສ້ອມບຳລຸງເຂດເສດຖະກິດພິເສດ",
+    serviceTypeEn: "Dry Port Container Forklifts & SEZ Service Hub",
+    scaleBadgeLo: "ສູນກາງທ່າບົກ ແລະ ເຂດເສດຖະກິດພິເສດ",
+    scaleBadgeEn: "Dry Port & SEZ Logistics Hub"
+  },
+  {
+    id: "lao-freight",
+    nameLo: "ລາວ ຟຣີທ ຟໍເວີດເດີ (LFF)",
+    nameEn: "Lao Freight Forwarder",
+    fullNameLo: "ບໍລິສັດ ລາວ ບໍລິການ ຂົນສົ່ງ ຈຳກັດ (Lao Freight Forwarder Co., Ltd.)",
+    fullNameEn: "Lao Freight Forwarder Co., Ltd.",
+    category: "logistics",
+    categoryLo: "ໂລຈິສຕິກ, ສາງສິນຄ້າ & ຂົນສົ່ງ",
+    categoryEn: "Logistics & Supply Chain",
+    logoSrc: "/images/customers/lao-freight.png",
+    serviceTypeLo: "ລົດຍົກຂົນຖ່າຍສິນຄ້າຂ້າມແດນ & ຢາງຕັນທົນການໂຫຼດໜັກ",
+    serviceTypeEn: "Cross-Border Cargo Forklifts & Heavy Solid Tires",
+    scaleBadgeLo: "ຜູ້ໃຫ້ບໍລິການຂົນສົ່ງສາກົນແຫ່ງທຳອິດ",
+    scaleBadgeEn: "Pioneer Freight Operator in Laos"
+  },
+
+  // 4. Telecom, Infrastructure & Industry
+  {
+    id: "lao-telecom",
+    nameLo: "ລາວ ໂທລະຄົມ (Lao Telecom)",
+    nameEn: "Lao Telecom (LTC)",
+    fullNameLo: "ບໍລິສັດ ລາວ ໂທລະຄົມມະນາຄົມ ມະຫາຊົນ (Lao Telecom)",
+    fullNameEn: "Lao Telecommunication Public Company",
+    category: "infrastructure",
+    categoryLo: "ໂຄງສ້າງພື້ນຖານ, ໂທລະຄົມ & ອຸດສາຫະກຳ",
+    categoryEn: "Infrastructure & Telecom",
+    logoSrc: "/images/customers/lao-telecom.png",
+    serviceTypeLo: "ລົດຍົກສາງອຸປະກອນໂທລະຄົມ & ບໍລິການບຳລຸງຮັກສາຄົບວົງຈອນ",
+    serviceTypeEn: "Telecom Equipment Warehouse Handling & Total Care",
+    scaleBadgeLo: "ລັດວິສາຫະກິດໂທລະຄົມອັນດັບ 1",
+    scaleBadgeEn: "National Telecom Operator"
+  },
+  {
+    id: "lao-world",
+    nameLo: "ລາວເວີນ (Lao World)",
+    nameEn: "Lao World (ITECC)",
+    fullNameLo: "ບໍລິສັດ ລາວເວີນ ມະຫາຊົນ (Lao World Public Company / ITECC)",
+    fullNameEn: "Lao World Public Company (ITECC Mall)",
+    category: "infrastructure",
+    categoryLo: "ໂຄງສ້າງພື້ນຖານ, ໂທລະຄົມ & ອຸດສາຫະກຳ",
+    categoryEn: "Infrastructure & Telecom",
+    logoSrc: "/images/customers/lao-world.png",
+    serviceTypeLo: "ລົດຍົກສູນວາງສະແດງສິນຄ້າ ITECC & ງານ Events ໄລຍະສັ້ນ-ຍາວ",
+    serviceTypeEn: "Exhibition Convention Center & Event Forklift Fleet",
+    scaleBadgeLo: "ສູນວາງສະແດງສິນຄ້າໃຫຍ່ສຸດໃນລາວ",
+    scaleBadgeEn: "Largest Exhibition Complex"
+  },
+  {
+    id: "kcl-cement",
+    nameLo: "ຊີມັງຄຳມ່ວນ (KCL Cement)",
+    nameEn: "Khammouane Cement (KCL)",
+    fullNameLo: "ບໍລິສັດ ຊີມັງຄຳມ່ວນ ຈຳກັດ (Khammouane Cement Co., Ltd.)",
+    fullNameEn: "Khammouane Cement Co., Ltd.",
+    category: "infrastructure",
+    categoryLo: "ໂຄງສ້າງພື້ນຖານ, ໂທລະຄົມ & ອຸດສາຫະກຳ",
+    categoryEn: "Infrastructure & Telecom",
+    logoSrc: "/images/customers/kcl-cement.png",
+    serviceTypeLo: "ລົດຍົກໂຮງງານຊີມັງທົນຝຸ່ນຂັ້ນສູງ & ອາໄຫຼ່ OEM Heavy Duty",
+    serviceTypeEn: "Dust-Proof Cement Plant Forklifts & Heavy OEM Parts",
+    scaleBadgeLo: "ໂຮງງານຊີມັງມາດຕະຖານອຸດສາຫະກຳ",
+    scaleBadgeEn: "Industrial Cement Producer"
+  },
+  {
+    id: "5n-plus",
+    nameLo: "5N Plus ລາວ (5N Plus)",
+    nameEn: "5N Plus Laos",
+    fullNameLo: "ບໍລິສັດ 5N Plus (ລາວ) ຈຳກັດ (Specialty Chemicals & Metals)",
+    fullNameEn: "5N Plus Inc. (Laos Facility)",
+    category: "infrastructure",
+    categoryLo: "ໂຄງສ້າງພື້ນຖານ, ໂທລະຄົມ & ອຸດສາຫະກຳ",
+    categoryEn: "Infrastructure & Telecom",
+    logoSrc: "/images/customers/5n-plus.png",
+    serviceTypeLo: "ລົດຍົກໄຟຟ້າຫ້ອງສະອາດ (Cleanroom) & ແພັກເກັດບຳລຸງຮັກສາ Zero Defect",
+    serviceTypeEn: "Cleanroom Electric Fleet & Zero-Defect Maintenance",
+    scaleBadgeLo: "ອຸດສາຫະກຳເຄມີພິເສດລະດັບສາກົນ",
+    scaleBadgeEn: "Specialty Chemicals Manufacturer"
+  }
+];

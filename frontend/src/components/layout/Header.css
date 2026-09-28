@@ -5,7 +5,7 @@
   right: 0;
   height: var(--topbar-height);
   background: #edf5ff;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.12);
+  border-bottom: 1px solid rgba(15, 45, 122, 0.16);
   color: #0f2d7a;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
@@ -28,6 +28,7 @@
 .header-center {
   display: flex;
   justify-content: center;
+  align-items: center;
   min-width: 0;
   justify-self: center;
 }
@@ -45,17 +46,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px; height: 36px;
+  width: 36px;
+  height: 36px;
   border: none;
   background: transparent;
   border-radius: var(--radius-md);
-  color: rgba(255, 255, 255, 0.85);
+  color: #0f2d7a;
   transition: background var(--duration-fast), color var(--duration-fast);
   flex-shrink: 0;
 }
+
 .header-menu-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  background: rgba(15, 45, 122, 0.08);
+  color: #0b1f57;
 }
 
 @media (max-width: 768px) {
@@ -65,101 +68,91 @@
   }
 }
 
-/* ── DK Red premium header: contrast overrides ──────────────────────────
-   Breadcrumb, SearchBar, LanguageToggle, NotificationCenter and
-   UserProfileDropdown are shared components whose base styles assume a
-   light page background (LanguageToggle is also reused on the Login page).
-   Scope the "blood red" contrast treatment to their header instance only,
-   rather than changing their shared/base CSS. ───────────────────────────── */
-
-/* Page title / breadcrumb */
 .header .breadcrumb-title,
 .header .breadcrumb-current { color: #0f2d7a; }
 .header .breadcrumb-link { color: rgba(15, 45, 122, 0.72); }
 .header .breadcrumb-link:hover { color: #0b1f57; }
 .header .breadcrumb-sep { color: rgba(15, 45, 122, 0.55); }
 
-/* Search trigger pill */
 .header .search-trigger {
   background: rgba(255, 255, 255, 0.9);
-  border-color: rgba(15, 45, 122, 0.2);
+  border-color: rgba(15, 45, 122, 0.18);
   color: #0f2d7a;
 }
 .header .search-trigger:hover {
   background: rgba(255, 255, 255, 1);
-  border-color: rgba(15, 45, 122, 0.35);
+  border-color: rgba(15, 45, 122, 0.28);
 }
-/* ::placeholder doesn't inherit `color`, so the header's deep-blue treatment
-   uses an explicit placeholder override here. */
-.header .search-trigger::placeholder { color: rgba(15, 45, 122, 0.6); }
+.header .search-trigger::placeholder { color: rgba(15, 45, 122, 0.62); }
 
-/* Language toggle pills + overflow dropdown */
 .header .lang-toggle,
-.header .lang-toggle-more {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.25);
-  color: rgba(255, 255, 255, 0.85);
-}
-.header .lang-toggle-btn { color: rgba(255, 255, 255, 0.85); }
+.header .lang-toggle-more,
+.header .lang-toggle-btn,
+.header .lang-toggle-more:hover,
 .header .lang-toggle-btn:hover:not(.active) {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.14);
+  color: #0f2d7a;
 }
-.header .lang-toggle-btn.active {
-  background: #ffffff;
-  color: #8b0000;
-}
-.header .lang-toggle-more:hover { color: #ffffff; }
+.header .lang-toggle-btn.active,
 .header .lang-toggle-more.active {
   background: #ffffff;
-  color: #8b0000;
+  color: #0f2d7a;
 }
-.header .lang-toggle-more option { background: #ffffff; color: #1e293b; }
+.header .lang-toggle-more option { background: #ffffff; color: #0f172a; }
 
-/* Notification bell */
-.header .notification-trigger { color: rgba(255, 255, 255, 0.85); }
-.header .notification-trigger:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+.header .notification-trigger,
+.header .user-dropdown-trigger,
+.header .user-dropdown-name,
+.header .user-dropdown-chevron { color: #0f2d7a; }
+.header .notification-trigger:hover,
+.header .user-dropdown-trigger:hover {
+  background: rgba(15, 45, 122, 0.08);
+  color: #0b1f57;
 }
 .header .notification-badge {
-  background: #ffffff;
-  color: #8b0000;
-  box-shadow: 0 0 0 2px #8b0000;
-}
-
-/* Profile dropdown trigger */
-.header .user-dropdown-trigger {
-  border-color: rgba(255, 255, 255, 0.25);
-  background: rgba(255, 255, 255, 0.08);
-}
-.header .user-dropdown-trigger:hover {
-  border-color: rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.14);
-}
-.header .user-dropdown-name { color: #ffffff; }
-.header .user-dropdown-chevron { color: rgba(255, 255, 255, 0.75); }
-
-/* ── Dark mode: swap DK Red for a deep brand blue ────────────────────────
-   Light mode keeps the #8b0000 brand red above untouched. In dark mode the
-   header uses blue-950 (#172554) — the same value Sidebar.css's
-   `.sidebar-brand` uses for its dark background — so the header and the
-   logo box form one continuous bar with no color seam at the top-left
-   corner. Keep these two hex values in sync if either changes. The
-   white-translucent overlays above (lang-toggle, notification, profile)
-   keep working as-is since they contrast fine against blue the same as
-   red — only the search trigger gets an explicit solid treatment below. ── */
-[data-theme="dark"] .header {
-  background: #172554; /* blue-950 — must match .sidebar-brand in Sidebar.css */
-  border-bottom: 1px solid #334155; /* slate-700 */
-}
-
-[data-theme="dark"] .header .search-trigger {
-  background: #1e293b; /* slate-800 */
-  border-color: #475569; /* slate-600 */
+  background: #0f2d7a;
   color: #ffffff;
+  box-shadow: 0 0 0 2px rgba(15, 45, 122, 0.12);
+}
+
+[data-theme="dark"] .header {
+  background: #172554;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.4);
+}
+[data-theme="dark"] .header,
+[data-theme="dark"] .header .breadcrumb-title,
+[data-theme="dark"] .header .breadcrumb-current,
+[data-theme="dark"] .header .breadcrumb-link,
+[data-theme="dark"] .header .breadcrumb-sep,
+[data-theme="dark"] .header .search-trigger,
+[data-theme="dark"] .header .notification-trigger,
+[data-theme="dark"] .header .user-dropdown-name,
+[data-theme="dark"] .header .user-dropdown-chevron,
+[data-theme="dark"] .header .lang-toggle,
+[data-theme="dark"] .header .lang-toggle-btn,
+[data-theme="dark"] .header .lang-toggle-more {
+  color: #e2e8f0;
+}
+[data-theme="dark"] .header .search-trigger {
+  background: rgba(15, 23, 42, 0.88);
+  border-color: rgba(148, 163, 184, 0.4);
 }
 [data-theme="dark"] .header .search-trigger:hover {
-  background: #27354a;
-  border-color: #64748b;
+  background: rgba(15, 23, 42, 1);
+  border-color: rgba(148, 163, 184, 0.6);
+}
+[data-theme="dark"] .header .notification-trigger:hover,
+[data-theme="dark"] .header .user-dropdown-trigger:hover,
+[data-theme="dark"] .header .lang-toggle-btn:hover:not(.active),
+[data-theme="dark"] .header .lang-toggle-more:hover {
+  background: rgba(148, 163, 184, 0.12);
+  color: #f8fafc;
+}
+[data-theme="dark"] .header .notification-badge {
+  background: #dbeafe;
+  color: #172554;
+}
+[data-theme="dark"] .header .lang-toggle-btn.active,
+[data-theme="dark"] .header .lang-toggle-more.active {
+  background: rgba(191, 219, 254, 0.18);
+  color: #f8fafc;
 }
