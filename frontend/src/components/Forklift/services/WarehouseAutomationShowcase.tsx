@@ -530,7 +530,7 @@ export function WarehouseAutomationShowcase() {
                   <img
                     src="/images/solutions/warehouse-management-solutions.png"
                     alt="DK LAO Warehouse Management Solutions Architecture"
-                    fill
+                    
                     unoptimized
                     priority
                     className="object-contain p-2 crisp-diagram group-hover/img:scale-[1.01] transition-transform duration-500"
@@ -635,7 +635,7 @@ export function WarehouseAutomationShowcase() {
                     <img
                       src="/images/solutions/material-handling-sales-rental.png"
                       alt="DK LAO Material Handling Equipment Range"
-                      fill
+                      
                       unoptimized
                       className="object-contain p-2 crisp-diagram group-hover/img:scale-[1.01] transition-transform duration-500"
                     />
@@ -667,7 +667,7 @@ export function WarehouseAutomationShowcase() {
                     <img
                       src="/images/solutions/products-solutions-portfolio.png"
                       alt="DK LAO Product and Service Portfolio"
-                      fill
+                      
                       unoptimized
                       className="object-contain p-2 crisp-diagram group-hover/img:scale-[1.01] transition-transform duration-500"
                     />
@@ -743,7 +743,7 @@ export function WarehouseAutomationShowcase() {
                   <img
                     src="/images/solutions/automation-digital-solutions.png"
                     alt="DK LAO Automation and Digital Solutions"
-                    fill
+                    
                     unoptimized
                     priority
                     className="object-contain p-2 crisp-diagram group-hover/img:scale-[1.01] transition-transform duration-500"
@@ -832,7 +832,7 @@ export function WarehouseAutomationShowcase() {
                   <img
                     src="/images/solutions/warehouse-material-handling-3d.png"
                     alt="DK LAO Warehouse and Material Handling 3D Solutions"
-                    fill
+                    
                     unoptimized
                     priority
                     className="object-contain crisp-diagram group-hover/img:scale-[1.01] transition-transform duration-500"
@@ -945,3 +945,4 @@ export function WarehouseAutomationShowcase() {
     </section>
   );
 }
+

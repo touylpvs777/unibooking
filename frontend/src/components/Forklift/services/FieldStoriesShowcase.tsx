@@ -131,7 +131,7 @@ export function FieldStoriesShowcase({ isLo }: FieldStoriesProps) {
                 <img
                   src={item.image}
                   alt={isLo ? item.titleLo : item.titleEn}
-                  fill
+                  
                   className="object-cover object-center group-hover:scale-105 transition-transform duration-500 opacity-90"
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
@@ -240,3 +240,4 @@ export function FieldStoriesShowcase({ isLo }: FieldStoriesProps) {
     </section>
   );
 }
+

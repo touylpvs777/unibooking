@@ -1,5 +1,6 @@
 import React from "react";
-import { InventoryItem } from "@/actions/store";
+import type { InventoryItem } from "@/actions/store";
+
 import { ProductCard } from "./ProductCard";
 import { PackageSearch } from "lucide-react";
 import { useTranslation } from "react-i18next";

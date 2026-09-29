@@ -52,7 +52,7 @@ export function TrustedPartners() {
                   <img
                     src={client.logoSrc}
                     alt={isLao ? client.nameLo : client.nameEn}
-                    fill
+                    
                     className="object-contain"
                   />
                 </div>
@@ -72,3 +72,4 @@ export function TrustedPartners() {
     </section>
   );
 }
+

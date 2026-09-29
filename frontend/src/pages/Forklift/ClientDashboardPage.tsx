@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { getForklifts } from "@/api/forklift";
 import { motion } from "framer-motion";
 import { 
   Building2, ShieldCheck, Activity, Wrench, 
@@ -43,7 +44,7 @@ interface MachineUnit {
   nextPmHours: number;
 }
 
-const FLEET_UNITS: MachineUnit[] = [
+const FLEET_UNITS_MOCK: MachineUnit[] = [
   {
     id: "FL-EP-01",
     model: "CPD25L1S 2.5T Lithium",
@@ -126,7 +127,27 @@ export default function ClientDashboardPage() {
 
   const formatCurrency = (value: number) => `₭ ${(value / 1000000).toFixed(1)}M`;
 
-  const filteredUnits = FLEET_UNITS.filter(unit => {
+  const [fleetUnits, setFleetUnits] = useState<MachineUnit[]>(FLEET_UNITS_MOCK);
+
+  useEffect(() => {
+    getForklifts({}).then(res => {
+      const units = res.data.items.map(fk => ({
+        id: fk.internal_code || fk.serial_number,
+        model: fk.model_number || "Unknown Model",
+        brand: fk.brand?.name || "Unknown Brand",
+        type: fk.fuel_type || "Standard",
+        location: fk.customer?.company || fk.customer?.first_name || "HQ",
+        locationLo: fk.customer?.company || fk.customer?.first_name || "HQ",
+        hourMeter: fk.current_hour_meter,
+        batteryHealth: fk.fuel_type?.toLowerCase().includes("electric") ? 95 : undefined,
+        pmStatus: "good",
+        nextPmHours: 500 - (fk.current_hour_meter % 500)
+      })) as MachineUnit[];
+      setFleetUnits(units.length > 0 ? units : FLEET_UNITS_MOCK);
+    }).catch(err => console.error("Failed to fetch real fleet data:", err));
+  }, []);
+
+  const filteredUnits = fleetUnits.filter(unit => {
     if (filterType === "all") return true;
     if (filterType === "ev") return unit.type.includes("Electric");
     if (filterType === "diesel") return unit.type.includes("Heavy Duty");
@@ -140,11 +161,11 @@ export default function ClientDashboardPage() {
         {/* Top Breadcrumb & Human Assurance */}
         <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
           <div className="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-400">
-            <Link href={`/${locale}`} className="hover:text-emerald-600 transition-colors">
+            <Link to={`/${locale}`} className="hover:text-emerald-600 transition-colors">
               {isLo ? "ໜ້າຫຼັກ" : "Home"}
             </Link>
             <span>/</span>
-            <Link href={`/${locale}/services`} className="hover:text-emerald-600 transition-colors">
+            <Link to={`/${locale}/services`} className="hover:text-emerald-600 transition-colors">
               {isLo ? "ສູນບໍລິການ 4S" : "4S Services"}
             </Link>
             <span>/</span>
@@ -198,8 +219,7 @@ export default function ClientDashboardPage() {
 
           {/* Quick Action Buttons */}
           <div className="flex flex-wrap items-center gap-3 relative z-10">
-            <a
-              href="https://wa.me/8562058929299?text=Urgent%20Forklift%20Service%20Request%20for%20SEPON-001"
+            <a href="https://wa.me/8562058929299?text=Urgent%20Forklift%20Service%20Request%20for%20SEPON-001"
               target="_blank"
               rel="noopener noreferrer"
               className="btn-emerald inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-bold shadow-lg shadow-emerald-600/20"
@@ -207,8 +227,7 @@ export default function ClientDashboardPage() {
               <Wrench className="w-4 h-4" />
               {isLo ? "ຮຽກຊ່າງສຸກເສີນ (DKwick Dispatch)" : "Request Emergency Dispatch"}
             </a>
-            <a
-              href="tel:+8562058929299"
+            <a href="tel:+8562058929299"
               className="inline-flex items-center gap-2 px-4 py-3 rounded-xl border border-slate-300 dark:border-white/10 bg-white/50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-800 dark:text-slate-200 text-sm font-semibold transition-all"
             >
               <PhoneCall className="w-4 h-4 text-emerald-500" />
@@ -510,8 +529,7 @@ export default function ClientDashboardPage() {
                       )}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <a
-                        href={`https://wa.me/8562058929299?text=Schedule%20PM%20Service%20for%20Unit%20${unit.id}`}
+                      <a href={`https://wa.me/8562058929299?text=Schedule%20PM%20Service%20for%20Unit%20${unit.id}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 hover:underline"
@@ -554,7 +572,7 @@ export default function ClientDashboardPage() {
               {isLo ? "ດາວໂຫຼດລາຍງານ (PDF)" : "Download Audit PDF"}
             </button>
             <Link
-              href={`/${locale}/contact`}
+              to={`/${locale}/contact`}
               className="btn-emerald px-5 py-3 rounded-xl text-xs md:text-sm font-bold inline-flex items-center gap-2"
             >
               <PhoneCall className="w-4 h-4" />
@@ -567,3 +585,10 @@ export default function ClientDashboardPage() {
     </div>
   );
 }
+
+
+
+
+
+
+

@@ -12,6 +12,8 @@ export function PromoBanner() {
   if (!isVisible) return null;
 
   return (
+    <>
+    <div style={{height: '100px', backgroundColor: 'yellow', color: 'black', fontSize: '24px'}}>YELLOW BLOCK IN PROMOBANNER</div>
     <AnimatePresence>
       {isVisible && (
         <motion.div
@@ -75,5 +77,7 @@ export function PromoBanner() {
         </motion.div>
       )}
     </AnimatePresence>
+    </>
   );
 }
+

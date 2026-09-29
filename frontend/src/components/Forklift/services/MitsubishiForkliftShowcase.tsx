@@ -346,7 +346,7 @@ export function MitsubishiForkliftShowcase() {
                 <img
                   src="/images/solutions/mitsubishi-powerful-efficiency.png"
                   alt="Mitsubishi Forklift Trucks Powerful Efficiency"
-                  fill
+                  
                   unoptimized
                   priority
                   className="object-contain p-3 crisp-diagram group-hover/img:scale-105 transition-transform duration-700"
@@ -375,7 +375,7 @@ export function MitsubishiForkliftShowcase() {
                 <img
                   src="/images/solutions/mitsubishi-powertrain-matrix.png"
                   alt="Mitsubishi Forklift Trucks Powertrain Matrix"
-                  fill
+                  
                   unoptimized
                   className="object-contain p-3 crisp-diagram group-hover/img:scale-105 transition-transform duration-700"
                 />
@@ -506,7 +506,7 @@ export function MitsubishiForkliftShowcase() {
               <img
                 src="/images/solutions/mitsubishi-warehouse-lineup.png"
                 alt="Mitsubishi Warehouse Lineup - Pallet Trucks, Stackers, Reach Trucks, Order Pickers"
-                fill
+                
                 unoptimized
                 className="object-contain p-3 crisp-diagram group-hover/img:scale-105 transition-transform duration-700"
               />
@@ -598,7 +598,7 @@ export function MitsubishiForkliftShowcase() {
                 <img
                   src="/images/solutions/mhe-attachments-application.png"
                   alt="Industrial Attachments - Multiple Load Handlers, Paper Roll Clamps, Carton Clamps"
-                  fill
+                  
                   unoptimized
                   className="object-contain p-3 crisp-diagram group-hover/img:scale-105 transition-transform duration-700"
                 />
@@ -626,7 +626,7 @@ export function MitsubishiForkliftShowcase() {
                 <img
                   src="/images/solutions/mhe-7-specialized-attachments.png"
                   alt="7 Specialized Forklift Attachments on Mitsubishi Green Forklifts"
-                  fill
+                  
                   unoptimized
                   className="object-contain p-3 crisp-diagram group-hover/img:scale-105 transition-transform duration-700"
                 />
@@ -773,3 +773,4 @@ export function MitsubishiForkliftShowcase() {
     </section>
   );
 }
+

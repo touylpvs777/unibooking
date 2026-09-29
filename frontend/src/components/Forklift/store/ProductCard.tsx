@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { InventoryItem, INITIAL_CATALOG } from "@/data/catalog";
+import { INITIAL_CATALOG } from "@/data/catalog";
+import type { InventoryItem } from "@/data/catalog";
+
 import { ShoppingCart, Package, Check, Eye, Zap, FileText, Download, Clock, MessageCircle, Sliders, Sparkles, ArrowRight, ShieldAlert, ShieldCheck, Info } from "lucide-react";
 import { Button } from "@/components/Forklift/ui/button";
 import { useCart, calculateLAKPrice, calculateRetailForeignPrice, FACTORY_MARKUP_PERCENT, FACTORY_MARKUP_RATE } from "@/context/CartContext";
@@ -284,7 +286,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
             <img
               src={item.image_url}
               alt={displayName}
-              fill
+              
               className="object-contain p-3 transition-transform duration-500 group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               loading="lazy"
@@ -525,7 +527,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
               {/* Main Image View with Current Angle Badge */}
               <div className="relative h-64 md:h-[400px] lg:h-[500px] w-full rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-white/10 shadow-inner">
                 {mainImage ? (
-                  <img src={mainImage} alt={displayName} fill className="object-contain p-2" priority />
+                  <img src={mainImage} alt={displayName}  className="object-contain p-2" priority />
                 ) : (
                   <Package className="w-16 h-16 m-auto text-slate-400 dark:text-slate-600 absolute inset-0" />
                 )}
@@ -552,7 +554,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
                         className={`relative flex flex-col items-center gap-1 shrink-0 snap-start group/thumb`}
                       >
                          <div className={`relative w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden border-2 transition-all ${mainImage === item.image_url ? 'border-[#E1251B] ring-2 ring-[#E1251B]/40 shadow-md scale-[1.03] bg-white' : 'border-slate-200 dark:border-white/10 hover:border-[#005BAC] bg-white'}`}>
-                           <img src={item.image_url!} alt="thumbnail-main" fill className="object-contain p-1" />
+                           <img src={item.image_url!} alt="thumbnail-main"  className="object-contain p-1" />
                          </div>
                          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded transition-colors ${mainImage === item.image_url ? 'bg-[#E1251B] text-white' : 'text-slate-600 dark:text-slate-300 group-hover/thumb:text-[#005BAC]'}`}>
                            {isLao ? "ຮູບຫຼັກ" : "Main"}
@@ -569,7 +571,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
                           className={`relative flex flex-col items-center gap-1 shrink-0 snap-start group/thumb`}
                         >
                            <div className={`relative w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden border-2 transition-all ${isSelected ? 'border-[#E1251B] ring-2 ring-[#E1251B]/40 shadow-md scale-[1.03] bg-white' : 'border-slate-200 dark:border-white/10 hover:border-[#005BAC] bg-white'}`}>
-                             <img src={img} alt={`thumbnail-${idx}`} fill className="object-cover" />
+                             <img src={img} alt={`thumbnail-${idx}`}  className="object-cover" />
                            </div>
                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded truncate max-w-[84px] text-center transition-colors ${isSelected ? 'bg-[#E1251B] text-white' : 'text-slate-600 dark:text-slate-300 group-hover/thumb:text-[#005BAC]'}`}>
                              {label}
@@ -1017,7 +1019,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
                     }}>
                       <div className="relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-white">
                         {rel.image_url ? (
-                          <img src={rel.image_url} alt={relName} fill className="object-cover" />
+                          <img src={rel.image_url} alt={relName}  className="object-cover" />
                         ) : (
                           <Package className="w-8 h-8 m-auto text-slate-400 absolute inset-0" />
                         )}
@@ -1045,3 +1047,4 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
     </>
   );
 }
+

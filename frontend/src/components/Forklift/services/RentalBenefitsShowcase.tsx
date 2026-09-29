@@ -204,7 +204,7 @@ export function RentalBenefitsShowcase() {
                 <img
                   src="/images/solutions/rental-5-core-benefits.png"
                   alt="Forklift Trucks Short and Long Term Rental 5 Core Benefits"
-                  fill
+                  
                   unoptimized
                   priority
                   className="object-contain crisp-diagram group-hover/img:scale-[1.01] transition-transform duration-500"
@@ -308,7 +308,7 @@ export function RentalBenefitsShowcase() {
                 <img
                   src="/images/solutions/rental-strategic-value-quadrants.png"
                   alt="Forklift Trucks Rental 4 Strategic Value Quadrants"
-                  fill
+                  
                   unoptimized
                   className="object-contain crisp-diagram group-hover/img:scale-[1.01] transition-transform duration-500"
                 />
@@ -386,3 +386,4 @@ export function RentalBenefitsShowcase() {
     </div>
   );
 }
+

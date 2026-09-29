@@ -160,7 +160,7 @@ export function StoreSidebar({
             : "0 CAPEX Forklift Lease, 24/7 Dedicated Technicians & Factory Consignment."}
         </p>
         <Link
-          href={`/${locale}/services#management-ecosystem`}
+          to={`/${locale}/services#management-ecosystem`}
           className="w-full py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-md shadow-blue-600/30"
         >
           <span>{isLao ? "ສຳຫຼວດລະບົບ 360°" : "Explore 360° Fleet"}</span>
@@ -170,3 +170,4 @@ export function StoreSidebar({
     </aside>
   );
 }
+

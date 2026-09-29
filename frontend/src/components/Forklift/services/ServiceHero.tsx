@@ -110,7 +110,7 @@ export const ServiceHero = ({ isLo }: { isLo: boolean }) => {
                 <img
                   src="/images/solutions/aftersales-service-workshop-team.png"
                   alt="DK LAO Genuine Aftersales Service and Workshop Team"
-                  fill
+                  
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
@@ -246,3 +246,4 @@ export const ServiceHero = ({ isLo }: { isLo: boolean }) => {
     </section>
   );
 };
+

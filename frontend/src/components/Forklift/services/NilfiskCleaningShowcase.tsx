@@ -456,7 +456,7 @@ export function NilfiskCleaningShowcase() {
                     <img
                       src="/images/solutions/nilfisk-scrubber-dryers-heavy-ride-on.png"
                       alt="Nilfisk Scrubber Dryers Heavy Industrial Ride-On Lineup - SC3500 to SC8000"
-                      fill
+                      
                       unoptimized
                       priority
                       className="object-contain crisp-diagram group-hover/img:scale-[1.01] transition-transform duration-500"
@@ -566,7 +566,7 @@ export function NilfiskCleaningShowcase() {
                     <img
                       src="/images/solutions/nilfisk-scrubber-dryers-walk-behind-compact.png"
                       alt="Nilfisk Walk-Behind and Compact Scrubber Dryers - SC100 to SC2000"
-                      fill
+                      
                       unoptimized
                       className="object-contain crisp-diagram group-hover/img:scale-[1.01] transition-transform duration-500"
                     />
@@ -631,7 +631,7 @@ export function NilfiskCleaningShowcase() {
                 <img
                   src="/images/solutions/nilfisk-industrial-sweepers-fleet.jpg"
                   alt="Nilfisk Industrial Sweepers Lineup - CS7010 Combi, SW8000, SR1601, SR1101, SW900"
-                  fill
+                  
                   unoptimized
                   className="object-contain crisp-diagram group-hover/img:scale-[1.01] transition-transform duration-500"
                 />
@@ -731,7 +731,7 @@ export function NilfiskCleaningShowcase() {
                     <img
                       src="/images/solutions/nilfisk-industrial-vacuums-oil-liquids-swarf.png"
                       alt="Nilfisk Industrial Vacuums - VHS120 and VHO200 for Swarf, Oil, Packaging, Bakery and Chemical"
-                      fill
+                      
                       unoptimized
                       className="object-contain crisp-diagram group-hover/img:scale-[1.01] transition-transform duration-500"
                     />
@@ -793,7 +793,7 @@ export function NilfiskCleaningShowcase() {
                     <img
                       src="/images/solutions/nilfisk-industrial-vacuums-heavy-duty.png"
                       alt="Nilfisk Industrial Vacuums - GM80P, VHS40/42, VHB436, S2, S3, T40W"
-                      fill
+                      
                       unoptimized
                       className="object-contain crisp-diagram group-hover/img:scale-[1.01] transition-transform duration-500"
                     />
@@ -888,7 +888,7 @@ export function NilfiskCleaningShowcase() {
                     <img
                       src="/images/solutions/nilfisk-commercial-wet-dry-vl-series.png"
                       alt="Nilfisk Commercial Wet and Dry Vacuums - VL100, VL200, VL500 Series"
-                      fill
+                      
                       unoptimized
                       className="object-contain crisp-diagram group-hover/img:scale-[1.01] transition-transform duration-500"
                     />
@@ -954,7 +954,7 @@ export function NilfiskCleaningShowcase() {
                     <img
                       src="/images/solutions/nilfisk-commercial-vacuum-cleaners.png"
                       alt="Nilfisk Commercial Vacuum Cleaners Lineup - VP100, VP300, VP930, VP600, VU500, GU700A, GD5"
-                      fill
+                      
                       unoptimized
                       className="object-contain crisp-diagram group-hover/img:scale-[1.01] transition-transform duration-500"
                     />
@@ -1042,3 +1042,4 @@ export function NilfiskCleaningShowcase() {
     </div>
   );
 }
+

@@ -89,7 +89,7 @@ export function ServiceHighlights() {
           {SERVICES.map((service) => {
             const Icon = service.icon;
             return (
-              <Link key={service.id} href={`/${locale}/services#${service.target}`} className="group relative block">
+              <Link key={service.id} to={`/${locale}/services#${service.target}`} className="group relative block">
                 {/* Adaptive Glass Card */}
                 <div className={`relative p-6 h-full flex flex-col rounded-3xl bg-white/85 dark:bg-slate-900/80 border border-slate-200/80 dark:border-white/10 shadow-sm transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-xl ${service.borderGlow}`}>
                   {/* Top Bar with Icon & Badge */}
@@ -123,3 +123,4 @@ export function ServiceHighlights() {
     </section>
   );
 }
+

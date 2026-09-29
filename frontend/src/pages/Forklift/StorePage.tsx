@@ -1,62 +1,46 @@
-import { Suspense } from "react";
+﻿import { Suspense, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { fetchInventory, fetchRentals } from "@/actions/store";
+import type { InventoryItem } from "@/actions/store";
 import { StoreClient } from "@/components/Forklift/store/StoreClient";
-import { HeroCarousel } from "@/components/Forklift/store/HeroCarousel";
-import { TrustedPartners } from "@/components/Forklift/store/TrustedPartners";
-import { ServiceHighlights } from "@/components/Forklift/store/ServiceHighlights";
-import { PromoBanner } from "@/components/Forklift/store/PromoBanner";
-import { EnterpriseGuarantees } from "@/components/Forklift/store/EnterpriseGuarantees";
-import { ExchangeRateTicker } from "@/components/Forklift/store/ExchangeRateTicker";
+import PageHeader from "@/components/layout/PageHeader";
 
-export const metadata = {
-  title: "B2B & Industrial Store | DK Lao Trading & LUD",
-  description: "Browse and order premium industrial and heavy machinery equipment parts with BCEL One QR & Bank Transfer.",
-};
+export default function ForkliftStorePage() {
+  const { i18n } = useTranslation();
+  const isLao = (i18n.language || "lo") === "lo";
+  
+  const [inventory, setInventory] = useState<InventoryItem[]>([]);
+  const [rentals, setRentals] = useState<InventoryItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
-export default async function StorePage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
-  const isLao = locale === "lo";
-  const inventory = await fetchInventory();
-  const rentals = await fetchRentals();
+  useEffect(() => {
+    Promise.all([fetchInventory(), fetchRentals()])
+      .then(([inv, ren]) => {
+        setInventory(inv);
+        setRentals(ren);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="p-6 max-w-7xl mx-auto">
+        <PageHeader title={isLao ? "ຮ້ານຄ້າລົດຟອກລິບ" : "Forklift Store"} subtitle={isLao ? "ກຳລັງໂຫຼດລາຍການສິນຄ້າ..." : "Loading catalog products..."} />
+        <div className="py-20 text-center text-slate-400 font-bold">{isLao ? "ກຳລັງໂຫຼດຂໍ້ມູນ..." : "Loading data..."}</div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 pt-24 pb-20 overflow-x-hidden">
-      {/* 1. VIP B2B Announcement Banner */}
-      <div className="container mx-auto px-4 md:px-6 mb-4">
-        <PromoBanner />
+    <div className="p-6 max-w-[1400px] mx-auto overflow-x-hidden">
+      <PageHeader
+        title={isLao ? "ຮ້ານຄ້າລົດຟອກລິບ" : "Forklift Store"}
+        subtitle={isLao ? "ຄົ້ນຫາ, ສັ່ງຊື້ ແລະ ຂໍລາຄາລົດຟອກລິບ ແລະ ອາໄຫຼ່" : "Search, order and request quotes for forklifts and parts"}
+      />
+
+      <div className="mt-6 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm">
+        <StoreClient initialItems={inventory} rentalItems={rentals} />
       </div>
-
-      {/* 2. Spectacular Top Store Hero Carousel */}
-      <div className="container mx-auto px-4 md:px-6 mb-6">
-        <HeroCarousel />
-      </div>
-
-      {/* 3. Enterprise Guarantees (4 Value Pillars) */}
-      <div className="container mx-auto px-4 md:px-6 mb-8">
-        <EnterpriseGuarantees />
-      </div>
-
-      {/* 4. Product Catalog — Interactive store with tabs, 3-step finder, filters, sidebar */}
-      <div className="container mx-auto px-4 md:px-6">
-        {/* Live Online Exchange Rates Ticker */}
-        <ExchangeRateTicker />
-
-        <Suspense fallback={<div className="py-20 text-center text-slate-400 font-bold">{isLao ? "ກຳລັງໂຫຼດລາຍການສິນຄ້າ..." : "Loading catalog products..."}</div>}>
-          <StoreClient initialItems={inventory} rentalItems={rentals} />
-        </Suspense>
-      </div>
-
-      {/* 5. Service Highlights — 4 Core Business Pillars */}
-      <ServiceHighlights />
-
-      {/* 6. Social Proof — Trusted Enterprise Partners marquee */}
-      <TrustedPartners />
-      
-      {/* End Store Content */}
     </div>
   );
 }

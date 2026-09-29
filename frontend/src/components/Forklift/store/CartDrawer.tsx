@@ -169,7 +169,7 @@ export function CartDrawer() {
                           <img
                             src={item.image_url}
                             alt={item.part_name}
-                            fill
+                            
                             className="object-cover"
                             sizes="64px"
                           />
@@ -249,7 +249,7 @@ export function CartDrawer() {
                           <div key={rec.sku_id} className="flex gap-3 items-center p-2 rounded-lg bg-slate-900/50 hover:bg-slate-800/50 border border-transparent hover:border-white/10 transition-colors">
                             <div className="relative w-12 h-12 rounded bg-slate-950 flex-shrink-0">
                               {rec.image_url ? (
-                                <img src={rec.image_url} alt={rec.part_name} fill className="object-cover rounded" sizes="48px" />
+                                <img src={rec.image_url} alt={rec.part_name}  className="object-cover rounded" sizes="48px" />
                               ) : (
                                 <ShoppingBag className="w-4 h-4 text-slate-600 m-auto mt-4" />
                               )}
@@ -401,3 +401,4 @@ export function CartDrawer() {
     </AnimatePresence>
   );
 }
+

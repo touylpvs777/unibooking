@@ -5,6 +5,7 @@ import AppLayout from '@/components/layout/AppLayout'
 import ToastContainer from '@/components/ui/Toast'
 import OfflineBanner from '@/components/OfflineBanner'
 import { Loader2 } from 'lucide-react'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 
 const LoginPage = lazy(() => import('@/pages/Login/LoginPage'))
 const DashboardPage = lazy(() => import('@/pages/Dashboard/DashboardPage'))
@@ -92,7 +93,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <OfflineBanner />
-      <Routes>
+      <ErrorBoundary><Routes>
         <Route path="/login" element={<Suspense fallback={<PageLoader />}><LoginPage /></Suspense>} />
 
         <Route element={<PrivateRoute />}>
@@ -188,9 +189,11 @@ export default function App() {
         </Route>
 
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
-      </Routes>
+      </Routes></ErrorBoundary>
 
       <ToastContainer />
     </BrowserRouter>
   )
 }
+
+

@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { Truck, Archive, SprayCan, Settings, Pickaxe, Layers, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
-import { PRE_CATEGORIES, PreCategory, STORE_CATEGORIES } from "@/data/categories";
+import { PRE_CATEGORIES, STORE_CATEGORIES } from "@/data/categories";
+import type { PreCategory } from "@/data/categories";
 import { useTranslation } from "react-i18next";
 
 interface PreCategoryNavProps {
@@ -175,3 +176,4 @@ export function PreCategoryNav({
     </div>
   );
 }
+

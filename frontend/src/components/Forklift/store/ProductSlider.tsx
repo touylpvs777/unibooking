@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { InventoryItem } from '@/actions/store';
+import type { InventoryItem } from "@/actions/store";
+
 import { useCart, calculateLAKPrice } from '@/context/CartContext';
 import { ChevronLeft, ChevronRight, Heart, Timer, ShoppingCart, Zap, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/Forklift/ui/button';
@@ -77,7 +78,7 @@ export function ProductSlider({ title, items, isFlashDeal = false }: ProductSlid
         </div>
         
         <div className="flex items-center gap-3">
-          <Link href={`/${locale}/store`} className="text-sm font-bold text-[#005BAC] hover:text-[#00488A] dark:text-blue-400 dark:hover:text-blue-300 mr-4 transition-colors">
+          <Link to={`/${locale}/store`} className="text-sm font-bold text-[#005BAC] hover:text-[#00488A] dark:text-blue-400 dark:hover:text-blue-300 mr-4 transition-colors">
             {isLao ? "ເບິ່ງທັງໝົດ" : "View All"} &rarr;
           </Link>
           <button onClick={() => scroll('left')} className="w-12 h-12 rounded-full bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 transition-all shadow-sm border border-slate-200 dark:border-slate-700 hover:scale-105 active:scale-95">
@@ -125,7 +126,7 @@ export function ProductSlider({ title, items, isFlashDeal = false }: ProductSlid
                   <img
                     src={item.image_url}
                     alt={productName}
-                    fill
+                    
                     className="object-contain p-3 transition-transform duration-500 group-hover:scale-105"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     loading="lazy"
@@ -176,3 +177,4 @@ export function ProductSlider({ title, items, isFlashDeal = false }: ProductSlid
     </div>
   );
 }
+

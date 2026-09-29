@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { InventoryItem } from "@/data/catalog";
+import type { InventoryItem } from "@/data/catalog";
+
 import { Button } from "@/components/Forklift/ui/button";
 import { X, Send, Building, Mail, Phone, FileText } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";

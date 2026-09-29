@@ -358,7 +358,7 @@ export function JungheinrichEFGShowcase() {
                 <img
                   src="/images/solutions/counterbalance-portfolio-efg.png"
                   alt="DK LAO Jungheinrich Counterbalance Portfolio EFG Series"
-                  fill
+                  
                   unoptimized
                   priority
                   className="object-contain p-2 sm:p-4 crisp-diagram transition-transform duration-700 group-hover/img:scale-[1.02]"
@@ -560,7 +560,7 @@ export function JungheinrichEFGShowcase() {
                   <img
                     src="/images/solutions/li-ion-80-percent-cost-savings.png"
                     alt="Save more than 80% costs with Jungheinrich Li-Ion"
-                    fill
+                    
                     unoptimized
                     className="object-contain p-2 crisp-diagram group-hover/img:scale-[1.02] transition-transform duration-500"
                   />
@@ -627,7 +627,7 @@ export function JungheinrichEFGShowcase() {
                   <img
                     src="/images/solutions/li-ion-5-years-guarantee.png"
                     alt="5 Years Guarantee on Li-Ion Batteries and Cells"
-                    fill
+                    
                     unoptimized
                     className="object-contain p-2 crisp-diagram group-hover/img:scale-[1.02] transition-transform duration-500"
                   />
@@ -703,7 +703,7 @@ export function JungheinrichEFGShowcase() {
                     <img
                       src="/images/solutions/li-ion-fast-charge-comparison.png"
                       alt="Li-Ion Fast Charge Comparison Chart"
-                      fill
+                      
                       unoptimized
                       className="object-contain p-4 crisp-diagram group-hover/img:scale-[1.02] transition-transform duration-500"
                     />
@@ -742,7 +742,7 @@ export function JungheinrichEFGShowcase() {
                 <img
                   src="/images/solutions/jungheinrich-li-ion-dawn.png"
                   alt="Jungheinrich Lithium-Ion Triple Fleet: EFG, EKX, ETV"
-                  fill
+                  
                   unoptimized
                   className="object-contain p-4 crisp-diagram group-hover/img:scale-[1.02] transition-transform duration-500"
                 />
@@ -833,3 +833,4 @@ export function JungheinrichEFGShowcase() {
     </section>
   );
 }
+

@@ -191,7 +191,7 @@ export function HeroCarousel() {
 
                 {/* Action Buttons */}
                 <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-                  <Link href={slide.link}>
+                  <Link to={slide.link}>
                     <button
                       type="button"
                       className={`h-12 sm:h-13 px-6 sm:px-8 rounded-xl font-bold text-white text-xs sm:text-sm shadow-xl flex items-center gap-2 transition-all hover:scale-105 active:scale-95 cursor-pointer ${
@@ -279,3 +279,4 @@ export function HeroCarousel() {
     </div>
   );
 }
+

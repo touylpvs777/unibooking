@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useRef } from "react";
-import { InventoryItem } from "@/data/catalog";
+import type { InventoryItem } from "@/data/catalog";
+
 import { STORE_CATEGORIES } from "@/data/categories";
 import { 
   X, 

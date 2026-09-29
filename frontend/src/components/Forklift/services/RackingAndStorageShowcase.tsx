@@ -249,7 +249,7 @@ export function RackingAndStorageShowcase() {
                 <img
                   src="/images/solutions/racking-shelving-3d-logistics-center.png"
                   alt="Warehouse Racking and Shelving 3D Logistics Center"
-                  fill
+                  
                   unoptimized
                   priority
                   className="object-contain crisp-diagram group-hover/img:scale-[1.01] transition-transform duration-500"
@@ -309,7 +309,7 @@ export function RackingAndStorageShowcase() {
                 <img
                   src="/images/solutions/racking-systems-6-types.png"
                   alt="6 Specialized Racking Systems - Single Bay, Shelving, Cantilever, Mezzanine, Mobile Racking"
-                  fill
+                  
                   unoptimized
                   className="object-contain crisp-diagram group-hover/img:scale-[1.01] transition-transform duration-500"
                 />
@@ -372,7 +372,7 @@ export function RackingAndStorageShowcase() {
                 <img
                   src="/images/solutions/automated-high-bay-racking-shuttle.png"
                   alt="Automated High-Bay Racking, Shuttle System & PRK Vertical Lift"
-                  fill
+                  
                   unoptimized
                   className="object-contain crisp-diagram group-hover/img:scale-[1.01] transition-transform duration-500"
                 />
@@ -472,3 +472,4 @@ export function RackingAndStorageShowcase() {
     </div>
   );
 }
+

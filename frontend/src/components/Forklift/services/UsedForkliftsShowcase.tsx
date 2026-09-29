@@ -133,7 +133,7 @@ export function UsedForkliftsShowcase() {
           <img
             src="/images/solutions/used-refurbished-forklifts-yard.png"
             alt="DK LAO Used Forklift Yard - Refurbished and Conditioned Fleet"
-            fill
+            
             unoptimized
             priority
             className="object-contain p-2 sm:p-4 crisp-diagram group-hover/img:scale-[1.02] transition-transform duration-700"
@@ -212,3 +212,4 @@ export function UsedForkliftsShowcase() {
     </div>
   );
 }
+

@@ -160,7 +160,7 @@ export function JLGAccessPlatformsShowcase() {
             <img
               src="/images/solutions/jlg-access-platforms-4s.png"
               alt="JLG Access Platform Lineup - Scissor, Boom, Ultra Boom, Telehandler"
-              fill
+              
               unoptimized
               priority
               className="object-contain crisp-diagram group-hover/img:scale-[1.01] transition-transform duration-500"
@@ -296,3 +296,4 @@ export function JLGAccessPlatformsShowcase() {
     </div>
   );
 }
+

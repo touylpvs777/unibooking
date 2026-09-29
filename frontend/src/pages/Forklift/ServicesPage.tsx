@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 
 import { BookingProvider } from "@/components/Forklift/services/BookingContext";
+import { InternalModeProvider } from "@/components/internal/InternalModeContext";
 import { ServiceHero } from "@/components/Forklift/services/ServiceHero";
 import { ServiceSalePillar } from "@/components/Forklift/services/ServiceSalePillar";
 import { ServiceRentalPillar } from "@/components/Forklift/services/ServiceRentalPillar";
@@ -140,7 +141,7 @@ export default function ForkliftServicesHubPage() {
   }, []);
 
   return (
-    <BookingProvider>
+    <InternalModeProvider><BookingProvider>
       <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors pt-16 pb-20 overflow-hidden">
         {/* 1. HERO SECTION */}
         <ServiceHero isLo={isLo} />
@@ -343,6 +344,8 @@ export default function ForkliftServicesHubPage() {
       `,
         }}
       />
-    </BookingProvider>
+    </BookingProvider></InternalModeProvider>
   );
 }
+
+

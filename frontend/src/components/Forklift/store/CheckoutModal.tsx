@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/context/CartContext";
-import { placeOrder, OrderResult } from "@/actions/order";
+import { placeOrder } from "@/actions/order";
+import type { OrderResult } from "@/actions/order";
 import {
   X,
   QrCode,
@@ -645,3 +646,4 @@ export function CheckoutModal() {
     </div>
   );
 }
+
