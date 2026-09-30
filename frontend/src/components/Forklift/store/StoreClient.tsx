@@ -81,7 +81,7 @@ const POPULAR_MODELS_DATA = [
 
 export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps) {
   const { totalItems, openCart } = useCart();
-  const searchParams = useSearchParams();
+  const [searchParams] = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   const { i18n } = useTranslation();
@@ -129,7 +129,7 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
           params.delete(key);
         }
       });
-      router.push(`${pathname}?${params.toString()}`, { scroll: false });
+      router(`${pathname}?${params.toString()}`, { preventScrollReset: true, replace: true });
     },
     [searchParams, pathname, router]
   );
