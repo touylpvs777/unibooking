@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { useSearchParams, useNavigate as useRouter, useLocation as usePathname } from "react-router-dom";
 import Fuse from "fuse.js";
 import type { IFuseOptions } from "fuse.js";
-import { InventoryItem } from "@/actions/store";
+import type { InventoryItem } from "@/actions/store";
 import { StoreSidebar } from "./StoreSidebar";
 import { ProductGrid } from "./ProductGrid";
 import { CartDrawer } from "./CartDrawer";
