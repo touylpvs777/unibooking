@@ -367,7 +367,6 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
                 </div>
               )}
             </div>
-          )}
         </main>
       </div>
 
