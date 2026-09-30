@@ -1,9 +1,10 @@
-﻿import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { fetchInventory, fetchRentals } from "@/actions/store";
 import type { InventoryItem } from "@/actions/store";
 import { StoreClient } from "@/components/Forklift/store/StoreClient";
 import PageHeader from "@/components/layout/PageHeader";
+import { CartProvider } from "@/context/CartContext";
 
 export default function ForkliftStorePage() {
   const { i18n } = useTranslation();
@@ -32,15 +33,17 @@ export default function ForkliftStorePage() {
   }
 
   return (
-    <div className="p-6 max-w-[1400px] mx-auto overflow-x-hidden">
-      <PageHeader
-        title={isLao ? "ຮ້ານຄ້າລົດຟອກລິບ" : "Forklift Store"}
-        subtitle={isLao ? "ຄົ້ນຫາ, ສັ່ງຊື້ ແລະ ຂໍລາຄາລົດຟອກລິບ ແລະ ອາໄຫຼ່" : "Search, order and request quotes for forklifts and parts"}
-      />
+    <CartProvider>
+      <div className="p-6 max-w-[1400px] mx-auto overflow-x-hidden">
+        <PageHeader
+          title={isLao ? "ຮ້ານຄ້າລົດຟອກລິບ" : "Forklift Store"}
+          subtitle={isLao ? "ຄົ້ນຫາ, ສັ່ງຊື້ ແລະ ຂໍລາຄາລົດຟອກລິບ ແລະ ອາໄຫຼ່" : "Search, order and request quotes for forklifts and parts"}
+        />
 
-      <div className="mt-6 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm">
-        <StoreClient initialItems={inventory} rentalItems={rentals} />
+        <div className="mt-6 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm">
+          <StoreClient initialItems={inventory} rentalItems={rentals} />
+        </div>
       </div>
-    </div>
+    </CartProvider>
   );
 }
