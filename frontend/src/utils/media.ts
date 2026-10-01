@@ -1,13 +1,14 @@
-const API_BASE = (import.meta.env.VITE_API_BASE_URL as string) ?? ''
-const BACKEND_ORIGIN = API_BASE.replace(/\/api\/v1\/?$/, '')
-
-/**
- * Resolves a path returned by the backend (e.g. "/uploads/images/xxx.jpg")
- * into an absolute URL against the backend's origin. Absolute URLs (legacy
- * data seeded with external image links) pass through unchanged.
- */
-export function resolveMediaUrl(path: string | null | undefined): string | null {
-  if (!path) return null
-  if (/^https?:\/\//i.test(path) || path.startsWith('data:')) return path
-  return `${BACKEND_ORIGIN}${path.startsWith('/') ? '' : '/'}${path}`
+export function resolveMediaUrl(url?: string | null): string {
+  if (!url) return '';
+  // ຖ້າເປັນ URL ເຕັມຢູ່ແລ້ວ
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  // ຖ້າຮູບຢູ່ໃນໂຟນເດີ public ຂອງ Frontend ໃຫ້ໃຊ້ path ນັ້ນເລີຍ
+  if (url.startsWith('/images/')) {
+    return url;
+  }
+  // ກໍລະນີອື່ນໆ ເຊັ່ນຮູບທີ່ອັບໂຫຼດເຂົ້າ Backend
+  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8001';
+  return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
 }

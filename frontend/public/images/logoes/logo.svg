@@ -1,0 +1,20 @@
+<svg width="240" height="60" viewBox="0 0 240 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="laoGradient" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#3eb489"/>
+      <stop offset="100%" stop-color="#98ff98"/>
+    </linearGradient>
+  </defs>
+  
+  <text x="10" y="42" font-family="Montserrat, Arial, sans-serif" font-weight="800" font-size="36" fill="url(#laoGradient)" letter-spacing="-1">
+    LAO
+  </text>
+  
+  <text x="94" y="42" font-family="Montserrat, Arial, sans-serif" font-weight="800" font-size="36" fill="#f7fffc" letter-spacing="-1">
+    UD
+  </text>
+  
+  <!-- Modern Geometric Accent -->
+  <path d="M 160 42 L 175 18 L 190 42 Z" fill="#3eb489" opacity="0.8"/>
+  <path d="M 180 42 L 195 18 L 210 42 Z" fill="#98ff98" opacity="0.6"/>
+</svg>

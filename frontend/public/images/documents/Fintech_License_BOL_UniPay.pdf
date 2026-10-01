@@ -1,0 +1,91 @@
+%PDF-1.4
+1 0 obj
+<<
+  /Type /Catalog
+  /Pages 2 0 R
+>>
+endobj
+2 0 obj
+<<
+  /Type /Pages
+  /Kids [3 0 R]
+  /Count 1
+>>
+endobj
+3 0 obj
+<<
+  /Type /Page
+  /Parent 2 0 R
+  /MediaBox [0 0 612 792]
+  /Contents 4 0 R
+  /Resources <<
+    /Font <<
+      /F1 <<
+        /Type /Font
+        /Subtype /Type1
+        /BaseFont /Helvetica-Bold
+      >>
+    >>
+  >>
+>>
+endobj
+4 0 obj
+<<
+  /Length 1066
+>>
+stream
+BT
+/F1 22 Tf
+50 750 Td
+(NATIONAL PAYMENT SYSTEM OPERATING LICENSE) Tj
+/F1 12 Tf
+0 -30 Td
+(Bank of the Lao PDR BOL - Payment Systems Department) Tj
+/F1 10 Tf
+0 -25 Td
+(--------------------------------------------------------------------------------------------------) Tj
+/F1 13 Tf
+0 -25 Td
+([ 1. PAYMENT SERVICE PROVIDER (PSP) AUTHORIZATION ]) Tj
+/F1 10 Tf
+0 -18 Td
+(License Ref: BOL-PSP-2023-088 Official Approved) Tj
+0 -15 Td
+(Platform Name: UniPay Core Platform LUD Fintech Co., Ltd.) Tj
+0 -15 Td
+(Authorized Services: Digital Wallet, QR Payment, Payment Gateway, Merchant Acquirer) Tj
+0 -15 Td
+(National Switch Interconnection: Certified LAPNet Interoperability) Tj
+0 -15 Td
+/F1 13 Tf
+0 -15 Td
+([ 2. SECURITY & COMPLIANCE CERTIFICATIONS ]) Tj
+/F1 10 Tf
+0 -18 Td
+(- PCI-DSS Level 1 Security Certification) Tj
+0 -15 Td
+(- Anti-Money Laundering AML/CFT & KYC System Fully Compliant) Tj
+0 -15 Td
+(- 24/7 Redundant Cloud Datacenter & Disaster Recovery) Tj
+0 -15 Td
+0 -30 Td
+/F1 9 Tf
+(OFFICIAL DOCUMENTATION - VERIFIED BY LUD ENTERPRISE AUDIT & COMPLIANCE SYSTEM) Tj
+ET
+endstream
+endobj
+xref
+0 5
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000305 00000 n 
+trailer
+<<
+  /Size 5
+  /Root 1 0 R
+>>
+startxref
+1421
+%%EOF
