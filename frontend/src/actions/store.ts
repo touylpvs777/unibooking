@@ -18,9 +18,9 @@ export async function fetchInventory(skip: number = 0, limit: number = 100): Pro
           part_name: prod.name_en,
           part_name_lo: prod.name_lo || prod.name_en,
           category: prod.category?.name_en || "General",
-          description: "Premium industrial equipment from DK Lao Trading",
+          description: prod.description_lo || prod.description_en || "Premium industrial equipment from DK Lao Trading",
           qty_on_hand: 5,
-          unit_price: 15000000,
+          unit_price: INITIAL_CATALOG.find(i => i.sku_code === prod.sku)?.unit_price || 15000000,
           image_url: prod.primary_image_url || INITIAL_CATALOG[idx % INITIAL_CATALOG.length].image_url,
           currency: "LAK",
         };
@@ -47,7 +47,7 @@ export async function fetchRentals(): Promise<InventoryItem[]> {
           part_name_lo: prod.name_lo || prod.name_en,
           category: prod.category?.name_en || "Rental Fleet",
           qty_on_hand: 2,
-          unit_price: 5000000, 
+          unit_price: RENTAL_CATALOG.find(i => i.sku_code === prod.sku)?.unit_price || 5000000, 
           image_url: prod.primary_image_url || RENTAL_CATALOG[idx % RENTAL_CATALOG.length].image_url,
           currency: "LAK",
         };
