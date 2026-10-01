@@ -8,6 +8,7 @@ import { Loader2 } from 'lucide-react'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 
 const LoginPage = lazy(() => import('@/pages/Login/LoginPage'))
+const PortalPage = lazy(() => import('@/pages/Portal/PortalPage'))
 const DashboardPage = lazy(() => import('@/pages/Dashboard/DashboardPage'))
 const CustomersPage = lazy(() => import('@/pages/Customers/CustomersPage'))
 const Customer360Page = lazy(() => import('@/pages/Customers/Customer360Page'))
@@ -188,7 +189,7 @@ export default function App() {
           </Route>
         </Route>
 
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<Navigate to="/portal" replace />} />
       </Routes></ErrorBoundary>
 
       <ToastContainer />

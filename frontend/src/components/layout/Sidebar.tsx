@@ -247,7 +247,7 @@ export default function Sidebar() {
       <aside className="sidebar transition-all duration-300" data-state={sidebarState} aria-label={t('common.mainNavigation')}>
         {/* Brand */}
         <div className="sidebar-brand">
-          <NavLink to="/dashboard" className="sidebar-brand-icon-link" onClick={closeMobile} title={brandCompanyName}>
+          <NavLink to="/portal" className="sidebar-brand-icon-link" onClick={closeMobile} title={brandCompanyName}>
             <div className={`sidebar-brand-icon${brandLogoUrl ? ' sidebar-brand-icon--logo' : ''}`}>
               {brandLogoUrl
                 ? <img src={brandLogoUrl} alt="" className="sidebar-brand-logo-img" />
